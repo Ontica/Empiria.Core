@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="InvalidHttpMethod" xml:space="preserve">
+    <value>Se intentĂ³ autentificar a un usuario mediante un mĂ©todo distinto a POST lo cual no estĂ¡ autorizado:\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al Ă¡rea de sistemas de su empresa o a Ă“ntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=InvalidAuthenticationClient</value>
+  </data>
+  <data name="InvalidRequestPath" xml:space="preserve">
+    <value>Se intentĂ³ acceder al sistema desde una pĂ¡gina o sitio distinto al autorizado.</value>
+  </data>
+  <data name="CantEncryptString" xml:space="preserve">
+    <value>No pude efectuar el cifrado de la cadena de texto.</value>
+  </data>
+  <data name="CantDecryptString" xml:space="preserve">
+    <value>No pude descifrar la cadena de texto.</value>
+  </data>
+  <data name="EncryptedObjectWasAltered" xml:space="preserve">
+    <value>El objeto cifrado ha sido alterado intencionalmente por un programa desconocido o por una persona.\n\nMUY IMPORTANTE: Este error tĂ­picamente representa un problema de seguridad muy grave.\nPor favor reporte el problema inmediatamente al Ă¡rea de sistemas de su empresa o a Ă“ntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=cryptedObjectWasAltered</value>
+  </data>
+  <data name="InvalidAuthenticationClient" xml:space="preserve">
+    <value>Se intentĂ³ autentificar a un usuario desde una aplicaciĂ³n o sitio web no autorizado:\n{0}\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al Ă¡rea de sistemas de su empresa o a Ă“ntica en\nhttp://empiria.ontica.org/security/securityattack.asp?id=InvalidAuthenticationClient</value>
+  </data>
+  <data name="RequireExecuteMethod" xml:space="preserve">
+    <value>No cuenta con los permisos necesarios para ejecutar la operaciĂ³n {0} sobre el dominio de aplicaciĂ³n {1}.</value>
+  </data>
+  <data name="UnauthenticatedIdentity" xml:space="preserve">
+    <value>No puedo construir el objeto EmpiriaPrincipal debido a que el usuario no estĂ¡ autentificado.</value>
+  </data>
+  <data name="WrongAuthentication" xml:space="preserve">
+    <value>La autentificaciĂ³n del usuario no se efectuĂ³ correctamente, razĂ³n por la cual no puedo continuar.</value>
+  </data>
+  <data name="CantCloseSession" xml:space="preserve">
+    <value>No pude cerrar adecuadamente la sesiĂ³n de trabajo con identificador {0}.</value>
+  </data>
+  <data name="CantChangePasswordOnUnauthenticatedUser" xml:space="preserve">
+    <value>Se intentĂ³ modificar el password del usuario con identificador {0}, pero el mismo no estaba autentificado en ese momento:\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al Ă¡rea de sistemas de su empresa o a Ă“ntica en \nhttp://empiria.ontica.org/security/securityattack.asp?id=CantChangePasswordOnUnauthenticatedUser</value>
+  </data>
+  <data name="CantVerifyPasswordOnUnauthenticatedUser" xml:space="preserve">
+    <value>Se intentĂ³ verificar la validez del password de acceso del usuario con identificador {0}, pero el mismo no estaba autentificado en ese momento:\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al Ă¡rea de sistemas de su empresa o a Ă“ntica en \nhttp://empiria.ontica.org/security/securityattack.asp?id=CantVerifyPasswordOnUnauthenticatedUser</value>
+  </data>
+  <data name="InvalidSingleSignOnToken" xml:space="preserve">
+    <value>Se intentĂ³ ejecutar una operaciĂ³n dentro del sistema que no pasĂ³ la verificaciĂ³n de la firma electrĂ³nica.\n\nMUY IMPORTANTE: Este error tĂ­picamente representa un problema de seguridad muy grave.\nPor favor reporte el problema inmediatamente al Ă¡rea de sistemas de su empresa o a Ă“ntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=InvalidSingleSignOnToken</value>
+  </data>
+  <data name="GuestUserNotFound" xml:space="preserve">
+    <value>El usuario 'Invitado' no ha sido definido en el sistema.</value>
+  </data>
+  <data name="WrongImpersonationToken" xml:space="preserve">
+    <value>Se intentĂ³ utilizar un token de autentificaciĂ³n que no ha sido definido en el sistema.\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad muy grave.\nPor favor reporte el problema inmediatamente al Ă¡rea de sistemas de su empresa o a Ă“ntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=InvalidImpersonationToken</value>
+  </data>
+  <data name="InvalidProtectionMode" xml:space="preserve">
+    <value>No puedo manejar el modo de protecciĂ³n '{0}' empleado en esta operaciĂ³n.</value>
+  </data>
+</root>

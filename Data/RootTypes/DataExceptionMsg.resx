@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CantGetDataReader" xml:space="preserve">
+    <value>No pude recuperar la informaciĂ³n de '{0}' mediante el objeto de acceso a datos DataReader.</value>
+  </data>
+  <data name="CantGetDataTable" xml:space="preserve">
+    <value>No pude recuperar la informaciĂ³n de '{0}' mediante el objeto de acceso a datos DataTable.</value>
+  </data>
+  <data name="CantExecuteActionQuery" xml:space="preserve">
+    <value>No pude ejecutar la consulta de acciĂ³n '{0}'. ParĂ¡metros de la operaciĂ³n: ({1})</value>
+  </data>
+  <data name="CantGetObjectId" xml:space="preserve">
+    <value>No pude recuperar el identificador del objeto (objectId) regresado por '{0}' de la base de datos.</value>
+  </data>
+  <data name="CantGetScalar" xml:space="preserve">
+    <value>No pude recuperar el dato regresado por '{0}' de la base de datos.</value>
+  </data>
+  <data name="CantGetDataView" xml:space="preserve">
+    <value>No pude recuperar la informaciĂ³n de '{0}' mediante el objeto de acceso a datos DataView.</value>
+  </data>
+  <data name="CantGetFieldValue" xml:space="preserve">
+    <value>No pude recuperar el valor del campo '{1}' del objeto de datos {0}.</value>
+  </data>
+  <data name="CacheRestoreRemovedObjectCallbackFails" xml:space="preserve">
+    <value>FallĂ³ la llamada de regreso (callback) del procedimiento asĂ­ncrono que actualiza el cachĂ© de datos.</value>
+  </data>
+  <data name="InvalidCacheItemRemovedReason" xml:space="preserve">
+    <value>La razĂ³n '{0}' por la cual se removiĂ³ el elemento de la cachĂ© de datos delsistema no ha sido definida en el mĂ©todo RemovedCallback.</value>
+  </data>
+  <data name="InvalidDatabaseTechnology" xml:space="preserve">
+    <value>No reconozco la tecnologĂ­a {0}, la cual estĂ¡ asignado al origen del acceso a datos del componente.</value>
+  </data>
+  <data name="CommitFails" xml:space="preserve">
+    <value>FallĂ³ la operaciĂ³n Commit de la transacciĂ³n debido a: {0}</value>
+  </data>
+  <data name="RollbackFails" xml:space="preserve">
+    <value>FallĂ³ la operaciĂ³n Rollback de la transacciĂ³n debido a: {0}</value>
+  </data>
+  <data name="TransactionCommited" xml:space="preserve">
+    <value>La operaciĂ³n de 'rollback' no se puede ejecutar debido a que ya se efectuĂ³ el 'commit' de la transacciĂ³n.</value>
+  </data>
+  <data name="TransactionAlreadyCommited" xml:space="preserve">
+    <value>La operaciĂ³n de 'commit' no se puede ejecutar de nuevo. En su lugar genere una nueva transacciĂ³n con el mĂ©todo GetTrasaction() de una instancia de DataWriteContext.</value>
+  </data>
+  <data name="DataContextOutOfTransaction" xml:space="preserve">
+    <value>No se ha creado una transacciĂ³n sobre el contexto.</value>
+  </data>
+  <data name="DataContextTooManyItemsForRemove" xml:space="preserve">
+    <value>Se intentĂ³ remover del contexto mĂ¡s elementos de los que contiene.</value>
+  </data>
+  <data name="AsynchronousCommitNotCalled" xml:space="preserve">
+    <value>TerminĂ³ el tiempo de espera de la llamada asĂ­ncrona y nunca se mandĂ³ llamar el mĂ©todo Commit() de la transacciĂ³n.</value>
+  </data>
+  <data name="ObjectIdOutOfValidBounds" xml:space="preserve">
+    <value>El id {0} obtenido para el nuevo objeto estĂ¡ fuera de los lĂ­mites establecidos por las reglas definidas para el dominio de ejecuciĂ³n.</value>
+  </data>
+  <data name="DataSourceNotDefined" xml:space="preserve">
+    <value>La fuente de datos {0} no ha sido definida en la tabla DBDataSources.</value>
+  </data>
+  <data name="CantRegisterObjectIdFactory" xml:space="preserve">
+    <value>No pude registrar la fĂ¡brica de identificadores de objetos a travĂ©s de los servicios de remoting empleando el canal proporcionado: {0}.</value>
+  </data>
+  <data name="ObjectRemovedFromDataCache" xml:space="preserve">
+    <value>El elemento con identificador {0} fue removido automĂ¡ticamente del cachĂ© de datos de la aplicaciĂ³n por la causa {1}, 
+debido a que el sistema operativo necesitaba los recursos de memoria que estaba utilizando (mecanismo scavenging).</value>
+  </data>
+  <data name="WrongQueryParametersNumber" xml:space="preserve">
+    <value>Se intentĂ³ ejecutar la consulta '{0}', pero los parĂ¡metros que se proporcionaron no coinciden en nĂºmero con los registrados en la tabla DBQueryParameters.</value>
+  </data>
+  <data name="ObjectIdRuleNotSet" xml:space="preserve">
+    <value>La regla para la creaciĂ³n de identificadores de objetos (ids) del tipo {0}, no se encuentra en el archivo de configuraciĂ³n.</value>
+  </data>
+  <data name="DuplicateObjectIdFactory" xml:space="preserve">
+    <value>Por cuestiones de integridad de la informaciĂ³n, sĂ³lo puede registrarse una Ăºnica fĂ¡brica de identificadores de objetos (Empiria.Data.ObjectIdFactory) en cada equipo. En este caso, otro proceso del sistema operativo registrĂ³ previamente dicha fĂ¡brica de objetos. Por favor, consulte con el personal de soporte tĂ©cnico de su organizaciĂ³n.</value>
+  </data>
+  <data name="CantParseDataIntegrationServer" xml:space="preserve">
+    <value>No pude construir el objeto Empiria.Security.WebServer con id = {0}. Es posible que no se encuentre instalado en el directorio de la aplicaciĂ³n el archivo de ensamblado Empiria.dll,  o bien, que no se tenga registrado ningĂºn servidor web con ese id en la base de datos de la aplicaciĂ³n.</value>
+  </data>
+  <data name="UndefinedDataPublishRule" xml:space="preserve">
+    <value>Se intentĂ³ publicar el objeto de datos con nombre '{0}' pero la regla de publicaciĂ³n no ha sido definida en el archivo de reglas del servidor origen.</value>
+  </data>
+  <data name="CantCreateDataTask" xml:space="preserve">
+    <value>No pude guardar la operaciĂ³n en la cola de tareas de integraciĂ³n de datos:\n\nServidor origen: {0}\nServidor destino: {1}\nOperaciĂ³n: {2}\nParĂ¡metros: {3}\n\nFavor de avisar inmediatamente de este problema al administrador del sistema.</value>
+  </data>
+  <data name="CantLoadDataIntegrationRules" xml:space="preserve">
+    <value>No pude cargar desde el archivo las reglas de integraciĂ³n de datos . Por favor avise cuanto antes de este problema al administrador del sistema.</value>
+  </data>
+  <data name="CantDoPostExecutionTask" xml:space="preserve">
+    <value>No pude ejecutar la post acciĂ³n de la operaciĂ³n de datos '{0}' con los parĂ¡metros siguientes: '{1}'. Es probable que exista un problema en las reglas del integrador de datos. Favor de comunicar imediatamente de este problema al administrador del sistema.</value>
+  </data>
+  <data name="DuplicateDataIntegrationEngine" xml:space="preserve">
+    <value>Por cuestiones de integridad de la informaciĂ³n, sĂ³lo puede registrarse una Ăºnica mĂ¡quina de integraciĂ³n de datos (Empiria.Data.Integration.DataIntegrationEngine) en cada equipo. En este caso, otro proceso del sistema operativo registrĂ³ previamente dicha mĂ¡quina. Por favor, consulte con el personal de soporte tĂ©cnico de su organizaciĂ³n.</value>
+  </data>
+  <data name="DataIntegrationWSProxyException" xml:space="preserve">
+    <value>OcurriĂ³ un problema al intentar ejecutar la operaciĂ³n de integraciĂ³n de datos '{0}' a travĂ©s de un proxy al servidor de servicios web '{1}'.</value>
+  </data>
+</root>

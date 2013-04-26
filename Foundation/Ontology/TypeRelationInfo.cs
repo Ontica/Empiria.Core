@@ -1,0 +1,283 @@
+﻿/* Empiria® Foundation Framework 2013 ************************************************************************
+*                                                                                                            *
+*  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
+*  Namespace : Empiria.Ontology                                 Assembly : Empiria.dll                       *
+*  Type      : TypeRelationInfo                                 Pattern  : Standard class                    *
+*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*                                                                                                            *
+*  Summary   : Sealed class that represents an ontology type relation definition.                            *
+*                                                                                                            *
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+using System;
+using System.Data;
+
+using Empiria.Data;
+using Empiria.Reflection;
+using Empiria.Security;
+
+namespace Empiria.Ontology {
+
+  public enum RelationTypeFamily {
+    Attribute = 1,
+    Association = 2,
+    Aggregation = 3,
+    Composition = 4,
+    Classification = 5,
+  }
+
+  /// <summary>Sealed class that represents an ontology type relation definition.</summary>
+  public abstract class TypeRelationInfo : IStorable {
+
+    #region Abstract members
+
+    protected abstract object ImplementsConvert(object value);
+    protected abstract void ImplementsLoadObjectData(DataRow row);
+
+    #endregion Abstract members
+
+    #region Fields
+
+    private int id = 0;
+    private MetaModelType sourceType = null;
+    private MetaModelType targetType = null;
+    private RelationTypeFamily relationTypeFamily = RelationTypeFamily.Attribute;
+    private string name = String.Empty;
+    private string displayName = String.Empty;
+    private string documentation = String.Empty;
+    private string keywords = String.Empty;
+    private object defaultValue = null;
+    private bool isSealed = false;
+    private bool isRuleBased = false;
+    private bool isReadOnly = false;
+    private bool isHistorizable = false;
+    private bool isKeyword = false;
+    private EncryptionMode protectionMode = EncryptionMode.Unprotected;
+    private string dataSource = String.Empty;
+    private string sourceIdFieldName = String.Empty;
+    private string targetIdFieldName = String.Empty;
+    private string typeRelationIdFieldName = String.Empty;
+    private bool isInherited = false;
+
+    //private string fullName = String.Empty;
+    private int postedById = 0;
+    private DateTime postingDate = DateTime.Today;
+    private GeneralObjectStatus status = GeneralObjectStatus.Active;
+
+    #endregion Fields
+
+    #region Constructors and parsers
+
+    protected TypeRelationInfo(MetaModelType sourceType) {
+      this.sourceType = sourceType;
+    }
+
+    static internal T Parse<T>(int typeRelationId) where T : TypeRelationInfo {
+      DataRow dataRow = OntologyData.GetTypeRelation(typeRelationId);
+      RelationTypeFamily relationTypeFamily =
+            TypeRelationInfo.ParseRelationTypeFamily((string) dataRow["RelationTypeFamily"]);
+      MetaModelType sourceType = MetaModelType.Parse((int) dataRow["SourceTypeId"]);
+
+      TypeRelationInfo instance = TypeRelationInfo.Create(relationTypeFamily, sourceType);
+      //instance.ValidateData(dataRow);
+      instance.LoadDataRow(dataRow);
+
+      return (T) instance;
+    }
+
+    static internal TypeRelationInfo Parse(MetaModelType sourceType, DataRow dataRow) {
+      RelationTypeFamily relationTypeFamily =
+            TypeRelationInfo.ParseRelationTypeFamily((string) dataRow["RelationTypeFamily"]);
+
+      TypeRelationInfo instance = TypeRelationInfo.Create(relationTypeFamily, sourceType);
+      //instance.ValidateData(dataRow);
+      instance.LoadDataRow(dataRow);
+
+      return instance;
+    }
+
+    static internal RelationTypeFamily ParseRelationTypeFamily(string familyName) {
+      try {
+        return (RelationTypeFamily) System.Enum.Parse(typeof(RelationTypeFamily), familyName);
+      } catch {
+        throw new OntologyException(OntologyException.Msg.UndefinedTypeInfoFamily, familyName);
+      }
+    }
+
+    static private TypeRelationInfo Create(RelationTypeFamily relationTypeFamily, MetaModelType sourceType) {
+      Type[] parTypes = new Type[] { typeof(MetaModelType) };
+      object[] parValues = new object[] { sourceType };
+
+      Type type = (relationTypeFamily == RelationTypeFamily.Attribute) ?
+                                                    typeof(TypeAttributeInfo) : typeof(TypeAssociationInfo);
+
+      return (TypeRelationInfo) ObjectFactory.CreateObject(type, parTypes, parValues);
+    }
+
+    #endregion Constructors and parsers
+
+    #region Public properties
+
+    internal string DataSource {
+      get { return dataSource; }
+    }
+
+    public string DisplayName {
+      get { return displayName; }
+    }
+
+    public string Documentation {
+      get { return documentation; }
+    }
+
+    internal object DefaultValue {
+      get { return defaultValue; }
+    }
+
+    public DateTime PostingDate {
+      get { return postingDate; }
+    }
+
+    public int Id {
+      get { return id; }
+    }
+
+    public bool IsHistorizable {
+      get { return isHistorizable; }
+    }
+
+    public bool IsInherited {
+      get { return isInherited; }
+    }
+
+    public bool IsKeyword {
+      get { return isKeyword; }
+    }
+
+    public bool IsReadOnly {
+      get { return isReadOnly; }
+    }
+
+    public bool IsRuleBased {
+      get { return isRuleBased; }
+    }
+
+    public bool IsSealed {
+      get { return isSealed; }
+    }
+
+    internal string Keywords {
+      get { return keywords; }
+    }
+
+    public string Name {
+      get { return name; }
+    }
+
+    internal int PostedById {
+      get { return postedById; }
+      set { postedById = value; }
+    }
+
+    public EncryptionMode ProtectionMode {
+      get { return protectionMode; }
+    }
+
+    public RelationTypeFamily RelationTypeFamily {
+      get { return relationTypeFamily; }
+    }
+
+    public GeneralObjectStatus Status {
+      get { return status; }
+      set { status = value; }
+    }
+
+    internal string SourceIdFieldName {
+      get { return sourceIdFieldName; }
+    }
+
+    public MetaModelType SourceType {
+      get { return sourceType; }
+    }
+
+    public MetaModelType TargetType {
+      get { return targetType; }
+    }
+
+    internal string TargetIdFieldName {
+      get { return targetIdFieldName; }
+    }
+
+    internal string TypeRelationIdFieldName {
+      get { return typeRelationIdFieldName; }
+    }
+
+    #endregion Public properties
+
+    #region Public methods
+
+    internal object Convert(object value) {
+      try {
+        return ImplementsConvert(value);
+      } catch (Exception exception) {
+        throw new OntologyException(OntologyException.Msg.ConvertionToTargetTypeFails,
+                                    exception, value, this.TargetType.Name);
+      }
+    }
+
+    internal object GetDefaultValue() {
+      return this.DefaultValue;
+    }
+
+    void IStorable.ImplementsOnStorageUpdateEnds() {
+      throw new NotImplementedException();
+    }
+
+    DataOperationList IStorable.ImplementsStorageUpdate(StorageContextOperation operation, DateTime timestamp) {
+      throw new NotImplementedException();
+    }
+
+    #endregion Public methods
+
+    #region Private methods
+
+    private void LoadDataRow(DataRow row) {
+      this.id = (int) row["TypeRelationId"];
+      this.targetType = MetaModelType.Parse((int) row["TargetTypeId"]);
+      this.name = (string) row["RelationName"];
+      //this.fullName = targetType.Name + "." + name;
+      this.displayName = (string) row["DisplayName"];
+      this.documentation = (string) row["Documentation"];
+      this.keywords = (string) row["TypeRelationKeywords"];
+      this.isSealed = (bool) row["IsSealed"];
+      this.isRuleBased = (bool) row["IsRuleBased"];
+      this.isReadOnly = (bool) row["IsReadOnly"];
+      this.isHistorizable = (bool) row["IsHistorizable"];
+      this.isKeyword = (bool) row["IsKeyword"];
+      this.protectionMode = (EncryptionMode) row["ProtectionMode"];
+      this.dataSource = (string) row["TypeRelationDataSource"];
+      this.sourceIdFieldName = (string) row["SourceIdFieldName"];
+      this.targetIdFieldName = (string) row["TargetIdFieldName"];
+      this.typeRelationIdFieldName = (string) row["TypeRelationIdFieldName"];
+      this.postedById = (int) row["PostedById"];
+      this.postingDate = (DateTime) row["PostingDate"];
+      this.status = (GeneralObjectStatus) char.Parse((string) row["TypeRelationStatus"]);
+      isInherited = (sourceType.Id != (int) row["SourceTypeId"]);
+
+      defaultValue = this.Convert(row["DefaultValue"]);
+
+      this.ImplementsLoadObjectData(row);
+    }
+
+    //private void ValidateData(DataRow row) {
+    //  string sourceTypeName = (string) row["SourceTypeName"];
+    //  if (!sourceType.Name.StartsWith(sourceTypeName)) {
+    //    throw new OntologyException(OntologyException.Msg.TypeRelationInfoDataTypeNotMatch,
+    //                                sourceTypeName, sourceType.Name);
+    //  }
+    //}
+
+    #endregion Private methods
+
+  } // class TypeRelationInfo
+
+} // namespace Empiria.Ontology

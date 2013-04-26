@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CantReadParameter" xml:space="preserve">
+    <value>No pude leer del archivo de configuraciĂ³n del sistema el parĂ¡metro '{0}' empleado por el tipo {1}.</value>
+  </data>
+  <data name="CantWriteParameter" xml:space="preserve">
+    <value>No pude guardar el valor del parĂ¡metro de configuraciĂ³n {0} pertenciente al tipo {1}.</value>
+  </data>
+  <data name="ListIndexOutOfRange" xml:space="preserve">
+    <value>No encontrĂ© el elemento con Ă­ndice '{0}' en la lista de objetos.</value>
+  </data>
+  <data name="ListKeyNotFound" xml:space="preserve">
+    <value>No encontrĂ© el elemento con clave '{0}' en la lista de objetos.</value>
+  </data>
+  <data name="ListItemTypeNotMatch" xml:space="preserve">
+    <value>El tipo de objeto de la lista no coincide con el tipo base de la lista</value>
+  </data>
+  <data name="ConstructorNotDefined" xml:space="preserve">
+    <value>No encontrĂ© el constructor invocado para crear objetos del tipo {0}. Esta es una deficiencia en la programaciĂ³n de la clase correspondiente.</value>
+  </data>
+  <data name="MethodExecutionFails" xml:space="preserve">
+    <value>OcurriĂ³ un problema al intentar ejecutar el mĂ©todo {0} vĂ­a mecanismos de reflexiĂ³n.</value>
+  </data>
+  <data name="MethodNotFound" xml:space="preserve">
+    <value>El tipo {0} no tiene definido el mĂ©todo {1}. Esta es una deficiencia de programaciĂ³n o una inconsistencia en la definiciĂ³n de metadatos.</value>
+  </data>
+  <data name="ObjectPropertyNotFound" xml:space="preserve">
+    <value>No encontrĂ© la propiedad con nombre '{0}' dentro de las propiedades del tipo {1}. Esta es una deficiencia de programaciĂ³n o una inconsistencia en la definiciĂ³n de metadatos.</value>
+  </data>
+  <data name="ParseMethodNotDefined" xml:space="preserve">
+    <value>No encontrĂ© el mĂ©todo estĂ¡tico Parse para crear objetos del tipo {0}. Esta es una deficiencia en la programaciĂ³n de la clase correspondiente.</value>
+  </data>
+  <data name="TypeNotDefined" xml:space="preserve">
+    <value>No encontrĂ© el tipo {0} en el ensamblado. Esta es una deficiencia de programaciĂ³n o una inconsistencia en la definiciĂ³n de metadatos.</value>
+  </data>
+  <data name="EnsureFails" xml:space="preserve">
+    <value>Una postcondiciĂ³n del mĂ©todo {0} no se cumpliĂ³: '{1}'.</value>
+  </data>
+  <data name="EnsureNotEmptyStringFails" xml:space="preserve">
+    <value>Una postcondiciĂ³n del mĂ©todo {0} no se cumpliĂ³: 'La cadena {1} no puede ser vacĂ­a'.</value>
+  </data>
+  <data name="EnsureNotNullObjectFails" xml:space="preserve">
+    <value>Una postcondiciĂ³n del mĂ©todo {0} no se cumpliĂ³: 'El objeto {1} no puede ser nulo'.</value>
+  </data>
+  <data name="RequireFails" xml:space="preserve">
+    <value>Una precondiciĂ³n del mĂ©todo {0} no se cumpliĂ³: '{1}'.</value>
+  </data>
+  <data name="RequireNotEmptyStringFails" xml:space="preserve">
+    <value>Una precondiciĂ³n del mĂ©todo {0} no se cumpliĂ³: 'La cadena {1} no puede ser vacĂ­a'.</value>
+  </data>
+  <data name="RequireNotNullObjectFails" xml:space="preserve">
+    <value>Una precondiciĂ³n del mĂ©todo {0} no se cumpliĂ³: 'El objeto {1} no puede ser nulo'.</value>
+  </data>
+  <data name="AssertFails" xml:space="preserve">
+    <value>Una aserciĂ³n en el mĂ©todo {0} no se cumpliĂ³: '{1}'.</value>
+  </data>
+  <data name="AssertNotEmptyStringFails" xml:space="preserve">
+    <value>Una aserciĂ³n en el mĂ©todo {0} no se cumpliĂ³: 'La cadena {1} no puede ser vacĂ­a'.</value>
+  </data>
+  <data name="AssertNotNullObjectFails" xml:space="preserve">
+    <value>Una aserciĂ³n en el mĂ©todo {0} no se cumpliĂ³: 'El objeto {1} no puede ser nulo'.</value>
+  </data>
+  <data name="ParameterNotExists" xml:space="preserve">
+    <value>No encontrĂ© el parĂ¡metro '{0}' empleado por el tipo {1} en el archivo de configuraciĂ³n del sistema.</value>
+  </data>
+  <data name="CantPublishMessage" xml:space="preserve">
+    <value>No pude publicar el siguiente mensaje perteneciente al tipo {0}:\n\n{1}\n\nFavor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuraciĂ³n del servidor.</value>
+  </data>
+  <data name="ConditionalOptionNotDefined" xml:space="preserve">
+    <value>La ejecuciĂ³n del programa alcanzĂ³ un elemento de una alternaciĂ³n (if) que no ha sido definido en el cĂ³digo del programa. Se trata de un error de programaciĂ³n.</value>
+  </data>
+  <data name="InvalidLicense" xml:space="preserve">
+    <value>La licencia del Framework EmpiriaÂ® no es vĂ¡lida.\n\nIMPORTANTE: Este producto de software, asĂ­ como su diseĂ±o y documentaciĂ³n, estĂ¡n protegidos por las leyes federales e internacionales sobre derechos de autor.\n\nToda violaciĂ³n a los derechos de autor sobre cualquiera de las partes que constituyen esta obra serĂ¡ perseguida hasta sus Ăºltimas consecuencias conforme a las leyes aplicables en MĂ©xico y en el extranjero.\n\nSi tiene alguna duda sobre la autenticidad de esta copia del producto puede contactarnos en www.ontica.org.</value>
+  </data>
+  <data name="CantPublishNullMessage" xml:space="preserve">
+    <value>No pude publicar un objeto nulo mediante los servicios de mensajerĂ­a EmpiriaÂ®:\n\nFavor de notificar sobre este error al administrador del sistema ya que se trata de un problema de programaciĂ³n.</value>
+  </data>
+  <data name="CantCreateQueueFactory" xml:space="preserve">
+    <value>No pude invocar la fĂ¡brica de objetos {0}, la cual se encarga de crear las colas de mensajes utilizadas por los servicios de mensajerĂ­a EmpiriaÂ®. Puede ser que el componente Empiria.Messaging.dll no exista, o no estĂ© instalado adecuadamente o que su versiĂ³n sea incorrecta.\n
+Favor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuraciĂ³n del servidor o de la aplicaciĂ³n.</value>
+  </data>
+  <data name="CantCreateQueueFactoryType" xml:space="preserve">
+    <value>No pude cargar el componente que administra los servicios de mensajerĂ­a EmpiriaÂ®. Es posible que el archivo Empiria.Messaging.dll no exista, o no estĂ© instalado adecuadamente o que tenga una versiĂ³n incorrecta.\n
+Favor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuraciĂ³n del servidor o de la aplicaciĂ³n.</value>
+  </data>
+  <data name="CantCreateDefaultQueue" xml:space="preserve">
+    <value>No pude crear la cola de mensajes predeterminada, misma que es indispensable para ejecutar el sistema EmpiriaÂ®. Puede ser que los parĂ¡metros de los componentes de mensajerĂ­a estĂ©n mal configurados, o que el servicio que emplea la cola de mensajes no estĂ© disponible o que el sistema no tenga permisos de acceso a dicho servicio.\n\n
+Favor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuraciĂ³n del servidor o de la aplicaciĂ³n.</value>
+  </data>
+  <data name="CantRetriveMessage" xml:space="preserve">
+    <value>No pude recuperar el mensaje de la cola de mensajes '{0}'.</value>
+  </data>
+  <data name="CantSendMessage" xml:space="preserve">
+    <value>No pude enviar el mensaje a la cola de mensajes '{0}'.</value>
+  </data>
+  <data name="CantStartQueue" xml:space="preserve">
+    <value>No pude inicializar la cola de mensajes '{0}'.</value>
+  </data>
+  <data name="QueueNotStarted" xml:space="preserve">
+    <value>La cola de mensajes '{0}' no ha sido inicializada. Para ejecutar esta operaciĂ³n es preciso que primero se inicialice dicha cola mediante la invocaciĂ³n del mĂ©todo Start().</value>
+  </data>
+  <data name="CantReadExecutionServerProperty" xml:space="preserve">
+    <value>No pude leer del archivo de configuraciĂ³n del sistema alguna de las propiedades requeridas por el tipo Empiria.ExecutionServer.</value>
+  </data>
+  <data name="XmlConfigurationFileNotExists" xml:space="preserve">
+    <value>El archivo '{0}', que contiene los parĂ¡metros de configuraciĂ³n del sistema EmpiriaÂ®, no existe.</value>
+  </data>
+  <data name="NotImplemented" xml:space="preserve">
+    <value>El mĂ©todo invocado todavĂ­a no ha sido implementado en el sistema.</value>
+  </data>
+  <data name="ConstructorExecutionFails" xml:space="preserve">
+    <value>OcurriĂ³ un problema al ejecutar el constructor del tipo '{0}' mediante mecanismos de reflexiĂ³n. Puede ser que se trate de un problema en la parametrizaciĂ³n del componente, en la carga de los atributos de la instancia o que los valores predeterminados de la clase contengan valores inconsistentes.</value>
+  </data>
+  <data name="InvalidTypeName" xml:space="preserve">
+    <value>No puedo leer el valor del parĂ¡metro {0} sobre el tipo {1}, debido a que Ă©ste no pertenece al espacio de nombres Empiria.</value>
+  </data>
+  <data name="ValidTypeNotFoundInStackTrace" xml:space="preserve">
+    <value>Se ha intentando invocar el lector de datos de configuraciĂ³n del sistema desde un tipo que no pertenece al espacio de nombres Empiria:\n\nStack:\n{0}</value>
+  </data>
+</root>
