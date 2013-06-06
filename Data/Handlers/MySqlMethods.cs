@@ -198,7 +198,8 @@ namespace Empiria.Data.Handlers {
         dataAdapter.Fill(dataTable);
         return new DataView(dataTable, filter, sort, DataViewRowState.CurrentRows);
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataView, exception,
+                                       operation.SourceName, filter, sort);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();

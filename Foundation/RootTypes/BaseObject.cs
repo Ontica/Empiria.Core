@@ -254,6 +254,8 @@ namespace Empiria {
       if (this.IsNew) {
         this.objectId = OntologyData.GetNextObjectId(this.ObjectTypeInfo);
       }
+      Assertion.Assert(this.objectId != 0,
+      "Object Id can't be zero. There is an error in GetNextObjectId or in DbRules table.");
       ImplementsSave();
       lock (cache) {
         cache.Insert(this);

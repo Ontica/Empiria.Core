@@ -41,7 +41,7 @@ namespace Empiria {
     }
 
     static public string Copyright {
-      get { return "Copyright © " + DateTime.Today.Year + "-1994. " + "La Vía Óntica SC / Ontica LLC"; }
+      get { return "Copyright © 1994-" + DateTime.Today.Year + ". La Vía Óntica SC + Ontica LLC"; }
     }
 
     static public string CopyrightUrl {
@@ -53,11 +53,11 @@ namespace Empiria {
     }
 
     static public string Name {
-      get { return "Soluciones Empiria® para Gobierno 2013"; }
+      get { return "Soluciones Empiria® para Gobierno"; }
     }
 
     static public string Url {
-      get { return "http://www.ontica.org/"; }		// http://land.empiria.org/soluciones.gobierno/administracion.territorial/
+      get { return "http://empiria.ontica.org/administracion-registros-publicos.html"; }
     }
 
     static public string Version {

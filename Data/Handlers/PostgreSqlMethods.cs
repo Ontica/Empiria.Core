@@ -67,7 +67,8 @@ namespace Empiria.Data.Handlers {
         dataAdapter.Fill(dataTable);
         return dataTable.Rows.Count;
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable,
+                                       exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -164,7 +165,8 @@ namespace Empiria.Data.Handlers {
         connection.Open();
         dataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataReader, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataReader, 
+                                       exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         //Don't dipose the connection because this method returns a DataReader.
@@ -192,7 +194,8 @@ namespace Empiria.Data.Handlers {
           return null;
         }
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable, 
+                                       exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -214,7 +217,8 @@ namespace Empiria.Data.Handlers {
         NpgsqlDataAdapter dataAdapter = new NpgsqlDataAdapter(command);
         dataAdapter.Fill(dataTable);
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable, 
+                                       exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -239,7 +243,8 @@ namespace Empiria.Data.Handlers {
 
         return new DataView(dataTable, filter, sort, DataViewRowState.CurrentRows);
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataView, exception,
+                                       operation.SourceName, filter, sort);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -287,7 +292,8 @@ namespace Empiria.Data.Handlers {
         connection.Open();
         scalar = command.ExecuteScalar();
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetScalar, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetScalar, 
+                                       exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();

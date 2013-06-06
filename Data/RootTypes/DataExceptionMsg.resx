@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CantGetDataReader" xml:space="preserve">
-    <value>No pude recuperar la informaciĂ³n de '{0}' mediante el objeto de acceso a datos DataReader.</value>
+    <value>No pude recuperar la información de '{0}' mediante el objeto de acceso a datos DataReader.</value>
   </data>
   <data name="CantGetDataTable" xml:space="preserve">
-    <value>No pude recuperar la informaciĂ³n de '{0}' mediante el objeto de acceso a datos DataTable.</value>
+    <value>No pude recuperar la información de '{0}' mediante el objeto de acceso a datos DataTable.</value>
   </data>
   <data name="CantExecuteActionQuery" xml:space="preserve">
-    <value>No pude ejecutar la consulta de acciĂ³n '{0}'. ParĂ¡metros de la operaciĂ³n: ({1})</value>
+    <value>No pude ejecutar la consulta de acción '{0}'. Parámetros de la operación: ({1})</value>
   </data>
   <data name="CantGetObjectId" xml:space="preserve">
     <value>No pude recuperar el identificador del objeto (objectId) regresado por '{0}' de la base de datos.</value>
@@ -133,82 +133,82 @@
     <value>No pude recuperar el dato regresado por '{0}' de la base de datos.</value>
   </data>
   <data name="CantGetDataView" xml:space="preserve">
-    <value>No pude recuperar la informaciĂ³n de '{0}' mediante el objeto de acceso a datos DataView.</value>
+    <value>No pude recuperar la información de '{0}' mediante el objeto de acceso a datos DataView.</value>
   </data>
   <data name="CantGetFieldValue" xml:space="preserve">
     <value>No pude recuperar el valor del campo '{1}' del objeto de datos {0}.</value>
   </data>
   <data name="CacheRestoreRemovedObjectCallbackFails" xml:space="preserve">
-    <value>FallĂ³ la llamada de regreso (callback) del procedimiento asĂ­ncrono que actualiza el cachĂ© de datos.</value>
+    <value>Falló la llamada de regreso (callback) del procedimiento asíncrono que actualiza el caché de datos.</value>
   </data>
   <data name="InvalidCacheItemRemovedReason" xml:space="preserve">
-    <value>La razĂ³n '{0}' por la cual se removiĂ³ el elemento de la cachĂ© de datos delsistema no ha sido definida en el mĂ©todo RemovedCallback.</value>
+    <value>La razón '{0}' por la cual se removió el elemento de la caché de datos delsistema no ha sido definida en el método RemovedCallback.</value>
   </data>
   <data name="InvalidDatabaseTechnology" xml:space="preserve">
-    <value>No reconozco la tecnologĂ­a {0}, la cual estĂ¡ asignado al origen del acceso a datos del componente.</value>
+    <value>No reconozco la tecnología {0}, la cual está asignado al origen del acceso a datos del componente.</value>
   </data>
   <data name="CommitFails" xml:space="preserve">
-    <value>FallĂ³ la operaciĂ³n Commit de la transacciĂ³n debido a: {0}</value>
+    <value>Falló la operación Commit de la transacción debido a: {0}</value>
   </data>
   <data name="RollbackFails" xml:space="preserve">
-    <value>FallĂ³ la operaciĂ³n Rollback de la transacciĂ³n debido a: {0}</value>
+    <value>Falló la operación Rollback de la transacción debido a: {0}</value>
   </data>
   <data name="TransactionCommited" xml:space="preserve">
-    <value>La operaciĂ³n de 'rollback' no se puede ejecutar debido a que ya se efectuĂ³ el 'commit' de la transacciĂ³n.</value>
+    <value>La operación de 'rollback' no se puede ejecutar debido a que ya se efectuó el 'commit' de la transacción.</value>
   </data>
   <data name="TransactionAlreadyCommited" xml:space="preserve">
-    <value>La operaciĂ³n de 'commit' no se puede ejecutar de nuevo. En su lugar genere una nueva transacciĂ³n con el mĂ©todo GetTrasaction() de una instancia de DataWriteContext.</value>
+    <value>La operación de 'commit' no se puede ejecutar de nuevo. En su lugar genere una nueva transacción con el método GetTrasaction() de una instancia de DataWriteContext.</value>
   </data>
   <data name="DataContextOutOfTransaction" xml:space="preserve">
-    <value>No se ha creado una transacciĂ³n sobre el contexto.</value>
+    <value>No se ha creado una transacción sobre el contexto.</value>
   </data>
   <data name="DataContextTooManyItemsForRemove" xml:space="preserve">
-    <value>Se intentĂ³ remover del contexto mĂ¡s elementos de los que contiene.</value>
+    <value>Se intentó remover del contexto más elementos de los que contiene.</value>
   </data>
   <data name="AsynchronousCommitNotCalled" xml:space="preserve">
-    <value>TerminĂ³ el tiempo de espera de la llamada asĂ­ncrona y nunca se mandĂ³ llamar el mĂ©todo Commit() de la transacciĂ³n.</value>
+    <value>Terminó el tiempo de espera de la llamada asíncrona y nunca se mandó llamar el método Commit() de la transacción.</value>
   </data>
   <data name="ObjectIdOutOfValidBounds" xml:space="preserve">
-    <value>El id {0} obtenido para el nuevo objeto estĂ¡ fuera de los lĂ­mites establecidos por las reglas definidas para el dominio de ejecuciĂ³n.</value>
+    <value>El id {0} obtenido para el nuevo objeto está fuera de los límites establecidos por las reglas definidas para el dominio de ejecución.</value>
   </data>
   <data name="DataSourceNotDefined" xml:space="preserve">
     <value>La fuente de datos {0} no ha sido definida en la tabla DBDataSources.</value>
   </data>
   <data name="CantRegisterObjectIdFactory" xml:space="preserve">
-    <value>No pude registrar la fĂ¡brica de identificadores de objetos a travĂ©s de los servicios de remoting empleando el canal proporcionado: {0}.</value>
+    <value>No pude registrar la fábrica de identificadores de objetos a través de los servicios de remoting empleando el canal proporcionado: {0}.</value>
   </data>
   <data name="ObjectRemovedFromDataCache" xml:space="preserve">
-    <value>El elemento con identificador {0} fue removido automĂ¡ticamente del cachĂ© de datos de la aplicaciĂ³n por la causa {1}, 
+    <value>El elemento con identificador {0} fue removido automáticamente del caché de datos de la aplicación por la causa {1}, 
 debido a que el sistema operativo necesitaba los recursos de memoria que estaba utilizando (mecanismo scavenging).</value>
   </data>
   <data name="WrongQueryParametersNumber" xml:space="preserve">
-    <value>Se intentĂ³ ejecutar la consulta '{0}', pero los parĂ¡metros que se proporcionaron no coinciden en nĂºmero con los registrados en la tabla DBQueryParameters.</value>
+    <value>Se intentó ejecutar la consulta '{0}', pero los parámetros que se proporcionaron no coinciden en número con los registrados en la tabla DBQueryParameters.</value>
   </data>
   <data name="ObjectIdRuleNotSet" xml:space="preserve">
-    <value>La regla para la creaciĂ³n de identificadores de objetos (ids) del tipo {0}, no se encuentra en el archivo de configuraciĂ³n.</value>
+    <value>La regla para la creación de identificadores de objetos (ids) del tipo {0}, no se encuentra en el archivo de configuración.</value>
   </data>
   <data name="DuplicateObjectIdFactory" xml:space="preserve">
-    <value>Por cuestiones de integridad de la informaciĂ³n, sĂ³lo puede registrarse una Ăºnica fĂ¡brica de identificadores de objetos (Empiria.Data.ObjectIdFactory) en cada equipo. En este caso, otro proceso del sistema operativo registrĂ³ previamente dicha fĂ¡brica de objetos. Por favor, consulte con el personal de soporte tĂ©cnico de su organizaciĂ³n.</value>
+    <value>Por cuestiones de integridad de la información, sólo puede registrarse una única fábrica de identificadores de objetos (Empiria.Data.ObjectIdFactory) en cada equipo. En este caso, otro proceso del sistema operativo registró previamente dicha fábrica de objetos. Por favor, consulte con el personal de soporte técnico de su organización.</value>
   </data>
   <data name="CantParseDataIntegrationServer" xml:space="preserve">
-    <value>No pude construir el objeto Empiria.Security.WebServer con id = {0}. Es posible que no se encuentre instalado en el directorio de la aplicaciĂ³n el archivo de ensamblado Empiria.dll,  o bien, que no se tenga registrado ningĂºn servidor web con ese id en la base de datos de la aplicaciĂ³n.</value>
+    <value>No pude construir el objeto Empiria.Security.WebServer con id = {0}. Es posible que no se encuentre instalado en el directorio de la aplicación el archivo de ensamblado Empiria.dll,  o bien, que no se tenga registrado ningún servidor web con ese id en la base de datos de la aplicación.</value>
   </data>
   <data name="UndefinedDataPublishRule" xml:space="preserve">
-    <value>Se intentĂ³ publicar el objeto de datos con nombre '{0}' pero la regla de publicaciĂ³n no ha sido definida en el archivo de reglas del servidor origen.</value>
+    <value>Se intentó publicar el objeto de datos con nombre '{0}' pero la regla de publicación no ha sido definida en el archivo de reglas del servidor origen.</value>
   </data>
   <data name="CantCreateDataTask" xml:space="preserve">
-    <value>No pude guardar la operaciĂ³n en la cola de tareas de integraciĂ³n de datos:\n\nServidor origen: {0}\nServidor destino: {1}\nOperaciĂ³n: {2}\nParĂ¡metros: {3}\n\nFavor de avisar inmediatamente de este problema al administrador del sistema.</value>
+    <value>No pude guardar la operación en la cola de tareas de integración de datos:\n\nServidor origen: {0}\nServidor destino: {1}\nOperación: {2}\nParámetros: {3}\n\nFavor de avisar inmediatamente de este problema al administrador del sistema.</value>
   </data>
   <data name="CantLoadDataIntegrationRules" xml:space="preserve">
-    <value>No pude cargar desde el archivo las reglas de integraciĂ³n de datos . Por favor avise cuanto antes de este problema al administrador del sistema.</value>
+    <value>No pude cargar desde el archivo las reglas de integración de datos . Por favor avise cuanto antes de este problema al administrador del sistema.</value>
   </data>
   <data name="CantDoPostExecutionTask" xml:space="preserve">
-    <value>No pude ejecutar la post acciĂ³n de la operaciĂ³n de datos '{0}' con los parĂ¡metros siguientes: '{1}'. Es probable que exista un problema en las reglas del integrador de datos. Favor de comunicar imediatamente de este problema al administrador del sistema.</value>
+    <value>No pude ejecutar la post acción de la operación de datos '{0}' con los parámetros siguientes: '{1}'. Es probable que exista un problema en las reglas del integrador de datos. Favor de comunicar imediatamente de este problema al administrador del sistema.</value>
   </data>
   <data name="DuplicateDataIntegrationEngine" xml:space="preserve">
-    <value>Por cuestiones de integridad de la informaciĂ³n, sĂ³lo puede registrarse una Ăºnica mĂ¡quina de integraciĂ³n de datos (Empiria.Data.Integration.DataIntegrationEngine) en cada equipo. En este caso, otro proceso del sistema operativo registrĂ³ previamente dicha mĂ¡quina. Por favor, consulte con el personal de soporte tĂ©cnico de su organizaciĂ³n.</value>
+    <value>Por cuestiones de integridad de la información, sólo puede registrarse una única máquina de integración de datos (Empiria.Data.Integration.DataIntegrationEngine) en cada equipo. En este caso, otro proceso del sistema operativo registró previamente dicha máquina. Por favor, consulte con el personal de soporte técnico de su organización.</value>
   </data>
   <data name="DataIntegrationWSProxyException" xml:space="preserve">
-    <value>OcurriĂ³ un problema al intentar ejecutar la operaciĂ³n de integraciĂ³n de datos '{0}' a travĂ©s de un proxy al servidor de servicios web '{1}'.</value>
+    <value>Ocurrió un problema al intentar ejecutar la operación de integración de datos '{0}' a través de un proxy al servidor de servicios web '{1}'.</value>
   </data>
 </root>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="InvalidHttpMethod" xml:space="preserve">
-    <value>Se intentĂ³ autentificar a un usuario mediante un mĂ©todo distinto a POST lo cual no estĂ¡ autorizado:\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al Ă¡rea de sistemas de su empresa o a Ă“ntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=InvalidAuthenticationClient</value>
+    <value>Se intentó autentificar a un usuario mediante un método distinto a POST lo cual no está autorizado:\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al área de sistemas de su empresa o a Óntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=InvalidAuthenticationClient</value>
   </data>
   <data name="InvalidRequestPath" xml:space="preserve">
-    <value>Se intentĂ³ acceder al sistema desde una pĂ¡gina o sitio distinto al autorizado.</value>
+    <value>Se intentó acceder al sistema desde una página o sitio distinto al autorizado.</value>
   </data>
   <data name="CantEncryptString" xml:space="preserve">
     <value>No pude efectuar el cifrado de la cadena de texto.</value>
@@ -130,39 +130,39 @@
     <value>No pude descifrar la cadena de texto.</value>
   </data>
   <data name="EncryptedObjectWasAltered" xml:space="preserve">
-    <value>El objeto cifrado ha sido alterado intencionalmente por un programa desconocido o por una persona.\n\nMUY IMPORTANTE: Este error tĂ­picamente representa un problema de seguridad muy grave.\nPor favor reporte el problema inmediatamente al Ă¡rea de sistemas de su empresa o a Ă“ntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=cryptedObjectWasAltered</value>
+    <value>El objeto cifrado ha sido alterado intencionalmente por un programa desconocido o por una persona.\n\nMUY IMPORTANTE: Este error típicamente representa un problema de seguridad muy grave.\nPor favor reporte el problema inmediatamente al área de sistemas de su empresa o a Óntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=cryptedObjectWasAltered</value>
   </data>
   <data name="InvalidAuthenticationClient" xml:space="preserve">
-    <value>Se intentĂ³ autentificar a un usuario desde una aplicaciĂ³n o sitio web no autorizado:\n{0}\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al Ă¡rea de sistemas de su empresa o a Ă“ntica en\nhttp://empiria.ontica.org/security/securityattack.asp?id=InvalidAuthenticationClient</value>
+    <value>Se intentó autentificar a un usuario desde una aplicación o sitio web no autorizado:\n{0}\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al área de sistemas de su empresa o a Óntica en\nhttp://empiria.ontica.org/security/securityattack.asp?id=InvalidAuthenticationClient</value>
   </data>
   <data name="RequireExecuteMethod" xml:space="preserve">
-    <value>No cuenta con los permisos necesarios para ejecutar la operaciĂ³n {0} sobre el dominio de aplicaciĂ³n {1}.</value>
+    <value>No cuenta con los permisos necesarios para ejecutar la operación {0} sobre el dominio de aplicación {1}.</value>
   </data>
   <data name="UnauthenticatedIdentity" xml:space="preserve">
-    <value>No puedo construir el objeto EmpiriaPrincipal debido a que el usuario no estĂ¡ autentificado.</value>
+    <value>No puedo construir el objeto EmpiriaPrincipal debido a que el usuario no está autentificado.</value>
   </data>
   <data name="WrongAuthentication" xml:space="preserve">
-    <value>La autentificaciĂ³n del usuario no se efectuĂ³ correctamente, razĂ³n por la cual no puedo continuar.</value>
+    <value>La autentificación del usuario no se efectuó correctamente, razón por la cual no puedo continuar.</value>
   </data>
   <data name="CantCloseSession" xml:space="preserve">
-    <value>No pude cerrar adecuadamente la sesiĂ³n de trabajo con identificador {0}.</value>
+    <value>No pude cerrar adecuadamente la sesión de trabajo con identificador {0}.</value>
   </data>
   <data name="CantChangePasswordOnUnauthenticatedUser" xml:space="preserve">
-    <value>Se intentĂ³ modificar el password del usuario con identificador {0}, pero el mismo no estaba autentificado en ese momento:\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al Ă¡rea de sistemas de su empresa o a Ă“ntica en \nhttp://empiria.ontica.org/security/securityattack.asp?id=CantChangePasswordOnUnauthenticatedUser</value>
+    <value>Se intentó modificar el password del usuario con identificador {0}, pero el mismo no estaba autentificado en ese momento:\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al área de sistemas de su empresa o a Óntica en \nhttp://empiria.ontica.org/security/securityattack.asp?id=CantChangePasswordOnUnauthenticatedUser</value>
   </data>
   <data name="CantVerifyPasswordOnUnauthenticatedUser" xml:space="preserve">
-    <value>Se intentĂ³ verificar la validez del password de acceso del usuario con identificador {0}, pero el mismo no estaba autentificado en ese momento:\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al Ă¡rea de sistemas de su empresa o a Ă“ntica en \nhttp://empiria.ontica.org/security/securityattack.asp?id=CantVerifyPasswordOnUnauthenticatedUser</value>
+    <value>Se intentó verificar la validez del password de acceso del usuario con identificador {0}, pero el mismo no estaba autentificado en ese momento:\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al área de sistemas de su empresa o a Óntica en \nhttp://empiria.ontica.org/security/securityattack.asp?id=CantVerifyPasswordOnUnauthenticatedUser</value>
   </data>
   <data name="InvalidSingleSignOnToken" xml:space="preserve">
-    <value>Se intentĂ³ ejecutar una operaciĂ³n dentro del sistema que no pasĂ³ la verificaciĂ³n de la firma electrĂ³nica.\n\nMUY IMPORTANTE: Este error tĂ­picamente representa un problema de seguridad muy grave.\nPor favor reporte el problema inmediatamente al Ă¡rea de sistemas de su empresa o a Ă“ntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=InvalidSingleSignOnToken</value>
+    <value>Se intentó ejecutar una operación dentro del sistema que no pasó la verificación de la firma electrónica.\n\nMUY IMPORTANTE: Este error típicamente representa un problema de seguridad muy grave.\nPor favor reporte el problema inmediatamente al área de sistemas de su empresa o a Óntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=InvalidSingleSignOnToken</value>
   </data>
   <data name="GuestUserNotFound" xml:space="preserve">
     <value>El usuario 'Invitado' no ha sido definido en el sistema.</value>
   </data>
   <data name="WrongImpersonationToken" xml:space="preserve">
-    <value>Se intentĂ³ utilizar un token de autentificaciĂ³n que no ha sido definido en el sistema.\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad muy grave.\nPor favor reporte el problema inmediatamente al Ă¡rea de sistemas de su empresa o a Ă“ntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=InvalidImpersonationToken</value>
+    <value>Se intentó utilizar un token de autentificación que no ha sido definido en el sistema.\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad muy grave.\nPor favor reporte el problema inmediatamente al área de sistemas de su empresa o a Óntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=InvalidImpersonationToken</value>
   </data>
   <data name="InvalidProtectionMode" xml:space="preserve">
-    <value>No puedo manejar el modo de protecciĂ³n '{0}' empleado en esta operaciĂ³n.</value>
+    <value>No puedo manejar el modo de protección '{0}' empleado en esta operación.</value>
   </data>
 </root>

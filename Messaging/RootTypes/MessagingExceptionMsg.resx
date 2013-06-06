@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -121,12 +121,12 @@
     <value>No puedo enviar el mensaje al log de eventos de Windows.</value>
   </data>
   <data name="EventLogNameNotFound" xml:space="preserve">
-    <value>No pude leer del archivo de configuraciĂ³n del sistema el nombre del log de eventos. \n\nFavor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuraciĂ³n del servidor.</value>
+    <value>No pude leer del archivo de configuración del sistema el nombre del log de eventos. \n\nFavor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuración del servidor.</value>
   </data>
   <data name="InvalidDefaultQueueTypeName" xml:space="preserve">
-    <value>No reconozco el tipo {0} como una clase o tipo de datos vĂ¡lido que represente a una cola de mensajes.</value>
+    <value>No reconozco el tipo {0} como una clase o tipo de datos válido que represente a una cola de mensajes.</value>
   </data>
   <data name="InvalidWindowsEventLog" xml:space="preserve">
-    <value>El nombre del log de eventos {0} especificado en el archivo de configuraciĂ³n no es correcto, o bien, el log de eventos {0} no ha sido configurado correctamente.\n\nFavor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuraciĂ³n del servidor.</value>
+    <value>El nombre del log de eventos {0} especificado en el archivo de configuración no es correcto, o bien, el log de eventos {0} no ha sido configurado correctamente.\n\nFavor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuración del servidor.</value>
   </data>
 </root>
