@@ -43,6 +43,13 @@ namespace Empiria.Ontology {
       return DataReader.GetDataTable(dataOp);
     }
 
+    static internal ObjectList<KeyValuePair> GetKeyValueListItems(GeneralList list) {
+      DataOperation dataOp = DataOperation.Parse("qryEOSKeyValueList", list.NamedKey);
+      DataTable table = DataReader.GetDataTable(dataOp);
+
+      return new ObjectList<KeyValuePair>((x) => KeyValuePair.Parse(x), table);
+    }
+
     static internal int GetNextObjectId(ObjectTypeInfo objectTypeInfo) {
       return DataWriter.CreateId(objectTypeInfo.DataSource);
     }

@@ -74,6 +74,10 @@ namespace Empiria {
       return list;
     }
 
+    public ObjectList<KeyValuePair> GetKeyValueList() {
+      return KeyValuePair.GetList(this.NamedKey);
+    }
+
     #endregion Public methods
 
   } // class GeneralList

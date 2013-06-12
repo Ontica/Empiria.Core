@@ -8,6 +8,7 @@
 *  Summary   : Static library with general purpose data read operations.                                     *
 *                                                                                                            *
 **************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+using System;
 using System.Data;
 
 namespace Empiria.Data {
@@ -17,12 +18,122 @@ namespace Empiria.Data {
 
     #region Public methods
 
+    static public string BuildSqlAndFilter(string firstFilter, string secondFilter, params string[] otherFilters) {
+      string filter = String.Empty;
+
+      firstFilter = FormatFilterString(firstFilter);
+      secondFilter = FormatFilterString(secondFilter);
+
+      if (firstFilter.Length != 0 && secondFilter.Length != 0) {
+        filter = firstFilter + " AND " + secondFilter;
+      } else if (firstFilter.Length != 0 && secondFilter.Length == 0) {
+        filter = firstFilter;
+      } else if (firstFilter.Length == 0 && secondFilter.Length != 0) {
+        filter = secondFilter;
+      } else if (firstFilter.Length == 0 && secondFilter.Length == 0) {
+        filter = string.Empty;
+      } else {
+        throw new NotImplementedException();		// Bad code exception
+      }
+
+      for (int i = 0; i < otherFilters.Length; i++) {
+        otherFilters[i] = FormatFilterString(otherFilters[i]);
+        if (otherFilters[i].Length == 0) {
+          continue;
+        }
+        if (filter.Length != 0) {
+          filter += " AND ";
+        }
+        filter += otherFilters[i];
+      }
+      return filter;
+    }
+
+    static public string BuildSqlInSetClause(string fieldName, int[] values) {
+      if (values == null || values.Length == 0) {
+        return String.Empty;
+      }
+      if (values.Length == 1) {
+        return fieldName + " = " + values[0];
+      }
+      string sql = String.Empty;
+      foreach (int value in values) {
+        if (sql.Length != 0) {
+          sql += ",";
+        }
+        sql += value;
+      }
+      return fieldName + " IN (" + sql + ")";
+    }
+
+    static public string BuildSqlInSetClause(string fieldName, string[] values) {
+      if (values == null || values.Length == 0) {
+        return String.Empty;
+      }
+      if (values.Length == 1) {
+        return fieldName + " = '" + values[0] + "'";
+      }
+      string sql = String.Empty;
+      foreach (string value in values) {
+        if (sql.Length != 0) {
+          sql += ",";
+        }
+        sql += "'" + value + "'";
+      }
+      return fieldName + " IN (" + sql + ")";
+    }
+
+    static public string BuildSqlOrFilter(string firstFilter, string secondFilter, params string[] otherFilters) {
+      string filter = String.Empty;
+
+      firstFilter = FormatFilterString(firstFilter);
+      secondFilter = FormatFilterString(secondFilter);
+
+      if (firstFilter.Length != 0 && secondFilter.Length != 0) {
+        filter = firstFilter + " OR " + secondFilter;
+      } else if (firstFilter.Length != 0 && secondFilter.Length == 0) {
+        filter = firstFilter;
+      } else if (firstFilter.Length == 0 && secondFilter.Length != 0) {
+        filter = secondFilter;
+      } else if (firstFilter.Length == 0 && secondFilter.Length == 0) {
+        filter = string.Empty;
+      } else {
+        throw new NotImplementedException();		// Bad code exception
+      }
+
+      for (int i = 0; i < otherFilters.Length; i++) {
+        otherFilters[i] = FormatFilterString(otherFilters[i]);
+        if (otherFilters[i].Length == 0) {
+          continue;
+        }
+        if (filter.Length != 0) {
+          filter += " OR ";
+        }
+        filter += otherFilters[i];
+      }
+      return filter;
+    }
+
     static public DataOperation CountEntities(string sourceName) {
       return DataOperation.Parse("@getCountEntities", sourceName);
     }
 
     static public DataOperation CountEntitiesFiltered(string sourceName, string filterExpression) {
       return DataOperation.Parse("@getCountEntitiesFiltered", sourceName, filterExpression);
+    }
+
+    static public string FormatFilterString(string filter) {
+      string temp = String.IsNullOrWhiteSpace(filter) ? String.Empty : filter;
+
+      temp = temp.Trim();
+      if (temp.Length != 0 && !temp.StartsWith("(")) {
+        temp = "(" + temp + ")";
+      }
+      return temp;
+    }
+
+    static public string FormatSortString(string sort) {
+      return String.IsNullOrWhiteSpace(sort) ? String.Empty : sort;
     }
 
     static public DataTable GetEntities(string sourceName) {
@@ -67,8 +178,6 @@ namespace Empiria.Data {
                                               string filterExpression) {
       DataOperation operation = DataOperation.Parse("@qryEntitiesJoinedFiltered", sourceName, joinedSourceName,
                                                     sourceJoinField, joinedTargetField, filterExpression);
-
-      //Empiria.Messaging.Publisher.Publish(operation.GetSourceFull());
 
       return DataReader.GetDataTable(operation);
     }

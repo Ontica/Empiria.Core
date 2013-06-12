@@ -168,6 +168,7 @@
     <Compile Include="DataTypes\Address.cs" />
     <Compile Include="Contacts\Organization.cs" />
     <Compile Include="DataTypes\InterestRateType.cs" />
+    <Compile Include="RootTypes\KeyValuePair.cs" />
     <Compile Include="RootTypes\ObjectListComparer.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />
     <Compile Include="RootTypes\TimePeriod.cs" />

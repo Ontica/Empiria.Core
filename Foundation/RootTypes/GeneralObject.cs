@@ -25,8 +25,11 @@ namespace Empiria {
 
     private string namedKey = String.Empty;
     private string name = String.Empty;
+    private string value = String.Empty;
     private string description = String.Empty;
     private string keywords = String.Empty;
+    private int index = -1;
+    private int referenceId = -1;
     private Contact postedBy = Person.Empty;
     private int replacedById = 0;
     private GeneralObjectStatus status = GeneralObjectStatus.Active;
@@ -71,10 +74,26 @@ namespace Empiria {
       set { namedKey = EmpiriaString.TrimAll(value); }
     }
 
+    protected string Value {
+      get { return this.value; }
+      set { this.value = EmpiriaString.TrimAll(value); }
+    }
+
+    protected int Index {
+      get { return index; }
+      set { index = value; }
+    }
+
+    protected int ReferenceId {
+      get { return referenceId; }
+      set { referenceId = value; }
+    }
+
     protected Contact PostedBy {
       get { return postedBy; }
       set { postedBy = value; }
     }
+
 
     protected int ReplacedById {
       get { return replacedById; }
@@ -114,8 +133,11 @@ namespace Empiria {
     protected override void ImplementsLoadObjectData(DataRow row) {
       this.namedKey = (string) row["GeneralObjectNamedKey"];
       this.name = (string) row["GeneralObjectName"];
+      this.value = (string) row["GeneralObjectValue"];
       this.description = (string) row["GeneralObjectDescription"];
       this.keywords = (string) row["GeneralObjectKeywords"];
+      this.index = (int) row["GeneralObjectIndex"];
+      this.referenceId = (int) row["GeneralObjectReferenceId"];
       this.postedBy = Contact.Parse((int) row["PostedById"]);
       this.replacedById = (int) row["ReplacedById"];
       this.status = (GeneralObjectStatus) Convert.ToChar(row["GeneralObjectStatus"]);
