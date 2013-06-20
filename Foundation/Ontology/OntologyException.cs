@@ -30,6 +30,7 @@ namespace Empiria.Ontology {
       TypeRelationInfoNotFound,
       TypeRelationInfoDataTypeNotMatch,
       UndefinedTypeInfoFamily,
+      TryToParseZeroObjectId,
     }
 
     static private string resourceBaseName = "Empiria.Ontology.OntologyExceptionMsg";

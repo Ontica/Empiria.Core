@@ -64,6 +64,10 @@ namespace Empiria {
     }
 
     static protected T Parse<T>(string typeName, int id) where T : BaseObject {
+      if (id == 0) {
+        Assertion.Assert(id != 0, new OntologyException(OntologyException.Msg.TryToParseZeroObjectId, 
+                                                        typeName));
+      }
       T item = cache.GetItem(typeName, id) as T;
       if (item != null) {
         return item;
@@ -108,6 +112,10 @@ namespace Empiria {
     }
 
     static protected T ParseFromBelow<T>(string typeName, int id) where T : BaseObject {
+      if (id == 0) {
+        Assertion.Assert(id != 0, new OntologyException(OntologyException.Msg.TryToParseZeroObjectId,
+                                                        typeName));
+      }
       Tuple<ObjectTypeInfo, DataRow> objectData = GetBaseObjectData(typeName, id);
 
       return BaseObject.CreateBaseObject<T>(objectData.Item1, objectData.Item2);

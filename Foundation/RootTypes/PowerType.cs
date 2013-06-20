@@ -77,6 +77,12 @@ namespace Empiria {
       return powerTypeInfo.GetLinks<U>(partitionedType, name);
     }
 
+    protected ObjectList<U> GetTypeLinks<U>(string linkName) where U : MetaModelType {
+      TypeAssociationInfo association = this.GetAssociation(linkName);
+
+      return association.GetTypeLinks<U>(this);
+    }
+
     #endregion Public methods
 
   } // class PowerType

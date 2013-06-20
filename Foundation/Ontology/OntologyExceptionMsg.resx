@@ -150,4 +150,7 @@
   <data name="RelationMemberNameNotFound" xml:space="preserve">
     <value>El tipo '{0}' no tiene definida una relación con el nombre '{1}'.</value>
   </data>
+  <data name="TryToParseZeroObjectId" xml:space="preserve">
+    <value>An attempt was made to parse an object with id equals to zero for type {}. For new objects please use a type constructor instead.</value>
+  </data>
 </root>

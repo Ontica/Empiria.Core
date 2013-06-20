@@ -136,6 +136,27 @@ namespace Empiria.Ontology {
       }
     }
 
+    // MetaModelType -> MetaModelType relation
+    internal ObjectList<T> GetTypeLinks<T>(MetaModelType source) where T : MetaModelType {
+      DataTable table = OntologyData.GetObjectLinksTable(this, source);
+
+      ObjectList<T> list = new ObjectList<T>(table.Rows.Count);
+
+      if (this.TargetType.TypeFamily == MetaModelTypeFamily.PowerType) {
+        Type powerTypeSystemType = this.TargetType.UnderlyingSystemType;
+        for (int i = 0; i < table.Rows.Count; i++) {
+          T item = (T) ObjectFactory.ParseObject(powerTypeSystemType, (int) table.Rows[i][this.TargetType.IdFieldName]);
+          list.Add(item);
+        }
+        return list;
+      } else {
+        for (int i = 0; i < table.Rows.Count; i++) {
+          list.Add(MetaModelType.Parse<T>((int) table.Rows[i][this.TargetType.IdFieldName]));
+        }
+        return list;
+      }
+    }
+
     internal ObjectList<T> GetTypeRelationLinks<T>(BaseObject source) where T : TypeRelationInfo {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 

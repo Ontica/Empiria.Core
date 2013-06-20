@@ -70,22 +70,12 @@ namespace Empiria.Ontology {
       return DataReader.GetDataView(DataOperation.Parse("qryEOSObjectAttributes", metaModelType.Name, instance.Id));
     }
 
-    //static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, MetaModelType targetType, IStorable source) {
-    //  string filter = GetTableIdFieldEqualsTo(typeRelation.DataSource, typeRelation.TypeRelationIdFieldName,
-    //                                          typeRelation.Id);
-    //  filter += " AND ";
-    //  filter += GetTableIdFieldEqualsTo(typeRelation.DataSource, typeRelation.SourceIdFieldName, source.Id);
-
-    //  return GeneralDataOperations.GetEntitiesJoined(targetType.DataSource, typeRelation.DataSource,
-    //                                                 targetType.IdFieldName, typeRelation.TargetIdFieldName,
-    //                                                 filter);
-    //}
-
     static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IStorable source) {
       string filter = GetTableIdFieldEqualsTo(typeRelation.DataSource, typeRelation.TypeRelationIdFieldName,
                                               typeRelation.Id);
       filter += " AND ";
       filter += GetTableIdFieldEqualsTo(typeRelation.DataSource, typeRelation.SourceIdFieldName, source.Id);
+      //string sortExpression = GetFieldName(typeRelation.DataSource, "LinkIndex");
 
       return GeneralDataOperations.GetEntitiesJoined(typeRelation.TargetType.DataSource, typeRelation.DataSource,
                                                      typeRelation.TargetType.IdFieldName, typeRelation.TargetIdFieldName,
