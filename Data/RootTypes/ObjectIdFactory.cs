@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Retrives and holds the objects unique identificators (object ids) per domain.                 *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -65,7 +65,7 @@ namespace Empiria.Data {
       try {
         if (mutex.WaitOne()) {
           string hashCode = sourceName + "." + typeId.ToString();
-          hashCode = hashCode.ToLowerInvariant();
+          hashCode = hashCode.ToUpperInvariant();
           ObjectIdRule rule = null;
           if (!loadedRules.TryGetValue(hashCode, out rule)) {
             rule = ObjectIdRule.Parse(sourceName, typeId);

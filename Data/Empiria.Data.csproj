@@ -92,7 +92,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
-    <DebugSymbols>false</DebugSymbols>
+    <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
     <NoWarn>
@@ -102,7 +102,7 @@
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -116,7 +116,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
-    <DebugSymbols>false</DebugSymbols>
+    <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
     <NoWarn>0618</NoWarn>
@@ -125,7 +125,7 @@
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -176,6 +176,7 @@
     <Reference Include="System.Web">
       <Name>System.Web</Name>
     </Reference>
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
@@ -193,7 +194,7 @@
     <Compile Include="Integration\DataIntegratorWSProxy.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Modeler\ZZDataObject.cs" />
+    <Compile Include="RootTypes\DataObject.cs" />
     <Compile Include="RootTypes\CachedObject.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -201,6 +202,7 @@
     <Compile Include="Handlers\MySqlMethods.cs" />
     <Compile Include="Integration\DataIntegratorRule.cs" />
     <Compile Include="Integration\DataIntegrationEngine.cs" />
+    <Compile Include="RootTypes\DataConverter.cs" />
     <Compile Include="RootTypes\GeneralDataOperations.cs" />
     <Compile Include="RootTypes\DataCache.cs">
       <SubType>Code</SubType>
@@ -214,7 +216,7 @@
     <Compile Include="RootTypes\DataReader.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Modeler\ZZDataSource.cs">
+    <Compile Include="RootTypes\DataSource.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RootTypes\DataWriter.cs">
@@ -265,6 +267,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Modeler\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>

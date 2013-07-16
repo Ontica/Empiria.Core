@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : This type is a wrapper of a static hash table that contains loaded MySql query parameters.    *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Collections.Generic;
 using System.Data;

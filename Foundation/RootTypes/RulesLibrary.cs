@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Represents a collection of business rules belonging to a named library.                       *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System.Data;
 
 using Empiria.Ontology;

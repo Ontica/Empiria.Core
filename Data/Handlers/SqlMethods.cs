@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : static internal class to read data stored in SQL Server® databases.                           *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -44,6 +44,7 @@ namespace Empiria.Data.Handlers {
         }
         result = dataAdapter.Update(source);
         transaction.Commit();
+        dataAdapter.Dispose();
       }
       return result;
     }
@@ -62,9 +63,10 @@ namespace Empiria.Data.Handlers {
         operation.FillParameters(command);
         SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
         dataAdapter.Fill(dataTable);
+        dataAdapter.Dispose();
         return dataTable.Rows.Count;
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -88,7 +90,7 @@ namespace Empiria.Data.Handlers {
         }
         affectedRows = command.ExecuteNonQuery();
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantExecuteActionQuery, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
                                        operation.SourceName, operation.ParametersToString());
       } finally {
         command.Parameters.Clear();
@@ -110,7 +112,7 @@ namespace Empiria.Data.Handlers {
         affectedRows = command.ExecuteNonQuery();
         command.Parameters.Clear();
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantExecuteActionQuery, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
                                        operation.SourceName, operation.ParametersToString());
       } finally {
         command.Parameters.Clear();
@@ -131,7 +133,7 @@ namespace Empiria.Data.Handlers {
         affectedRows = command.ExecuteNonQuery();
         command.Parameters.Clear();
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantExecuteActionQuery, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
                                        operation.SourceName, operation.ParametersToString());
       } finally {
         command.Parameters.Clear();
@@ -172,7 +174,7 @@ namespace Empiria.Data.Handlers {
         connection.Open();
         dataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataReader, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataReader, exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         //Don't dipose the connection because this method returns a DataReader.
@@ -194,13 +196,14 @@ namespace Empiria.Data.Handlers {
         operation.FillParameters(command);
         SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
         dataAdapter.Fill(dataTable);
+        dataAdapter.Dispose();
         if (dataTable.Rows.Count != 0) {
           return dataTable.Rows[0];
         } else {
           return null;
         }
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -221,8 +224,9 @@ namespace Empiria.Data.Handlers {
         operation.FillParameters(command);
         SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
         dataAdapter.Fill(dataTable);
+        dataAdapter.Dispose();
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -244,10 +248,10 @@ namespace Empiria.Data.Handlers {
         operation.FillParameters(command);
         SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
         dataAdapter.Fill(dataTable);
-
+        dataAdapter.Dispose();
         return new DataView(dataTable, filter, sort, DataViewRowState.CurrentRows);
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataView, exception, operation.SourceName, filter, sort);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataView, exception, operation.SourceName, filter, sort);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -272,7 +276,7 @@ namespace Empiria.Data.Handlers {
           fieldValue = dataReader[fieldName];
         }
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetFieldValue,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetFieldValue,
                                        exception, operation.SourceName, fieldName);
       } finally {
         command.Parameters.Clear();
@@ -284,7 +288,6 @@ namespace Empiria.Data.Handlers {
     static internal object GetScalar(DataOperation operation) {
       SqlConnection connection = new SqlConnection(operation.DataSource.Source);
       SqlCommand command = new SqlCommand(operation.SourceName, connection);
-      object scalar = System.DBNull.Value;
 
       try {
         command.CommandType = operation.CommandType;
@@ -293,14 +296,13 @@ namespace Empiria.Data.Handlers {
         }
         operation.FillParameters(command);
         connection.Open();
-        scalar = command.ExecuteScalar();
+        return command.ExecuteScalar();
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetScalar, exception, operation.SourceName);
-      } finally {
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetScalar, exception, operation.SourceName);
+      } finally {        
         command.Parameters.Clear();
         connection.Dispose();
       }
-      return scalar;
     }
 
     #endregion Internal methods

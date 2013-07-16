@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Class that represents an ontology type association definition.                                *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 
@@ -63,10 +63,24 @@ namespace Empiria.Ontology {
 
     #region Public methods
 
-    internal T GetLink<T>(BaseObject source) where T : BaseObject {
-      DataRow dataRow = OntologyData.GetObjectLinkDataRow(this, source);
+    internal T GetLink<T>(BaseObject source, T defaultValue = null) where T : BaseObject {
+      DataRow row = OntologyData.GetObjectLinkDataRow(this, source);
 
-      return BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, dataRow);
+      if (row != null) {
+        return BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, row);
+      } else {
+        return defaultValue;
+      }
+    }
+
+    internal T GetLink<T>(ObjectTypeInfo source, T defaultValue = null) where T : BaseObject {
+      DataRow row = OntologyData.GetObjectLinkDataRow(this, source);
+
+      if (row != null) {
+        return BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, row);
+      } else {
+        return defaultValue;
+      }
     }
 
     internal ObjectList<T> GetLinks<T>(BaseObject source) where T : BaseObject {
@@ -102,6 +116,7 @@ namespace Empiria.Ontology {
       return list;
     }
 
+    // Object -> Object relation
     internal ObjectList<T> GetLinks<T>(BaseObject source, Predicate<T> predicate) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
@@ -116,6 +131,7 @@ namespace Empiria.Ontology {
       return list;
     }
 
+    // Object -> MetaModelType relation
     internal ObjectList<T> GetTypeLinks<T>(BaseObject source) where T : MetaModelType {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
@@ -123,14 +139,14 @@ namespace Empiria.Ontology {
 
       if (this.TargetType.TypeFamily == MetaModelTypeFamily.PowerType) {
         Type powerTypeSystemType = this.TargetType.UnderlyingSystemType;
-        for (int i = 0; i < table.Rows.Count; i++) {
-          T item = (T) ObjectFactory.ParseObject(powerTypeSystemType, (int) table.Rows[i][this.TargetType.IdFieldName]);
+        foreach (DataRow row in table.Rows) {
+          T item = (T) ObjectFactory.ParseObject(powerTypeSystemType, (int) row[this.TargetType.IdFieldName]);
           list.Add(item);
         }
         return list;
       } else {
-        for (int i = 0; i < table.Rows.Count; i++) {
-          list.Add(MetaModelType.Parse<T>((int) table.Rows[i][this.TargetType.IdFieldName]));
+        foreach (DataRow row in table.Rows) {
+          list.Add(MetaModelType.Parse<T>((int) row[this.TargetType.IdFieldName]));
         }
         return list;
       }

@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Proxy type that allows communication to the user web application.                             *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 
 using Empiria.Security;
 

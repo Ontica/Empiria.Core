@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Represents a generic named sortable list of items of specific reference type.                 *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Collections;
 using System.Collections.Generic;

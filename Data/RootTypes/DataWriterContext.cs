@@ -8,7 +8,7 @@
 *  Summary   : Represents a context for run transactional and non transactional data operations in synchro-  *
 *              nous or asynchronous mode. Instances are returned by the DataWriter.CreateContext() method.   *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Collections.Generic;
 using System.Data;

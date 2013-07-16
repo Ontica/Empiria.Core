@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Sealed class that represents an ontology type attribute definition.                           *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 

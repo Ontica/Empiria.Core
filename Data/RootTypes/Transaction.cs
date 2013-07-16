@@ -8,7 +8,7 @@
 *  Summary   : Allows the execution of data write operations in a transactional mode. Instances are created  *
 *              using the method BeginTransaction on a DataWriterContext object.                              *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Collections;
 using System.Data;
@@ -255,7 +255,7 @@ namespace Empiria.Data {
         } catch (Exception innerException) {
           Empiria.Messaging.Message message = new Empiria.Messaging.Message(innerException);
           Empiria.Messaging.Publisher.Publish(message);
-          throw innerException;
+          throw;
         }// try
       } // if
     }

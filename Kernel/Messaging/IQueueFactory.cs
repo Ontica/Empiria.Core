@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Separated interface that represents a messaging queue factory.                                *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 
 namespace Empiria.Messaging {
 

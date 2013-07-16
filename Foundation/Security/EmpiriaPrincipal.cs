@@ -9,7 +9,7 @@
 *              framework code is running, including that user's identity (EmpiriaIdentity) and any domain    *
 *              roles to which they belong. This class can't be derived.                                      *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Security.Principal;
 

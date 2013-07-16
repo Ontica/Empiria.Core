@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Represents a stored key-value pair that can be used as list items.                            *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 

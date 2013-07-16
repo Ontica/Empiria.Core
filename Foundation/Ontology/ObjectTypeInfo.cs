@@ -7,7 +7,8 @@
 *                                                                                                            *
 *  Summary   : Represents an object type definition.                                                         *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+using System.Collections.Generic;
 using System.Data;
 
 namespace Empiria.Ontology {
@@ -46,20 +47,20 @@ namespace Empiria.Ontology {
 
     #region Public methods
 
-    public TypeAssociationInfo GetAssociation(int id) {
-      return base.GetRelation<TypeAssociationInfo>(id);
+    public TypeAssociationInfo GetAssociationInfo(int id) {
+      return base.GetRelationInfo<TypeAssociationInfo>(id);
     }
 
-    public TypeAssociationInfo GetAssociation(string name) {
-      return base.GetRelation<TypeAssociationInfo>(name);
+    public TypeAssociationInfo GetAssociationInfo(string name) {
+      return base.GetRelationInfo<TypeAssociationInfo>(name);
     }
 
-    public TypeAttributeInfo GetAttribute(int id) {
-      return base.GetRelation<TypeAttributeInfo>(id);
+    public TypeAttributeInfo GetAttributeInfo(int id) {
+      return base.GetRelationInfo<TypeAttributeInfo>(id);
     }
 
-    public TypeAttributeInfo GetAttribute(string name) {
-      return base.GetRelation<TypeAttributeInfo>(name);
+    public TypeAttributeInfo GetAttributeInfo(string name) {
+      return base.GetRelationInfo<TypeAttributeInfo>(name);
     }
 
     public TypeMethodInfo[] GetMethods() {

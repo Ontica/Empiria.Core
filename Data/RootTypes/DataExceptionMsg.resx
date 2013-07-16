@@ -117,25 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CantGetDataReader" xml:space="preserve">
+  <data name="CannotGetDataReader" xml:space="preserve">
     <value>No pude recuperar la información de '{0}' mediante el objeto de acceso a datos DataReader.</value>
   </data>
-  <data name="CantGetDataTable" xml:space="preserve">
+  <data name="CannotGetDataTable" xml:space="preserve">
     <value>No pude recuperar la información de '{0}' mediante el objeto de acceso a datos DataTable.</value>
   </data>
-  <data name="CantExecuteActionQuery" xml:space="preserve">
+  <data name="CannotExecuteActionQuery" xml:space="preserve">
     <value>No pude ejecutar la consulta de acción '{0}'. Parámetros de la operación: ({1})</value>
   </data>
-  <data name="CantGetObjectId" xml:space="preserve">
+  <data name="CannotGetObjectId" xml:space="preserve">
     <value>No pude recuperar el identificador del objeto (objectId) regresado por '{0}' de la base de datos.</value>
   </data>
-  <data name="CantGetScalar" xml:space="preserve">
+  <data name="CannotGetScalar" xml:space="preserve">
     <value>No pude recuperar el dato regresado por '{0}' de la base de datos.</value>
   </data>
-  <data name="CantGetDataView" xml:space="preserve">
+  <data name="CannotGetDataView" xml:space="preserve">
     <value>No pude recuperar la información de '{0}' mediante el objeto de acceso a datos DataView.</value>
   </data>
-  <data name="CantGetFieldValue" xml:space="preserve">
+  <data name="CannotGetFieldValue" xml:space="preserve">
     <value>No pude recuperar el valor del campo '{1}' del objeto de datos {0}.</value>
   </data>
   <data name="CacheRestoreRemovedObjectCallbackFails" xml:space="preserve">
@@ -174,7 +174,7 @@
   <data name="DataSourceNotDefined" xml:space="preserve">
     <value>La fuente de datos {0} no ha sido definida en la tabla DBDataSources.</value>
   </data>
-  <data name="CantRegisterObjectIdFactory" xml:space="preserve">
+  <data name="CannotRegisterObjectIdFactory" xml:space="preserve">
     <value>No pude registrar la fábrica de identificadores de objetos a través de los servicios de remoting empleando el canal proporcionado: {0}.</value>
   </data>
   <data name="ObjectRemovedFromDataCache" xml:space="preserve">
@@ -190,19 +190,19 @@ debido a que el sistema operativo necesitaba los recursos de memoria que estaba 
   <data name="DuplicateObjectIdFactory" xml:space="preserve">
     <value>Por cuestiones de integridad de la información, sólo puede registrarse una única fábrica de identificadores de objetos (Empiria.Data.ObjectIdFactory) en cada equipo. En este caso, otro proceso del sistema operativo registró previamente dicha fábrica de objetos. Por favor, consulte con el personal de soporte técnico de su organización.</value>
   </data>
-  <data name="CantParseDataIntegrationServer" xml:space="preserve">
+  <data name="CannotParseDataIntegrationServer" xml:space="preserve">
     <value>No pude construir el objeto Empiria.Security.WebServer con id = {0}. Es posible que no se encuentre instalado en el directorio de la aplicación el archivo de ensamblado Empiria.dll,  o bien, que no se tenga registrado ningún servidor web con ese id en la base de datos de la aplicación.</value>
   </data>
   <data name="UndefinedDataPublishRule" xml:space="preserve">
     <value>Se intentó publicar el objeto de datos con nombre '{0}' pero la regla de publicación no ha sido definida en el archivo de reglas del servidor origen.</value>
   </data>
-  <data name="CantCreateDataTask" xml:space="preserve">
+  <data name="CannotCreateDataTask" xml:space="preserve">
     <value>No pude guardar la operación en la cola de tareas de integración de datos:\n\nServidor origen: {0}\nServidor destino: {1}\nOperación: {2}\nParámetros: {3}\n\nFavor de avisar inmediatamente de este problema al administrador del sistema.</value>
   </data>
-  <data name="CantLoadDataIntegrationRules" xml:space="preserve">
+  <data name="CannotLoadDataIntegrationRules" xml:space="preserve">
     <value>No pude cargar desde el archivo las reglas de integración de datos . Por favor avise cuanto antes de este problema al administrador del sistema.</value>
   </data>
-  <data name="CantDoPostExecutionTask" xml:space="preserve">
+  <data name="CannotDoPostExecutionTask" xml:space="preserve">
     <value>No pude ejecutar la post acción de la operación de datos '{0}' con los parámetros siguientes: '{1}'. Es probable que exista un problema en las reglas del integrador de datos. Favor de comunicar imediatamente de este problema al administrador del sistema.</value>
   </data>
   <data name="DuplicateDataIntegrationEngine" xml:space="preserve">

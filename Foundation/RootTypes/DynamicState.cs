@@ -2,13 +2,12 @@
 *                                                                                                            *
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
 *  Namespace : Empiria                                          Assembly : Empiria.dll                       *
-*  Type      : Structure                                        Pattern  : Abstract Class                    *
+*  Type      : DynamicState                                     Pattern  : Abstract Class                    *
 *  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
-*  Summary   : The type Structure is the root of the structure type hierarchy. All structure types must be   *
-*              descendants of this type.                                                                     *
+*  Summary   : DynamicState holds a bag of attributes for an object or type.                                 *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,40 +17,54 @@ using Empiria.Ontology;
 
 namespace Empiria {
 
+  /// <summary>DynamicState holds a bag of attributes for an object or type.</summary>
   internal class DynamicState : IStorable {
 
     #region Fields
 
-    private Dictionary<string, object> state = new Dictionary<string, object>();
-    private BaseObject instance = null;
+    private Dictionary<string, object> state = null;
 
-    private bool valuesReaded = false;
+    MetaModelType metaModelType = null;
+    private IStorable instance = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
     public DynamicState(BaseObject instance) {
+      this.metaModelType = instance.ObjectTypeInfo;
       this.instance = instance;
-      Initialize();
+    }
+
+    public DynamicState(MetaModelType instance) {
+      this.metaModelType = instance;
+      this.instance = instance;
     }
 
     #endregion Constructors and parsers
 
     #region Public methods
 
-    internal T GetMember<T>(string name) {
-      if (!valuesReaded) {
-        ReadMemberValues();
+    internal T GetValue<T>(string name) {
+      if (state == null) {
+        lock (instance) {
+          ReadMemberValues();
+        }
       }
       if (state.ContainsKey(name)) {
         return (T) state[name];
       } else {
-        throw new OntologyException(OntologyException.Msg.RelationMemberNameNotFound, instance.ObjectTypeInfo.Name, name);
+        throw new OntologyException(OntologyException.Msg.RelationMemberNameNotFound,
+                                    this.metaModelType.Name, name);
       }
     }
 
-    internal void SetMember<T>(string name, T value) {
+    internal void SetValue<T>(string name, T value) {
+      if (state == null) {
+        lock (instance) {
+          ReadMemberValues();
+        }
+      }
       if (state.ContainsKey(name)) {
         state[name] = value;
       } else {
@@ -63,7 +76,8 @@ namespace Empiria {
       get { return instance.Id; }
     }
 
-    DataOperationList IStorable.ImplementsStorageUpdate(StorageContextOperation operation, DateTime timestamp) {
+    DataOperationList IStorable.ImplementsStorageUpdate(StorageContextOperation operation,
+                                                        DateTime timestamp) {
       throw new NotImplementedException();
     }
 
@@ -75,25 +89,25 @@ namespace Empiria {
 
     #region Private methods
 
-    private void Initialize() {
-      TypeRelationInfo[] relations = instance.ObjectTypeInfo.GetRelations();
-      foreach (TypeRelationInfo relationInfo in relations) {
-        state.Add(relationInfo.Name, relationInfo.GetDefaultValue());
-      }
-      valuesReaded = false;
-    }
-
     private void ReadMemberValues() {
-      DataView view = OntologyData.GetObjectAttributes(this.instance.ObjectTypeInfo, this.instance);
-      for (int i = 0; i < view.Count; i++) {
-        TypeAttributeInfo attribute = instance.ObjectTypeInfo.GetAttribute((int) view[i]["TypeRelationId"]);
-        state[attribute.Name] = attribute.Convert(view[i]["AttributeValue"]);
+      if (state != null) {
+        return;
       }
-      valuesReaded = true;
+      var array = this.metaModelType.GetAttibuteKeyValues();
+      state = new Dictionary<string,object>(array.Length);
+      foreach (KeyValuePair<string, object> item in array) {
+        state.Add(item.Key, item.Value);
+      }
+      DataTable table = OntologyData.GetObjectAttributes(this.metaModelType, instance);
+      foreach(DataRow row in table.Rows) {
+        this.metaModelType.GetRelationInfo<TypeAttributeInfo>((int) row["TypeRelationId"]);
+        TypeAttributeInfo attribute = this.metaModelType.GetRelationInfo<TypeAttributeInfo>((int) row["TypeRelationId"]);
+        state[attribute.Name] = attribute.Convert(row["AttributeValue"]);
+      }
     }
 
     #endregion Private methods
 
-  } // class Structure
+  } // class DynamicState
 
-} // namespace Empiria.
+} // namespace Empiria

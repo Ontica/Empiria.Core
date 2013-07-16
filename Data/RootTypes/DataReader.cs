@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Static class with methods that performs data reading operations.                              *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 
@@ -207,7 +207,7 @@ namespace Empiria.Data {
     static public int GetObjectId(DataOperation operation) {
       object scalar = GetScalar(operation);
 
-      if ((scalar != null) && (scalar != System.DBNull.Value)) {
+      if (scalar != null) {
         return (int) scalar;
       } else {
         return 0;

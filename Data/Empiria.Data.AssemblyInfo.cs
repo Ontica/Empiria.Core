@@ -6,7 +6,7 @@
 *                                                                                                            *
 *  Summary   : Empiria® Universal Database Access Library.                                                   *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System.Reflection;
 using System.Runtime.InteropServices;
 

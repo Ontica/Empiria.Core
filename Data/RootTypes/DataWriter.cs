@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Static class with methods that performs data writing operations.                              *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 using System.Reflection;
@@ -208,7 +208,7 @@ namespace Empiria.Data {
 
       } catch (Exception innerException) {
         DataPublisher.Publish(postExecutionRule, operation, innerException);
-        Exception exception = new EmpiriaDataException(EmpiriaDataException.Msg.CantDoPostExecutionTask, innerException,
+        Exception exception = new EmpiriaDataException(EmpiriaDataException.Msg.CannotDoPostExecutionTask, innerException,
                                                        operation.SourceName, operation.Parameters.ToString());
         if (postExecutionRule.Priority == DataIntegrationRulePriority.Chained) {
           throw exception;

@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Defines a values table structure.                                                             *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 using Empiria.Data;

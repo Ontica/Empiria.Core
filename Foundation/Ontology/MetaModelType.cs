@@ -8,8 +8,9 @@
 *  Summary   : This type is the root of the item type metadata information hierarchy. All types information  *
 *              classes must be descendants of this type.                                                     *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
+using System.Collections.Generic;
 using System.Data;
 using Empiria.Collections;
 using Empiria.Data;
@@ -65,8 +66,11 @@ namespace Empiria.Ontology {
     private GeneralObjectStatus status = GeneralObjectStatus.Active;
 
     private Type underlyingSystemType = null;
-    private DoubleKeyList<TypeRelationInfo> relationsList = null;
+    private DoubleKeyList<TypeRelationInfo> relationInfoList = null;
     private DoubleKeyList<TypeMethodInfo> methodsList = null;
+
+    private List<KeyValuePair<string, object>> attibuteKeyValues = null;
+    private DynamicState dynamicState = null;
 
     #endregion Fields
 
@@ -76,12 +80,14 @@ namespace Empiria.Ontology {
       this.typeFamily = typeFamily;
       if (id != 0) {
         Load(OntologyData.GetTypeDataRow(id), id.ToString());
+        this.dynamicState = new DynamicState(this);
       }
     }
 
     protected internal MetaModelType(MetaModelTypeFamily typeFamily, string typeName) {
       this.typeFamily = typeFamily;
       Load(OntologyData.GetTypeDataRow(typeName), typeName);
+      this.dynamicState = new DynamicState(this);
     }
 
     static internal MetaModelType Parse(int typeId) {
@@ -120,14 +126,6 @@ namespace Empiria.Ontology {
     }
 
     static private MetaModelType CreateInstance(MetaModelTypeFamily typeFamily) {
-      //string typeInfoName = Enum.GetName(typeof(MetaModelTypeFamily), typeFamily) + "Info";
-
-      //MetaModelTypeInfo metaModelTypeInfo = MetaModelTypeInfo.Parse(typeInfoName);
-
-      //return metaModelTypeInfo.ParseInstance(id);
-
-
-
       Type[] parTypes = new Type[] { typeof(int) };
       object[] pars = new object[] { 0 };
 
@@ -203,7 +201,9 @@ namespace Empiria.Ontology {
     protected DoubleKeyList<TypeMethodInfo> Methods {
       get {
         if (methodsList == null) {
-          LoadMethods();
+          lock (this) {
+            LoadMethods();
+          }
         }
         return methodsList;
       }
@@ -211,10 +211,12 @@ namespace Empiria.Ontology {
 
     protected DoubleKeyList<TypeRelationInfo> Relations {
       get {
-        if (relationsList == null) {
-          LoadRelations();
+        if (relationInfoList == null) {
+          lock (this) {
+            LoadRelations();
+          }
         }
-        return relationsList;
+        return relationInfoList;
       }
     }
 
@@ -328,14 +330,18 @@ namespace Empiria.Ontology {
       if (obj == null) {
         return false;
       }
-      return (this.Id == obj.Id); // base.Equals(obj) && 
+      return (this.Id == obj.Id);
     }
 
     public override int GetHashCode() {
       return this.Id;
     }
 
-    protected T GetRelation<T>(int id) where T : TypeRelationInfo {
+    protected T GetAttribute<T>(string attributeName) {
+      return dynamicState.GetValue<T>(attributeName);
+    }
+
+    protected internal T GetRelationInfo<T>(int id) where T : TypeRelationInfo {
       if (this.Relations.ContainsId(id)) {
         return (T) this.Relations[id];
       } else {
@@ -343,23 +349,44 @@ namespace Empiria.Ontology {
       }
     }
 
-    protected T GetRelation<T>(string key) where T : TypeRelationInfo {
+    protected internal T GetRelationInfo<T>(string key) where T : TypeRelationInfo {
       if (this.Relations.ContainsKey(key)) {
         return (T) this.Relations[key];
       } else {
         throw new OntologyException(OntologyException.Msg.TypeRelationInfoNotFound, key, this.Name);
       }
     }
+
     void IStorable.ImplementsOnStorageUpdateEnds() {
-      //cache.Insert(this);
       throw new NotImplementedException("BaseObject.ImplementsOnStorageUpdateEnds");
     }
 
     DataOperationList IStorable.ImplementsStorageUpdate(StorageContextOperation operation, DateTime timestamp) {
-      //if (this.IsNew) {
-      //  this.objectId = ObjectReader.GetNextObjectId(this.ObjectTypeInfo);
-      //}
       throw new NotImplementedException("BaseObject.ImplementsStorageUpdate");
+    }
+
+    internal KeyValuePair<string, object>[] GetAttibuteKeyValues() {
+      Type thisType = this.GetType();
+      if (thisType.IsGenericType && thisType.IsSubclassOf(typeof(PowerType<>).GetGenericTypeDefinition())) {
+        Empiria.Messaging.Publisher.Publish("1) PT GetAttibuteKeyValues for " + this.Id.ToString() + " " + this.Name);
+        return ((PowerType<BaseObject>) this).PartitionedType.GetAttibuteKeyValues();
+      } else {
+        Empiria.Messaging.Publisher.Publish("2) GetAttibuteKeyValues for " + this.Id.ToString() + " / " + this.Name +
+                                            " / " + thisType.Name + " / " + thisType.BaseType.Name);
+      }
+      if (attibuteKeyValues == null) {
+        lock (this.Relations) {
+          IList<TypeRelationInfo> relationsList = this.Relations.Values;
+          attibuteKeyValues = new List<KeyValuePair<string, object>>(relationsList.Count);
+          foreach (TypeRelationInfo relationInfo in relationsList) {
+            if (relationInfo is TypeAttributeInfo) {
+              attibuteKeyValues.Add(new KeyValuePair<string, object>(relationInfo.Name,
+                                                                      relationInfo.GetDefaultValue()));
+            }
+          }  // foreach
+        }  // lock
+      }
+      return attibuteKeyValues.ToArray();
     }
 
     protected internal void Reload() {
@@ -430,6 +457,10 @@ namespace Empiria.Ontology {
     }
 
     private void LoadMethods() {
+      if (methodsList != null) {
+        return;
+      }
+
       DataTable dataTable = OntologyData.GetTypeMethods(this.Id);
 
       this.methodsList = new DoubleKeyList<TypeMethodInfo>(dataTable.Rows.Count);
@@ -441,13 +472,16 @@ namespace Empiria.Ontology {
     }
 
     private void LoadRelations() {
-      DataTable dataTable = OntologyData.GetTypeRelations(this.Name);
+      if (relationInfoList != null) {
+        return;
+      }
 
-      this.relationsList = new DoubleKeyList<TypeRelationInfo>(dataTable.Rows.Count);
+      DataTable dataTable = OntologyData.GetTypeRelations(this.Name);
+      this.relationInfoList = new DoubleKeyList<TypeRelationInfo>(dataTable.Rows.Count);
 
       for (int i = 0, j = dataTable.Rows.Count; i < j; i++) {
         TypeRelationInfo item = TypeRelationInfo.Parse(this, dataTable.Rows[i]);
-        this.relationsList.Add(item.Name, item);
+        this.relationInfoList.Add(item.Name, item);
       }
     }
 

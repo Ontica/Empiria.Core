@@ -276,7 +276,7 @@
     <Compile Include="Ontology\OntologyException.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RootTypes\ZZStructure.cs">
+    <Compile Include="RootTypes\Structure.cs">
       <SubType>Code</SubType>
     </Compile>
     <EmbeddedResource Include="Ontology\OntologyExceptionMsg.resx">

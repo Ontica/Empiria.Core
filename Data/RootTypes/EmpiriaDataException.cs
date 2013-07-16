@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : The exception that is thrown when a data access operation fails.                              *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -21,18 +21,18 @@ namespace Empiria.Data {
     public enum Msg {
       AsynchronousCommitNotCalled,
       CacheRestoreRemovedObjectCallbackFails,
-      CantCreateDataTask,
-      CantDoPostExecutionTask,
-      CantExecuteActionQuery,
-      CantGetDataReader,
-      CantGetDataTable,
-      CantGetDataView,
-      CantGetFieldValue,
-      CantGetObjectId,
-      CantGetScalar,
-      CantLoadDataIntegrationRules,
-      CantParseDataIntegrationServer,
-      CantRegisterObjectIdFactory,
+      CannotCreateDataTask,
+      CannotDoPostExecutionTask,
+      CannotExecuteActionQuery,
+      CannotGetDataReader,
+      CannotGetDataTable,
+      CannotGetDataView,
+      CannotGetFieldValue,
+      CannotGetObjectId,
+      CannotGetScalar,
+      CannotLoadDataIntegrationRules,
+      CannotParseDataIntegrationServer,
+      CannotRegisterObjectIdFactory,
       CommitFails,
       DataContextOutOfTransaction,
       DataContextTooManyItemsForRemove,
@@ -64,7 +64,7 @@ namespace Empiria.Data {
       : base(message.ToString(), GetMessage(message, args)) {
       try {
         base.Publish();
-      } catch {
+      } finally {
         // no-op
       }
     }
@@ -79,7 +79,7 @@ namespace Empiria.Data {
       : base(message.ToString(), GetMessage(message, args), exception) {
       try {
         base.Publish();
-      } catch {
+      } finally {
         // no-op
       }
     }

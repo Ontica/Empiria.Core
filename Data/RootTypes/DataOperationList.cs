@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Represents a synchronized and serializable list of Operation type objects.                    *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using Empiria.Collections;
 
 namespace Empiria.Data {

@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Provides a context for use resources that requires a Windows impersonation operation.         *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;

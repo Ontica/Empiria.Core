@@ -7,7 +7,8 @@
 *                                                                                                            *
 *  Summary   : Represents a power type definition.                                                           *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+using System;
 
 namespace Empiria.Ontology {
 
@@ -37,8 +38,15 @@ namespace Empiria.Ontology {
 
     #region Public methods
 
+    //public T GetLink<T>(ObjectTypeInfo partitionedType,
+    //                    string name, T defaultValue = null) where T : BaseObject {
+    //  TypeAssociationInfo association = base.GetRelation<TypeAssociationInfo>(name);
+
+    //  return association.GetLink<T>(partitionedType, defaultValue);
+    //}
+
     public ObjectList<T> GetLinks<T>(ObjectTypeInfo partitionedType, string name) where T : BaseObject {
-      TypeAssociationInfo association = base.GetRelation<TypeAssociationInfo>(name);
+      TypeAssociationInfo association = base.GetRelationInfo<TypeAssociationInfo>(name);
 
       return association.GetLinks<T>(partitionedType);
     }

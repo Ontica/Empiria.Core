@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Executes asynchronous data operations published on queues throw web services invoking.        *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 using System.Runtime.Remoting.Messaging;
@@ -184,8 +184,8 @@ namespace Empiria.Data.Integration {
               UpdateIntegrationTask(integrationTaskId, false);
             }
           }
-        } catch {
-
+        } finally {
+          // no-op
         }
       }
       currentTasks = -1;

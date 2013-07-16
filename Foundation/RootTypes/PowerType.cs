@@ -8,7 +8,7 @@
 *  Summary   : A power type is a an object type whose instances are subtypes of another object type, named   *
 *              the partitioned type. Powertyping enables dynamic specialization.                             *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 
 using Empiria.Ontology;
@@ -78,9 +78,9 @@ namespace Empiria {
     }
 
     protected ObjectList<U> GetTypeLinks<U>(string linkName) where U : MetaModelType {
-      TypeAssociationInfo association = this.GetAssociation(linkName);
+      TypeAssociationInfo associationInfo = this.GetAssociationInfo(linkName);
 
-      return association.GetTypeLinks<U>(this);
+      return associationInfo.GetTypeLinks<U>(this);
     }
 
     #endregion Public methods

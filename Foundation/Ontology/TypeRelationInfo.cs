@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Sealed class that represents an ontology type relation definition.                            *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 
@@ -57,8 +57,6 @@ namespace Empiria.Ontology {
     private string targetIdFieldName = String.Empty;
     private string typeRelationIdFieldName = String.Empty;
     private bool isInherited = false;
-
-    //private string fullName = String.Empty;
     private int postedById = 0;
     private DateTime postingDate = DateTime.Today;
     private GeneralObjectStatus status = GeneralObjectStatus.Active;
@@ -78,7 +76,6 @@ namespace Empiria.Ontology {
       MetaModelType sourceType = MetaModelType.Parse((int) dataRow["SourceTypeId"]);
 
       TypeRelationInfo instance = TypeRelationInfo.Create(relationTypeFamily, sourceType);
-      //instance.ValidateData(dataRow);
       instance.LoadDataRow(dataRow);
 
       return (T) instance;
@@ -89,7 +86,6 @@ namespace Empiria.Ontology {
             TypeRelationInfo.ParseRelationTypeFamily((string) dataRow["RelationTypeFamily"]);
 
       TypeRelationInfo instance = TypeRelationInfo.Create(relationTypeFamily, sourceType);
-      //instance.ValidateData(dataRow);
       instance.LoadDataRow(dataRow);
 
       return instance;
@@ -107,10 +103,11 @@ namespace Empiria.Ontology {
       Type[] parTypes = new Type[] { typeof(MetaModelType) };
       object[] parValues = new object[] { sourceType };
 
-      Type type = (relationTypeFamily == RelationTypeFamily.Attribute) ?
-                                                    typeof(TypeAttributeInfo) : typeof(TypeAssociationInfo);
-
-      return (TypeRelationInfo) ObjectFactory.CreateObject(type, parTypes, parValues);
+      if (relationTypeFamily == RelationTypeFamily.Attribute) {
+        return (TypeRelationInfo) ObjectFactory.CreateObject(typeof(TypeAttributeInfo), parTypes, parValues);
+      } else {
+        return (TypeRelationInfo) ObjectFactory.CreateObject(typeof(TypeAssociationInfo), parTypes, parValues);
+      }
     }
 
     #endregion Constructors and parsers
@@ -244,7 +241,6 @@ namespace Empiria.Ontology {
       this.id = (int) row["TypeRelationId"];
       this.targetType = MetaModelType.Parse((int) row["TargetTypeId"]);
       this.name = (string) row["RelationName"];
-      //this.fullName = targetType.Name + "." + name;
       this.displayName = (string) row["DisplayName"];
       this.documentation = (string) row["Documentation"];
       this.keywords = (string) row["TypeRelationKeywords"];
@@ -267,14 +263,6 @@ namespace Empiria.Ontology {
 
       this.ImplementsLoadObjectData(row);
     }
-
-    //private void ValidateData(DataRow row) {
-    //  string sourceTypeName = (string) row["SourceTypeName"];
-    //  if (!sourceType.Name.StartsWith(sourceTypeName)) {
-    //    throw new OntologyException(OntologyException.Msg.TypeRelationInfoDataTypeNotMatch,
-    //                                sourceTypeName, sourceType.Name);
-    //  }
-    //}
 
     #endregion Private methods
 

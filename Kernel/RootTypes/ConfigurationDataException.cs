@@ -8,7 +8,7 @@
 *  Summary   : The exception that is thrown when a configuration parameter is not found or when the system   *
 *              can´t  read or access it.                                                                     *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Reflection;
 

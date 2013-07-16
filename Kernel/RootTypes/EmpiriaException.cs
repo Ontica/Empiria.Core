@@ -8,7 +8,7 @@
 *  Summary   : Class for run-time exceptions in Empiria® Framework. All exception classes needs be           *
 *              derivated of this class.                                                                      *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Diagnostics;
 using System.Reflection;

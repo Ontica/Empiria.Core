@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Proxy type that allows communication to data integration web services.                        *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 using Empiria.Reflection;
@@ -45,7 +45,8 @@ namespace Empiria.Data.Integration {
           }
         }
       } catch (Exception innerException) {
-        new EmpiriaDataException(EmpiriaDataException.Msg.DataIntegrationWSProxyException, innerException, "SynchronizeServerCaches", "This");
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.DataIntegrationWSProxyException, 
+                                       innerException, "SynchronizeServerCaches", "This");
       }
     }
 
@@ -59,7 +60,7 @@ namespace Empiria.Data.Integration {
 
         return (IEmpiriaServer) ObjectFactory.ParseObject(serverType, serverId);
       } catch (Exception innerException) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantParseDataIntegrationServer, innerException, serverId);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotParseDataIntegrationServer, innerException, serverId);
       }
     }
 

@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : static internal class to read data stored in Microsoft® Access and other OleDb databases.     *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 using System.Data.OleDb;
@@ -35,9 +35,10 @@ namespace Empiria.Data.Handlers {
         operation.FillParameters(command);
         OleDbDataAdapter dataAdapter = new OleDbDataAdapter(command);
         dataAdapter.Fill(dataTable);
+        dataAdapter.Dispose();
         return dataTable.Rows.Count;
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -63,7 +64,7 @@ namespace Empiria.Data.Handlers {
         for (int i = 0; i < operation.Parameters.Length; i++) {
           parametersString += (parametersString.Length != 0 ? ", " : String.Empty) + Convert.ToString(operation.Parameters[i]);
         }
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantExecuteActionQuery, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
                                        operation.SourceName, parametersString);
       } finally {
         command.Parameters.Clear();
@@ -89,7 +90,7 @@ namespace Empiria.Data.Handlers {
         for (int i = 0; i < operation.Parameters.Length; i++) {
           parametersString += (parametersString.Length != 0 ? ", " : String.Empty) + Convert.ToString(operation.Parameters[i]);
         }
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantExecuteActionQuery, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
                                        operation.SourceName, parametersString);
       } finally {
         command.Parameters.Clear();
@@ -114,7 +115,7 @@ namespace Empiria.Data.Handlers {
         for (int i = 0; i < operation.Parameters.Length; i++) {
           parametersString += (parametersString.Length != 0 ? ", " : String.Empty) + Convert.ToString(operation.Parameters[i]);
         }
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantExecuteActionQuery, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
                                        operation.SourceName, parametersString);
       } finally {
         command.Parameters.Clear();
@@ -144,7 +145,7 @@ namespace Empiria.Data.Handlers {
         connection.Open();
         dataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataReader, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataReader, exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         //Don't dispose the connection because this method returns a DataReader.
@@ -166,13 +167,14 @@ namespace Empiria.Data.Handlers {
         operation.FillParameters(command);
         OleDbDataAdapter dataAdapter = new OleDbDataAdapter(command);
         dataAdapter.Fill(dataTable);
+        dataAdapter.Dispose();
         if (dataTable.Rows.Count != 0) {
           return dataTable.Rows[0];
         } else {
           return null;
         }
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -193,8 +195,9 @@ namespace Empiria.Data.Handlers {
         operation.FillParameters(command);
         OleDbDataAdapter dataAdapter = new OleDbDataAdapter(command);
         dataAdapter.Fill(dataTable);
+        dataAdapter.Dispose();
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -216,9 +219,10 @@ namespace Empiria.Data.Handlers {
         operation.FillParameters(command);
         OleDbDataAdapter dataAdapter = new OleDbDataAdapter(command);
         dataAdapter.Fill(dataTable);
+        dataAdapter.Dispose();
         return new DataView(dataTable, filter, sort, DataViewRowState.CurrentRows);
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataView, exception, 
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataView, exception, 
                                        operation.SourceName, filter, sort);
       } finally {
         command.Parameters.Clear();
@@ -244,7 +248,7 @@ namespace Empiria.Data.Handlers {
           fieldValue = dataReader[fieldName];
         }
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetFieldValue,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetFieldValue,
                                        exception, operation.SourceName, fieldName);
       } finally {
         command.Parameters.Clear();
@@ -256,7 +260,6 @@ namespace Empiria.Data.Handlers {
     static internal object GetScalar(DataOperation operation) {
       OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
       OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
-      object scalar = null;
 
       try {
         command.CommandType = operation.CommandType;
@@ -265,14 +268,13 @@ namespace Empiria.Data.Handlers {
         }
         operation.FillParameters(command);
         connection.Open();
-        scalar = command.ExecuteScalar();
+        return command.ExecuteScalar();
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetScalar, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetScalar, exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
       }
-      return scalar;
     }
 
     #endregion Internal methods

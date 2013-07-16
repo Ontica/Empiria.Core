@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Static library with general purpose data read operations.                                     *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 
@@ -15,6 +15,16 @@ namespace Empiria.Data {
 
   /// <summary>Static library with general purpose data read operations.</summary>
   static public class GeneralDataOperations {
+
+    #region Public properties
+
+    static public string NoRecordsFilter {
+      get {
+        return "(1 = 0)";
+      }
+    }
+
+    #endregion Public properties
 
     #region Public methods
 
@@ -253,10 +263,6 @@ namespace Empiria.Data {
       } else {
         throw new NotImplementedException();
       }
-    }
-
-    static public string GetNoRecordsFilter() {
-      return "(1 = 0)";
     }
 
     static public DataOperation SelectEntityUniqueFieldValues(string sourceName, string returnFieldName) {

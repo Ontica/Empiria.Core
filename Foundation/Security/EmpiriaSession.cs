@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : This internal class represents an Empiria system user session.                                *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 
 namespace Empiria.Security {

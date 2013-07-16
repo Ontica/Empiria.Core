@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Provides data read methods for Empiria Foundation Ontology objects.                           *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 
@@ -66,8 +66,8 @@ namespace Empiria.Ontology {
       return DataWriter.CreateId("EOSTypeRelations");
     }
 
-    static internal DataView GetObjectAttributes(MetaModelType metaModelType, IStorable instance) {
-      return DataReader.GetDataView(DataOperation.Parse("qryEOSObjectAttributes", metaModelType.Name, instance.Id));
+    static internal DataTable GetObjectAttributes(MetaModelType metaModelType, IStorable instance) {
+      return DataReader.GetDataTable(DataOperation.Parse("qryEOSObjectAttributes", metaModelType.Name, instance.Id));
     }
 
     static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IStorable source) {
@@ -83,7 +83,12 @@ namespace Empiria.Ontology {
     }
 
     static internal DataRow GetObjectLinkDataRow(TypeRelationInfo typeRelation, IStorable source) {
-      throw new NotImplementedException("OntologyData.GetObjectLinkDataRow");
+      DataTable table = GetObjectLinksTable(typeRelation, source);
+
+      if (table.Rows.Count != 0) {
+        return table.Rows[0];
+      }
+      return null;
     }
 
     static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IStorable source,
@@ -163,7 +168,6 @@ namespace Empiria.Ontology {
     static private string GetTableIdFieldEqualsTo(string source, string fieldName, int idFieldValue) {
       return "([" + source + "]." + "[" + fieldName + "] = " + idFieldValue.ToString() + ")";
     }
-
 
     static internal void WriteLink(TypeAssociationInfo assocationInfo, IStorable source, IStorable target) {
       DataOperation operation = DataOperation.Parse("writeEOSObjectLink", GetNextRelationId(assocationInfo),

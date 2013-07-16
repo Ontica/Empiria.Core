@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Provides read and write data operations allocated on external servers throw web services.     *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Collections.Generic;
 
@@ -188,7 +188,7 @@ namespace Empiria.Data.Integration {
                                                              operation, dataTaskIndex);
         DataWriter.ExecuteInternal(publishOperation);
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantCreateDataTask, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotCreateDataTask, exception,
                                        ExecutionServer.ServerId, publishRule.TargetServerId,
                                        operation.SourceName, operation.ParametersToString());
       }
@@ -204,7 +204,7 @@ namespace Empiria.Data.Integration {
           DataWriter.ExecuteInternal(publishOperation);
         }
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantCreateDataTask, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotCreateDataTask, exception,
                                        ExecutionServer.ServerId, publishRule.TargetServerId,
                                        operationList.Name, operationList.Count);
       }

@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Provides read and write data operations allocated on external servers throw web services.     *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -33,47 +33,47 @@ namespace Empiria.Data.Integration {
     #region Internal methods
 
     static internal IEmpiriaServer GetObjectIdServer(string sourceName) {
-      return dataIntegrationRules["I@" + sourceName.ToLowerInvariant()][0].TargetServer;
+      return dataIntegrationRules["I@" + sourceName.ToUpperInvariant()][0].TargetServer;
     }
 
     static internal DataIntegrationRule GetPostExecutionRule(string sourceName) {
-      return dataIntegrationRules["E@" + sourceName.ToLowerInvariant()][0];
+      return dataIntegrationRules["E@" + sourceName.ToUpperInvariant()][0];
     }
 
     static internal List<DataIntegrationRule> GetPublishRules(string sourceName) {
-      return dataIntegrationRules["P@" + sourceName.ToLowerInvariant()];
+      return dataIntegrationRules["P@" + sourceName.ToUpperInvariant()];
     }
 
     static internal IEmpiriaServer GetReadRuleServer(string sourceName) {
-      return dataIntegrationRules["R@" + sourceName.ToLowerInvariant()][0].TargetServer;
+      return dataIntegrationRules["R@" + sourceName.ToUpperInvariant()][0].TargetServer;
     }
 
     static internal DataIntegrationRule GetWriteRule(string sourceName) {
-      return dataIntegrationRules["W@" + sourceName.ToLowerInvariant()][0];
+      return dataIntegrationRules["W@" + sourceName.ToUpperInvariant()][0];
     }
 
     static internal bool HasCachingRule(string sourceName) {
-      return dataIntegrationRules.ContainsKey("C@" + sourceName.ToLowerInvariant());
+      return dataIntegrationRules.ContainsKey("C@" + sourceName.ToUpperInvariant());
     }
 
     static internal bool HasExternalCreateIdRule(string sourceName) {
-      return dataIntegrationRules.ContainsKey("I@" + sourceName.ToLowerInvariant());
+      return dataIntegrationRules.ContainsKey("I@" + sourceName.ToUpperInvariant());
     }
 
     static internal bool HasPostExecutionTask(string sourceName) {
-      return dataIntegrationRules.ContainsKey("E@" + sourceName.ToLowerInvariant());
+      return dataIntegrationRules.ContainsKey("E@" + sourceName.ToUpperInvariant());
     }
 
     static internal bool HasPublishRule(string sourceName) {
-      return dataIntegrationRules.ContainsKey("P@" + sourceName.ToLowerInvariant());
+      return dataIntegrationRules.ContainsKey("P@" + sourceName.ToUpperInvariant());
     }
 
     static internal bool HasReadRule(string sourceName) {
-      return dataIntegrationRules.ContainsKey("R@" + sourceName.ToLowerInvariant());
+      return dataIntegrationRules.ContainsKey("R@" + sourceName.ToUpperInvariant());
     }
 
     static internal bool HasWriteRule(string sourceName) {
-      return dataIntegrationRules.ContainsKey("W@" + sourceName.ToLowerInvariant());
+      return dataIntegrationRules.ContainsKey("W@" + sourceName.ToUpperInvariant());
     }
 
     #endregion Internal methods
@@ -89,7 +89,7 @@ namespace Empiria.Data.Integration {
 
         for (int i = 0; i < table.Rows.Count; i++) {
           string dictionaryKey = (string) table.Rows[i]["DbRuleType"] + "@" +
-                                 ((string) table.Rows[i]["SourceName"]).ToLowerInvariant();
+                                 ((string) table.Rows[i]["SourceName"]).ToUpperInvariant();
 
           int integrationRuleId = (int) table.Rows[i]["DbRuleId"];
           string condition = (string) table.Rows[i]["DbRuleCondition"];
@@ -106,7 +106,7 @@ namespace Empiria.Data.Integration {
           } // if
         } // for
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantLoadDataIntegrationRules, exception);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotLoadDataIntegrationRules, exception);
       } // try
     }
 

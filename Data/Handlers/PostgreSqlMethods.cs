@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Static internal class to read data stored in PostgreSQL databases.                            *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
 using System.EnterpriseServices;
@@ -46,6 +46,7 @@ namespace Empiria.Data.Handlers {
         }
         result = dataAdapter.Update(source);
         transaction.Commit();
+        dataAdapter.Dispose();
       }
       return result;
     }
@@ -65,9 +66,10 @@ namespace Empiria.Data.Handlers {
         operation.FillParameters(command);
         NpgsqlDataAdapter dataAdapter = new NpgsqlDataAdapter(command);
         dataAdapter.Fill(dataTable);
+        dataAdapter.Dispose();
         return dataTable.Rows.Count;
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable,
                                        exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
@@ -92,7 +94,7 @@ namespace Empiria.Data.Handlers {
         }
         affectedRows = command.ExecuteNonQuery();
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantExecuteActionQuery, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
                                        operation.SourceName, operation.ParametersToString());
       } finally {
         command.Parameters.Clear();
@@ -114,7 +116,7 @@ namespace Empiria.Data.Handlers {
         affectedRows = command.ExecuteNonQuery();
         command.Parameters.Clear();
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantExecuteActionQuery, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
                                        operation.SourceName, operation.ParametersToString());
       } finally {
         command.Parameters.Clear();
@@ -135,7 +137,7 @@ namespace Empiria.Data.Handlers {
         affectedRows = command.ExecuteNonQuery();
         command.Parameters.Clear();
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantExecuteActionQuery, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
                                        operation.SourceName, operation.ParametersToString());
       } finally {
         command.Parameters.Clear();
@@ -165,11 +167,11 @@ namespace Empiria.Data.Handlers {
         connection.Open();
         dataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataReader, 
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataReader, 
                                        exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
-        //Don't dipose the connection because this method returns a DataReader.
+        //Do not dipose the NpgsqlConnection object because this method returns a DataReader.
       }
       return dataReader;
     }
@@ -188,13 +190,14 @@ namespace Empiria.Data.Handlers {
         operation.FillParameters(command);
         NpgsqlDataAdapter dataAdapter = new NpgsqlDataAdapter(command);
         dataAdapter.Fill(dataTable);
+        dataAdapter.Dispose();
         if (dataTable.Rows.Count != 0) {
           return dataTable.Rows[0];
         } else {
           return null;
         }
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable, 
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, 
                                        exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
@@ -205,9 +208,9 @@ namespace Empiria.Data.Handlers {
     static internal DataTable GetDataTable(DataOperation operation, string dataTableName) {
       NpgsqlConnection connection = new NpgsqlConnection(operation.DataSource.Source);
       NpgsqlCommand command = new NpgsqlCommand(operation.SourceName, connection);
-      DataTable dataTable = new DataTable(dataTableName);
 
       try {
+        DataTable dataTable = new DataTable(dataTableName);
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
         command.CommandType = operation.CommandType;
         if (operation.ExecutionTimeout != 0) {
@@ -216,22 +219,25 @@ namespace Empiria.Data.Handlers {
         operation.FillParameters(command);
         NpgsqlDataAdapter dataAdapter = new NpgsqlDataAdapter(command);
         dataAdapter.Fill(dataTable);
+        dataAdapter.Dispose();
+        
+        return dataTable;
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataTable, 
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, 
                                        exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
       }
-      return dataTable;
+
     }
 
     static internal DataView GetDataView(DataOperation operation, string filter, string sort) {
       NpgsqlConnection connection = new NpgsqlConnection(operation.DataSource.Source);
       NpgsqlCommand command = new NpgsqlCommand(operation.SourceName, connection);
-      DataTable dataTable = new DataTable(operation.SourceName);
 
       try {
+        DataTable dataTable = new DataTable(operation.SourceName);
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
         command.CommandType = operation.CommandType;
         if (operation.ExecutionTimeout != 0) {
@@ -240,10 +246,10 @@ namespace Empiria.Data.Handlers {
         operation.FillParameters(command);
         NpgsqlDataAdapter dataAdapter = new NpgsqlDataAdapter(command);
         dataAdapter.Fill(dataTable);
-
+        dataAdapter.Dispose();
         return new DataView(dataTable, filter, sort, DataViewRowState.CurrentRows);
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetDataView, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataView, exception,
                                        operation.SourceName, filter, sort);
       } finally {
         command.Parameters.Clear();
@@ -269,7 +275,7 @@ namespace Empiria.Data.Handlers {
           fieldValue = dataReader[fieldName];
         }
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetFieldValue,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetFieldValue,
                                        exception, operation.SourceName, fieldName);
       } finally {
         command.Parameters.Clear();
@@ -281,7 +287,6 @@ namespace Empiria.Data.Handlers {
     static internal object GetScalar(DataOperation operation) {
       NpgsqlConnection connection = new NpgsqlConnection(operation.DataSource.Source);
       NpgsqlCommand command = new NpgsqlCommand(operation.SourceName, connection);
-      object scalar = System.DBNull.Value;
 
       try {
         command.CommandType = operation.CommandType;
@@ -290,15 +295,14 @@ namespace Empiria.Data.Handlers {
         }
         operation.FillParameters(command);
         connection.Open();
-        scalar = command.ExecuteScalar();
+        return command.ExecuteScalar();
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CantGetScalar, 
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetScalar, 
                                        exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
       }
-      return scalar;
     }
 
     #endregion Internal methods

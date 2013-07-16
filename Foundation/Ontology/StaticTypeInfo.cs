@@ -7,7 +7,8 @@
 *                                                                                                            *
 *  Summary   : Represents a static type used for general purpose method execution.                           *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+using System;
 
 namespace Empiria.Ontology {
 
