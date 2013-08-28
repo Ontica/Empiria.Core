@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
 *  Namespace : Empiria.Collections                              Assembly : Empiria.Kernel.dll                *
 *  Type      : EmpiriaCollection                                Pattern  : Collection Class                  *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Abstract class that represents a strongly typed list of items that can be accessed            *
 *              by index or key.                                                                              *

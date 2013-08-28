@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
 *  Namespace : Empiria.Ontology                                 Assembly : Empiria.dll                       *
 *  Type      : OntologyException                                Pattern  : Empiria Exception Class           *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : The exception that is thrown when a problem occurs in Empiria Foundation Ontology Framework.  *
 *                                                                                                            *
@@ -19,18 +19,19 @@ namespace Empiria.Ontology {
   public sealed class OntologyException : EmpiriaException {
 
     public enum Msg {
+      CannotParseObjectWithDataRow,
       ConvertionToTargetTypeFails,
-      RelationMemberNameNotFound,
       ObjectIdNotFound,
       ObjectNamedKeyNotFound,
+      RelationMemberNameNotFound,
+      TryToParseZeroObjectId,
+      TypeAssociationInfoNotFound,
       TypeInfoFamilyNotMatch,
       TypeInfoNotFound,
       TypeMethodInfoNotFound,
       TypeNamedIdFieldNameNotDefined,
-      TypeRelationInfoNotFound,
-      TypeRelationInfoDataTypeNotMatch,
       UndefinedTypeInfoFamily,
-      TryToParseZeroObjectId,
+      WrongAssociatedObjectFound,
     }
 
     static private string resourceBaseName = "Empiria.Ontology.OntologyExceptionMsg";

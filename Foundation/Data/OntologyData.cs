@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
 *  Namespace : Empiria.Ontology                                 Assembly : Empiria.dll                       *
 *  Type      : OntologyData                                     Pattern  : Data Services Static Class        *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Provides data read methods for Empiria Foundation Ontology objects.                           *
 *                                                                                                            *

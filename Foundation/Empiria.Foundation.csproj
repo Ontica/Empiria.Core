@@ -144,6 +144,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\empiria.assemblies\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
       <Private>False</Private>
@@ -174,7 +178,7 @@
     <Compile Include="RootTypes\TimePeriod.cs" />
     <Compile Include="RootTypes\ZZTypeList.cs" />
     <Compile Include="RootTypes\GeneralList.cs" />
-    <Compile Include="Contacts\ContactsData.cs" />
+    <Compile Include="Data\ContactsData.cs" />
     <Compile Include="Contacts\Contact.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -222,7 +226,7 @@
     <Compile Include="RootTypes\ZZSortExpression.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Security\SecurityData.cs">
+    <Compile Include="Data\SecurityData.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Security\Authorization.cs">
@@ -237,7 +241,7 @@
     <Compile Include="Security\EmpiriaSession.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Ontology\OntologyData.cs">
+    <Compile Include="Data\OntologyData.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Ontology\TypeRelationInfo.cs">

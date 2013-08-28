@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Data Types Library                *
 *  Namespace : Empiria                                          Assembly : Empiria.dll                       *
 *  Type      : TimePeriod                                       Pattern  : Value Type                        *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Value type that handles datetime period operations.                                           *
 *                                                                                                            *
@@ -26,6 +26,12 @@ namespace Empiria {
     public TimePeriod(DateTime fromDate, DateTime toDate) {
       this.fromDate = fromDate;
       this.toDate = toDate;
+    }
+
+    static public TimePeriod AllTime {
+      get {
+        return new TimePeriod(ExecutionServer.DateMinValue, ExecutionServer.DateMaxValue);
+      }
     }
 
     #endregion Constructors and parsers

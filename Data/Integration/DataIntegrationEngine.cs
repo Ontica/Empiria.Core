@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Data Integration Services         *
 *  Namespace : Empiria.Data.Integration                         Assembly : Empiria.Data.dll                  *
 *  Type      : DataIntegrationEngine                            Pattern  : Singleton Class                   *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Executes asynchronous data operations published on queues throw web services invoking.        *
 *                                                                                                            *

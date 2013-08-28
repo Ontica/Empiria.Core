@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
 *  Namespace : Empiria.Ontology                                 Assembly : Empiria.dll                       *
 *  Type      : MetaModelType                                    Pattern  : Abstract Class With items Cache   *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : This type is the root of the item type metadata information hierarchy. All types information  *
 *              classes must be descendants of this type.                                                     *
@@ -12,6 +12,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+
 using Empiria.Collections;
 using Empiria.Data;
 using Empiria.Reflection;
@@ -66,10 +68,13 @@ namespace Empiria.Ontology {
     private GeneralObjectStatus status = GeneralObjectStatus.Active;
 
     private Type underlyingSystemType = null;
-    private DoubleKeyList<TypeRelationInfo> relationInfoList = null;
+
+    private DoubleKeyList<TypeAttributeInfo> attributeInfoList = null;
+    private DoubleKeyList<TypeAssociationInfo> associationInfoList = null;
     private DoubleKeyList<TypeMethodInfo> methodsList = null;
 
     private List<KeyValuePair<string, object>> attibuteKeyValues = null;
+
     private DynamicState dynamicState = null;
 
     #endregion Fields
@@ -209,14 +214,25 @@ namespace Empiria.Ontology {
       }
     }
 
-    protected DoubleKeyList<TypeRelationInfo> Relations {
+    protected internal DoubleKeyList<TypeAssociationInfo> Associations {
       get {
-        if (relationInfoList == null) {
+        if (associationInfoList == null) {
           lock (this) {
             LoadRelations();
           }
         }
-        return relationInfoList;
+        return associationInfoList;
+      }
+    }
+
+    protected internal DoubleKeyList<TypeAttributeInfo> Attributes {
+      get {
+        if (attributeInfoList == null) {
+          lock (this) {
+            LoadRelations();
+          }
+        }
+        return attributeInfoList;
       }
     }
 
@@ -306,7 +322,7 @@ namespace Empiria.Ontology {
       set { lastUpdate = value; }
     }
 
-    internal MetaModelTypeFamily TypeFamily {
+    public MetaModelTypeFamily TypeFamily {
       get { return typeFamily; }
     }
 
@@ -341,21 +357,21 @@ namespace Empiria.Ontology {
       return dynamicState.GetValue<T>(attributeName);
     }
 
-    protected internal T GetRelationInfo<T>(int id) where T : TypeRelationInfo {
-      if (this.Relations.ContainsId(id)) {
-        return (T) this.Relations[id];
-      } else {
-        throw new OntologyException(OntologyException.Msg.TypeRelationInfoNotFound, id, this.Name);
-      }
-    }
+    //protected internal TypeAssociationInfo GetAssociationInfo(int id) {
+    //  if (this.Associations.ContainsId(id)) {
+    //    return this.Associations[id];
+    //  } else {
+    //    throw new OntologyException(OntologyException.Msg.TypeAssociationInfoNotFound, id, this.Name);
+    //  }
+    //}
 
-    protected internal T GetRelationInfo<T>(string key) where T : TypeRelationInfo {
-      if (this.Relations.ContainsKey(key)) {
-        return (T) this.Relations[key];
-      } else {
-        throw new OntologyException(OntologyException.Msg.TypeRelationInfoNotFound, key, this.Name);
-      }
-    }
+    //protected internal TypeAssociationInfo GetAssociationInfo(string key) {
+    //  if (this.Associations.ContainsKey(key)) {
+    //    return this.Associations[key];
+    //  } else {
+    //    throw new OntologyException(OntologyException.Msg.TypeAssociationInfoNotFound, key, this.Name);
+    //  }
+    //}
 
     void IStorable.ImplementsOnStorageUpdateEnds() {
       throw new NotImplementedException("BaseObject.ImplementsOnStorageUpdateEnds");
@@ -367,22 +383,21 @@ namespace Empiria.Ontology {
 
     internal KeyValuePair<string, object>[] GetAttibuteKeyValues() {
       Type thisType = this.GetType();
+        //this.TypeFamily == MetaModelTypeFamily.PowerType      
       if (thisType.IsGenericType && thisType.IsSubclassOf(typeof(PowerType<>).GetGenericTypeDefinition())) {
-        Empiria.Messaging.Publisher.Publish("1) PT GetAttibuteKeyValues for " + this.Id.ToString() + " " + this.Name);
+        //Empiria.Messaging.Publisher.Publish("1) PT GetAttibuteKeyValues for " + this.Id.ToString() + " " + this.Name);
         return ((PowerType<BaseObject>) this).PartitionedType.GetAttibuteKeyValues();
       } else {
-        Empiria.Messaging.Publisher.Publish("2) GetAttibuteKeyValues for " + this.Id.ToString() + " / " + this.Name +
-                                            " / " + thisType.Name + " / " + thisType.BaseType.Name);
+        //Empiria.Messaging.Publisher.Publish("2) GetAttibuteKeyValues for " + this.Id.ToString() + " / " + this.Name +
+        //                                    " / " + thisType.Name + " / " + thisType.BaseType.Name);
       }
       if (attibuteKeyValues == null) {
-        lock (this.Relations) {
-          IList<TypeRelationInfo> relationsList = this.Relations.Values;
+        lock (this.Attributes) {
+          IList<TypeAttributeInfo> relationsList = this.Attributes.Values;
           attibuteKeyValues = new List<KeyValuePair<string, object>>(relationsList.Count);
-          foreach (TypeRelationInfo relationInfo in relationsList) {
-            if (relationInfo is TypeAttributeInfo) {
-              attibuteKeyValues.Add(new KeyValuePair<string, object>(relationInfo.Name,
-                                                                      relationInfo.GetDefaultValue()));
-            }
+          foreach (TypeAttributeInfo attributeInfo in relationsList) {
+              attibuteKeyValues.Add(new KeyValuePair<string, object>(attributeInfo.Name,
+                                                                      attributeInfo.GetDefaultValue()));
           }  // foreach
         }  // lock
       }
@@ -472,16 +487,22 @@ namespace Empiria.Ontology {
     }
 
     private void LoadRelations() {
-      if (relationInfoList != null) {
+      if (attributeInfoList != null || associationInfoList != null) {
         return;
       }
 
       DataTable dataTable = OntologyData.GetTypeRelations(this.Name);
-      this.relationInfoList = new DoubleKeyList<TypeRelationInfo>(dataTable.Rows.Count);
-
-      for (int i = 0, j = dataTable.Rows.Count; i < j; i++) {
-        TypeRelationInfo item = TypeRelationInfo.Parse(this, dataTable.Rows[i]);
-        this.relationInfoList.Add(item.Name, item);
+      this.attributeInfoList = new DoubleKeyList<TypeAttributeInfo>(0);
+      this.associationInfoList = new DoubleKeyList<TypeAssociationInfo>(0);
+      foreach (DataRow dataRow in dataTable.Rows) {
+        RelationTypeFamily family = TypeRelationInfo.ParseRelationTypeFamily((string) dataRow["RelationTypeFamily"]);
+        if (family == RelationTypeFamily.Attribute) {
+          TypeAttributeInfo attribute = TypeAttributeInfo.Parse(this, dataRow);
+          this.attributeInfoList.Add(attribute.Name, attribute);
+        } else {
+          TypeAssociationInfo associationInfo = TypeAssociationInfo.Parse(this, dataRow);
+          this.associationInfoList.Add(associationInfo.Name, associationInfo);
+        }
       }
     }
 

@@ -123,11 +123,8 @@
   <data name="TypeInfoNotFound" xml:space="preserve">
     <value>Los metadatos del tipo '{0}' no han sido definidos en el sistema.</value>
   </data>
-  <data name="TypeRelationInfoNotFound" xml:space="preserve">
-    <value>Los metadatos de la relación '{0}' sobre el tipo '{1}' no han sido definidos en el sistema.</value>
-  </data>
-  <data name="TypeRelationInfoDataTypeNotMatch" xml:space="preserve">
-    <value>La relación '{0}' pertenece a un tipo que no es '{1}' según lo especifican los metadatos definidos en el sistema.</value>
+  <data name="TypeAssociationInfoNotFound" xml:space="preserve">
+    <value>Los metadatos de la asoaciación '{0}' sobre el tipo '{1}' no han sido definidos en el sistema.</value>
   </data>
   <data name="UndefinedTypeInfoFamily" xml:space="preserve">
     <value>El sistema ontológico no tiene definida la familia de tipos '{0}'.</value>
@@ -152,5 +149,11 @@
   </data>
   <data name="TryToParseZeroObjectId" xml:space="preserve">
     <value>An attempt was made to parse an object with id equals to zero for type {}. For new objects please use a type constructor instead.</value>
+  </data>
+  <data name="CannotParseObjectWithDataRow" xml:space="preserve">
+    <value>No pude hacer el parsing del objeto del tipo '{0}' utilizando el dataRow proporcionado.</value>
+  </data>
+  <data name="WrongAssociatedObjectFound" xml:space="preserve">
+    <value>El objeto con id {0} del tipo {1} (source) está incorrectamente relacionado con otro objeto usando la relación {2}. Es posible que el tipo de dicho objeto relacionado no sea del tipo que indica el tipo target de la relación, o bien, que no se encuentre en la tabla donde se almacenan los objetos de ese tipo.</value>
   </data>
 </root>

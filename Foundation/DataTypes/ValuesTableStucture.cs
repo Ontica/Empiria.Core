@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Data Types Library                *
 *  Namespace : Empiria.DataTypes                                Assembly : Empiria.dll                       *
 *  Type      : ValuesTableStucture                              Pattern  : Data Type                         *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Defines a values table structure.                                                             *
 *                                                                                                            *

@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Data Types Library                *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *  Type      : EmpiriaString                                    Pattern  : Static Data Type                  *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Represents a string data type.                                                                *
 *                                                                                                            *
@@ -34,8 +34,8 @@ namespace Empiria {
 
     #region Fields
 
-    static private readonly decimal jaroWinklerDefaultPrefixAdjustmentScale = 0.1m;
-    static private readonly int jaroWinklerDefaultMaxPrefixDistance = 4;
+    private const decimal jaroWinklerDefaultPrefixAdjustmentScale = 0.1m;
+    private const int jaroWinklerDefaultMaxPrefixDistance = 4;
 
     #endregion Fields
 

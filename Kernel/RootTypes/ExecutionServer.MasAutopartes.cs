@@ -3,7 +3,7 @@
 *	 Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
 *	 Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *	 Type      : ExecutionServer                                  Pattern  : Static Class                      *
-*	 Date      : 28/Mar/2013                                      Version  : 5.1      Pattern version: 2.0     *
+*	 Date      : 23/Oct/2013                                      Version  : 5.2      Pattern version: 2.0     *
 *																																																						 *
 *  Summary   : Static class that returns Empiria® current execution server information.                      *
 *																																																						 *
@@ -31,7 +31,7 @@ namespace Empiria {
 
     #region Fields
 
-    static private readonly string EmpiriaPrincipalTag = "Empiria.MasAutopartes.Principal";
+    static private readonly string EmpiriaPrincipalTag = "Empiria.Trade.MasAutopartes.Principal";
 
     static private string customerName = null;
     static private string customerUrl = null;

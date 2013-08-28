@@ -3,13 +3,14 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
 *  Namespace : Empiria.Ontology                                 Assembly : Empiria.dll                       *
 *  Type      : TypeAttributeInfo                                Pattern  : Standard class                    *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Sealed class that represents an ontology type attribute definition.                           *
 *                                                                                                            *
 **************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Data;
+using Empiria.Data;
 
 namespace Empiria.Ontology {
 
@@ -18,13 +19,13 @@ namespace Empiria.Ontology {
 
     #region Fields
 
-    private int size = 0;
-    private int precision = 0;
-    private int scale = 0;
-    private object minValue = null;
-    private object maxValue = null;
-    private string format = String.Empty;
-    private bool isFixedSize = false;
+    //private int size = 0;
+    //private int precision = 0;
+    //private int scale = 0;
+    //private object minValue = null;
+    //private object maxValue = null;
+    //private string format = String.Empty;
+    //private bool isFixedSize = false;
 
     #endregion Fields
 
@@ -35,40 +36,64 @@ namespace Empiria.Ontology {
 
     }
 
+    static internal TypeAttributeInfo Parse(MetaModelType sourceType, DataRow dataRow) {
+      TypeAttributeInfo attributeInfo = new TypeAttributeInfo(sourceType);
+
+      attributeInfo.LoadDataRow(dataRow);
+
+      return attributeInfo;
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
 
     public new object DefaultValue {
-      get { return base.DefaultValue; }
+      //get { return base.DefaultValue; }
+      get;
+      set;
     }
 
     public string Format {
-      get { return format; }
+      //get { return attributeData.IsFixedSize; }
+      get;
+      set;
     }
 
     public bool IsFixedSize {
-      get { return isFixedSize; }
+      //get { return attributeData.IsFixedSize; }
+      get;
+      set;
     }
 
     public object MaxValue {
-      get { return maxValue; }
+      //get { return attributeData.IsFixedSize; }
+      get;
+      set;
     }
 
     public object MinValue {
-      get { return minValue; }
+      //get { return attributeData.IsFixedSize; }
+      get;
+      set;
     }
 
     public int Precision {
-      get { return precision; }
+      //get { return attributeData.Precision; }
+      get;
+      set;
     }
 
     public int Scale {
-      get { return scale; }
+      //get { return attributeData.IsFixedSize; }
+      get;
+      set;
     }
 
     public int Size {
-      get { return size; }
+      //get { return attributeData.IsFixedSize; }
+      get;
+      set;
     }
 
     #endregion Public properties
@@ -102,14 +127,31 @@ namespace Empiria.Ontology {
       return System.Convert.ChangeType(value, targetType);
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
-      size = (int) row["AttributeSize"];
-      precision = (int) row["AttributePrecision"];
-      scale = (int) row["AttributeScale"];
-      minValue = this.ImplementsConvert(row["AttributeMinValue"]);
-      maxValue = this.ImplementsConvert(row["AttributeMaxValue"]);
-      format = (string) row["AttributeDisplayFormat"];
-      isFixedSize = (bool) row["AttributeIsFixedSize"];
+    //private Structure<TypeAttributeInfo> attributeData = new Structure<TypeAttributeInfo>();
+
+    protected override void LoadDataRow(DataRow row) {
+      base.LoadDataRow(row);
+      var attributes = new {
+        Size = 0, Precision = 0, Scale = 0,
+        MinValue = String.Empty, MaxValue = String.Empty,
+        DisplayFormat = "", IsFixedSize = false
+      };
+
+      //opcion 1: Structure.Parse(this, (string) row["TypeRelationExtensionData"]);
+
+      //opcion 2: this.attributeData.Parse((string) row["TypeRelationExtensionData"]);
+
+      //opcion 3: 
+
+      dynamic o = JsonConverter.ToObject((string) row["TypeRelationExtensionData"], attributes);
+
+      this.Size = (int) row["AttributeSize"];
+      this.Precision = (int) row["AttributePrecision"];
+      this.Scale = (int) row["AttributeScale"];
+      this.MinValue = this.ImplementsConvert(row["AttributeMinValue"]);
+      this.MaxValue = this.ImplementsConvert(row["AttributeMaxValue"]);
+      this.Format = (string) row["AttributeDisplayFormat"];
+      this.IsFixedSize = (bool) row["AttributeIsFixedSize"];
     }
 
     #endregion Public methods

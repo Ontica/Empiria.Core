@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
 *  Namespace : Empiria.Reflection                               Assembly : Empiria.Kernel.dll                *
 *  Type      : MethodInvoker                                    Pattern  : Static Class                      *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Static class that provides services for Empiria method invocation.                            *
 *                                                                                                            *

@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Storage Services                  *
 *  Namespace : Empiria                                          Assembly : Empiria.dll                       *
 *  Type      : StorageChangeItem                                Pattern  : Standard Class                    *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Represents the changes performed over a storable object.                                      *
 *                                                                                                            *

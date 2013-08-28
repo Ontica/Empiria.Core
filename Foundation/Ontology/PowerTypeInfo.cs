@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
 *  Namespace : Empiria.Ontology                                 Assembly : Empiria.dll                       *
 *  Type      : PowerTypeInfo                                    Pattern  : Type metadata class               *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Represents a power type definition.                                                           *
 *                                                                                                            *
@@ -46,7 +46,7 @@ namespace Empiria.Ontology {
     //}
 
     public ObjectList<T> GetLinks<T>(ObjectTypeInfo partitionedType, string name) where T : BaseObject {
-      TypeAssociationInfo association = base.GetRelationInfo<TypeAssociationInfo>(name);
+      TypeAssociationInfo association = base.Associations[name];
 
       return association.GetLinks<T>(partitionedType);
     }

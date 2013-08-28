@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
 *  Namespace : Empiria                                          Assembly : Empiria.dll                       *
 *  Type      : PowerType                                        Pattern  : Abstract Class                    *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : A power type is a an object type whose instances are subtypes of another object type, named   *
 *              the partitioned type. Powertyping enables dynamic specialization.                             *
@@ -29,6 +29,28 @@ namespace Empiria {
 
     #region Constructors and parsers
 
+    //protected internal PowerType(int id)
+    //  : base(MetaModelTypeFamily.ObjectType, id) {
+
+    //}
+
+    //protected internal PowerType(string name)
+    //  : base(MetaModelTypeFamily.ObjectType, name) {
+
+    //}
+
+    //static public new PowerType Parse(int id) {
+    //  return MetaModelType.Parse<ObjectTypeInfo>(id);
+    //}
+
+    //static public new PowerType Parse(string name) {
+    //  return MetaModelType.Parse<ObjectTypeInfo>(name);
+    //}
+
+    #endregion Constructors and parsers
+
+    #region Constructors and parsers
+
     protected PowerType(string powerTypeName, int typeId)
       : base(typeId) {
       this.powerTypeInfo = PowerTypeInfo.Parse(powerTypeName);
@@ -38,16 +60,20 @@ namespace Empiria {
     static public new U Parse<U>(int typeId) where U : PowerType<T> {
       ObjectTypeInfo typeInfo = ObjectTypeInfo.Parse(typeId);
       if (typeInfo is U) {
+        //Empiria.Messaging.Publisher.Publish("if (typeInfo is U) on typeid " + typeId);
         return (U) typeInfo;
       } else {
+        //Empiria.Messaging.Publisher.Publish("NOT if (typeInfo is U) on typeid " + typeId);
         return ObjectFactory.CreateObject<U>(new Type[] { typeof(int) }, new object[] { typeId });
       }
     }
 
     static public U Parse<U>(ObjectTypeInfo typeInfo) where U : PowerType<T> {
       if (typeInfo is U) {
+        //Empiria.Messaging.Publisher.Publish("if (typeInfo is U) on typeInfo " + typeInfo.Name);
         return (U) typeInfo;
       } else {
+        //Empiria.Messaging.Publisher.Publish("NOT if (typeInfo is U) on typeInfo " + typeInfo.Name);
         return ObjectFactory.CreateObject<U>(new Type[] { typeof(int) }, new object[] { typeInfo.Id });
       }
     }
@@ -56,12 +82,16 @@ namespace Empiria {
 
     #region Public properties
 
-    public PowerTypeInfo PowerTypeInfo {
-      get { return powerTypeInfo; }
+    public override bool IsPowerType {
+      get { return true; }
     }
 
     public ObjectTypeInfo PartitionedType {
       get { return partitionedType; }
+    }
+
+    public PowerTypeInfo PowerTypeInfo {
+      get { return powerTypeInfo; }
     }
 
     #endregion Public properties
@@ -69,7 +99,8 @@ namespace Empiria {
     #region Public methods
 
     public T CreateInstance() {
-      return (T) ObjectFactory.CreateObject(partitionedType.UnderlyingSystemType, new Type[] { typeof(string) },
+      return (T) ObjectFactory.CreateObject(partitionedType.UnderlyingSystemType, 
+                                            new Type[] { typeof(string) },
                                             new object[] { partitionedType.Name });
     }
 
@@ -78,7 +109,7 @@ namespace Empiria {
     }
 
     protected ObjectList<U> GetTypeLinks<U>(string linkName) where U : MetaModelType {
-      TypeAssociationInfo associationInfo = this.GetAssociationInfo(linkName);
+      TypeAssociationInfo associationInfo = this.Associations[linkName];
 
       return associationInfo.GetTypeLinks<U>(this);
     }

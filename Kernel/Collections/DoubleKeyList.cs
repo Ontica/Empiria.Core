@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
 *  Namespace : Empiria.Collections                              Assembly : Empiria.dll                       *
 *  Type      : DoubleKeyList                                    Pattern  : Collection class                  *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Sealed class that holds a double sorted list.                                                 *
 *                                                                                                            *

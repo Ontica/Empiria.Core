@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
 *  Namespace : Empiria                                          Assembly : Empiria.dll                       *
 *  Type      : GeneralList                                      Pattern  : Storage Item                      *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Represents a list type that holds BaseObject instances.                                       *
 *                                                                                                            *
@@ -66,8 +66,9 @@ namespace Empiria {
       return base.GetLinks<T>("GeneralList_Objects");
     }
 
-    public ObjectList<T> GetTypeRelationItems<T>() where T : TypeRelationInfo {
-      ObjectList<T> list = base.GetTypeRelationLinks<T>("GeneralList_TypeRelations");
+    public ObjectList<TypeAssociationInfo> GetTypeRelationItems() {
+      ObjectList<TypeAssociationInfo> list = 
+                            base.GetTypeAssociationLinks("GeneralList_TypeRelations");
 
       list.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
 

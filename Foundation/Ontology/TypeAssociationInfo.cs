@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
 *  Namespace : Empiria.Ontology                                 Assembly : Empiria.dll                       *
 *  Type      : TypeAssociationInfo                              Pattern  : Standard class                    *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Class that represents an ontology type association definition.                                *
 *                                                                                                            *
@@ -36,6 +36,14 @@ namespace Empiria.Ontology {
 
     static public TypeAssociationInfo Parse(int typeRelationId) {
       return TypeRelationInfo.Parse<TypeAssociationInfo>(typeRelationId);
+    }
+
+    static internal TypeAssociationInfo Parse(MetaModelType sourceType, DataRow dataRow) {
+      TypeAssociationInfo associationInfo = new TypeAssociationInfo(sourceType);
+
+      associationInfo.LoadDataRow(dataRow);
+
+      return associationInfo;
     }
 
     static public TypeAssociationInfo Empty {
@@ -83,17 +91,25 @@ namespace Empiria.Ontology {
       }
     }
 
+    // Object 1..* Object relation
     internal ObjectList<T> GetLinks<T>(BaseObject source) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
-
       ObjectList<T> list = new ObjectList<T>(table.Rows.Count);
 
-      for (int i = 0; i < table.Rows.Count; i++) {
-        list.Add(BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, table.Rows[i]));
+      try {
+        for (int i = 0; i < table.Rows.Count; i++) {
+          list.Add(BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, table.Rows[i]));
+        }
+      } catch (Exception e) {
+        OntologyException exception = new OntologyException(OntologyException.Msg.WrongAssociatedObjectFound, e, source.Id, 
+                                                            source.ObjectTypeInfo.Name, this.Name);
+
+        throw exception;
       }
       return list;
     }
 
+    // ObjectType 1..* Object relation
     internal ObjectList<T> GetLinks<T>(ObjectTypeInfo source) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
@@ -105,6 +121,7 @@ namespace Empiria.Ontology {
       return list;
     }
 
+    // Object 1..* Object relation (in time period)
     internal ObjectList<T> GetLinks<T>(BaseObject source, TimePeriod period) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source, period);
 
@@ -116,7 +133,7 @@ namespace Empiria.Ontology {
       return list;
     }
 
-    // Object -> Object relation
+    // Object 1..* Object relation (filtered by predicate)
     internal ObjectList<T> GetLinks<T>(BaseObject source, Predicate<T> predicate) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
@@ -131,7 +148,7 @@ namespace Empiria.Ontology {
       return list;
     }
 
-    // Object -> MetaModelType relation
+    // Object 1..* MetaModelType relation
     internal ObjectList<T> GetTypeLinks<T>(BaseObject source) where T : MetaModelType {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
@@ -173,14 +190,12 @@ namespace Empiria.Ontology {
       }
     }
 
-    internal ObjectList<T> GetTypeRelationLinks<T>(BaseObject source) where T : TypeRelationInfo {
+    internal ObjectList<TypeAssociationInfo> GetAssociationLinks(BaseObject source) {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
-
-      ObjectList<T> list = new ObjectList<T>(table.Rows.Count);
-
-      for (int i = 0; i < table.Rows.Count; i++) {
-        list.Add((T) TypeRelationInfo.Parse(this.SourceType, table.Rows[i]));
+      var list = new ObjectList<TypeAssociationInfo>(table.Rows.Count);
+      foreach (DataRow dataRow in table.Rows) {
+        list.Add(TypeAssociationInfo.Parse(this.SourceType, dataRow));
       }
       return list;
     }
@@ -195,7 +210,8 @@ namespace Empiria.Ontology {
       return ObjectFactory.ParseObject(this.TargetType.UnderlyingSystemType, System.Convert.ToInt32(value));
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
+    protected override void LoadDataRow(DataRow row) {
+      base.LoadDataRow(row);
       this.associationTypeId = (int) row["AssociationTypeId"];
       this.cardinality = (string) row["Cardinality"];
     }

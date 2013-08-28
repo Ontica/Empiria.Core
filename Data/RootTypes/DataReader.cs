@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Data Access Library               *
 *  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
 *  Type      : DataReader                                       Pattern  : Static Class                      *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Static class with methods that performs data reading operations.                              *
 *                                                                                                            *
@@ -129,12 +129,12 @@ namespace Empiria.Data {
     }
 
     static public DataTable GetDataTable(DataOperation operation) {
-      return GetDataTable(operation, operation.SourceName);
+      return GetDataTable(operation, operation.Name);
     }
 
     static public DataTable GetDataTable(DataOperation operation, string dataTableName) {
-      Assertion.EnsureObject(operation, "operation");
-      Assertion.EnsureObject(dataTableName, "dataTableName");
+      Assertion.RequireObject(operation, "operation");
+      Assertion.RequireObject(dataTableName, "dataTableName");
 
       if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
         return GetExternalDataTable(operation, dataTableName);

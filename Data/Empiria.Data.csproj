@@ -116,7 +116,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
-    <DebugSymbols>true</DebugSymbols>
+    <DebugSymbols>false</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
     <NoWarn>0618</NoWarn>
@@ -125,7 +125,7 @@
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -151,6 +151,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\empiria.assemblies\MySql.Data.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\empiria.solutions\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql, Version=2.0.11.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -202,7 +206,7 @@
     <Compile Include="Handlers\MySqlMethods.cs" />
     <Compile Include="Integration\DataIntegratorRule.cs" />
     <Compile Include="Integration\DataIntegrationEngine.cs" />
-    <Compile Include="RootTypes\DataConverter.cs" />
+    <Compile Include="RootTypes\JsonConverter.cs" />
     <Compile Include="RootTypes\GeneralDataOperations.cs" />
     <Compile Include="RootTypes\DataCache.cs">
       <SubType>Code</SubType>
@@ -259,6 +263,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="empiria.strong.name.public.key.snk" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kernel\Empiria.Kernel.csproj">

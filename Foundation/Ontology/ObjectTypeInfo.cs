@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
 *  Namespace : Empiria.Ontology                                 Assembly : Empiria.dll                       *
 *  Type      : ObjectTypeInfo                                   Pattern  : Type metadata class               *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Represents an object type definition.                                                         *
 *                                                                                                            *
@@ -39,45 +39,29 @@ namespace Empiria.Ontology {
 
     #region Public properties
 
+    public new Empiria.Collections.DoubleKeyList<TypeAssociationInfo> Associations {
+      get { return base.Associations; }
+    }
+
+    public new Empiria.Collections.DoubleKeyList<TypeAttributeInfo> Attributes {
+      get { return base.Attributes; }
+    }
+
     public new ObjectTypeInfo BaseType {
       get { return (ObjectTypeInfo) base.BaseType; }
+    }
+
+    public virtual bool IsPowerType {
+      get { return false; }
+    }
+
+    public new Empiria.Collections.DoubleKeyList<TypeMethodInfo> Methods {
+      get { return base.Methods; }
     }
 
     #endregion Public properties
 
     #region Public methods
-
-    public TypeAssociationInfo GetAssociationInfo(int id) {
-      return base.GetRelationInfo<TypeAssociationInfo>(id);
-    }
-
-    public TypeAssociationInfo GetAssociationInfo(string name) {
-      return base.GetRelationInfo<TypeAssociationInfo>(name);
-    }
-
-    public TypeAttributeInfo GetAttributeInfo(int id) {
-      return base.GetRelationInfo<TypeAttributeInfo>(id);
-    }
-
-    public TypeAttributeInfo GetAttributeInfo(string name) {
-      return base.GetRelationInfo<TypeAttributeInfo>(name);
-    }
-
-    public TypeMethodInfo[] GetMethods() {
-      TypeMethodInfo[] array = new TypeMethodInfo[base.Methods.Count];
-
-      base.Methods.Values.CopyTo(array, 0);
-
-      return array;
-    }
-
-    public TypeRelationInfo[] GetRelations() {
-      TypeRelationInfo[] array = new TypeRelationInfo[base.Relations.Count];
-
-      base.Relations.Values.CopyTo(array, 0);
-
-      return array;
-    }
 
     public ObjectTypeInfo[] GetSubclasses() {
       DataTable dataTable = OntologyData.GetDerivedTypes(this.Id);

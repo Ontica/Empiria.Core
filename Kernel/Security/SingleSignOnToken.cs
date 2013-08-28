@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Security Framework                *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.Kernel.dll                *
 *  Type      : SingleSignOnToken                                Pattern  : Static Class                      *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Represents a single sign-on data token that enables a looged user log in once and gain access *
 *              to multiple software systems without beign prompted to log in again.                          *

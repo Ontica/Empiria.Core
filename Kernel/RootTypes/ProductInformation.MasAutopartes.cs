@@ -3,7 +3,7 @@
 *	 Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
 *	 Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *	 Type      : ProductInformation                               Pattern  : Static class                      *
-*	 Date      : 28/Mar/2013                                      Version  : 5.1      Pattern version: 2.0     *
+*	 Date      : 23/Oct/2013                                      Version  : 5.2      Pattern version: 2.0     *
 *																																																						 *
 *  Summary   : Static class that holds Empiria® product information.                                         *
 *																																																						 *
@@ -12,7 +12,7 @@ using System;
 using System.Reflection;
 
 namespace Empiria {
-  
+
   /// <summary>Static class that holds Empiria® product information.</summary>
   static public class ProductInformation {
 
@@ -41,7 +41,7 @@ namespace Empiria {
     }
 
     static public string Copyright {
-      get { return "Copyright © " + DateTime.Today.Year + "-1994. " + "La Vía Óntica SC / Ontica LLC"; }
+      get { return "Copyright © 1999-" + DateTime.Today.Year + ". " + "La Vía Óntica SC + Ontica LLC"; }
     }
 
     static public string CopyrightUrl {

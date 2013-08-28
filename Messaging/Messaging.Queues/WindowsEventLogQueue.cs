@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Messaging Services                *
 *  Namespace : Empiria.Messaging.Queues                         Assembly : Empiria.Messaging.dll             *
 *  Type      : WindowsEventLogQueue                             Pattern  : Messaging Queue Class             *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Class used for publish information in the Windows Event Log.                                  *
 *                                                                                                            *

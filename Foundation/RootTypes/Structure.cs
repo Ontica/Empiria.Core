@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
 *  Namespace : Empiria                                          Assembly : Empiria.dll                       *
 *  Type      : Structure                                        Pattern  : Abstract Class                    *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : The type Structure is the root of the structure type hierarchy. All structure types must be   *
 *              descendants of this type.                                                                     *
@@ -11,6 +11,7 @@
 **************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 
+using Empiria.Data;
 using Empiria.Ontology;
 
 namespace Empiria {
@@ -39,6 +40,10 @@ namespace Empiria {
 
     //  return item;
     //}
+
+    static public T Parse<T>(string json) where T : Structure {
+      return JsonConverter.ToObject<T>(json);
+    }
 
     #endregion Constructors and parsers
 

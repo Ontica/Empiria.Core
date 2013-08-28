@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
 *  Namespace : Empiria                                          Assembly : Empiria.dll                       *
 *  Type      : BaseObject                                       Pattern  : Abstract Class                    *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : BaseObject is the root type of the object type hierarchy in Empiria® Framework.               *
 *              All object types that uses the framework must be descendants of this abstract type.           *
@@ -97,14 +97,21 @@ namespace Empiria {
     }
 
     static protected T Parse<T>(string typeName, DataRow dataRow) where T : BaseObject {
-      ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(typeName, dataRow);
-      int objectIdFieldValue = (int) dataRow[derivedTypeInfo.IdFieldName];
+      try {
+        ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(typeName, dataRow);
+        int objectIdFieldValue = (int) dataRow[derivedTypeInfo.IdFieldName];
 
-      T item = cache.GetItem(derivedTypeInfo.Name, objectIdFieldValue) as T;
-      if (item != null) {
-        return item;  // Only use dataRow when item is not in cache
+        T item = cache.GetItem(derivedTypeInfo.Name, objectIdFieldValue) as T;
+        if (item != null) {
+          return item;  // Only use dataRow when item is not in cache
+        }
+        return BaseObject.CreateBaseObject<T>(derivedTypeInfo, dataRow);
+      } catch (Exception e) {
+        var exception = new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
+                                              e, typeName);
+        exception.Publish();
+        throw exception;
       }
-      return BaseObject.CreateBaseObject<T>(derivedTypeInfo, dataRow);
     }
 
     static protected T ParseEmpty<T>(string typeName) where T : BaseObject {
@@ -189,19 +196,19 @@ namespace Empiria {
     }
 
     protected T GetLink<T>(string linkName) where T : BaseObject {
-      TypeAssociationInfo association = objectTypeInfo.GetAssociationInfo(linkName);
+      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetLink<T>(this);
     }
 
     protected ObjectList<T> GetLinks<T>(string linkName) where T : BaseObject {
-      TypeAssociationInfo association = objectTypeInfo.GetAssociationInfo(linkName);
+      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetLinks<T>(this);
     }
 
     protected ObjectList<T> GetLinks<T>(string linkName, Comparison<T> sort) where T : BaseObject {
-      TypeAssociationInfo association = objectTypeInfo.GetAssociationInfo(linkName);
+      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
       ObjectList<T> list = association.GetLinks<T>(this);
 
       list.Sort(sort);
@@ -210,13 +217,13 @@ namespace Empiria {
     }
 
     protected ObjectList<T> GetLinks<T>(string linkName, TimePeriod period) where T : BaseObject {
-      TypeAssociationInfo association = objectTypeInfo.GetAssociationInfo(linkName);
+      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetLinks<T>(this, period);
     }
 
     protected ObjectList<T> GetLinks<T>(string linkName, TimePeriod period, Comparison<T> sort) where T : BaseObject {
-      TypeAssociationInfo association = objectTypeInfo.GetAssociationInfo(linkName);
+      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
       ObjectList<T> list = association.GetLinks<T>(this, period);
 
       list.Sort(sort);
@@ -225,7 +232,7 @@ namespace Empiria {
     }
 
     protected ObjectList<T> GetLinks<T>(string linkName, Predicate<T> predicate) where T : BaseObject {
-      TypeAssociationInfo association = objectTypeInfo.GetAssociationInfo(linkName);
+      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetLinks<T>(this, predicate);
     }
@@ -235,22 +242,23 @@ namespace Empiria {
     }
 
     protected ObjectList<T> GetTypeLinks<T>(string linkName) where T : MetaModelType {
-      TypeAssociationInfo association = objectTypeInfo.GetAssociationInfo(linkName);
+      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetTypeLinks<T>(this);
     }
 
-    protected ObjectList<T> GetTypeRelationLinks<T>(string linkName) where T : TypeRelationInfo {
-      TypeAssociationInfo association = objectTypeInfo.GetAssociationInfo(linkName);
+    protected ObjectList<TypeAssociationInfo> GetTypeAssociationLinks(string linkName) {
+      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
-      return association.GetTypeRelationLinks<T>(this);
+      return association.GetAssociationLinks(this);
     }
 
     void IStorable.ImplementsOnStorageUpdateEnds() {
       throw new NotImplementedException("BaseObject.ImplementsOnStorageUpdateEnds");
     }
 
-    DataOperationList IStorable.ImplementsStorageUpdate(StorageContextOperation operation, DateTime timestamp) {
+    DataOperationList IStorable.ImplementsStorageUpdate(StorageContextOperation operation,
+                                                        DateTime timestamp) {
       throw new NotImplementedException("BaseObject.ImplementsStorageUpdate");
     }
 
@@ -272,6 +280,10 @@ namespace Empiria {
 
     protected void SetAttribute<T>(string name, T value) {
       throw new NotImplementedException("BaseObject.SetAttribute<T>");
+    }
+
+    protected DataRow GetDataRow() {
+      return OntologyData.GetBaseObjectDataRow(this.ObjectTypeInfo, this.Id);
     }
 
     #endregion Public methods

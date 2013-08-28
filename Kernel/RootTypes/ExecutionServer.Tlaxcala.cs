@@ -31,7 +31,7 @@ namespace Empiria {
 
     #region Fields
 
-    static private readonly string EmpiriaPrincipalTag = "Empiria.Land.Tlaxcala.Principal";
+    private const string EmpiriaPrincipalTag = "Empiria.Land.Tlaxcala.Principal";
 
     static private string customerName = null;
     static private string customerUrl = null;

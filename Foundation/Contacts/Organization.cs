@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Contacts Management               *
 *  Namespace : Empiria.Contacts                                 Assembly : Empiria.dll                       *
 *  Type      : Organization                                     Pattern  : Ontology Object Type              *
-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Represents a government entity or agency, an enterprise or a non-profit organization.         *
 *                                                                                                            *
