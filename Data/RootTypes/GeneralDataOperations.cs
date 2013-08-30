@@ -241,14 +241,14 @@ namespace Empiria.Data {
                                   string searchFieldName, string searchValue) {
       DataOperation operation = DataOperation.Parse("@getEntityField", sourceName, entityIdFieldName,
                                                     searchFieldName + " = '" + searchValue + "'");
-      return DataReader.GetObjectId(operation);
+      return DataReader.GetScalar<int>(operation);
     }
 
     static public T GetEntityField<T>(string sourceName, string selectedFieldName,
-                                         string entityIdFieldName, int entityId) {
+                                      string entityIdFieldName, int entityId) {
       DataOperation dataOperation = DataOperation.Parse("@getEntityField", sourceName, selectedFieldName,
                                                          entityIdFieldName + " = " + entityId.ToString());
-      return (T) DataReader.GetScalar(dataOperation);
+      return DataReader.GetScalar<T>(dataOperation);
     }
 
     static public string GetFilterSortSqlString(string filter, string sort) {

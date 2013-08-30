@@ -182,7 +182,8 @@ namespace Empiria.Data {
           sql += " AND ([" + (string) ruleDataRow["IdTypeFieldName"] + "] = " + (int) ruleDataRow["TypeId"] + ")";
         }
         DataSource dataSource = DataSource.Parse((string) ruleDataRow["SourceName"]);
-        return DataReader.GetObjectId(DataOperation.Parse(dataSource, sql));
+        
+        return DataReader.GetScalar<int>(DataOperation.Parse(dataSource, sql));
       }
 
       #endregion Private methods

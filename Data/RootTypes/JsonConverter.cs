@@ -154,7 +154,6 @@ namespace Empiria.Data {
 
     #endregion Public methods
 
-
     #region Private methods
 
     static private string BuildDictionaryKey(Type type) {

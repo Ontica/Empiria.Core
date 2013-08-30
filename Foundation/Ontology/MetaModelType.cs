@@ -55,6 +55,7 @@ namespace Empiria.Ontology {
     private string displayPluralName = String.Empty;
     private bool femaleGenre = false;
     private string documentation = String.Empty;
+    private string extensionData = String.Empty;
     private string keywords = String.Empty;
     private string dataSource = String.Empty;
     private string idFieldName = String.Empty;
@@ -196,6 +197,11 @@ namespace Empiria.Ontology {
     public string Documentation {
       get { return documentation; }
       protected set { documentation = EmpiriaString.TrimAll(value); }
+    }
+
+    public string ExtensionData {
+      get { return extensionData; }
+      protected set { extensionData = EmpiriaString.TrimAll(value); }
     }
 
     public bool FemaleGenre {
@@ -349,13 +355,18 @@ namespace Empiria.Ontology {
       return (this.Id == obj.Id);
     }
 
+    protected T GetAttribute<T>(string attributeName) {
+      return dynamicState.GetValue<T>(attributeName);
+    }
+
+    public T GetExtensionData<T>() {
+      return Empiria.Data.JsonConverter.ToObject<T>(extensionData);
+    }
+
     public override int GetHashCode() {
       return this.Id;
     }
 
-    protected T GetAttribute<T>(string attributeName) {
-      return dynamicState.GetValue<T>(attributeName);
-    }
 
     //protected internal TypeAssociationInfo GetAssociationInfo(int id) {
     //  if (this.Associations.ContainsId(id)) {
@@ -383,7 +394,7 @@ namespace Empiria.Ontology {
 
     internal KeyValuePair<string, object>[] GetAttibuteKeyValues() {
       Type thisType = this.GetType();
-        //this.TypeFamily == MetaModelTypeFamily.PowerType      
+      //this.TypeFamily == MetaModelTypeFamily.PowerType      
       if (thisType.IsGenericType && thisType.IsSubclassOf(typeof(PowerType<>).GetGenericTypeDefinition())) {
         //Empiria.Messaging.Publisher.Publish("1) PT GetAttibuteKeyValues for " + this.Id.ToString() + " " + this.Name);
         return ((PowerType<BaseObject>) this).PartitionedType.GetAttibuteKeyValues();
@@ -396,8 +407,8 @@ namespace Empiria.Ontology {
           IList<TypeAttributeInfo> relationsList = this.Attributes.Values;
           attibuteKeyValues = new List<KeyValuePair<string, object>>(relationsList.Count);
           foreach (TypeAttributeInfo attributeInfo in relationsList) {
-              attibuteKeyValues.Add(new KeyValuePair<string, object>(attributeInfo.Name,
-                                                                      attributeInfo.GetDefaultValue()));
+            attibuteKeyValues.Add(new KeyValuePair<string, object>(attributeInfo.Name,
+                                                                    attributeInfo.GetDefaultValue()));
           }  // foreach
         }  // lock
       }
@@ -454,6 +465,7 @@ namespace Empiria.Ontology {
       this.displayPluralName = (string) dataRow["DisplayPluralName"];
       this.femaleGenre = (bool) dataRow["FemaleGenre"];
       this.documentation = (string) dataRow["Documentation"];
+      this.extensionData = (string) dataRow["TypeExtensionData"];
       this.keywords = (string) dataRow["TypeKeywords"];
       this.solutionName = (string) dataRow["SolutionName"];
       this.systemName = (string) dataRow["SystemName"];

@@ -204,17 +204,27 @@ namespace Empiria.Data {
       }
     }
 
-    static public int GetObjectId(DataOperation operation) {
+    //static public T GetScalar<T>(DataOperation operation) {
+    //  object scalar = GetScalar(operation);
+
+    //  if (scalar != null && scalar != DBNull.Value) {
+    //    return (T) scalar;
+    //  } else {
+    //    return default(T);
+    //  }
+    //}
+
+    static public T GetScalar<T>(DataOperation operation, T defaultValue = default(T)) {
       object scalar = GetScalar(operation);
 
-      if (scalar != null) {
-        return (int) scalar;
+      if (scalar != null && scalar != DBNull.Value) {
+        return (T) scalar;
       } else {
-        return 0;
+        return defaultValue;
       }
     }
 
-    static public object GetScalar(DataOperation operation) {
+    static private object GetScalar(DataOperation operation) {
       Assertion.EnsureObject(operation, "operation");
 
       if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
