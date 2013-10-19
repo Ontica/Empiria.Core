@@ -3,7 +3,7 @@
 *	 Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
 *	 Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *	 Type      : ProductInformation                               Pattern  : Static class                      *
-*	 Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*	 Date      : 23/Oct/2013                                      Version  : 5.2      Pattern version: 2.0     *
 *																																																						 *
 *  Summary   : Static class that holds Empiria® product information.                                         *
 *																																																						 *
@@ -41,7 +41,7 @@ namespace Empiria {
     }
 
     static public string Copyright {
-      get { return "Copyright © 1994-" + DateTime.Today.Year + ". La Vía Óntica SC + Ontica LLC."; }
+      get { return "Copyright © 1999-" + DateTime.Today.Year + ". La Vía Óntica SC + Ontica LLC."; }
     }
 
     static public string CopyrightUrl {
@@ -49,15 +49,15 @@ namespace Empiria {
     }
 
     static public string Description {
-      get { return "Sistema para la Administración del Registro Público de la Propiedad del Estado de Zacatecas"; }
+      get { return "Sistema de suministro y comercio en red"; }
     }
 
     static public string Name {
-      get { return "Soluciones Empiria® para Gobierno"; }
+      get { return "Empiria® Trade 2013"; }
     }
 
     static public string Url {
-      get { return "http://empiria.ontica.org/administracion-registros-publicos.html"; }
+      get { return "http://empiria.ontica.org/trade/"; }
     }
 
     static public string Version {

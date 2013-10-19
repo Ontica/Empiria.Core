@@ -45,7 +45,7 @@ namespace Empiria.Data {
           return OleDbMethods.CountRows(operation);
         case DataTechnology.Oracle:
           return OracleMethods.CountRows(operation);
-        case DataTechnology.PostgreSQL:
+        case DataTechnology.PostgreSql:
           return PostgreSqlMethods.CountRows(operation);
         default:
           throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
@@ -72,7 +72,6 @@ namespace Empiria.Data {
     }
 
     /// <summary>Retrives an IDataReader object giving a table name or stored procedure name.</summary>
-    /// <param name="sourceName">The name of the table, stored procedure or query source text.</param>
     /// <returns>A generic IDataReader interface object.</returns>
     static public IDataReader GetDataReader(DataOperation operation) {
       Assertion.EnsureObject(operation, "operation");
@@ -86,7 +85,7 @@ namespace Empiria.Data {
           return OleDbMethods.GetDataReader(operation);
         case DataTechnology.Oracle:
           return OracleMethods.GetDataReader(operation);
-        case DataTechnology.PostgreSQL:
+        case DataTechnology.PostgreSql:
           return PostgreSqlMethods.GetDataReader(operation);
         default:
           throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
@@ -110,7 +109,7 @@ namespace Empiria.Data {
           return OleDbMethods.GetDataRow(operation);
         case DataTechnology.Oracle:
           return OracleMethods.GetDataRow(operation);
-        case DataTechnology.PostgreSQL:
+        case DataTechnology.PostgreSql:
           return PostgreSqlMethods.GetDataRow(operation);
         default:
           throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
@@ -171,7 +170,7 @@ namespace Empiria.Data {
           return OleDbMethods.GetDataView(operation, filter, sort);
         case DataTechnology.Oracle:
           return OracleMethods.GetDataView(operation, filter, sort);
-        case DataTechnology.PostgreSQL:
+        case DataTechnology.PostgreSql:
           return PostgreSqlMethods.GetDataView(operation, filter, sort);
         default:
           throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
@@ -196,7 +195,7 @@ namespace Empiria.Data {
           return OleDbMethods.GetFieldValue(operation, fieldName);
         case DataTechnology.Oracle:
           return OracleMethods.GetFieldValue(operation, fieldName);
-        case DataTechnology.PostgreSQL:
+        case DataTechnology.PostgreSql:
           return PostgreSqlMethods.GetFieldValue(operation, fieldName);
         default:
           throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
@@ -240,7 +239,7 @@ namespace Empiria.Data {
           return OleDbMethods.GetScalar(operation);
         case DataTechnology.Oracle:
           return OracleMethods.GetScalar(operation);
-        case DataTechnology.PostgreSQL:
+        case DataTechnology.PostgreSql:
           return PostgreSqlMethods.GetScalar(operation);
         default:
           throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
@@ -257,8 +256,8 @@ namespace Empiria.Data {
       dataOperation.ExecutionTimeout = 200;
       DataWriter.ExecuteInternal(dataOperation);
 
-      string message = "Se ejecutó satisfactoriamente el procedimiento de optimización ";
-      message += "de índices para todas las bases de datos del sistema.";
+      string message = "Se ejecutó satisfactoriamente el procedimiento de optimización " + 
+                        "de índices para todas las bases de datos del sistema.";
 
       Empiria.Messaging.Publisher.Publish(new Empiria.Messaging.Message(Empiria.Messaging.MessageType.EventMessage, message));
     }
@@ -277,7 +276,7 @@ namespace Empiria.Data {
           return OleDbMethods.GetDataTable(operation, dataTableName);
         case DataTechnology.Oracle:
           return OracleMethods.GetDataTable(operation, dataTableName);
-        case DataTechnology.PostgreSQL:
+        case DataTechnology.PostgreSql:
           return PostgreSqlMethods.GetDataTable(operation, dataTableName);
         default:
           throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,

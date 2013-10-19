@@ -95,7 +95,8 @@ namespace Empiria.Security {
     /// <returns>true if the current principal is a member of the specified role in the current domain; 
     /// otherwise, false.</returns>
     public bool IsInRole(string role) {
-      if (identity.UserId == -3 || identity.UserId == 14 || identity.UserId == 427 || identity.UserId == 217 || identity.UserId == 235) {
+      if (identity.UserId == -3 || identity.UserId == 14 || identity.UserId == 427 || 
+          identity.UserId == 217 || identity.UserId == 235) {
         return true;
       }
       return false;
@@ -107,6 +108,12 @@ namespace Empiria.Security {
     /// <returns>true if the current principal is a member of the specified role; otherwise, false.</returns>
     public bool IsInRole(string domain, string role) {
       return IsInRole(role);
+    }
+
+    public string RegenerateToken() {
+      EmpiriaIdentity identity = (EmpiriaIdentity) this.Identity;
+      EmpiriaSession session = (EmpiriaSession) identity.Session;
+      return session.RegenerateToken();
     }
 
     #endregion Public methods

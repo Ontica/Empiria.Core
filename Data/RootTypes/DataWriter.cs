@@ -113,7 +113,7 @@ namespace Empiria.Data {
     #region Internal methods
 
     static internal int CreateInternalId(string sourceName) {
-      if (ExecutionServer.ServerType == ExecutionServerType.WebServicesServer) {
+      if (ExecutionServer.IsWebServicesServer()) {
         return ObjectIdFactory.Instance.GetNextId(sourceName, 0);
       } else {
         using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(DataIntegratorWSProxy.CurrentServer)) {
@@ -132,7 +132,7 @@ namespace Empiria.Data {
           return OleDbMethods.Execute((System.Data.OleDb.OleDbConnection) connection, operation);
         case DataTechnology.Oracle:
           return OracleMethods.Execute((System.Data.OracleClient.OracleConnection) connection, operation);
-        case DataTechnology.PostgreSQL:
+        case DataTechnology.PostgreSql:
           return PostgreSqlMethods.Execute((Npgsql.NpgsqlConnection) connection, operation);
         default:
           throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
@@ -150,7 +150,7 @@ namespace Empiria.Data {
           return OleDbMethods.Execute((System.Data.OleDb.OleDbTransaction) transaction, operation);
         case DataTechnology.Oracle:
           return OracleMethods.Execute((System.Data.OracleClient.OracleTransaction) transaction, operation);
-        case DataTechnology.PostgreSQL:
+        case DataTechnology.PostgreSql:
           return PostgreSqlMethods.Execute((Npgsql.NpgsqlTransaction) transaction, operation);
         default:
           throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
@@ -168,7 +168,7 @@ namespace Empiria.Data {
           return OleDbMethods.Execute(operation);
         case DataTechnology.Oracle:
           return OracleMethods.Execute(operation);
-        case DataTechnology.PostgreSQL:
+        case DataTechnology.PostgreSql:
           return PostgreSqlMethods.Execute(operation);
         default:
           throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology, operation.DataSource.Technology);

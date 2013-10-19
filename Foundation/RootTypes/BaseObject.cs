@@ -286,6 +286,10 @@ namespace Empiria {
       return OntologyData.GetBaseObjectDataRow(this.ObjectTypeInfo, this.Id);
     }
 
+    public virtual string ToJson() {
+      return String.Empty;
+    }
+
     #endregion Public methods
 
     #region Private methods

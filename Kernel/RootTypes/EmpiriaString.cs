@@ -332,6 +332,7 @@ namespace Empiria {
     }
 
     static public string FormatForScripting(string source) {
+      source = source.Replace("''","\"").Replace("'", "´");
       source = source.Replace(System.Environment.NewLine, "\\n");
 
       return source.Replace(Char.ConvertFromUtf32(0x000A), "\\n");

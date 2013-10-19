@@ -99,7 +99,14 @@ namespace Empiria.Security {
                      StartTime.ToString("yyyy-MM-dd_HH:mm:ss") + "|" +
                      SystemSession.ToString() + "|" + ClientAddress + "|" +
                      ClientEnvironment;
-      return Guid.NewGuid().ToString() + "_" + Empiria.Security.Cryptographer.CreateHashCode(token);
+      return Guid.NewGuid().ToString() + "-" + Empiria.Security.Cryptographer.CreateHashCode(token);
+    }
+
+    internal string RegenerateToken() {
+      this.token = CreateToken(); 
+      SecurityData.WriteSession(this);
+
+      return this.token;
     }
 
     internal void UpdateEndTime() {

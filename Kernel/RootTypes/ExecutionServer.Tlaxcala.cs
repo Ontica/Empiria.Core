@@ -22,6 +22,7 @@ namespace Empiria {
     WebServicesServer = 2,
     WindowsServiceServer = 3,
     WindowsApplication = 4,
+    WebApiServer = 5,
   }
 
   #endregion Enumerations
@@ -90,22 +91,34 @@ namespace Empiria {
 
     static public IEmpiriaPrincipal CurrentPrincipal {
       get {
-        if (HttpContext.Current == null || HttpContext.Current.Session == null) {
+        if (HttpContext.Current == null) {
+          return null;
+        }
+        if (ServerType != ExecutionServerType.WebApiServer &&
+            HttpContext.Current.Session == null) {
           return null;
         }
         if (!isStarted) {
           Start();
         }
-        return HttpContext.Current.Session[EmpiriaPrincipalTag] as IEmpiriaPrincipal;
+        if (ServerType != ExecutionServerType.WebApiServer) {
+          return HttpContext.Current.Session[EmpiriaPrincipalTag] as IEmpiriaPrincipal;
+        } else {
+          return HttpContext.Current.User as IEmpiriaPrincipal;
+        }
       }
       set {
         if (!isStarted) {
           Start();
         }
-        if (HttpContext.Current != null) {
+        if (HttpContext.Current != null && ServerType != ExecutionServerType.WebApiServer) {
           HttpContext.Current.Session.Add(ExecutionServer.EmpiriaPrincipalTag, null);
         }
-        HttpContext.Current.Session[EmpiriaPrincipalTag] = value;
+        if (ServerType != ExecutionServerType.WebApiServer) {
+          HttpContext.Current.Session[EmpiriaPrincipalTag] = value;
+        } else {
+          HttpContext.Current.User = value;
+        }
       }
     }
 
@@ -127,8 +140,8 @@ namespace Empiria {
         if (!isStarted) {
           Start();
         }
-        if (CurrentIdentity != null) {
-          return CurrentIdentity.Session.Token;
+        if (CurrentSession != null) {
+          return CurrentSession.Token;
         } else {
           return String.Empty;
         }
@@ -258,6 +271,11 @@ namespace Empiria {
 
     #region Public methods
 
+    static public bool IsWebServicesServer() {
+      return (ServerType == ExecutionServerType.WebServicesServer ||
+              ServerType == ExecutionServerType.WebApiServer);
+    }
+
     static public void DisposeSession() {
       if (HttpContext.Current != null && HttpContext.Current.Session != null) {
         HttpContext.Current.Session.Remove(ExecutionServer.EmpiriaPrincipalTag);
@@ -281,8 +299,8 @@ namespace Empiria {
         licenseSerialNumber = ConfigurationData.GetString("Empiria", "License.SerialNumber");
         customerName = ConfigurationData.GetString("Empiria", "Customer.Name");
         customerUrl = ConfigurationData.GetString("Empiria", "Customer.Url");
-        dateMaxValue = DateTime.Parse(ConfigurationData.GetString("Empiria", "DateMaxValue"));
-        dateMinValue = DateTime.Parse(ConfigurationData.GetString("Empiria", "DateMinValue"));
+        dateMaxValue = ConfigurationData.GetDateTime("Empiria", "DateMaxValue");
+        dateMinValue = ConfigurationData.GetDateTime("Empiria", "DateMinValue");
         serverId = ConfigurationData.GetInteger("Empiria", "Server.ID");
         organizationId = ConfigurationData.GetInteger("Empiria", "Organization.ID");
         serverName = ConfigurationData.GetString("Empiria", "Server.Name");

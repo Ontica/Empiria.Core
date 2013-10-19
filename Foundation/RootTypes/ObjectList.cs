@@ -93,6 +93,10 @@ namespace Empiria {
       return base.FindAll(match);
     }
 
+    public new T FindLast(Predicate<T> match) {
+      return base.FindLast(match);
+    }
+
     protected internal int Remove(ObjectList<T> objectList) {
       IEnumerator<T> enumerator = this.GetEnumerator();
 
@@ -111,6 +115,10 @@ namespace Empiria {
 
     public new void Sort(Comparison<T> comparison) {
       base.Sort(comparison);
+    }
+
+    public string ToJson() {
+      return String.Empty;
     }
 
     #endregion Public methods

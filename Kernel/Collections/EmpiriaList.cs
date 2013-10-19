@@ -198,6 +198,17 @@ namespace Empiria.Collections {
       }
     }
 
+    protected T FindLast(Predicate<T> match) {
+      if (isSynchronized) {
+        lock (items) {
+          return items.FindLast(match);
+        }
+      } else {
+        return items.FindLast(match);
+      }
+    }
+
+
     protected void Insert(int index, T item) {
       if (isSynchronized) {
         lock (items) {

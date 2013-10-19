@@ -15,6 +15,7 @@ using System.Security.Permissions;
 using Empiria.Data.Handlers;
 
 namespace Empiria.Data {
+  using System.Diagnostics.CodeAnalysis;
 
   #region Enumerations
 
@@ -22,7 +23,7 @@ namespace Empiria.Data {
     SqlServer = 1,
     MySql = 2,
     Oracle = 3,
-    PostgreSQL = 4,
+    PostgreSql = 4,
     OleDb = 5,
     Odbc = 6,
     MSQueue = 7,
@@ -102,7 +103,7 @@ namespace Empiria.Data {
           return OleDbMethods.GetConnection(source);
         case DataTechnology.Oracle:
           return OracleMethods.GetConnection(source);
-        case DataTechnology.PostgreSQL:
+        case DataTechnology.PostgreSql:
           return PostgreSqlMethods.GetConnection(source);
         default:
           throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology, technology);

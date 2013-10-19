@@ -58,7 +58,7 @@ namespace Empiria.Security {
     static public Authorization Create(string userName, string password, string publicKey,
                                        string authorizationNS, int objectId) {
       int typeId = GetAuthorizationType(authorizationNS);
-      User user = User.Authenticate(userName, password, publicKey);
+      EmpiriaUser user = EmpiriaUser.Authenticate(userName, password, publicKey);
 
       if (typeId == 0) {
         return null;

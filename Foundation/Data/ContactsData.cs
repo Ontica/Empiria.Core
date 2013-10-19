@@ -44,7 +44,7 @@ namespace Empiria.Contacts {
       return DataWriter.Execute(DataOperation.Parse(sql));
     }
 
-    static internal int WriteUser(User user) {
+    static internal int WriteUser(EmpiriaUser user) {
       throw new NotImplementedException();
     }
 

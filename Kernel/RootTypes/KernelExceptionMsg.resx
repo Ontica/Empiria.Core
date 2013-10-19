@@ -217,7 +217,7 @@ Favor de notificar sobre este error al administrador del sistema ya que se trata
     <value>La cola de mensajes '{0}' no ha sido inicializada. Para ejecutar esta operación es preciso que primero se inicialice dicha cola mediante la invocación del método Start().</value>
   </data>
   <data name="CantReadExecutionServerProperty" xml:space="preserve">
-    <value>No pude leer del archivo de configuración del sistema alguna de las propiedades requeridas por el tipo Empiria.ExecutionServer.</value>
+    <value>No pude leer del archivo de configuración del sistema la propiedad requeridas por el tipo Empiria.ExecutionServer.</value>
   </data>
   <data name="XmlConfigurationFileNotExists" xml:space="preserve">
     <value>El archivo '{0}', que contiene los parámetros de configuración del sistema Empiria®, no existe.</value>

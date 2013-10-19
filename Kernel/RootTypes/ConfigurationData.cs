@@ -62,6 +62,19 @@ namespace Empiria {
       return ReadValue(GetCallerTypeName(), parameterName);
     }
 
+    /// <summary>Returns the value of a date-time configuration parameter belongs to the caller type.</summary>
+    /// <param name="parameter">Name of the configuration parameter.</param>
+    static public DateTime GetDateTime(string parameterName) {
+      return DateTime.Parse(ReadValue(GetCallerTypeName(), parameterName));
+    }
+
+    /// <summary>Returns the value of a date-time configuration setting of the gived type.</summary>
+    /// <param name="typeName">Name of the type.</param>
+    /// <param name="name">Name of the configuration setting.</param>
+    static public DateTime GetDateTime(string typeName, string parameterName) {
+      return DateTime.Parse(ReadValue(typeName, parameterName));
+    }
+
     /// <summary>Returns the value of a string configuration setting of the gived type.</summary>
     /// <param name="typeName">Name of the type.</param>
     /// <param name="name">Name of the configuration setting.</param>

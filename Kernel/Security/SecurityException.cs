@@ -26,6 +26,7 @@ namespace Empiria.Security {
       EncryptedObjectWasAltered,
       GuestUserNotFound,
       InvalidAuthenticationClient,
+      InvalidClientID,
       InvalidHttpMethod,
       InvalidProtectionMode,
       InvalidRequestPath,

@@ -1,13 +1,13 @@
 ﻿/* Empiria® Foundation Framework 2013 ************************************************************************
-*																																																						 *
-*	 Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
-*	 Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
-*	 Type      : ExecutionServer                                  Pattern  : Static Class                      *
-*	 Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
-*																																																						 *
+*                                                                                                            *
+*  Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
+*  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
+*  Type      : ExecutionServer                                  Pattern  : Static Class                      *
+*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
+*                                                                                                            *
 *  Summary   : Static class that returns Empiria® current execution server information.                      *
-*																																																						 *
-**************************************************** Copyright © La Vía Óntica SC & Ontica LLC. 1994-2013. **/
+*                                                                                                            *
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
 using System.Web;
 
@@ -24,15 +24,15 @@ namespace Empiria {
     WindowsApplication = 4,
     WebApiServer = 5,
   }
-  
+
   #endregion Enumerations
-  
+
   /// <summary>Static class that returns Empiria® current execution server information.</summary>
   static public class ExecutionServer {
 
     #region Fields
 
-    static private readonly string EmpiriaPrincipalTag = "Empiria.Land.Zacatecas.Principal";
+    private const string EmpiriaPrincipalTag = "Empiria.Trade.Principal";
 
     static private string customerName = null;
     static private string customerUrl = null;
@@ -94,7 +94,7 @@ namespace Empiria {
         if (HttpContext.Current == null) {
           return null;
         }
-        if (ServerType != ExecutionServerType.WebApiServer &&
+        if (ServerType != ExecutionServerType.WebApiServer && 
             HttpContext.Current.Session == null) {
           return null;
         }
@@ -197,7 +197,7 @@ namespace Empiria {
     }
 
     static public string LicenseName {
-      get { return "Zacatecas"; }
+      get { return "Trade"; }
     }
 
     static public string LicenseNumber {
@@ -272,7 +272,7 @@ namespace Empiria {
     #region Public methods
 
     static public bool IsWebServicesServer() {
-      return (ServerType == ExecutionServerType.WebServicesServer ||
+      return (ServerType == ExecutionServerType.WebServicesServer || 
               ServerType == ExecutionServerType.WebApiServer);
     }
 
@@ -314,6 +314,7 @@ namespace Empiria {
     }
 
     #endregion Public methods
+
     #region Private methods
 
     static private void Start() {

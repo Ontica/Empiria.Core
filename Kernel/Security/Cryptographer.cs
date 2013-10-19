@@ -92,6 +92,23 @@ namespace Empiria.Security {
       return DecryptString(cipherText, entropy + ExecutionServer.LicenseNumber);
     }
 
+    ///// <summary>Takes a ciphertext string and decrypts it using the giving public key.</summary>
+    ///// <param name="ciphertext">Text string to be decrypted.</param>
+    ///// <param name="publicKey">The public key used to decrypt the text string.</param>
+    //static public string Decrypt(EncryptionMode protectionMode, string cipherText, string entropy) {
+    //  Assertion.RequireObject(cipherText, "cipherText");
+    //  Assertion.RequireObject(entropy, "entropy");
+
+    //  switch (protectionMode) {
+    //    case EncryptionMode.EntropyHashCode:
+    //        s = EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
+    //        s = CreateHashCode(s, entropy);
+
+    //        return DecryptString(s, entropy + ExecutionServer.LicenseNumber);
+    //  }
+    //  return DecryptString(cipherText, entropy + ExecutionServer.LicenseNumber);
+    //}
+
     /// <summary>Takes a plaintext string and encrypts it.</summary>
     /// <param name="plaintext">Text string to be encrypted.</param>
     static public string Encrypt(EncryptionMode protectionMode, string plainText) {
@@ -118,7 +135,6 @@ namespace Empiria.Security {
         case EncryptionMode.HashCode:
           s = EncryptString(plainText, ExecutionServer.LicenseNumber);
           s = CreateHashCode(s);
-
           return EncryptString(s, ExecutionServer.LicenseNumber);
         case EncryptionMode.EntropyKey:
           Assertion.RequireObject(entropy, "entropy");
@@ -126,8 +142,11 @@ namespace Empiria.Security {
           return EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
         case EncryptionMode.EntropyHashCode:
           Assertion.RequireObject(entropy, "entropy");
-          s = EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
-          s = CreateHashCode(s, entropy);
+          //s = EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
+          //s = CreateHashCode(s, entropy);
+
+          //s = EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
+          s = CreateHashCode(plainText, entropy + ExecutionServer.LicenseNumber);
 
           return EncryptString(s, entropy + ExecutionServer.LicenseNumber);
         default:
@@ -310,39 +329,40 @@ namespace Empiria.Security {
       return hashCode;
     }
 
-    static private string GenerateSerialNumberPart(string hashCode, string hardwareCode) {
-      SHA256Managed sha = new SHA256Managed();
-      byte[] hash = sha.ComputeHash(ASCIIEncoding.ASCII.GetBytes(hashCode + hardwareCode));
+    //static private string GenerateSerialNumberPart(string hashCode, string hardwareCode) {
+    //  SHA256Managed sha = new SHA256Managed();
+    //  byte[] hash = sha.ComputeHash(ASCIIEncoding.ASCII.GetBytes(hashCode + hardwareCode));
 
-      return GetLicenseHashCode(Convert.ToBase64String(hash).ToUpper());
-    }
+    //  return GetLicenseHashCode(Convert.ToBase64String(hash).ToUpper());
+    //}
 
     static private string GetSerialNumber() {
-      string hardwareCode = GetSerialNumberSeed();
+      //string hardwareCode = GetSerialNumberSeed();
 
-      string serialNumber = String.Empty;
-      string[] licArray = ExecutionServer.LicenseNumber.Split('-');
+      //string serialNumber = String.Empty;
+      //string[] licArray = ExecutionServer.LicenseNumber.Split('-');
 
-      for (int i = 0; i < licArray.Length; i++) {
-        string part = hardwareCode.Substring(i * 11, 11) + licArray[i];
-        serialNumber += GenerateSerialNumberPart(GetLicenseHashCode(part), hardwareCode) + "-";
-      }
-      return serialNumber.TrimEnd('-');
+      //for (int i = 0; i < licArray.Length; i++) {
+      //  string part = hardwareCode.Substring(i * 11, 11) + licArray[i];
+      //  serialNumber += GenerateSerialNumberPart(GetLicenseHashCode(part), hardwareCode) + "-";
+      //}
+      //return serialNumber.TrimEnd('-');
+      return ExecutionServer.LicenseSerialNumber;
     }
 
-    static private string GetSerialNumberSeed() {
-      string temp = String.Empty;
+    //static private string GetSerialNumberSeed() {
+    //  string temp = String.Empty;
 
-      string[] seedParts = ReadString("SNSeeds").Split('|');
+    //  string[] seedParts = ReadString("SNSeeds").Split('|');
 
-      for (int i = 0; i < (seedParts.Length / 2); i++) {
-        temp += GetSerialNumberSeedPart(seedParts[2 * i], seedParts[(2 * i) + 1], String.Empty);
-      }
-      temp += ExecutionServer.LicenseName;
-      temp = Convert.ToBase64String(new SHA256Managed().ComputeHash(ASCIIEncoding.ASCII.GetBytes(temp)));
+    //  for (int i = 0; i < (seedParts.Length / 2); i++) {
+    //    temp += GetSerialNumberSeedPart(seedParts[2 * i], seedParts[(2 * i) + 1], String.Empty);
+    //  }
+    //  temp += ExecutionServer.LicenseName;
+    //  temp = Convert.ToBase64String(new SHA256Managed().ComputeHash(ASCIIEncoding.ASCII.GetBytes(temp)));
 
-      return temp.PadRight(16, '0');
-    }
+    //  return temp.PadRight(16, '0');
+    //}
 
     static private string ReadString(string name) {
       string data = ConfigurationData.GetString(name);

@@ -169,7 +169,7 @@ namespace Empiria.Data {
         case DataTechnology.Oracle:
           pars = OracleParameterCache.GetParameters(dataSource.Source, base.Name, base.Parameters);
           break;
-        case DataTechnology.PostgreSQL:
+        case DataTechnology.PostgreSql:
           pars = PostgreSqlParameterCache.GetParameters(dataSource.Source, base.Name, base.Parameters);
           break;
         default:
@@ -230,14 +230,14 @@ namespace Empiria.Data {
           case DataTechnology.Oracle:
             text = DataReader.GetFieldValue(operation, "OracleQueryString") as string;
             break;
-          case DataTechnology.PostgreSQL:
+          case DataTechnology.PostgreSql:
             text = DataReader.GetFieldValue(operation, "PostgreSQLQueryString") as string;
             break;
           default:
             text = DataReader.GetFieldValue(operation, "OleDbQueryString") as string;
             break;
         }
-        if (text.Length != 0) {
+        if (!String.IsNullOrWhiteSpace(text)) {
           return text;
         } else {
           throw new EmpiriaDataException(EmpiriaDataException.Msg.DataSourceNotDefined, sourceName);

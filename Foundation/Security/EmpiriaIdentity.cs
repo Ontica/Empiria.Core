@@ -15,26 +15,28 @@ using System.Web.Security;
 namespace Empiria.Security {
 
   public sealed class EmpiriaIdentity : IEmpiriaIdentity, IDisposable {
-
+    
     #region Fields
 
-    private User user = null;
+    private EmpiriaUser user = null;
     private EmpiriaSession session = null;
     private bool isAuthenticated = false;
     private int regionId = 0;
     private bool disposed = false;
 
+    static readonly private string globalApiKey = ConfigurationData.GetString("Empiria.Trade.API.Key"); 
+
     #endregion Fields
 
     #region Constructors and parsers
 
-    private EmpiriaIdentity(User user) {
+    private EmpiriaIdentity(EmpiriaUser user) {
       Assertion.RequireObject(user, "user");
       this.user = user;
     }
 
     static public EmpiriaIdentity Authenticate(string name, string password, string entropy, int regionId) {
-      User user = Empiria.Security.User.Authenticate(name, password, entropy);
+      EmpiriaUser user = Empiria.Security.EmpiriaUser.Authenticate(name, password, entropy);
 
       if (user != null) {
         EmpiriaIdentity identity = new EmpiriaIdentity(user);
@@ -49,9 +51,23 @@ namespace Empiria.Security {
       }
     }
 
+    // For Empiria Web-Api's authentication 
+    static public EmpiriaPrincipal Authenticate(string clientID, string userName, string password, 
+                                                string entropy,  int contextId) {
+      if (!globalApiKey.Equals(clientID)) {
+        new SecurityException(SecurityException.Msg.InvalidClientID, clientID);
+        return null;
+      }
+      var identity = EmpiriaIdentity.Authenticate(userName, password, entropy, contextId);
+      if (identity != null) {
+        return new EmpiriaPrincipal(identity);
+      }
+      return null;
+    }
+
     static public EmpiriaIdentity Authenticate(Uri referrer, FormsAuthenticationTicket remoteTicket) {
       //CheckClient(referrer);
-      User user = User.Authenticate(remoteTicket);
+      EmpiriaUser user = EmpiriaUser.Authenticate(remoteTicket);
       if (user != null) {
         EmpiriaIdentity identity = new EmpiriaIdentity(user);
 
@@ -62,10 +78,10 @@ namespace Empiria.Security {
       } else {
         return null;
       }
-    }
+    }  
 
     static public EmpiriaIdentity AuthenticateGuest() {
-      User user = Empiria.Security.User.AuthenticateGuest();
+      EmpiriaUser user = Empiria.Security.EmpiriaUser.AuthenticateGuest();
 
       if (user != null) {
         EmpiriaIdentity identity = new EmpiriaIdentity(user);
@@ -125,7 +141,7 @@ namespace Empiria.Security {
       get { return this.User; }
     }
 
-    public User User {
+    public EmpiriaUser User {
       get {
         session.UpdateEndTime();
         return user;
@@ -161,7 +177,7 @@ namespace Empiria.Security {
 
     static private EmpiriaSession CreateSession(int userId) {
       return new EmpiriaSession(userId,
-                                HttpContext.Current.Session.SessionID,
+                                HttpContext.Current.Session != null ? HttpContext.Current.Session.SessionID : "Session-less",
                                 HttpContext.Current.Request.UserHostAddress,
                                 HttpContext.Current.Request.UserAgent);
     }

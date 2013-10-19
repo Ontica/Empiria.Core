@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria® Foundation Framework                    System   : Security Framework                *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.dll                       *
-*  Type      : User                                             Pattern  : Ontology Relation Type            *
+*  Type      : EmpiriaUser                                      Pattern  : Ontology Relation Type            *
 *  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
 *                                                                                                            *
 *  Summary   : Represents a human user.                                                                      *
@@ -16,11 +16,11 @@ using Empiria.Contacts;
 
 namespace Empiria.Security {
 
-  public sealed class User : BaseObject, IEmpiriaUser {
+  public sealed class EmpiriaUser : BaseObject, IEmpiriaUser {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.User";
+    private const string thisTypeName = "ObjectType.EmpiriaUser";
 
     private string userName = String.Empty;
     private bool isActive = false;
@@ -33,18 +33,18 @@ namespace Empiria.Security {
 
     #region Constructors and parsers
 
-    public User()
+    public EmpiriaUser()
       : base(thisTypeName) {
 
     }
 
-    private User(string typeName)
+    private EmpiriaUser(string typeName)
       : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
-    static public User Parse(int id) {
-      return BaseObject.Parse<User>(thisTypeName, id);
+    static public EmpiriaUser Parse(int id) {
+      return BaseObject.Parse<EmpiriaUser>(thisTypeName, id);
     }
 
     #endregion Constructors and parsers
@@ -94,7 +94,7 @@ namespace Empiria.Security {
 
     #region Public methods
 
-    static internal User Authenticate(string userName, string password, string entropy) {
+    static internal EmpiriaUser Authenticate(string userName, string password, string entropy) {
       Assertion.RequireObject(userName, "userName");
       Assertion.RequireObject(password, "password");
       Assertion.RequireObject(entropy, "entropy");
@@ -107,7 +107,7 @@ namespace Empiria.Security {
       if (userId == 0) {
         return null;
       }
-      User user = User.Parse(userId);
+      EmpiriaUser user = EmpiriaUser.Parse(userId);
 
       if (user.IsSystemUser && !user.IsAdministrator) {
         return null;
@@ -124,22 +124,22 @@ namespace Empiria.Security {
       }
     }
 
-    static internal User Authenticate(FormsAuthenticationTicket remoteTicket) {
+    static internal EmpiriaUser Authenticate(FormsAuthenticationTicket remoteTicket) {
       Assertion.RequireObject(remoteTicket, "remoteTicket");
 
       int userId = ContactsData.GetContactIdWithUserName(remoteTicket.Name);
       if (userId == 0) {
         return null;
       }
-      return User.Parse(userId);
+      return EmpiriaUser.Parse(userId);
     }
 
-    static internal User AuthenticateGuest() {
+    static internal EmpiriaUser AuthenticateGuest() {
       int userId = ContactsData.GetContactIdWithUserName("GUEST");
       if (userId == 0) {
         return null;
       }
-      User user = User.Parse(userId);
+      EmpiriaUser user = EmpiriaUser.Parse(userId);
 
       if (!user.IsActive) {
         return null;
@@ -164,24 +164,6 @@ namespace Empiria.Security {
       return false;
     }
 
-    //public bool CanExecute(Ontology.TypeMethodInfo typeMethodInfo, Contacts.Organization organization) {
-    //  if (ExecutionServer.LicenseName == "Zacatecas") {
-    //    if (this.Id == -3 || this.Id == 11 || this.Id == 12 || this.Id == 212 || this.Id == 217 ||
-    //        this.Id == 416 || this.Id == 441 || this.Id == 242 || this.Id == 243 ||
-    //        this.Id == 421 || this.Id == 38 || this.Id == 413 || this.Id == 417 || this.Id == 429) {
-    //      return true;
-    //    }
-    //  } else if (ExecutionServer.LicenseName == "Tlaxcala") {
-    //    if (this.Id == -3 || this.Id == 11 || this.Id == 12 || this.Id == 38 ||
-    //        this.Id == 220 || this.Id == 221 || this.Id == 266 || this.Id == 228 || this.Id == 349 ||
-    //        this.Id == 240 || this.Id == 205 || this.Id == 235 || this.Id == 280 || this.Id == 276 ||
-    //        this.Id == 300 || this.Id == 36 || this.Id == 37 || this.Id == 301) {
-    //      return true;
-    //    }
-    //  }
-    //  return false;
-    //}
-
     public void ChangePassword(string currentPassword, string newPassword, string userID) {
       Assertion.RequireObject(currentPassword, "currentPassword");
       Assertion.RequireObject(newPassword, "newPassword");
@@ -200,11 +182,7 @@ namespace Empiria.Security {
         return;
       }
       string password = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, newPassword, userID);
-
       ContactsData.WriteContactAttribute(this.Contact, "UserPassword", password);
-
-      //Security.Data.SecurityData.AppendAuditTrail(ExecutionServer.CurrentIdentity.Session.Guid,
-      //                                            this.MetaModelType.Id, this.Id, 'U', DateTime.Now, "ChangePassword / Success");
     }
 
     protected override void ImplementsLoadObjectData(DataRow row) {
@@ -229,16 +207,15 @@ namespace Empiria.Security {
       string password = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, newPassword, userID);
 
       ContactsData.WriteContactAttribute(this.Contact, "UserPassword", password);
-
-      //Security.Data.SecurityData.AppendAuditTrail(ExecutionServer.CurrentIdentity.Session.Guid,
-      //                                      this.MetaModelType.Id, this.Id, 'U', DateTime.Now, "SetPassword / Success");
     }
 
     public bool VerifyElectronicSign(string eSign) {
-      string userName = Cryptographer.Encrypt(EncryptionMode.EntropyKey, ExecutionServer.CurrentUser.UserName, ExecutionServer.CurrentSessionToken);
+      string userName = Cryptographer.Encrypt(EncryptionMode.EntropyKey,
+                                              ExecutionServer.CurrentUser.UserName,
+                                              ExecutionServer.CurrentSessionToken);
       string password = Cryptographer.Encrypt(EncryptionMode.EntropyKey, eSign, ExecutionServer.CurrentSessionToken);
 
-      User user = Authenticate(userName, password, ExecutionServer.CurrentSessionToken);
+      EmpiriaUser user = Authenticate(userName, password, ExecutionServer.CurrentSessionToken);
 
       if (user == null) {
         return false;
@@ -249,27 +226,8 @@ namespace Empiria.Security {
       }
     }
 
-    //public bool VerifyPassword(string password, string userID) {
-    //  Assertion.RequireObject(password, "password");
-    //  Assertion.RequireObject(userID, "userName");
-
-    //  if (IsSystemUser && !IsAdministrator) {
-    //    return false;
-    //  }
-    //  if (!isAuthenticated) {
-    //    SecurityException exception = 
-    //        new SecurityException(SecurityException.Msg.CantVerifyPasswordOnUnauthenticatedUser, userID);
-    //    exception.Publish();
-    //    throw exception;
-    //  }
-    //  if (Cryptographer.Decrypt(ContactsData.GetContactAttribute<string>(this.Contact, "UserPassword"), userID) == password) {
-    //    return true;
-    //  }
-    //  return false;
-    //}
-
     #endregion Public methods
 
-  } // class User
+  } // class EmpiriaUser
 
 } // namespace Empiria.Security

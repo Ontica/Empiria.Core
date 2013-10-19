@@ -115,7 +115,6 @@ namespace Empiria.Data.Handlers {
         }
         reader.Close();
       }
-
       return discoveredParameters;
     }
 

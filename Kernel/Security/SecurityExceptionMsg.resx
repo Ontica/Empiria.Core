@@ -165,4 +165,7 @@
   <data name="InvalidProtectionMode" xml:space="preserve">
     <value>No puedo manejar el modo de protección '{0}' empleado en esta operación.</value>
   </data>
+  <data name="InvalidClientID" xml:space="preserve">
+    <value>Se recibió un ClientID o ApiKey que no está registrado: {0}. Es posible que se trate de un acceso no autorizado.</value>
+  </data>
 </root>
