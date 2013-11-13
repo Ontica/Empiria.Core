@@ -215,13 +215,6 @@ namespace Empiria.Data {
       return DataReader.GetDataRow(operation);
     }
 
-    static public DataRow GetEntityById(string sourceName, string idFieldName, string entityId) {
-      DataOperation operation = DataOperation.Parse("@getEntityByField", sourceName,
-                                                    idFieldName, "'" + entityId + "'");
-
-      return DataReader.GetDataRow(operation);
-    }
-
     static public DataRow GetEntityByIdFiltered(string sourceName, string idFieldName,
                                                 int entityId, string filterExpression) {
       DataOperation operation = DataOperation.Parse("@getEntityByFieldFiltered", sourceName, idFieldName,
@@ -229,10 +222,17 @@ namespace Empiria.Data {
       return DataReader.GetDataRow(operation);
     }
 
-    static public DataRow GetEntityByIdFiltered(string sourceName, string idFieldName,
-                                                string entityId, string filterExpression) {
+    static public DataRow GetEntityByKey(string sourceName, string idFieldName, string entityUniqueKey) {
+      DataOperation operation = DataOperation.Parse("@getEntityByField", sourceName,
+                                                    idFieldName, "'" + entityUniqueKey + "'");
+
+      return DataReader.GetDataRow(operation);
+    }
+
+    static public DataRow GetEntityByKeyFiltered(string sourceName, string idFieldName,
+                                                 string entityUniqueKey, string filterExpression) {
       DataOperation operation = DataOperation.Parse("@getEntityByFieldFiltered", sourceName, idFieldName,
-                                                    "'" + entityId + "'", filterExpression);
+                                                    "'" + entityUniqueKey + "'", filterExpression);
 
       return DataReader.GetDataRow(operation);
     }
@@ -265,7 +265,8 @@ namespace Empiria.Data {
       }
     }
 
-    static public DataOperation SelectEntityUniqueFieldValues(string sourceName, string returnFieldName) {
+    static public DataOperation SelectEntityUniqueFieldValues(string sourceName, 
+                                                              string returnFieldName) {
       return DataOperation.Parse("@qryEntityUniqueFieldValues", sourceName, returnFieldName);
     }
 

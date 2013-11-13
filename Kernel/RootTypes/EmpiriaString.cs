@@ -826,6 +826,9 @@ namespace Empiria {
 
     static public DateTime ToDateTime(string source, string format) {
       try {
+        source = source.Replace("-", "/");
+        source = source.Replace("./", "/");
+        source = source.Replace(".-", "-");
         return DateTime.ParseExact(source, format, new CultureInfo("es-US"));
       } catch {
         throw new Exception("No reconozco el valor " + source + " como del tipo de datos fecha.");

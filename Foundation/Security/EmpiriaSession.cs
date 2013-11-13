@@ -9,6 +9,7 @@
 *                                                                                                            *
 **************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
 using System;
+using System.Data;
 
 namespace Empiria.Security {
 
@@ -30,6 +31,10 @@ namespace Empiria.Security {
 
     #region Constructors and parsers
 
+    private EmpiriaSession() {
+      // TODO: Complete member initialization
+    }
+
     internal EmpiriaSession(int userId, string systemSession,
                             string clientAddress, string clientEnvironment) {
       this.serverId = ExecutionServer.ServerId;
@@ -39,6 +44,31 @@ namespace Empiria.Security {
       this.clientEnvironment = clientEnvironment;
       this.token = CreateToken();
       this.Create();
+    }
+
+    static internal bool TryParseActive(string sessionToken, out EmpiriaSession session) {
+      DataRow row = SecurityData.GetSessionData(sessionToken);
+      session = null;
+      if (row != null) {
+        session = new EmpiriaSession();
+        session.Load(row);
+        if (session.IsStillActive) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    private void Load(DataRow row) {
+      this.id = (int) row["SessionId"];
+      this.token = (string) row["SessionToken"];
+      this.serverId = (int) row["ServerId"];
+      this.userId = (int) row["UserId"];
+      this.systemSession = (string) row["SystemSession"];
+      this.clientAddress = (string) row["ClientAddress"];
+      this.clientEnvironment = (string) row["ClientEnvironment"];
+      this.startTime = (DateTime) row["StartTime"];
+      this.endTime = (DateTime) row["EndTime"];
     }
 
     #endregion Constructors and parsers
@@ -60,6 +90,12 @@ namespace Empiria.Security {
 
     public DateTime EndTime {
       get { return endTime; }
+    }
+
+    public bool IsStillActive {
+      get {
+        return true;
+      }
     }
 
     public string Token {
@@ -114,6 +150,8 @@ namespace Empiria.Security {
     }
 
     #endregion Internal and private methods
+
+
 
   } //class EmpiriaSession
 

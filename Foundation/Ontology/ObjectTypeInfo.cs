@@ -35,6 +35,20 @@ namespace Empiria.Ontology {
       return MetaModelType.Parse<ObjectTypeInfo>(name);
     }
 
+    internal static bool TryParse(string typeName, out ObjectTypeInfo objectTypeInfo) {
+      try {
+        objectTypeInfo = ObjectTypeInfo.Parse(typeName);
+        return true;
+      } catch {
+        objectTypeInfo = null;
+        return false;  
+      }
+    }
+
+    public static ObjectTypeInfo Empty { 
+      get { return ObjectTypeInfo.Parse(-1); }
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
@@ -78,7 +92,7 @@ namespace Empiria.Ontology {
     }
 
     public bool IsSubclassOf(ObjectTypeInfo typeInfo) {
-      ObjectTypeInfo typeIterator = (ObjectTypeInfo) this.BaseType;
+      var typeIterator = (ObjectTypeInfo) this.BaseType;
       while (true) {
         if (typeIterator.Id == typeInfo.Id) {
           return true;

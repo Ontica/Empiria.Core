@@ -14,7 +14,14 @@ using Empiria.Data;
 
 namespace Empiria.Security {
 
-  internal sealed class SecurityData {
+  static internal class SecurityData {
+
+    static internal System.Data.DataRow GetSessionData(string sessionToken) {
+      string sql = "SELECT * FROM EMPSessions WHERE SessionToken = '{0}'";
+      sql = String.Format(sql, sessionToken);
+
+      return DataReader.GetDataRow(DataOperation.Parse(sql));
+    }
 
     static internal DataOperation GetWriteAuditTrailOperation(int typeId, int objectId,
                                                             char operationChar, string observations) {

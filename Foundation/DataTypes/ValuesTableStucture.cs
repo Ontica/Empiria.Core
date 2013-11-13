@@ -148,10 +148,10 @@ namespace Empiria.DataTypes {
     }
 
     private void LoadColumnsStructure() {
-      DataRow tableColumnNames = GeneralDataOperations.GetEntityByIdFiltered("EOSRangesTables", "RangesTableName",
+      DataRow tableColumnNames = GeneralDataOperations.GetEntityByKeyFiltered("EOSRangesTables", "RangesTableName",
                                                                               this.tableName, "RangeType = 'N'");
 
-      DataRow tableColumnTypes = GeneralDataOperations.GetEntityByIdFiltered("EOSRangesTables", "RangesTableName",
+      DataRow tableColumnTypes = GeneralDataOperations.GetEntityByKeyFiltered("EOSRangesTables", "RangesTableName",
                                                                  this.tableName, "RangeType = 'T'");
 
       if (((string) tableColumnNames["UpperBound"]).Length != 0) {

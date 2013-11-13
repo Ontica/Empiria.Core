@@ -92,23 +92,6 @@ namespace Empiria.Security {
       return DecryptString(cipherText, entropy + ExecutionServer.LicenseNumber);
     }
 
-    ///// <summary>Takes a ciphertext string and decrypts it using the giving public key.</summary>
-    ///// <param name="ciphertext">Text string to be decrypted.</param>
-    ///// <param name="publicKey">The public key used to decrypt the text string.</param>
-    //static public string Decrypt(EncryptionMode protectionMode, string cipherText, string entropy) {
-    //  Assertion.RequireObject(cipherText, "cipherText");
-    //  Assertion.RequireObject(entropy, "entropy");
-
-    //  switch (protectionMode) {
-    //    case EncryptionMode.EntropyHashCode:
-    //        s = EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
-    //        s = CreateHashCode(s, entropy);
-
-    //        return DecryptString(s, entropy + ExecutionServer.LicenseNumber);
-    //  }
-    //  return DecryptString(cipherText, entropy + ExecutionServer.LicenseNumber);
-    //}
-
     /// <summary>Takes a plaintext string and encrypts it.</summary>
     /// <param name="plaintext">Text string to be encrypted.</param>
     static public string Encrypt(EncryptionMode protectionMode, string plainText) {
@@ -142,12 +125,11 @@ namespace Empiria.Security {
           return EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
         case EncryptionMode.EntropyHashCode:
           Assertion.RequireObject(entropy, "entropy");
-          //s = EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
-          //s = CreateHashCode(s, entropy);
+          //s = CreateHashCode(plainText, entropy + ExecutionServer.LicenseNumber);
+          //return EncryptString(s, entropy + ExecutionServer.LicenseNumber);
 
-          //s = EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
-          s = CreateHashCode(plainText, entropy + ExecutionServer.LicenseNumber);
-
+          s = EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
+          s = CreateHashCode(s, entropy);
           return EncryptString(s, entropy + ExecutionServer.LicenseNumber);
         default:
           throw new SecurityException(SecurityException.Msg.InvalidProtectionMode, protectionMode.ToString());

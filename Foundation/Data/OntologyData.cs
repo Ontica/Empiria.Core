@@ -30,7 +30,7 @@ namespace Empiria.Ontology {
       if (objectTypeInfo.DataSource.StartsWith("qry") || objectTypeInfo.DataSource.StartsWith("get")) {
         return DataReader.GetDataRow(DataOperation.Parse(objectTypeInfo.DataSource, objectId));
       }
-      return GeneralDataOperations.GetEntityById(objectTypeInfo.DataSource, objectTypeInfo.NamedIdFieldName, objectId);
+      return GeneralDataOperations.GetEntityByKey(objectTypeInfo.DataSource, objectTypeInfo.NamedIdFieldName, objectId);
     }
 
     static internal DataTable GetDerivedTypes(int baseTypeId) {
@@ -133,7 +133,7 @@ namespace Empiria.Ontology {
     }
 
     static internal DataRow GetTypeDataRow(string typeName) {
-      DataRow row = GeneralDataOperations.GetEntityById("EOSTypes", "TypeName", typeName);
+      DataRow row = GeneralDataOperations.GetEntityByKey("EOSTypes", "TypeName", typeName);
       if (row != null) {
         return row;
       } else {

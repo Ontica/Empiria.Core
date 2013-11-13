@@ -204,6 +204,42 @@
     <Compile Include="Integration\DataIntegratorWSProxy.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Modeler\DbBaseQuery.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modeler\DbBaseTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modeler\DbDatabase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modeler\DbDataSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modeler\DbDependencies.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modeler\DbField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modeler\DbFunction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modeler\DbIndex.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modeler\DbQueryParameter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modeler\DbStoredProcedure.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modeler\DBTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modeler\DBView.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="RootTypes\DataObject.cs" />
     <Compile Include="RootTypes\CachedObject.cs">
       <SubType>Code</SubType>
@@ -278,7 +314,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Modeler\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>

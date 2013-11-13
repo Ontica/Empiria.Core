@@ -94,16 +94,16 @@ namespace Empiria.Security {
 
     #region Public methods
 
-    static internal EmpiriaUser Authenticate(string userName, string password, string entropy) {
-      Assertion.RequireObject(userName, "userName");
+    static internal EmpiriaUser Authenticate(string username, string password, string entropy) {
+      Assertion.RequireObject(username, "username");
       Assertion.RequireObject(password, "password");
       Assertion.RequireObject(entropy, "entropy");
 
       //Remove this two lines
-      userName = Cryptographer.Decrypt(userName, entropy);
-      password = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, Cryptographer.Decrypt(password, entropy), userName);
-
-      int userId = ContactsData.GetContactIdWithUserName(userName);
+      username = Cryptographer.Decrypt(username, entropy);
+      password = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, 
+                                       Cryptographer.Decrypt(password, entropy), username);
+      int userId = ContactsData.GetContactIdWithUserName(username);
       if (userId == 0) {
         return null;
       }
@@ -115,13 +115,34 @@ namespace Empiria.Security {
       if (!user.IsActive) {
         return null;
       }
-      if (Cryptographer.Decrypt(ContactsData.GetContactAttribute<string>(user.Contact, "UserPassword"), userName).Equals(Cryptographer.Decrypt(password, userName))) {
+      if (Cryptographer.Decrypt(ContactsData.GetContactAttribute<string>(user.Contact, "UserPassword"), username).
+                                Equals(Cryptographer.Decrypt(password, username))) {
         user.isAuthenticated = true;
         return user;
       } else {
         user.isAuthenticated = false;
         return null;
       }
+    }
+
+    static internal EmpiriaUser Authenticate(EmpiriaSession activeSession) {
+      Assertion.RequireObject(activeSession, "activeSession");
+
+      if (!activeSession.IsStillActive) {
+        return null;
+      }
+      if (activeSession.UserId == 0) {
+        return null;
+      }
+      EmpiriaUser user = EmpiriaUser.Parse(activeSession.UserId);
+      if (user.IsSystemUser && !user.IsAdministrator) {
+        return null;
+      }
+      if (!user.IsActive) {
+        return null;
+      }
+      user.isAuthenticated = true;
+      return user;
     }
 
     static internal EmpiriaUser Authenticate(FormsAuthenticationTicket remoteTicket) {

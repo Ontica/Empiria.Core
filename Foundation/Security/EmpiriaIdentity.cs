@@ -35,8 +35,8 @@ namespace Empiria.Security {
       this.user = user;
     }
 
-    static public EmpiriaIdentity Authenticate(string name, string password, string entropy, int regionId) {
-      EmpiriaUser user = Empiria.Security.EmpiriaUser.Authenticate(name, password, entropy);
+    static public EmpiriaIdentity Authenticate(string username, string password, string entropy, int regionId) {
+      EmpiriaUser user = Empiria.Security.EmpiriaUser.Authenticate(username, password, entropy);
 
       if (user != null) {
         EmpiriaIdentity identity = new EmpiriaIdentity(user);
@@ -51,11 +51,40 @@ namespace Empiria.Security {
       }
     }
 
+    static internal EmpiriaIdentity Authenticate(EmpiriaSession session) {
+      EmpiriaUser user = Empiria.Security.EmpiriaUser.Authenticate(session);
+
+      if (user != null) {
+        EmpiriaIdentity identity = new EmpiriaIdentity(user);
+
+        identity.session = session;
+        identity.isAuthenticated = true;
+        identity.regionId = -1;
+        ValidateIdentity(identity);
+        return identity;
+      } else {
+        return null;
+      }
+    }
+
+    public static bool TryAuthenticate(string sessionToken, out EmpiriaPrincipal principal) {
+      EmpiriaSession session;
+      principal = null;
+      if (EmpiriaSession.TryParseActive(sessionToken, out session)) {
+        var identity = EmpiriaIdentity.Authenticate(session);
+        if (identity != null) {
+          principal = new EmpiriaPrincipal(identity);
+          return true;
+        }
+      }
+      return false;
+    }
+
     // For Empiria Web-Api's authentication 
-    static public EmpiriaPrincipal Authenticate(string clientID, string userName, string password, 
+    static public EmpiriaPrincipal Authenticate(string apiClientKey, string userName, string password,
                                                 string entropy,  int contextId) {
-      if (!globalApiKey.Equals(clientID)) {
-        new SecurityException(SecurityException.Msg.InvalidClientID, clientID);
+      if (!globalApiKey.Equals(apiClientKey)) {
+        new SecurityException(SecurityException.Msg.InvalidClientID, apiClientKey);
         return null;
       }
       var identity = EmpiriaIdentity.Authenticate(userName, password, entropy, contextId);
