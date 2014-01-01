@@ -360,13 +360,12 @@ namespace Empiria.Ontology {
     }
 
     public T GetExtensionData<T>() {
-      return Empiria.Data.JsonConverter.ToObject<T>(extensionData);
+      return JsonConverter.ToObject<T>(extensionData);
     }
 
     public override int GetHashCode() {
       return this.Id;
     }
-
 
     //protected internal TypeAssociationInfo GetAssociationInfo(int id) {
     //  if (this.Associations.ContainsId(id)) {

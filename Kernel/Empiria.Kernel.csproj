@@ -207,9 +207,9 @@
     <Compile Include="RootTypes\AssertionFailsException.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RootTypes\ExecutionServer.Trade.cs" />
+    <Compile Include="RootTypes\ExecutionServer.MasAutopartes.cs" />
     <Compile Include="RootTypes\IUnitOfWork.cs" />
-    <Compile Include="RootTypes\ProductInformation.Trade.cs" />
+    <Compile Include="RootTypes\ProductInformation.MasAutopartes.cs" />
     <Compile Include="Security\SingleSignOnToken.cs" />
     <Compile Include="RootTypes\OperationBase.cs" />
     <Compile Include="RootTypes\XmlConfigurationFile.cs" />

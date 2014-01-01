@@ -287,7 +287,7 @@ namespace Empiria {
     }
 
     public virtual string ToJson() {
-      return String.Empty;
+      throw new NotImplementedException();
     }
 
     #endregion Public methods

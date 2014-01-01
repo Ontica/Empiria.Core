@@ -28,6 +28,7 @@ namespace Empiria.Contacts {
     private string keywords = String.Empty;
     private string eMail = String.Empty;
     private Address address = Address.Empty;
+    private string extensionData = String.Empty;
 
     private GeneralObjectStatus status = GeneralObjectStatus.Active;
 
@@ -92,6 +93,10 @@ namespace Empiria.Contacts {
       protected set { keywords = value; }
     }
 
+    public T GetExtensionData<T>() {
+      return Empiria.Data.JsonConverter.ToObject<T>(extensionData);
+    }
+
     public string FullName {
       get { return fullName; }
       protected set { fullName = value; }
@@ -125,6 +130,7 @@ namespace Empiria.Contacts {
       this.nickname = (string) row["Nickname"];
       this.taxTag = (string) row["TaxIDNumber"];
       this.image = (string) row["ImageFilename"];
+      this.extensionData = (string) row["FingerprintTemplate"];
       this.eMail = (string) row["EMail"];
       this.address = Address.Parse(row);
       this.keywords = (string) row["ContactKeywords"];
