@@ -1,13 +1,13 @@
-﻿/* Empiria® Foundation Framework 2013 ************************************************************************
+﻿/* Empiria® Foundation Framework 2014 ************************************************************************
 *																																																						 *
 *	 Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
 *	 Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *	 Type      : ProductInformation                               Pattern  : Static class                      *
-*	 Date      : 23/Oct/2013                                      Version  : 5.2      Pattern version: 2.0     *
+*	 Date      : 28/Mar/2014                                      Version  : 5.5      Pattern version: 2.0     *
 *																																																						 *
 *  Summary   : Static class that holds Empiria® product information.                                         *
 *																																																						 *
-**************************************************** Copyright © La Vía Óntica SC & Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2014. **/
 using System;
 using System.Reflection;
 
@@ -53,7 +53,7 @@ namespace Empiria {
     }
 
     static public string Name {
-      get { return "Empiria® Trade 2013"; }
+      get { return "Empiria® Trade 2014"; }
     }
 
     static public string Url {

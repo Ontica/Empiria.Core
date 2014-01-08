@@ -1,12 +1,12 @@
-﻿/* Empiria® Foundation Framework 2013 ************************************************************************
+﻿/* Empiria® Foundation Framework 2014 ************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
 *  Assembly  : Empiria.Kernel.dll                               Pattern  : Assembly Attributes File          *
-*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
+*  Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 4.0  *
 *                                                                                                            *
 *  Summary   : Contains the minimal set of types for running the Empiria® Framework.                         *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -15,10 +15,10 @@ using System.Runtime.InteropServices;
 *************************************************************************************************************/
 [assembly: AssemblyTitle("Empiria.Kernel")]
 [assembly: AssemblyDescription("Empiria® Foundation Framework Kernel Types")]
-[assembly: AssemblyVersion("5.2.1023.0")]
-[assembly: AssemblyFileVersion("5.2.1023")]
+[assembly: AssemblyVersion("5.5.0328.0")]
+[assembly: AssemblyFileVersion("5.5.0328")]
 [assembly: AssemblyCompany("Ontica")]
-[assembly: AssemblyProduct("Empiria® Foundation Framework 2013")]
+[assembly: AssemblyProduct("Empiria® Foundation Framework 2014")]
 [assembly: AssemblyCopyright("© La Vía Óntica SC + Ontica LLC. All rights reserved.")]
 [assembly: AssemblyTrademark("Empiria and Ontica are either registered trademarks of La Vía Óntica SC or Ontica LLC.")]
 [assembly: AssemblyConfiguration("")]

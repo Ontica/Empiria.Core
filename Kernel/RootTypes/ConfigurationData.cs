@@ -1,14 +1,14 @@
-﻿/* Empiria® Foundation Framework 2013 ************************************************************************
+﻿/* Empiria® Foundation Framework 2014 ************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *  Type      : ConfigurationData                                Pattern  : Static Class                      *
-*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
+*  Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 4.0  *
 *                                                                                                            *
 *  Summary   : Gets or sets the configuration parameters of an Empiria® Framework type or types in customer  *
 *              systems.                                                                                      *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System;
 using System.Diagnostics;
 

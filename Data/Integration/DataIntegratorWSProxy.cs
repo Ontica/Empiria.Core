@@ -1,13 +1,13 @@
-﻿/* Empiria® Foundation Framework 2013 ************************************************************************
+﻿/* Empiria® Foundation Framework 2014 ************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Foundation Framework                    System   : Data Integration Services         *
 *  Namespace : Empiria.Data.Integration                         Assembly : Empiria.Data.dll                  *
 *  Type      : DataIntegratorProxyFactory                       Pattern  : Web Service Proxy Class           *
-*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
+*  Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 4.0  *
 *                                                                                                            *
 *  Summary   : Proxy type that allows communication to data integration web services.                        *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System;
 using System.Data;
 using Empiria.Reflection;

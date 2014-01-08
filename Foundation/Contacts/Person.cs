@@ -1,14 +1,14 @@
-﻿/* Empiria® Foundation Framework 2013 ************************************************************************
+﻿/* Empiria® Foundation Framework 2014 ************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Foundation Framework                    System   : Contacts Management               *
 *  Namespace : Empiria.Contacts                                 Assembly : Empiria.dll                       *
 *  Type      : Person                                           Pattern  : Ontology Object Type              *
-*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
+*  Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 4.0  *
 *                                                                                                            *
 *  Summary   : Information specific to a person, where a person references one and only one single world     *
 *              person.                                                                                       *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System;
 using System.Data;
 

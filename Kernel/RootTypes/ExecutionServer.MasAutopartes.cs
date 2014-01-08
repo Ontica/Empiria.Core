@@ -1,13 +1,13 @@
-﻿/* Empiria® Foundation Framework 2013 ************************************************************************
+﻿/* Empiria® Foundation Framework 2014 ************************************************************************
 *																																																						 *
 *	 Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
 *	 Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *	 Type      : ExecutionServer                                  Pattern  : Static Class                      *
-*	 Date      : 23/Oct/2013                                      Version  : 5.2      Pattern version: 2.0     *
+*	 Date      : 28/Mar/2014                                      Version  : 5.5      Pattern version: 2.0     *
 *																																																						 *
 *  Summary   : Static class that returns Empiria® current execution server information.                      *
 *																																																						 *
-**************************************************** Copyright © La Vía Óntica SC & Ontica LLC. 1994-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1994-2014. **/
 using System;
 using System.Web;
 

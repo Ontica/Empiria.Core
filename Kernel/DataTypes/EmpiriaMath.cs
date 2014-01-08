@@ -1,13 +1,13 @@
-﻿/* Empiria® Foundation Framework 2013 ************************************************************************
+﻿/* Empiria® Foundation Framework 2014 ************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria® Foundation Framework                    System   : Data Types Library                *
 *  Namespace : Empiria.DataTypes                                Assembly : Empiria.Kernel.dll                *
 *  Type      : EmpiriaMath                                      Pattern  : Data Type                         *
-*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
+*  Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 4.0  *
 *                                                                                                            *
 *  Summary   : Performs arithmetical operations over numerical data types.                                   *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2013. **/
+**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
 using System;
 
 namespace Empiria.DataTypes {
