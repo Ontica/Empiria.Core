@@ -1,14 +1,14 @@
-﻿/* Empiria® Foundation Framework 2014 ************************************************************************
+﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Foundation Framework                    System   : Contacts Management               *
+*  Solution  : Empiria Foundation Framework                     System   : Contacts Management               *
 *  Namespace : Empiria.Contacts                                 Assembly : Empiria.dll                       *
 *  Type      : Contact                                          Pattern  : Empiria Semiabstract Object Type  *
-*  Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 4.0  *
+*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Represents either a person, an organization or a group that has a meaningful name and can be  *
 *              contacted in some way and can play one or more roles.                                         *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 
@@ -36,8 +36,7 @@ namespace Empiria.Contacts {
 
     #region Constructors and parsers
 
-    protected Contact(string typeName)
-      : base(typeName) {
+    protected Contact(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
@@ -51,6 +50,10 @@ namespace Empiria.Contacts {
 
     static public Contact ParseFromBelow(int id) {
       return BaseObject.ParseFromBelow<Contact>(thisTypeName, id);
+    }
+
+    static public ObjectList<Contact> GetList(string filter) {
+      return ContactsData.GetContacts(filter);
     }
 
     #endregion Constructors and parsers
@@ -124,6 +127,22 @@ namespace Empiria.Contacts {
       return base.GetLinks<T>(roleName, period);
     }
 
+    /// <summary>OOJJOO</summary>
+    internal int organizationId {
+      get;
+      set;
+    }
+
+    /// <summary>OOJJOO</summary> 
+    internal int externalObjectId {
+      get;
+      set;
+    }
+
+    internal void SaveTempUserSettings() {
+      ContactsData.WriteTempUserSettings(this.Id, organizationId, externalObjectId);
+    }
+
     protected override void ImplementsLoadObjectData(DataRow row) {
       this.fullName = (string) row["ContactFullName"];
       this.alias = (string) row["ShortName"];
@@ -135,6 +154,9 @@ namespace Empiria.Contacts {
       this.address = Address.Parse(row);
       this.keywords = (string) row["ContactKeywords"];
       this.status = (GeneralObjectStatus) Convert.ToChar(row["ContactStatus"]);
+     
+      this.organizationId = (int) row["EMail2TypeId"];
+      this.externalObjectId = (int) row["Phone2TypeId"];
     }
 
     protected override void ImplementsSave() {

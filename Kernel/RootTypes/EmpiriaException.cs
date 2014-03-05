@@ -1,14 +1,14 @@
-﻿/* Empiria® Foundation Framework 2014 ************************************************************************
+﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
+*  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *  Type      : EmpiriaException                                 Pattern  : Empiria Base Exception Class      *
-*  Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 4.0  *
+*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
-*  Summary   : Class for run-time exceptions in Empiria® Framework. All exception classes needs be           *
+*  Summary   : Class for run-time exceptions in Empiria Framework. All exception classes needs be            *
 *              derivated of this class.                                                                      *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Diagnostics;
 using System.Reflection;
@@ -17,7 +17,7 @@ using System.Runtime.Serialization;
 
 namespace Empiria {
 
-  /// <summary>Abstract class for run-time exceptions in Empiria® Framework.</summary>
+  /// <summary>Abstract class for run-time exceptions in Empiria Framework.</summary>
   /// <remarks>Specialized exceptions must be managed through derived classes of this class.</remarks>
   [Serializable]
   public abstract class EmpiriaException : Exception {

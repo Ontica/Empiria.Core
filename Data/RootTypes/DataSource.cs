@@ -1,13 +1,13 @@
-﻿/* Empiria® Foundation Framework 2014 ************************************************************************
+﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Foundation Framework                    System   : Data Access Library               *
+*  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
 *  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
 *  Type      : DataSource                                       Pattern  : Static Class With Objects Cache   *
-*  Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 4.0  *
+*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Represents a data source formed by the source or connection string and the data technology.   *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System.Collections.Generic;
 using System.Data;
 using System.Security.Permissions;

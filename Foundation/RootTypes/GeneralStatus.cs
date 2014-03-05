@@ -1,13 +1,13 @@
-﻿/* Empiria® Foundation Framework 2014 ************************************************************************
+﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
+*  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
 *  Namespace : Empiria                                          Assembly : Empiria.dll                       *
 *  Type      : Multiple General Purpose Enumerations            Pattern  : None                              *
-*  Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 4.0  *
+*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Abstract type that holds basic object instances which are stored in a general common table.   *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 
 namespace Empiria {
 

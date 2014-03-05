@@ -231,6 +231,7 @@
     <Compile Include="RootTypes\ZZRule.cs" />
     <Compile Include="RootTypes\ZZRelation.cs" />
     <Compile Include="Security\ImpersonationContext.cs" />
+    <Compile Include="Security\UserSettings.cs" />
     <Compile Include="Security\WebServer.cs" />
     <Compile Include="Security\EmpiriaUser.cs" />
     <Compile Include="Empiria.AssemblyInfo.cs" />

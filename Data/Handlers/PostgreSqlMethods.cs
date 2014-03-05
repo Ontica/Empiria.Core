@@ -1,19 +1,18 @@
-﻿/* Empiria® Foundation Framework 2014 ************************************************************************
+﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Foundation Framework                    System   : Data Access Library               *
+*  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
 *  Namespace : Empiria.Data.Handlers                            Assembly : Empiria.Data.dll                  *
 *  Type      : PostgreSqlMethods                                Pattern  : Static Class                      *
-*  Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 4.0  *
+*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Static internal class to read data stored in PostgreSQL databases.                            *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 using System.EnterpriseServices;
 using System.Security.Permissions;
 using Npgsql;
-
 
 namespace Empiria.Data.Handlers {
 

@@ -1,14 +1,14 @@
-﻿/* Empiria® Foundation Framework 2014 ************************************************************************
+﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Foundation Framework                    System   : Foundation Ontology               *
+*  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
 *  Namespace : Empiria                                          Assembly : Empiria.dll                       *
 *  Type      : BaseObject                                       Pattern  : Abstract Class                    *
-*  Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 4.0  *
+*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
-*  Summary   : BaseObject is the root type of the object type hierarchy in Empiria® Framework.               *
+*  Summary   : BaseObject is the root type of the object type hierarchy in Empiria Framework.                *
 *              All object types that uses the framework must be descendants of this abstract type.           *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 
@@ -19,7 +19,7 @@ using Empiria.Reflection;
 namespace Empiria {
 
   /// <summary>
-  /// BaseObject is the root type of the object type hierarchy in Empiria® Framework. 
+  /// BaseObject is the root type of the object type hierarchy in Empiria Framework. 
   /// All object types that uses the framework must be descendants of this abstract type.
   /// </summary>
   public abstract class BaseObject : IStorable {
@@ -271,7 +271,7 @@ namespace Empiria {
         this.objectId = OntologyData.GetNextObjectId(this.ObjectTypeInfo);
       }
       Assertion.Assert(this.objectId != 0,
-      "Object Id can't be zero. There is an error in GetNextObjectId or in DbRules table.");
+                       "Object Id can't be zero. There is an error in GetNextObjectId or in DbRules table.");
       ImplementsSave();
       lock (cache) {
         cache.Insert(this);

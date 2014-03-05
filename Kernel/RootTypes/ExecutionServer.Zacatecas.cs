@@ -3,11 +3,11 @@
 *	 Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
 *	 Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *	 Type      : ExecutionServer                                  Pattern  : Static Class                      *
-*	 Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 3.0  *
-*																																																						 *
-*  Summary   : Static class that returns Empiria® current execution server information.                      *
-*																																																						 *
-**************************************************** Copyright © La Vía Óntica SC & Ontica LLC. 1994-2014. **/
+*  Version   : 5.5   Date: 28/Mar/2014                          License  : GNU AGPLv3  (See license.txt)     *
+*                                                                                                            *
+*  Summary   : Static class that returns Empiria current execution server information.                       *
+*                                                                                                            *
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Web;
 
@@ -27,7 +27,7 @@ namespace Empiria {
   
   #endregion Enumerations
   
-  /// <summary>Static class that returns Empiria® current execution server information.</summary>
+  /// <summary>Static class that returns Empiria current execution server information.</summary>
   static public class ExecutionServer {
 
     #region Fields
@@ -317,8 +317,15 @@ namespace Empiria {
 
     #region Private methods
 
+    static private readonly object locker = new object();
     static private void Start() {
-      Start(ExecutionServerType.WebApplicationServer);
+      if (!IsStarted) {
+        lock (locker) {
+          if (!IsStarted) {
+            Start(ExecutionServerType.WebApplicationServer);
+          }
+        }
+      }
     }
 
     #endregion Private methods

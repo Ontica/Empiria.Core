@@ -1,14 +1,14 @@
-﻿/* Empiria® Foundation Framework 2014 ************************************************************************
+﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Foundation Framework                    System   : Contacts Management               *
+*  Solution  : Empiria Foundation Framework                     System   : Contacts Management               *
 *  Namespace : Empiria.Contacts                                 Assembly : Empiria.dll                       *
 *  Type      : Contact                                          Pattern  : Empiria Semiabstract Object Type  *
-*  Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 4.0  *
+*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Represents either a person, an organization or a group that has a meaningful name and can be  *
 *              contacted in some way and can play one or more roles.                                         *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 
@@ -68,6 +68,12 @@ namespace Empiria.Contacts {
     #endregion Constructors and parsers
 
     #region Public properties
+
+    public string Description {
+      get {
+        return "Principal";
+      }
+    }
 
     public string Street {
       get { return street; }

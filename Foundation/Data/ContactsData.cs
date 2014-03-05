@@ -1,14 +1,15 @@
-﻿/* Empiria® Foundation Framework 2014 ************************************************************************
+﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Foundation Framework                    System   : Contacts Management               *
+*  Solution  : Empiria Foundation Framework                     System   : Contacts Management               *
 *  Namespace : Empiria.Contacts.Data                            Assembly : Empiria.dll                       *
 *  Type      : ObjectReader                                     Pattern  : Data Services Static Class        *
-*  Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 4.0  *
+*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Provides data read methods for Empiria Foundation Ontology objects.                           *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Data;
 
 using Empiria.Data;
 using Empiria.Security;
@@ -27,6 +28,18 @@ namespace Empiria.Contacts {
       return GeneralDataOperations.GetEntityId("EOSContacts", "ContactId", "UserName", userName);
     }
 
+    static internal ObjectList<Contact> GetContacts(string keywords, string sort = "") {
+      string filter = keywords.Length != 0 ? 
+                      SearchExpression.ParseAndLikeWithNoiseWords("ContactKeywords", keywords).ToString() :
+                      String.Empty;
+      string sql = "SELECT * FROM EOSContacts";
+      sql += GeneralDataOperations.GetFilterSortSqlString(filter, sort);
+
+      DataTable table = DataReader.GetDataTable(DataOperation.Parse(sql));
+
+      return new ObjectList<Contact>((x) => Contact.Parse(x), table);
+    }
+
     static internal int WriteContact(Contact o) {
       throw new NotImplementedException();
     }
@@ -42,6 +55,11 @@ namespace Empiria.Contacts {
       sql += " WHERE ContactId = " + contact.Id.ToString();
 
       return DataWriter.Execute(DataOperation.Parse(sql));
+    }
+
+    static internal int WriteTempUserSettings(int userId, int organizationId, int externalObjectId) {
+      return DataWriter.Execute(DataOperation.Parse("writeTempUserSettings", 
+                                userId, organizationId, externalObjectId));
     }
 
     static internal int WriteUser(EmpiriaUser user) {

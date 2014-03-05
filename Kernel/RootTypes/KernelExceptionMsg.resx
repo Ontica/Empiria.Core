@@ -187,21 +187,21 @@
     <value>La ejecución del programa alcanzó un elemento de una alternación (if) que no ha sido definido en el código del programa. Se trata de un error de programación.</value>
   </data>
   <data name="InvalidLicense" xml:space="preserve">
-    <value>La licencia del Framework Empiria® no es válida.\n\nIMPORTANTE: Este producto de software, así como su diseño y documentación, están protegidos por las leyes federales e internacionales sobre derechos de autor.\n\nToda violación a los derechos de autor sobre cualquiera de las partes que constituyen esta obra será perseguida hasta sus últimas consecuencias conforme a las leyes aplicables en México y en el extranjero.\n\nSi tiene alguna duda sobre la autenticidad de esta copia del producto puede contactarnos en www.ontica.org.</value>
+    <value>La licencia del Framework Empiria no es válida.\n\nIMPORTANTE: Este producto de software, así como su diseño y documentación, están protegidos por las leyes federales e internacionales sobre derechos de autor.\n\nToda violación a los derechos de autor sobre cualquiera de las partes que constituyen esta obra será perseguida hasta sus últimas consecuencias conforme a las leyes aplicables en México y en el extranjero.\n\nSi tiene alguna duda sobre la autenticidad de esta copia del producto puede contactarnos en www.ontica.org.</value>
   </data>
   <data name="CantPublishNullMessage" xml:space="preserve">
-    <value>No pude publicar un objeto nulo mediante los servicios de mensajería Empiria®:\n\nFavor de notificar sobre este error al administrador del sistema ya que se trata de un problema de programación.</value>
+    <value>No pude publicar un objeto nulo mediante los servicios de mensajería Empiria:\n\nFavor de notificar sobre este error al administrador del sistema ya que se trata de un problema de programación.</value>
   </data>
   <data name="CantCreateQueueFactory" xml:space="preserve">
-    <value>No pude invocar la fábrica de objetos {0}, la cual se encarga de crear las colas de mensajes utilizadas por los servicios de mensajería Empiria®. Puede ser que el componente Empiria.Messaging.dll no exista, o no esté instalado adecuadamente o que su versión sea incorrecta.\n
+    <value>No pude invocar la fábrica de objetos {0}, la cual se encarga de crear las colas de mensajes utilizadas por los servicios de mensajería Empiria. Puede ser que el componente Empiria.Messaging.dll no exista, o no esté instalado adecuadamente o que su versión sea incorrecta.\n
 Favor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuración del servidor o de la aplicación.</value>
   </data>
   <data name="CantCreateQueueFactoryType" xml:space="preserve">
-    <value>No pude cargar el componente que administra los servicios de mensajería Empiria®. Es posible que el archivo Empiria.Messaging.dll no exista, o no esté instalado adecuadamente o que tenga una versión incorrecta.\n
+    <value>No pude cargar el componente que administra los servicios de mensajería Empiria. Es posible que el archivo Empiria.Messaging.dll no exista, o no esté instalado adecuadamente o que tenga una versión incorrecta.\n
 Favor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuración del servidor o de la aplicación.</value>
   </data>
   <data name="CantCreateDefaultQueue" xml:space="preserve">
-    <value>No pude crear la cola de mensajes predeterminada, misma que es indispensable para ejecutar el sistema Empiria®. Puede ser que los parámetros de los componentes de mensajería estén mal configurados, o que el servicio que emplea la cola de mensajes no esté disponible o que el sistema no tenga permisos de acceso a dicho servicio.\n\n
+    <value>No pude crear la cola de mensajes predeterminada, misma que es indispensable para ejecutar el sistema Empiria. Puede ser que los parámetros de los componentes de mensajería estén mal configurados, o que el servicio que emplea la cola de mensajes no esté disponible o que el sistema no tenga permisos de acceso a dicho servicio.\n\n
 Favor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuración del servidor o de la aplicación.</value>
   </data>
   <data name="CantRetriveMessage" xml:space="preserve">
@@ -220,7 +220,7 @@ Favor de notificar sobre este error al administrador del sistema ya que se trata
     <value>No pude leer del archivo de configuración del sistema la propiedad requeridas por el tipo Empiria.ExecutionServer.</value>
   </data>
   <data name="XmlConfigurationFileNotExists" xml:space="preserve">
-    <value>El archivo '{0}', que contiene los parámetros de configuración del sistema Empiria®, no existe.</value>
+    <value>El archivo '{0}', que contiene los parámetros de configuración del sistema Empiria, no existe.</value>
   </data>
   <data name="NotImplemented" xml:space="preserve">
     <value>El método invocado todavía no ha sido implementado en el sistema.</value>

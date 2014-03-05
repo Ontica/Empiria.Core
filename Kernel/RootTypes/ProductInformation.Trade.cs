@@ -1,19 +1,19 @@
-﻿/* Empiria® Foundation Framework 2014 ************************************************************************
+﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *																																																						 *
-*	 Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
+*	 Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *	 Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *	 Type      : ProductInformation                               Pattern  : Static class                      *
-*	 Date      : 28/Mar/2014                                      Version  : 5.5      Pattern version: 2.0     *
+*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *																																																						 *
-*  Summary   : Static class that holds Empiria® product information.                                         *
+*  Summary   : Static class that holds Empiria product information.                                          *
 *																																																						 *
-**************************************************** Copyright © La Vía Óntica SC & Ontica LLC. 1994-2014. **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Reflection;
 
 namespace Empiria {
 
-  /// <summary>Static class that holds Empiria® product information.</summary>
+  /// <summary>Static class that holds Empiria product information.</summary>
   static public class ProductInformation {
 
     #region Fields
@@ -41,7 +41,9 @@ namespace Empiria {
     }
 
     static public string Copyright {
-      get { return "Copyright © 1999-" + DateTime.Today.Year + ". La Vía Óntica SC + Ontica LLC."; }
+      get {
+        return "Copyright © 1999-" + DateTime.Today.Year + ". La Vía Óntica SC, Ontica LLC y colaboradores.";
+      }
     }
 
     static public string CopyrightUrl {
@@ -53,7 +55,7 @@ namespace Empiria {
     }
 
     static public string Name {
-      get { return "Empiria® Trade 2014"; }
+      get { return "Empiria Trade 2014"; }
     }
 
     static public string Url {

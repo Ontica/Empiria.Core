@@ -1,13 +1,13 @@
-﻿/* Empiria® Foundation Framework 2014 ************************************************************************
+﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Foundation Framework                    System   : Security Framework                *
+*  Solution  : Empiria Foundation Framework                     System   : Security Framework                *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.dll                       *
 *  Type      : EmpiriaUser                                      Pattern  : Ontology Relation Type            *
-*  Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 4.0  *
+*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Represents a human user.                                                                      *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 using System.Web.Security;
@@ -47,6 +47,12 @@ namespace Empiria.Security {
       return BaseObject.Parse<EmpiriaUser>(thisTypeName, id);
     }
 
+    static public EmpiriaUser Current {
+      get {
+        return ExecutionServer.CurrentUser as EmpiriaUser;
+      }
+    }
+
     #endregion Constructors and parsers
 
     #region Public propertiese
@@ -78,6 +84,18 @@ namespace Empiria.Security {
 
     public bool IsSystemUser {
       get { return (base.Id <= 0); }
+    }
+
+    public Organization Organization {
+      get {
+        return Organization.Parse(1);
+      }
+    }
+
+    public UserSettings Settings {
+      get {
+        return new UserSettings(this.Contact);
+      }
     }
 
     public string UITheme {

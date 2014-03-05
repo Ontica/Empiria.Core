@@ -1,13 +1,13 @@
-﻿/* Empiria® Foundation Framework 2014 ************************************************************************
+﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Foundation Framework                    System   : Messaging Services                *
+*  Solution  : Empiria Foundation Framework                     System   : Messaging Services                *
 *  Namespace : Empiria.Messaging.Queues                         Assembly : Empiria.Messaging.dll             *
 *  Type      : WindowsEventLogQueue                             Pattern  : Messaging Queue Class             *
-*  Date      : 28/Mar/2014                                      Version  : 5.5     License: CC BY-NC-SA 4.0  *
+*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Class used for publish information in the Windows Event Log.                                  *
 *                                                                                                            *
-**************************************************** Copyright © La Vía Óntica SC + Ontica LLC. 1999-2014. **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Diagnostics;
 
@@ -39,7 +39,7 @@ namespace Empiria.Messaging.Queues {
         using (EventLog logEntry = new EventLog(base.Name)) {
           logEntry.Source = DefaultEventLogSource;
           string msg = "Se inicializó la cola de mensajes de Windows a las " + DateTime.Now.ToLongTimeString() +
-                       " para el servidor Empiria® del tipo '" + Empiria.ExecutionServer.ServerType.ToString() +
+                       " para el servidor Empiria del tipo '" + Empiria.ExecutionServer.ServerType.ToString() +
                        "' bajo el proceso con identificador PID = ";
           if (System.Diagnostics.Process.GetCurrentProcess() != null) {
             msg += System.Diagnostics.Process.GetCurrentProcess().Id.ToString() + ".";
