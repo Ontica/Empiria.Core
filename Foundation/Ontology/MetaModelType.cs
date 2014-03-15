@@ -8,7 +8,7 @@
 *  Summary   : This type is the root of the item type metadata information hierarchy. All types information  *
 *              classes must be descendants of this type.                                                     *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Data;

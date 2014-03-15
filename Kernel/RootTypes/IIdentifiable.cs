@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Interface that represents an identifiable object throw an integer Id.                         *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 
 namespace Empiria {
 

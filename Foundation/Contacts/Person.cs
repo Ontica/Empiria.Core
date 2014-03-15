@@ -8,7 +8,7 @@
 *  Summary   : Information specific to a person, where a person references one and only one single world     *
 *              person.                                                                                       *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 

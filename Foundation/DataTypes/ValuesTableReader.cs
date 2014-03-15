@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Performs column read operations over a general purpose values table.                          *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 

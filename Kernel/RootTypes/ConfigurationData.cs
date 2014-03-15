@@ -8,7 +8,7 @@
 *  Summary   : Gets or sets the configuration parameters of an Empiria Framework type or types in customer   *
 *              systems.                                                                                      *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Diagnostics;
 

@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Abstract class that represents a messaging queue object.                                      *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Messaging {

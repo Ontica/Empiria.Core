@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : This type represents an object that can be cached using the wrapper type DataCache.           *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Web.Caching;
 

@@ -8,7 +8,7 @@
 *  Summary   : Represents either a person, an organization or a group that has a meaningful name and can be  *
 *              contacted in some way and can play one or more roles.                                         *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 

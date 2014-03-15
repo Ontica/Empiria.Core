@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Interface that represents a transactional operation.                                          *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria {

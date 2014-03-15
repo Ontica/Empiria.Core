@@ -8,7 +8,7 @@
 *  Summary   : This interface contains the fields of EmpiriaPrincipal and provides a separated interface for *
 *              integrate Empiria.Kernel.dll assembly with this assembly.                                     *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Security.Principal;
 

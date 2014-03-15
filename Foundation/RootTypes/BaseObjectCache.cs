@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Internal sealed class that represents a cached collection of BaseObject instances.            *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using Empiria.Collections;
 
 namespace Empiria {
