@@ -209,17 +209,6 @@ namespace Empiria.Ontology {
       protected set { femaleGenre = value; }
     }
 
-    protected DoubleKeyList<TypeMethodInfo> Methods {
-      get {
-        if (methodsList == null) {
-          lock (this) {
-            LoadMethods();
-          }
-        }
-        return methodsList;
-      }
-    }
-
     protected internal DoubleKeyList<TypeAssociationInfo> Associations {
       get {
         if (associationInfoList == null) {
@@ -239,6 +228,17 @@ namespace Empiria.Ontology {
           }
         }
         return attributeInfoList;
+      }
+    }
+
+    protected DoubleKeyList<TypeMethodInfo> Methods {
+      get {
+        if (methodsList == null) {
+          lock (this) {
+            LoadMethods();
+          }
+        }
+        return methodsList;
       }
     }
 

@@ -188,6 +188,7 @@
     <Compile Include="Ontology.Modeler\TypeProperty.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="RootTypes\IExtensible.cs" />
     <Compile Include="RootTypes\KeyValuePair.cs" />
     <Compile Include="RootTypes\ObjectListComparer.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />

@@ -941,7 +941,7 @@ namespace Empiria {
       temp = temp.Replace("|", " ");
       temp = temp.Replace("<", " ");
       temp = temp.Replace(">", " ");
-      temp = temp.Replace("&", " ");
+      //temp = temp.Replace("&", " ");
       temp = temp.Replace("\"", "´");
       temp = temp.Replace("\'", "´");
 

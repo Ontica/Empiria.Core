@@ -125,9 +125,6 @@ namespace Empiria.Security {
           return EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
         case EncryptionMode.EntropyHashCode:
           Assertion.RequireObject(entropy, "entropy");
-          //s = CreateHashCode(plainText, entropy + ExecutionServer.LicenseNumber);
-          //return EncryptString(s, entropy + ExecutionServer.LicenseNumber);
-
           s = EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
           s = CreateHashCode(s, entropy);
           return EncryptString(s, entropy + ExecutionServer.LicenseNumber);

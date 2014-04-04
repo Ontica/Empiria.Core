@@ -35,6 +35,9 @@ namespace Empiria.Security {
       UnauthenticatedIdentity,
       WrongAuthentication,
       WrongImpersonationToken,
+      WrongRequestedVersionForDIF,
+      IntegrityValidatorAssertFails,
+      InvalidDIFDataItemDataType,
     }
 
     static private string resourceBaseName = "Empiria.Security.SecurityExceptionMsg";
