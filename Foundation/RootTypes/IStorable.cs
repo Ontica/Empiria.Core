@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Storage Services                  *
 *  Namespace : Empiria.Storage                                  Assembly : Empiria.dll                       *
-*  Type      : IStorable                                        Pattern  : Separated Interface               *
+*  Type      : IStorable                                        Pattern  : Loose coupling interface          *
 *  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Interface that represents an storable.                                                        *
