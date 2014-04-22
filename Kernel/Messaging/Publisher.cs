@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Messaging Core Services           *
 *  Namespace : Empiria.Messaging                                Assembly : Empiria.Kernel.dll                *
 *  Type      : Publisher                                        Pattern  : Static Class                      *
-*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Class used to publish or serialize objects to specific message queue.                         *
 *                                                                                                            *

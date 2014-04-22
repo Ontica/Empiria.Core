@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Modeler Library              *
 *  Namespace : Empiria.Data.Modeler                             Assembly : Empiria.Data.dll                  *
 *  Type      : DataObject                                       Pattern  : Standard Class                    *
-*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : This type represents a data object metadata.                                                  *
 *                                                                                                            *

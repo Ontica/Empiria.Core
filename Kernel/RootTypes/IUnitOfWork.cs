@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Storage Services                  *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *  Type      : IUnitOfWork                                      Pattern  : Separated Interface               *
-*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Interface that represents an identificable and serializable unit of work, that consists in    *
 *              a serializable set of ordered operations, a guid identificator and status.                    *

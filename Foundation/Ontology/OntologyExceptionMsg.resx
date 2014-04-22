@@ -124,13 +124,13 @@
     <value>Los metadatos del tipo '{0}' no han sido definidos en el sistema.</value>
   </data>
   <data name="TypeAssociationInfoNotFound" xml:space="preserve">
-    <value>Los metadatos de la asoaciación '{0}' sobre el tipo '{1}' no han sido definidos en el sistema.</value>
+    <value>Los metadatos de la asociación '{0}' sobre el tipo '{1}' no han sido definidos en el sistema.</value>
   </data>
   <data name="UndefinedTypeInfoFamily" xml:space="preserve">
     <value>El sistema ontológico no tiene definida la familia de tipos '{0}'.</value>
   </data>
   <data name="ObjectIdNotFound" xml:space="preserve">
-    <value>No se encuentra la información del objeto con identificador '{0}' perteneciente al tipo '{1}' en el archivo correspondiente.</value>
+    <value>An object of type {1} and id = {0} doesn't exist. (Hint: This problem generally is caused by wrong database values.)</value>
   </data>
   <data name="ConvertionToTargetTypeFails" xml:space="preserve">
     <value>No puede convertir el valor '{0}' al tipo de datos {1}.</value>
@@ -142,7 +142,7 @@
     <value>El tipo '{0}' no tiene definido el nombre del campo de donde se debe leer el nombre identificador del objeto '{1}'. </value>
   </data>
   <data name="ObjectNamedKeyNotFound" xml:space="preserve">
-    <value>El objeto con nombre identificador '{1}' perteneciente al tipo '{0}' no existe en el archivo correspondiente.</value>
+    <value>An object of type {1} and named identificator '{0}' doesn't exist.\n (Hint: This problem generally is caused by wrong database values.)</value>
   </data>
   <data name="RelationMemberNameNotFound" xml:space="preserve">
     <value>El tipo '{0}' no tiene definida una relación con el nombre '{1}'.</value>

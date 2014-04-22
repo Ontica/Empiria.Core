@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Messaging Core Services           *
 *  Namespace : Empiria.Messaging                                Assembly : Empiria.Kernel.dll                *
 *  Type      : Message                                          Pattern  : Standard Class                    *
-*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Represents an atomic data package that can be transmitted by a message queue.                 *
 *                                                                                                            *

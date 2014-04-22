@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Security Framework                *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.Kernel.dll                *
 *  Type      : IntegrityValidator                               Pattern  : Standard Class                    *
-*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Provides a service to secure entities using a data integrity field, which it is calculted     *
 *              as a hash code of a list of the entity's protected fields.                                    *
@@ -26,12 +26,18 @@ namespace Empiria.Security {
     }
 
     public void Assert(string dataIntegrityFieldValue) {
+      if (dataIntegrityFieldValue.Length == 0) {      // OOJJOO Remove this line to assure integrity check
+        return;
+      }
       int version = Convert.ToInt32(dataIntegrityFieldValue.Substring(0, 1), 16);
       string storedDIFData = dataIntegrityFieldValue.Substring(1);
 
       if (!storedDIFData.Equals(this.GetDIFHashCode(version))) {
-        throw new SecurityException(SecurityException.Msg.IntegrityValidatorAssertFails,
-                                    resourceTypeName, resource.Id);
+        var e = new SecurityException(SecurityException.Msg.IntegrityValidatorAssertFails,
+                                      resourceTypeName, resource.Id);
+        e.Publish();  // OOJJOO Only throw exception
+        //throw new SecurityException(SecurityException.Msg.IntegrityValidatorAssertFails,
+        //                            resourceTypeName, resource.Id);
       }
     }
 

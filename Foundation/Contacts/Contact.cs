@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Contacts Management               *
 *  Namespace : Empiria.Contacts                                 Assembly : Empiria.dll                       *
 *  Type      : Contact                                          Pattern  : Empiria Semiabstract Object Type  *
-*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Represents either a person, an organization or a group that has a meaningful name and can be  *
 *              contacted in some way and can play one or more roles.                                         *
@@ -27,7 +27,7 @@ namespace Empiria.Contacts {
     private string image = String.Empty;
     private string keywords = String.Empty;
     private string eMail = String.Empty;
-    private Address address = Address.Empty;
+    private TempAddress address = TempAddress.Empty;
     private string extensionData = String.Empty;
 
     private GeneralObjectStatus status = GeneralObjectStatus.Active;
@@ -60,7 +60,7 @@ namespace Empiria.Contacts {
 
     #region Public properties
 
-    public Address Address {
+    public TempAddress Address {
       get { return address; }
       set { address = value; }
     }
@@ -151,7 +151,7 @@ namespace Empiria.Contacts {
       this.image = (string) row["ImageFilename"];
       this.extensionData = (string) row["FingerprintTemplate"];
       this.eMail = (string) row["EMail"];
-      this.address = Address.Parse(row);
+      this.address = TempAddress.Parse(row);
       this.keywords = (string) row["ContactKeywords"];
       this.status = (GeneralObjectStatus) Convert.ToChar(row["ContactStatus"]);
      

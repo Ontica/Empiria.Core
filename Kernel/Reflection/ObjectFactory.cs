@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria.Reflection                               Assembly : Empiria.Kernel.dll                *
 *  Type      : ObjectFactory                                    Pattern  : Static Class                      *
-*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : This class provides services for a empiria type instance creation.                            *
 *                                                                                                            *
@@ -86,9 +86,13 @@ namespace Empiria.Reflection {
         MethodInfo method = type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public,
                                            null, CallingConventions.Any, new Type[] { typeof(int) }, null);
         return method.Invoke(null, new object[] { objectId });
-      } catch (Exception innerException) {
-        throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, innerException,
+      } catch (TargetInvocationException e) {
+        throw e.GetBaseException();
+      } catch (TargetException e) {
+        throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
                                       type.FullName + "[ Id = " + objectId + " ]");
+      } catch {
+        throw;
       }
     }
 

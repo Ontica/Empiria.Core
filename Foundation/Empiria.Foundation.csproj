@@ -172,7 +172,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataTypes\Address.cs" />
+    <Compile Include="DataTypes\TempAddress.cs" />
     <Compile Include="Contacts\Organization.cs" />
     <Compile Include="DataTypes\InterestRateType.cs" />
     <Compile Include="Ontology.Modeler\TypeModeler.cs" />
@@ -190,6 +190,7 @@
     </Compile>
     <Compile Include="RootTypes\IExtensible.cs" />
     <Compile Include="RootTypes\KeyValuePair.cs" />
+    <Compile Include="RootTypes\LazyObject.cs" />
     <Compile Include="RootTypes\ObjectListComparer.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />
     <Compile Include="RootTypes\TimePeriod.cs" />

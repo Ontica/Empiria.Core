@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *  Type      : EMail                                            Pattern  : Static Class                      *
-*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Operations for send e-mails.                                                                  *
 *                                                                                                            *
@@ -23,11 +23,11 @@ namespace Empiria.Messaging {
     #region Public methods
 
     static public void Send(string eMail, string subject, string body, FileInfo[] attachments) {
-      SmtpClient smtp = new SmtpClient("mail.masautopartes.com.mx");
+      SmtpClient smtp = new SmtpClient("smtpout.secureserver.net");
 
       NetworkCredential credential = new NetworkCredential("pineda@masautopartes.com.mx", "Hercules0201");
       smtp.Credentials = credential;
-      smtp.Port = 50;
+      smtp.Port = 80;
 
       MailMessage message = new MailMessage();
       message.From = new MailAddress("pineda@masautopartes.com.mx", "Auto Refacciones Pineda, S.A. de C.V.");
@@ -46,10 +46,6 @@ namespace Empiria.Messaging {
     }
 
     #endregion Public methods
-
-    #region Private methods
-
-    #endregion Private methods
 
   } //class EMail
 

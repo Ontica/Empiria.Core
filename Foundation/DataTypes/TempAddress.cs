@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Contacts Management               *
 *  Namespace : Empiria.Contacts                                 Assembly : Empiria.dll                       *
 *  Type      : Contact                                          Pattern  : Empiria Semiabstract Object Type  *
-*  Version   : 5.5        Date: 28/Mar/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Represents either a person, an organization or a group that has a meaningful name and can be  *
 *              contacted in some way and can play one or more roles.                                         *
@@ -14,7 +14,7 @@ using System.Data;
 
 namespace Empiria.Contacts {
 
-  public class Address {
+  public class TempAddress {
 
     #region Fields
 
@@ -35,20 +35,21 @@ namespace Empiria.Contacts {
 
     #region Constructors and parsers
 
-    internal Address()
-      : base() {
+    internal TempAddress() : base() {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
-    static public Address Empty {
-      get { return new Address(); }
+    static public TempAddress Empty {
+      get {
+        return new TempAddress();
+      }
     }
 
-    static public Address Parse(DataRow row) {
+    static public TempAddress Parse(DataRow row) {
       if (row == null) {
-        return Address.Empty;
+        return TempAddress.Empty;
       }
-      Address o = new Address();
+      TempAddress o = new TempAddress();
 
       o.street = (string) row["AddressStreet"];
       o.extNumber = (string) row["AddressExtNumber"];
@@ -132,12 +133,6 @@ namespace Empiria.Contacts {
 
     #endregion Public properties
 
-
-    #region Public methods
-
-
-    #endregion Public methods
-
-  } // class Address
+  } // class TempAddress
 
 } // namespace Empiria.Contacts
