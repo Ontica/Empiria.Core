@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Represents a generic named sortable list of items of specific reference type.                 *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,35 +29,31 @@ namespace Empiria.Collections {
 
     #region Constructors and parsers
 
-    public EmpiriaList()
-      : this(false) {
+    public EmpiriaList() : this(false) {
       //no-op
     }
 
-    public EmpiriaList(bool synchronized)
-      : this(String.Empty, 16, synchronized) {
+    public EmpiriaList(bool synchronized) : this(16, synchronized) {
       // no-op
     }
 
-    public EmpiriaList(int capacity)
-      : this(String.Empty, capacity, false) {
+    public EmpiriaList(int capacity): this(capacity, false) {
       // no-op
     }
 
-    public EmpiriaList(int capacity, bool synchronized)
-      : this(String.Empty, capacity, synchronized) {
+    public EmpiriaList(List<T> items) : this(items, false) {
       // no-op
     }
 
-    public EmpiriaList(string name, bool synchronized)
-      : this(name, 16, synchronized) {
-      // no-op
-    }
-
-    public EmpiriaList(string name, int capacity, bool synchronized) {
-      this.name = name;
+    public EmpiriaList(int capacity, bool synchronized) {
       this.isSynchronized = synchronized;
       items = new List<T>(capacity);
+    }
+
+
+    public EmpiriaList(List<T> items, bool synchronized) {
+      this.isSynchronized = synchronized;
+      this.items = items;
     }
 
     #endregion Constructors and parsers
@@ -71,10 +67,6 @@ namespace Empiria.Collections {
 
     public bool IsSynchronized {
       get { return isSynchronized; }
-    }
-
-    public string Name {
-      get { return name; }
     }
 
     #endregion Public properties
@@ -207,7 +199,6 @@ namespace Empiria.Collections {
         return items.FindLast(match);
       }
     }
-
 
     protected void Insert(int index, T item) {
       if (isSynchronized) {

@@ -248,6 +248,7 @@
     <Compile Include="Handlers\MySqlMethods.cs" />
     <Compile Include="Integration\DataIntegratorRule.cs" />
     <Compile Include="Integration\DataIntegrationEngine.cs" />
+    <Compile Include="Kernel\IStorable.cs" />
     <Compile Include="RootTypes\JsonConverter.cs" />
     <Compile Include="RootTypes\GeneralDataOperations.cs" />
     <Compile Include="RootTypes\DataCache.cs">
@@ -295,6 +296,10 @@
     <Compile Include="Handlers\SqlParameterCache.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Kernel\ObjectList.cs" />
+    <Compile Include="Kernel\StorageChangeItem.cs" />
+    <Compile Include="Kernel\StorageChangeItemList.cs" />
+    <Compile Include="Kernel\StorageContext.cs" />
     <Compile Include="RootTypes\Transaction.cs">
       <SubType>Code</SubType>
     </Compile>

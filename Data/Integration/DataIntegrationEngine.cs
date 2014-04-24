@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Executes asynchronous data operations published on queues throw web services invoking.        *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 using System.Runtime.Remoting.Messaging;

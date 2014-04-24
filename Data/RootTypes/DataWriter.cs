@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Static class with methods that performs data writing operations.                              *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 using System.Reflection;

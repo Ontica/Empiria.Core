@@ -8,7 +8,7 @@
 *  Summary   : Interface that represents an identificable and serializable unit of work, that consists in    *
 *              a serializable set of ordered operations, a guid identificator and status.                    *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Runtime.Serialization;
 

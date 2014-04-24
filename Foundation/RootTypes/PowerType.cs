@@ -8,7 +8,7 @@
 *  Summary   : A power type is a an object type whose instances are subtypes of another object type, named   *
 *              the partitioned type. Powertyping enables dynamic specialization.                             *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Ontology;

@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Static internal class used to read data stored in Microsoft Access and other OleDb databases. *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 using System.Data.OleDb;

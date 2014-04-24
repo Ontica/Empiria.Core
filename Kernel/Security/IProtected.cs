@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : This interface serves to control the data integrity of a stored entity.                       *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System.Security.Principal;
 
 namespace Empiria.Security {

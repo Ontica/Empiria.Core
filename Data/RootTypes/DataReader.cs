@@ -7,8 +7,9 @@
 *                                                                                                            *
 *  Summary   : Static class with methods that performs data reading operations.                              *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Data.Handlers;
@@ -203,15 +204,36 @@ namespace Empiria.Data {
       }
     }
 
-    //static public T GetScalar<T>(DataOperation operation) {
-    //  object scalar = GetScalar(operation);
+    static public List<T> GetList<T>(DataOperation operation, Func<DataRow, T> parser) {
+      Assertion.RequireObject(operation, "operation");
+      Assertion.RequireObject(parser, "parser");
 
-    //  if (scalar != null && scalar != DBNull.Value) {
-    //    return (T) scalar;
-    //  } else {
-    //    return default(T);
-    //  }
-    //}
+      DataTable dataTable = DataReader.GetDataTable(operation);
+
+      var list = new List<T>(dataTable.Rows.Count);
+      foreach (DataRow row in dataTable.Rows) {
+        list.Add(parser.Invoke(row));
+      }
+      return list;
+    }
+
+    static public List<T> GetList<T>(DataOperation operation, Func<DataRow, T> parser, string filter) {
+      return DataReader.GetList<T>(operation, parser, filter, String.Empty);
+    }
+
+    static public List<T> GetList<T>(DataOperation operation, Func<DataRow, T> parser,
+                                     string filter, string sort) {
+      Assertion.RequireObject(operation, "operation");
+      Assertion.RequireObject(parser, "parser");
+
+      DataView dataView = DataReader.GetDataView(operation, filter, sort);
+
+      var list = new List<T>(dataView.Count);
+      foreach (DataRowView row in dataView) {
+        list.Add(parser.Invoke(row.Row));
+      }
+      return list;
+    }
 
     static public T GetScalar<T>(DataOperation operation, T defaultValue = default(T)) {
       object scalar = GetScalar(operation);

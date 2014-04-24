@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Represents a list of BaseObject instances.                                                    *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 
@@ -147,14 +147,14 @@ namespace Empiria {
         string mergeKey = mergeKeyBuilder.Invoke(listA[i]);
         T item = listTemp.Find((y) => match.Invoke(listA[i], y));
         if (item == null || item.Equals(default(T))) {     // A Not founded in B
-          Merge<T> merge = new Merge<T>(mergeKey, listA[i], this.nullObject, MergeResultType.UnmatchedObjectB);
+          var merge = new Merge<T>(mergeKey, listA[i], this.nullObject, MergeResultType.UnmatchedObjectB);
           mergeResult.Add(merge);
         } else if (condition.Invoke(listA[i], item)) {     // A Founded in B and condition = true
-          Merge<T> merge = new Merge<T>(mergeKey, listA[i], item, MergeResultType.ExactMatch);
+          var merge = new Merge<T>(mergeKey, listA[i], item, MergeResultType.ExactMatch);
           mergeResult.Add(merge);
           listTemp.Remove(item);
         } else {                                          // A Founded in B but condition = false
-          Merge<T> merge = new Merge<T>(mergeKey, listA[i], item, MergeResultType.ConditionFails);
+          var merge = new Merge<T>(mergeKey, listA[i], item, MergeResultType.ConditionFails);
           mergeResult.Add(merge);
           listTemp.Remove(item);
         }

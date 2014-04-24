@@ -7,14 +7,14 @@
 *                                                                                                            *
 *  Summary   : Empiria JSON serialization library. JSON operations are based on Json.NET.                    *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 
 using Newtonsoft.Json;
 
-/// ToDo List: 
+/// ToDo List:    OOJJOO
 /// Object slicing (include/exclude a list of properties)
 /// Include private and public properties for serialize
 /// Represent object references of IIdentifiable instances only by their Id 

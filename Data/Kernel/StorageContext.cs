@@ -1,13 +1,13 @@
 ﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Storage Services                  *
-*  Namespace : Empiria.Storage                                  Assembly : Empiria.dll                       *
+*  Namespace : Empiria                                          Assembly : Empiria.Data.dll                  *
 *  Type      : StorageContext                                   Pattern  : Context Class                     *
 *  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Represents a context for object storage system transactional operations.                      *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -143,7 +143,7 @@ namespace Empiria {
         return;
       }
       changesList.Add(new StorageChangeItem(StorageContextOperation.Save, storableObject));
-      storableObject.ImplementsOnStorageUpdateEnds();
+      //storableObject.ImplementsOnStorageUpdateEnds();  OOJJOO
     }
 
     //public void Suspend(StorageObject storageObject) {
@@ -171,8 +171,9 @@ namespace Empiria {
     }
 
     private void FillDataWriterContext() {
-      foreach (StorageChangeItem changeItem in changesList) {
-        dataWriterContext.Add(changeItem.StorableObject.ImplementsStorageUpdate(changeItem.Operation, timeStamp));
+      foreach (StorageChangeItem changeItem in changesList) {  
+      // OOJJOO
+      //  dataWriterContext.Add(changeItem.StorableObject.ImplementsStorageUpdate(changeItem.Operation, timeStamp));
       }
     }
 

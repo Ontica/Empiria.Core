@@ -224,7 +224,6 @@
     <Compile Include="RootTypes\BusinessRuleItem.cs" />
     <Compile Include="RootTypes\BaseObject.cs" />
     <Compile Include="RootTypes\BaseObjectCache.cs" />
-    <Compile Include="RootTypes\ObjectList.cs" />
     <Compile Include="RootTypes\DynamicState.cs" />
     <Compile Include="RootTypes\PowerType.cs" />
     <Compile Include="RootTypes\GeneralObject.cs" />
@@ -237,8 +236,6 @@
     <Compile Include="Security\WebServer.cs" />
     <Compile Include="Security\EmpiriaUser.cs" />
     <Compile Include="Empiria.AssemblyInfo.cs" />
-    <Compile Include="RootTypes\IStorable.cs" />
-    <Compile Include="RootTypes\StorageChangeItemList.cs" />
     <Compile Include="RootTypes\SearchExpression.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -288,12 +285,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Collections\ZZObjectPager.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="RootTypes\StorageChangeItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="RootTypes\StorageContext.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Ontology\OntologyException.cs">

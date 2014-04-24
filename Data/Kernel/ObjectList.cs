@@ -1,20 +1,30 @@
 ﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
-*  Namespace : Empiria                                          Assembly : Empiria.dll                       *
+*  Solution  : Empiria Foundation Framework                     System   : Storage Services                  *
+*  Namespace : Empiria                                          Assembly : Empiria.Data.dll                  *
 *  Type      : ObjectList                                       Pattern  : Empiria List Class                *
 *  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Represents a list of BaseObject instances.                                                    *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Collections;
+using Empiria.Data;
 
 namespace Empiria {
+
+  static public class ListExtensionMethods {
+
+    /// <summary>Extends List<T> objects to return readonly ObjectList<T> type</summary>
+    static public ObjectList<T> ToObjectList<T>(this List<T> list) where T : IStorable {
+      return new ObjectList<T>(list);
+    }
+
+  }
 
   /// <summary>Represents a list of BaseObject instances.</summary>
   public class ObjectList<T> : EmpiriaList<T> where T : IStorable {
@@ -25,49 +35,29 @@ namespace Empiria {
       //no-op
     }
 
-    public ObjectList(int capacity)
-      : base(capacity) {
+    public ObjectList(int capacity) : base(capacity) {
       // no-op
     }
 
-    public ObjectList(string name, int capacity)
-      : base(name, capacity, false) {
-      //no-op
+    public ObjectList(List<T> list) : base(list) {
+
     }
 
-
-    public ObjectList(List<T> list)
-      : this(list.Count) {
-      this.AddRange(list);
-    }
-
-    public ObjectList(System.Func<DataRow, T> parseMethod, DataView view)
-      : this(view.Count) {
-      for (int i = 0; i < view.Count; i++) {
-        this.Add(parseMethod.Invoke(view[i].Row));
+    public ObjectList(Func<DataRow, T> parser, DataView view) : this(view.Count) {
+      foreach (DataRowView row in view) {
+        this.Add(parser.Invoke(row.Row));
       }
     }
 
-    public ObjectList(System.Func<DataRow, T> parseMethod, DataTable table)
-      : this(table.Rows.Count) {
-      for (int i = 0; i < table.Rows.Count; i++) {
-        this.Add(parseMethod.Invoke(table.Rows[i]));
+    public ObjectList(Func<DataRow, T> parser, DataTable table) {
+      foreach (DataRow row in table.Rows) {
+        this.Add(parser.Invoke(row));
       }
     }
 
     #endregion Constructors and parsers
 
     #region Public methods
-
-    protected internal new void Add(T item) {
-      base.Add(item);
-    }
-
-    public override T this[int index] {
-      get {
-        return (T) base[index];
-      }
-    }
 
     public new bool Contains(T item) {
       return base.Contains(item);
@@ -77,12 +67,6 @@ namespace Empiria {
       T result = base.Find(match);
 
       return (result != null);
-    }
-
-    public override void CopyTo(T[] array, int index) {
-      for (int i = index, j = Count; i < j; i++) {
-        array.SetValue(base[i], i);
-      }
     }
 
     public new T Find(Predicate<T> match) {
@@ -97,28 +81,12 @@ namespace Empiria {
       return base.FindLast(match);
     }
 
-    protected internal int Remove(ObjectList<T> objectList) {
-      IEnumerator<T> enumerator = this.GetEnumerator();
-
-      int counter = 0;
-      for (int i = 0; i < objectList.Count; i++) {
-        if (base.Remove(objectList[i])) {
-          counter++;
-        }
-      }
-      return counter;
-    }
-
-    protected internal new int RemoveAll(Predicate<T> match) {
-      return base.RemoveAll(match);
-    }
-
     public new void Sort(Comparison<T> comparison) {
       base.Sort(comparison);
     }
 
     public string ToJson() {
-      return String.Empty;
+      throw new NotImplementedException();
     }
 
     #endregion Public methods

@@ -7,8 +7,9 @@
 *                                                                                                            *
 *  Summary   : Class that represents an ontology type association definition.                                *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Reflection;
@@ -94,7 +95,7 @@ namespace Empiria.Ontology {
     // Object 1..* Object relation
     internal ObjectList<T> GetLinks<T>(BaseObject source) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
-      ObjectList<T> list = new ObjectList<T>(table.Rows.Count);
+      List<T> list = new List<T>(table.Rows.Count);
 
       try {
         for (int i = 0; i < table.Rows.Count; i++) {
@@ -106,38 +107,38 @@ namespace Empiria.Ontology {
 
         throw exception;
       }
-      return list;
+      return list.ToObjectList();
     }
 
     // ObjectType 1..* Object relation
     internal ObjectList<T> GetLinks<T>(ObjectTypeInfo source) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
-      ObjectList<T> list = new ObjectList<T>(table.Rows.Count);
+      List<T> list = new List<T>(table.Rows.Count);
 
       for (int i = 0; i < table.Rows.Count; i++) {
         list.Add(BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, table.Rows[i]));
       }
-      return list;
+      return list.ToObjectList();
     }
 
     // Object 1..* Object relation (in time period)
     internal ObjectList<T> GetLinks<T>(BaseObject source, TimePeriod period) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source, period);
 
-      ObjectList<T> list = new ObjectList<T>(table.Rows.Count);
+      List<T> list = new List<T>(table.Rows.Count);
 
       for (int i = 0; i < table.Rows.Count; i++) {
         list.Add(BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, table.Rows[i]));
       }
-      return list;
+      return list.ToObjectList();
     }
 
     // Object 1..* Object relation (filtered by predicate)
     internal ObjectList<T> GetLinks<T>(BaseObject source, Predicate<T> predicate) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
-      ObjectList<T> list = new ObjectList<T>(table.Rows.Count);
+      List<T> list = new List<T>(table.Rows.Count);
 
       for (int i = 0; i < table.Rows.Count; i++) {
         T item = BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, table.Rows[i]);
@@ -145,14 +146,14 @@ namespace Empiria.Ontology {
           list.Add(item);
         }
       }
-      return list;
+      return list.ToObjectList();
     }
 
     // Object 1..* MetaModelType relation
     internal ObjectList<T> GetTypeLinks<T>(BaseObject source) where T : MetaModelType {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
-      ObjectList<T> list = new ObjectList<T>(table.Rows.Count);
+      var list = new List<T>(table.Rows.Count);
 
       if (this.TargetType.TypeFamily == MetaModelTypeFamily.PowerType) {
         Type powerTypeSystemType = this.TargetType.UnderlyingSystemType;
@@ -160,12 +161,12 @@ namespace Empiria.Ontology {
           T item = (T) ObjectFactory.ParseObject(powerTypeSystemType, (int) row[this.TargetType.IdFieldName]);
           list.Add(item);
         }
-        return list;
+        return list.ToObjectList();
       } else {
         foreach (DataRow row in table.Rows) {
           list.Add(MetaModelType.Parse<T>((int) row[this.TargetType.IdFieldName]));
         }
-        return list;
+        return list.ToObjectList();
       }
     }
 
@@ -173,7 +174,7 @@ namespace Empiria.Ontology {
     internal ObjectList<T> GetTypeLinks<T>(MetaModelType source) where T : MetaModelType {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
-      ObjectList<T> list = new ObjectList<T>(table.Rows.Count);
+      var list = new List<T>(table.Rows.Count);
 
       if (this.TargetType.TypeFamily == MetaModelTypeFamily.PowerType) {
         Type powerTypeSystemType = this.TargetType.UnderlyingSystemType;
@@ -181,23 +182,23 @@ namespace Empiria.Ontology {
           T item = (T) ObjectFactory.ParseObject(powerTypeSystemType, (int) table.Rows[i][this.TargetType.IdFieldName]);
           list.Add(item);
         }
-        return list;
+        return list.ToObjectList();
       } else {
         for (int i = 0; i < table.Rows.Count; i++) {
           list.Add(MetaModelType.Parse<T>((int) table.Rows[i][this.TargetType.IdFieldName]));
         }
-        return list;
+        return list.ToObjectList();
       }
     }
 
     internal ObjectList<TypeAssociationInfo> GetAssociationLinks(BaseObject source) {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
-      var list = new ObjectList<TypeAssociationInfo>(table.Rows.Count);
+      var list = new List<TypeAssociationInfo>(table.Rows.Count);
       foreach (DataRow dataRow in table.Rows) {
         list.Add(TypeAssociationInfo.Parse(this.SourceType, dataRow));
       }
-      return list;
+      return list.ToObjectList();
     }
 
     protected override object ImplementsConvert(object value) {

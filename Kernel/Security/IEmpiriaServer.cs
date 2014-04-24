@@ -8,7 +8,7 @@
 *  Summary   : This interface contains the contract of a Empiria Server object and provides a separated      *
 *              interface for integrate Empiria.Kernel.dll assembly with Empiria.dll assembly.                *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 
 namespace Empiria.Security {
 

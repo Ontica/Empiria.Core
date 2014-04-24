@@ -8,7 +8,7 @@
 *  Summary   : Allows the execution of data write operations in a transactional mode. Instances are created  *
 *              using the method BeginTransaction on a DataWriterContext object.                              *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections;
 using System.Data;

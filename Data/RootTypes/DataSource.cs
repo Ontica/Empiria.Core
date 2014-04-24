@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Represents a data source formed by the source or connection string and the data technology.   *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System.Collections.Generic;
 using System.Data;
 using System.Security.Permissions;

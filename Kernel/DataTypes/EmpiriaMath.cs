@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Performs arithmetical operations over numerical data types.                                   *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.DataTypes {

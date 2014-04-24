@@ -8,7 +8,7 @@
 *  Summary   : This type is the root of the item type metadata information hierarchy. All types information  *
 *              classes must be descendants of this type.                                                     *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -382,14 +382,6 @@ namespace Empiria.Ontology {
     //    throw new OntologyException(OntologyException.Msg.TypeAssociationInfoNotFound, key, this.Name);
     //  }
     //}
-
-    void IStorable.ImplementsOnStorageUpdateEnds() {
-      throw new NotImplementedException("BaseObject.ImplementsOnStorageUpdateEnds");
-    }
-
-    DataOperationList IStorable.ImplementsStorageUpdate(StorageContextOperation operation, DateTime timestamp) {
-      throw new NotImplementedException("BaseObject.ImplementsStorageUpdate");
-    }
 
     internal KeyValuePair<string, object>[] GetAttibuteKeyValues() {
       Type thisType = this.GetType();

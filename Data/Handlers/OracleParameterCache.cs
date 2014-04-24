@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : This type is a wrapper of a static hash table that contains the loaded OracleParameters.      *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2001-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Data;

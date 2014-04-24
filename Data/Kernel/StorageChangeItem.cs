@@ -1,13 +1,13 @@
 ﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Storage Services                  *
-*  Namespace : Empiria                                          Assembly : Empiria.dll                       *
+*  Namespace : Empiria                                          Assembly : Empiria.Data.dll                  *
 *  Type      : StorageChangeItem                                Pattern  : Standard Class                    *
 *  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Represents the changes performed over a storable object.                                      *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Data;
@@ -35,7 +35,10 @@ namespace Empiria {
     #region Public properties
 
     internal DataOperationList ChangesList {
-      get { return storableObject.ImplementsStorageUpdate(operation, DateTime.Now); }
+      get {
+        throw new NotImplementedException();
+        //return storableObject.ImplementsStorageUpdate(operation, DateTime.Now); 
+      }
     }
 
     internal StorageContextOperation Operation {

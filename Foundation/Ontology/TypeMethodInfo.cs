@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Represents a method type definition.                                                          *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 
@@ -208,14 +208,6 @@ namespace Empiria.Ontology {
     #endregion Public methods
 
     #region Private methods
-
-    DataOperationList IStorable.ImplementsStorageUpdate(StorageContextOperation operation, DateTime timestamp) {
-      throw new NotImplementedException();
-    }
-
-    void IStorable.ImplementsOnStorageUpdateEnds() {
-      throw new NotImplementedException();
-    }
 
     private void LoadDataRow(DataRow dataRow) {
       if (dataRow == null) {

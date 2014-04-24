@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Represents a synchronized and serializable list of Operation type objects.                    *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using Empiria.Collections;
 
 namespace Empiria.Data {
@@ -16,9 +16,8 @@ namespace Empiria.Data {
 
     #region Constructors and parsers
 
-    public DataOperationList(string name)
-      : base(name, true) {
-
+    public DataOperationList(string name) : base(true) {
+      this.Name = name;
     }
 
     static public DataOperationList Parse(string[] messagesArray) {
@@ -37,6 +36,11 @@ namespace Empiria.Data {
 
     public new DataOperation this[int index] {
       get { return (DataOperation) base[index]; }
+    }
+
+    public string Name {
+      get;
+      private set;
     }
 
     #endregion Public properties

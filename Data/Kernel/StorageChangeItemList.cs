@@ -1,14 +1,14 @@
 ﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Storage Services                  *
-*  Namespace : Empiria                                          Assembly : Empiria.dll                       *
+*  Namespace : Empiria                                          Assembly : Empiria.Data.dll                  *
 *  Type      : StorageChangeItemList                            Pattern  : Empiria List Class                *
 *  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Represents an ordered list of StorageChangeItemList instances.                                *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
-
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
 using Empiria.Collections;
 
 namespace Empiria {

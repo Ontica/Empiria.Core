@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Static internal class used to read data stored in MySQL Server databases.                     *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2006-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 using System.Security.Permissions;

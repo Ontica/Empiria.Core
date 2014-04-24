@@ -8,7 +8,7 @@
 *  Summary   : Represents a single sign-on data token that enables a looged user log in once and gain access *
 *              to multiple software systems without beign prompted to log in again.                          *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 

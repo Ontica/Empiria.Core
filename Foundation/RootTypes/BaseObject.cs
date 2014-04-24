@@ -8,8 +8,9 @@
 *  Summary   : BaseObject is the root type of the object type hierarchy in Empiria Framework.                *
 *              All object types that uses the framework must be descendants of this abstract type.           *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Data;
@@ -138,11 +139,11 @@ namespace Empiria {
       ObjectTypeInfo objectTypeInfo = ObjectTypeInfo.Parse(typeName);
 
       DataTable table = OntologyData.GetGeneralObjectsDataTable(objectTypeInfo);
-      ObjectList<T> list = new ObjectList<T>(table.Rows.Count);
+      List<T> list = new List<T>(table.Rows.Count);
       for (int i = 0; i < table.Rows.Count; i++) {
         list.Add(BaseObject.Parse<T>(objectTypeInfo, table.Rows[i]));
       }
-      return list;
+      return list.ToObjectList();
     }
 
     static protected T ParseUnknown<T>(string typeName) where T : BaseObject {
@@ -251,15 +252,6 @@ namespace Empiria {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetAssociationLinks(this);
-    }
-
-    void IStorable.ImplementsOnStorageUpdateEnds() {
-      throw new NotImplementedException("BaseObject.ImplementsOnStorageUpdateEnds");
-    }
-
-    DataOperationList IStorable.ImplementsStorageUpdate(StorageContextOperation operation,
-                                                        DateTime timestamp) {
-      throw new NotImplementedException("BaseObject.ImplementsStorageUpdate");
     }
 
     protected void Link(TypeAssociationInfo assocationInfo, IStorable value) {

@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : DynamicState holds a bag of attributes for an object or type.                                 *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -74,15 +74,6 @@ namespace Empiria {
 
     int IIdentifiable.Id {
       get { return instance.Id; }
-    }
-
-    DataOperationList IStorable.ImplementsStorageUpdate(StorageContextOperation operation,
-                                                        DateTime timestamp) {
-      throw new NotImplementedException();
-    }
-
-    void IStorable.ImplementsOnStorageUpdateEnds() {
-      throw new NotImplementedException();
     }
 
     #endregion Public methods

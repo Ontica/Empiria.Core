@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Sealed class that represents an ontology type relation definition.                            *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 
@@ -230,14 +230,6 @@ namespace Empiria.Ontology {
 
     internal object GetDefaultValue() {
       return this.DefaultValue;
-    }
-
-    void IStorable.ImplementsOnStorageUpdateEnds() {
-      throw new NotImplementedException();
-    }
-
-    DataOperationList IStorable.ImplementsStorageUpdate(StorageContextOperation operation, DateTime timestamp) {
-      throw new NotImplementedException();
     }
 
     #endregion Public methods

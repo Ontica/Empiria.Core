@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Represents a fundamental, built-in type or scalar type definition.                            *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 
 namespace Empiria.Ontology {
 
