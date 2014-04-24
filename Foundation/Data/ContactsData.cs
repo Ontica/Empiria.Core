@@ -28,7 +28,7 @@ namespace Empiria.Contacts {
       return GeneralDataOperations.GetEntityId("EOSContacts", "ContactId", "UserName", userName);
     }
 
-    static internal ObjectList<Contact> GetContacts(string keywords, string sort = "") {
+    static internal FixedList<Contact> GetContacts(string keywords, string sort = "") {
       string filter = keywords.Length != 0 ? 
                       SearchExpression.ParseAndLikeWithNoiseWords("ContactKeywords", keywords).ToString() :
                       String.Empty;
@@ -37,7 +37,7 @@ namespace Empiria.Contacts {
 
       DataTable table = DataReader.GetDataTable(DataOperation.Parse(sql));
 
-      return new ObjectList<Contact>((x) => Contact.Parse(x), table);
+      return new FixedList<Contact>((x) => Contact.Parse(x), table);
     }
 
     static internal int WriteContact(Contact o) {

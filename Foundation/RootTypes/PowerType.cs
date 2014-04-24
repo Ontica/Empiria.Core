@@ -104,11 +104,11 @@ namespace Empiria {
                                             new object[] { partitionedType.Name });
     }
 
-    protected ObjectList<U> GetLinks<U>(string name) where U : BaseObject {
+    protected FixedList<U> GetLinks<U>(string name) where U : BaseObject {
       return powerTypeInfo.GetLinks<U>(partitionedType, name);
     }
 
-    protected ObjectList<U> GetTypeLinks<U>(string linkName) where U : MetaModelType {
+    protected FixedList<U> GetTypeLinks<U>(string linkName) where U : MetaModelType {
       TypeAssociationInfo associationInfo = this.Associations[linkName];
 
       return associationInfo.GetTypeLinks<U>(this);

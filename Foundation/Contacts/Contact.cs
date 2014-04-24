@@ -52,7 +52,7 @@ namespace Empiria.Contacts {
       return BaseObject.ParseFromBelow<Contact>(thisTypeName, id);
     }
 
-    static public ObjectList<Contact> GetList(string filter) {
+    static public FixedList<Contact> GetList(string filter) {
       return ContactsData.GetContacts(filter);
     }
 
@@ -119,11 +119,11 @@ namespace Empiria.Contacts {
 
     #region Public methods
 
-    public ObjectList<T> GetContactsInRole<T>(string roleName) where T : Contact {
+    public FixedList<T> GetContactsInRole<T>(string roleName) where T : Contact {
       return base.GetLinks<T>(roleName);
     }
 
-    public ObjectList<T> GetContactsInRole<T>(string roleName, TimePeriod period) where T : Contact {
+    public FixedList<T> GetContactsInRole<T>(string roleName, TimePeriod period) where T : Contact {
       return base.GetLinks<T>(roleName, period);
     }
 

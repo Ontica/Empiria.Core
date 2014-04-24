@@ -46,7 +46,7 @@ namespace Empiria {
       get { return BaseObject.ParseEmpty<KeyValuePair>(thisTypeName); }
     }
 
-    static public ObjectList<KeyValuePair> GetList(string listNamedKey) {
+    static public FixedList<KeyValuePair> GetList(string listNamedKey) {
       GeneralList list = GeneralList.Parse(listNamedKey);
 
       return Ontology.OntologyData.GetKeyValueListItems(list);

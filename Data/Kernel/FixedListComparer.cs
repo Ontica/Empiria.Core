@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
 *  Namespace : Empiria                                          Assembly : Empiria.dll                       *
-*  Type      : ObjectList                                       Pattern  : Empiria List Class                *
+*  Type      : FixedListComparer                                Pattern  : Empiria List Class                *
 *  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
-*  Summary   : Represents a list of BaseObject instances.                                                    *
+*  Summary   : Performs comparison of two FixedList objects.                                                 *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -13,56 +13,17 @@ using System.Collections.Generic;
 
 namespace Empiria {
 
-  public delegate bool Predicate2<in T>(T obj1, T obj2);
   public delegate string MergeKeyBuilder<in T>(T obj);
 
-  public enum MergeResultType {
-    Undefined = 'U',
-    ExactMatch = 'M',
-    ConditionFails = 'C',
-    UnmatchedObjectA = 'A',
-    UnmatchedObjectB = 'B',
-  }
+  public delegate bool Predicate2<in T>(T obj1, T obj2);
 
-  public class Merge<T> where T : IStorable {
-
-    private string mergeKey = String.Empty;
-    private T objectA = default(T);
-    private T objectB = default(T);
-    private MergeResultType result = MergeResultType.Undefined;
-
-    internal Merge(string mergeKey, T objectA, T objectB, MergeResultType result) {
-      this.mergeKey = mergeKey;
-      this.objectA = objectA;
-      this.objectB = objectB;
-      this.result = result;
-    }
-
-    public string MergeKey {
-      get { return mergeKey; }
-    }
-
-    public T ObjectA {
-      get { return objectA; }
-    }
-
-    public T ObjectB {
-      get { return objectB; }
-    }
-
-    public MergeResultType Result {
-      get { return result; }
-    }
-
-  } // Merge
-
-  /// <summary>Represents a list of BaseObject instances.</summary>
-  public class ObjectListComparer<T> where T : IStorable {
+  /// <summary>Performs comparison of two FixedList objects.</summary>
+  public class FixedListComparer<T> where T : IStorable {
 
     #region Fields
 
-    private ObjectList<T> listA = null;
-    private ObjectList<T> listB = null;
+    private FixedList<T> listA = null;
+    private FixedList<T> listB = null;
     private T nullObject = default(T);
 
     private List<Merge<T>> mergeResult = new List<Merge<T>>();
@@ -71,15 +32,15 @@ namespace Empiria {
 
     #region Constructors and parsers
 
-    private ObjectListComparer() {
+    private FixedListComparer() {
       //no-op
     }
 
-    static public ObjectListComparer<T> Parse(ObjectList<T> listA, ObjectList<T> listB, T nullObject) {
+    static public FixedListComparer<T> Parse(FixedList<T> listA, FixedList<T> listB, T nullObject) {
       Assertion.EnsureObject(listA, "listA");
       Assertion.EnsureObject(listB, "listB");
 
-      ObjectListComparer<T> comparer = new ObjectListComparer<T>();
+      FixedListComparer<T> comparer = new FixedListComparer<T>();
 
       comparer.listA = listA;
       comparer.listB = listB;
@@ -92,11 +53,11 @@ namespace Empiria {
 
     #region Public properties
 
-    public ObjectList<T> ListA {
+    public FixedList<T> ListA {
       get { return listA; }
     }
 
-    public ObjectList<T> ListB {
+    public FixedList<T> ListB {
       get { return listB; }
     }
 
@@ -146,14 +107,14 @@ namespace Empiria {
       for (int i = 0; i < listA.Count; i++) {
         string mergeKey = mergeKeyBuilder.Invoke(listA[i]);
         T item = listTemp.Find((y) => match.Invoke(listA[i], y));
-        if (item == null || item.Equals(default(T))) {     // A Not founded in B
+        if (item == null || item.Equals(default(T))) {     // A not found in B
           var merge = new Merge<T>(mergeKey, listA[i], this.nullObject, MergeResultType.UnmatchedObjectB);
           mergeResult.Add(merge);
-        } else if (condition.Invoke(listA[i], item)) {     // A Founded in B and condition = true
+        } else if (condition.Invoke(listA[i], item)) {     // A found in B and condition = true
           var merge = new Merge<T>(mergeKey, listA[i], item, MergeResultType.ExactMatch);
           mergeResult.Add(merge);
           listTemp.Remove(item);
-        } else {                                          // A Founded in B but condition = false
+        } else {                                          // A found in B but condition = false
           var merge = new Merge<T>(mergeKey, listA[i], item, MergeResultType.ConditionFails);
           mergeResult.Add(merge);
           listTemp.Remove(item);
@@ -168,6 +129,6 @@ namespace Empiria {
 
     #endregion Public methods
 
-  } // class ObjectListComparer
+  } // class FixedListComparer
 
 } // namespace Empiria

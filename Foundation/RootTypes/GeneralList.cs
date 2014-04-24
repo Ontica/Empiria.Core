@@ -58,16 +58,16 @@ namespace Empiria {
     #region Public methods
 
     //ToDO --- Change THIS !!!!!
-    public ObjectList<T> GetContacts<T>() where T : Empiria.Contacts.Contact {
+    public FixedList<T> GetContacts<T>() where T : Empiria.Contacts.Contact {
       return base.GetLinks<T>("GeneralList_Contacts");
     }
 
-    public ObjectList<T> GetItems<T>() where T : BaseObject {
+    public FixedList<T> GetItems<T>() where T : BaseObject {
       return base.GetLinks<T>("GeneralList_Objects");
     }
 
-    public ObjectList<TypeAssociationInfo> GetTypeRelationItems() {
-      ObjectList<TypeAssociationInfo> list = 
+    public FixedList<TypeAssociationInfo> GetTypeRelationItems() {
+      FixedList<TypeAssociationInfo> list = 
                             base.GetTypeAssociationLinks("GeneralList_TypeRelations");
 
       list.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
@@ -75,7 +75,7 @@ namespace Empiria {
       return list;
     }
 
-    public ObjectList<KeyValuePair> GetKeyValueList() {
+    public FixedList<KeyValuePair> GetKeyValueList() {
       return KeyValuePair.GetList(this.NamedKey);
     }
 

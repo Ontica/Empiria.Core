@@ -45,7 +45,7 @@ namespace Empiria.Ontology {
     //  return association.GetLink<T>(partitionedType, defaultValue);
     //}
 
-    public ObjectList<T> GetLinks<T>(ObjectTypeInfo partitionedType, string name) where T : BaseObject {
+    public FixedList<T> GetLinks<T>(ObjectTypeInfo partitionedType, string name) where T : BaseObject {
       TypeAssociationInfo association = base.Associations[name];
 
       return association.GetLinks<T>(partitionedType);

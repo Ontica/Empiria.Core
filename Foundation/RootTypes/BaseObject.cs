@@ -135,7 +135,7 @@ namespace Empiria {
       return BaseObject.CreateBaseObject<T>(derivedTypeInfo, dataRow);
     }
 
-    static protected ObjectList<T> ParseList<T>(string typeName) where T : BaseObject {
+    static protected FixedList<T> ParseList<T>(string typeName) where T : BaseObject {
       ObjectTypeInfo objectTypeInfo = ObjectTypeInfo.Parse(typeName);
 
       DataTable table = OntologyData.GetGeneralObjectsDataTable(objectTypeInfo);
@@ -143,7 +143,7 @@ namespace Empiria {
       for (int i = 0; i < table.Rows.Count; i++) {
         list.Add(BaseObject.Parse<T>(objectTypeInfo, table.Rows[i]));
       }
-      return list.ToObjectList();
+      return list.ToFixedList();
     }
 
     static protected T ParseUnknown<T>(string typeName) where T : BaseObject {
@@ -202,37 +202,37 @@ namespace Empiria {
       return association.GetLink<T>(this);
     }
 
-    protected ObjectList<T> GetLinks<T>(string linkName) where T : BaseObject {
+    protected FixedList<T> GetLinks<T>(string linkName) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetLinks<T>(this);
     }
 
-    protected ObjectList<T> GetLinks<T>(string linkName, Comparison<T> sort) where T : BaseObject {
+    protected FixedList<T> GetLinks<T>(string linkName, Comparison<T> sort) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
-      ObjectList<T> list = association.GetLinks<T>(this);
+      FixedList<T> list = association.GetLinks<T>(this);
 
       list.Sort(sort);
 
       return list;
     }
 
-    protected ObjectList<T> GetLinks<T>(string linkName, TimePeriod period) where T : BaseObject {
+    protected FixedList<T> GetLinks<T>(string linkName, TimePeriod period) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetLinks<T>(this, period);
     }
 
-    protected ObjectList<T> GetLinks<T>(string linkName, TimePeriod period, Comparison<T> sort) where T : BaseObject {
+    protected FixedList<T> GetLinks<T>(string linkName, TimePeriod period, Comparison<T> sort) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
-      ObjectList<T> list = association.GetLinks<T>(this, period);
+      FixedList<T> list = association.GetLinks<T>(this, period);
 
       list.Sort(sort);
 
       return list;
     }
 
-    protected ObjectList<T> GetLinks<T>(string linkName, Predicate<T> predicate) where T : BaseObject {
+    protected FixedList<T> GetLinks<T>(string linkName, Predicate<T> predicate) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetLinks<T>(this, predicate);
@@ -242,13 +242,13 @@ namespace Empiria {
       return (this.objectTypeInfo.GetHashCode() ^ this.Id);
     }
 
-    protected ObjectList<T> GetTypeLinks<T>(string linkName) where T : MetaModelType {
+    protected FixedList<T> GetTypeLinks<T>(string linkName) where T : MetaModelType {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetTypeLinks<T>(this);
     }
 
-    protected ObjectList<TypeAssociationInfo> GetTypeAssociationLinks(string linkName) {
+    protected FixedList<TypeAssociationInfo> GetTypeAssociationLinks(string linkName) {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetAssociationLinks(this);

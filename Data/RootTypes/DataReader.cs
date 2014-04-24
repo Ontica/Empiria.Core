@@ -204,6 +204,31 @@ namespace Empiria.Data {
       }
     }
 
+    static public FixedList<T> GetFixedList<T>(DataOperation operation,
+                                            Func<DataRow, T> parser) where T : IStorable {
+      Assertion.RequireObject(operation, "operation");
+      Assertion.RequireObject(parser, "parser");
+
+      DataTable dataTable = DataReader.GetDataTable(operation);
+
+      return new FixedList<T>(parser, dataTable);
+    }
+
+    static public FixedList<T> GetFixedList<T>(DataOperation operation, Func<DataRow, T> parser,
+                                               string filter) where T : IStorable {
+      return DataReader.GetFixedList<T>(operation, parser, filter, String.Empty);
+    }
+
+    static public FixedList<T> GetFixedList<T>(DataOperation operation, Func<DataRow, T> parser,
+                                               string filter, string sort) where T : IStorable {
+      Assertion.RequireObject(operation, "operation");
+      Assertion.RequireObject(parser, "parser");
+
+      DataView view = DataReader.GetDataView(operation, filter, sort);
+
+      return new FixedList<T>(parser, view);
+    }
+
     static public List<T> GetList<T>(DataOperation operation, Func<DataRow, T> parser) {
       Assertion.RequireObject(operation, "operation");
       Assertion.RequireObject(parser, "parser");

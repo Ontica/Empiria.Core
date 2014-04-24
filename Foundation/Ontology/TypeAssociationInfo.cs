@@ -93,7 +93,7 @@ namespace Empiria.Ontology {
     }
 
     // Object 1..* Object relation
-    internal ObjectList<T> GetLinks<T>(BaseObject source) where T : BaseObject {
+    internal FixedList<T> GetLinks<T>(BaseObject source) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
       List<T> list = new List<T>(table.Rows.Count);
 
@@ -107,11 +107,11 @@ namespace Empiria.Ontology {
 
         throw exception;
       }
-      return list.ToObjectList();
+      return list.ToFixedList();
     }
 
     // ObjectType 1..* Object relation
-    internal ObjectList<T> GetLinks<T>(ObjectTypeInfo source) where T : BaseObject {
+    internal FixedList<T> GetLinks<T>(ObjectTypeInfo source) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
       List<T> list = new List<T>(table.Rows.Count);
@@ -119,11 +119,11 @@ namespace Empiria.Ontology {
       for (int i = 0; i < table.Rows.Count; i++) {
         list.Add(BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, table.Rows[i]));
       }
-      return list.ToObjectList();
+      return list.ToFixedList();
     }
 
     // Object 1..* Object relation (in time period)
-    internal ObjectList<T> GetLinks<T>(BaseObject source, TimePeriod period) where T : BaseObject {
+    internal FixedList<T> GetLinks<T>(BaseObject source, TimePeriod period) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source, period);
 
       List<T> list = new List<T>(table.Rows.Count);
@@ -131,11 +131,11 @@ namespace Empiria.Ontology {
       for (int i = 0; i < table.Rows.Count; i++) {
         list.Add(BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, table.Rows[i]));
       }
-      return list.ToObjectList();
+      return list.ToFixedList();
     }
 
     // Object 1..* Object relation (filtered by predicate)
-    internal ObjectList<T> GetLinks<T>(BaseObject source, Predicate<T> predicate) where T : BaseObject {
+    internal FixedList<T> GetLinks<T>(BaseObject source, Predicate<T> predicate) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
       List<T> list = new List<T>(table.Rows.Count);
@@ -146,11 +146,11 @@ namespace Empiria.Ontology {
           list.Add(item);
         }
       }
-      return list.ToObjectList();
+      return list.ToFixedList();
     }
 
     // Object 1..* MetaModelType relation
-    internal ObjectList<T> GetTypeLinks<T>(BaseObject source) where T : MetaModelType {
+    internal FixedList<T> GetTypeLinks<T>(BaseObject source) where T : MetaModelType {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
       var list = new List<T>(table.Rows.Count);
@@ -161,17 +161,17 @@ namespace Empiria.Ontology {
           T item = (T) ObjectFactory.ParseObject(powerTypeSystemType, (int) row[this.TargetType.IdFieldName]);
           list.Add(item);
         }
-        return list.ToObjectList();
+        return list.ToFixedList();
       } else {
         foreach (DataRow row in table.Rows) {
           list.Add(MetaModelType.Parse<T>((int) row[this.TargetType.IdFieldName]));
         }
-        return list.ToObjectList();
+        return list.ToFixedList();
       }
     }
 
     // MetaModelType -> MetaModelType relation
-    internal ObjectList<T> GetTypeLinks<T>(MetaModelType source) where T : MetaModelType {
+    internal FixedList<T> GetTypeLinks<T>(MetaModelType source) where T : MetaModelType {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
       var list = new List<T>(table.Rows.Count);
@@ -182,23 +182,23 @@ namespace Empiria.Ontology {
           T item = (T) ObjectFactory.ParseObject(powerTypeSystemType, (int) table.Rows[i][this.TargetType.IdFieldName]);
           list.Add(item);
         }
-        return list.ToObjectList();
+        return list.ToFixedList();
       } else {
         for (int i = 0; i < table.Rows.Count; i++) {
           list.Add(MetaModelType.Parse<T>((int) table.Rows[i][this.TargetType.IdFieldName]));
         }
-        return list.ToObjectList();
+        return list.ToFixedList();
       }
     }
 
-    internal ObjectList<TypeAssociationInfo> GetAssociationLinks(BaseObject source) {
+    internal FixedList<TypeAssociationInfo> GetAssociationLinks(BaseObject source) {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
       var list = new List<TypeAssociationInfo>(table.Rows.Count);
       foreach (DataRow dataRow in table.Rows) {
         list.Add(TypeAssociationInfo.Parse(this.SourceType, dataRow));
       }
-      return list.ToObjectList();
+      return list.ToFixedList();
     }
 
     protected override object ImplementsConvert(object value) {

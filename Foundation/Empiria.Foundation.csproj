@@ -191,7 +191,6 @@
     <Compile Include="RootTypes\IExtensible.cs" />
     <Compile Include="RootTypes\KeyValuePair.cs" />
     <Compile Include="RootTypes\LazyObject.cs" />
-    <Compile Include="RootTypes\ObjectListComparer.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />
     <Compile Include="RootTypes\TimePeriod.cs" />
     <Compile Include="RootTypes\ZZTypeList.cs" />
