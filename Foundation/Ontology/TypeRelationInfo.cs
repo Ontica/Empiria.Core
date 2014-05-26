@@ -100,7 +100,7 @@ namespace Empiria.Ontology {
 
     static internal RelationTypeFamily ParseRelationTypeFamily(string familyName) {
       try {
-        return (RelationTypeFamily) System.Enum.Parse(typeof(RelationTypeFamily), familyName);
+        return (RelationTypeFamily) Enum.Parse(typeof(RelationTypeFamily), familyName);
       } catch {
         throw new OntologyException(OntologyException.Msg.UndefinedTypeInfoFamily, familyName);
       }

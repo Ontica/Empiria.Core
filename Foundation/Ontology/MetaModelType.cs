@@ -159,7 +159,7 @@ namespace Empiria.Ontology {
 
     static internal MetaModelTypeFamily ParseMetaModelTypeFamily(string typeFamilyName) {
       try {
-        return (MetaModelTypeFamily) System.Enum.Parse(typeof(MetaModelTypeFamily), typeFamilyName);
+        return (MetaModelTypeFamily) Enum.Parse(typeof(MetaModelTypeFamily), typeFamilyName);
       } catch {
         throw new OntologyException(OntologyException.Msg.UndefinedTypeInfoFamily, typeFamilyName);
       }

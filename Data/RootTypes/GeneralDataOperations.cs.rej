@@ -1,0 +1,10 @@
+diff a/Data/RootTypes/GeneralDataOperations.cs b/Data/RootTypes/GeneralDataOperations.cs	(rejected hunks)
+@@ -3,7 +3,7 @@
+ *  Solution  : Empiria® Foundation Framework                    System   : Data Access Library               *
+ *  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
+ *  Type      : GeneralDataOperations                            Pattern  : Data Services Static Class        *
+-*  Date      : 25/Jun/2013                                      Version  : 5.1     License: CC BY-NC-SA 3.0  *
++*  Date      : 23/Oct/2013                                      Version  : 5.2     License: CC BY-NC-SA 3.0  *
+ *                                                                                                            *
+ *  Summary   : Static library with general purpose data read operations.                                     *
+ *                                                                                                            *

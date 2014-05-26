@@ -260,6 +260,15 @@ namespace Empiria.Data {
       return list;
     }
 
+    static public T GetObject<T>(DataOperation operation, Func<DataRow, T> parser) {
+      Assertion.RequireObject(operation, "operation");
+      Assertion.RequireObject(parser, "parser");
+
+      DataRow row = DataReader.GetDataRow(operation);
+
+      return parser.Invoke(row);
+    }
+
     static public T GetScalar<T>(DataOperation operation, T defaultValue = default(T)) {
       object scalar = GetScalar(operation);
 
