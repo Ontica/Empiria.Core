@@ -111,7 +111,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\empiria.assemblies\</OutputPath>
+    <OutputPath>..\..\..\empiria.assemblies\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
@@ -149,22 +149,18 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\empiria.assemblies\Mono.Security.dll</HintPath>
+    <Reference Include="Mono.Security">
+      <HintPath>..\..\..\empiria.assemblies\Mono.Security.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data, Version=1.0.7.30072, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\empiria.assemblies\MySql.Data.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\..\empiria.assemblies\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\empiria.solutions\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Npgsql, Version=2.0.11.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\empiria.assemblies\Npgsql.dll</HintPath>
+    <Reference Include="Npgsql">
+      <HintPath>..\..\..\empiria.assemblies\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>

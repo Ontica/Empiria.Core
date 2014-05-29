@@ -16,6 +16,7 @@ TestResults
 *.rar
 *.zip
 *.snk
+*.cd
 ZZ*.*
 
 # Build results
