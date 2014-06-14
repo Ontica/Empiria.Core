@@ -1,7 +1,7 @@
 ﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
-*  Namespace : Empiria                                          Assembly : Empiria.dll                       *
+*  Namespace : Empiria                                          Assembly : Empiria.Data.dll                  *
 *  Type      : FixedListComparer                                Pattern  : Empiria List Class                *
 *  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *

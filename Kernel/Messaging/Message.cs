@@ -54,10 +54,6 @@ namespace Empiria.Messaging {
 
     #endregion Public properties
 
-    #region Private methods
-
-    #endregion Private methods
-
   } // class Message
 
 } //namespace Empiria.Messaging

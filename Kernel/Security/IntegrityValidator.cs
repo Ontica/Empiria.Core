@@ -35,7 +35,7 @@ namespace Empiria.Security {
       if (!storedDIFData.Equals(this.GetDIFHashCode(version))) {
         var e = new SecurityException(SecurityException.Msg.IntegrityValidatorAssertFails,
                                       resourceTypeName, resource.Id);
-        e.Publish();  // OOJJOO Only throw exception
+        e.Publish();  // OOJJOO Exception only published, not throwed 
         //throw new SecurityException(SecurityException.Msg.IntegrityValidatorAssertFails,
         //                            resourceTypeName, resource.Id);
       }

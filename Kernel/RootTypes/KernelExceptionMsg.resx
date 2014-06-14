@@ -234,4 +234,7 @@ Favor de notificar sobre este error al administrador del sistema ya que se trata
   <data name="ValidTypeNotFoundInStackTrace" xml:space="preserve">
     <value>Se ha intentando invocar el lector de datos de configuración del sistema desde un tipo que no pertenece al espacio de nombres Empiria:\n\nStack:\n{0}</value>
   </data>
+  <data name="InvalidControlFlowReached" xml:space="preserve">
+    <value>PROGRAMMING ERROR: The program has a coding error so their execution reaches an invalid code flow statement. Probably the program has a loop or switch that miss an exit condition. Please report this incident immediately to the system administrator or write us to support @ontica.org.</value>
+  </data>
 </root>

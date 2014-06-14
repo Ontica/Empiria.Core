@@ -7,7 +7,8 @@
 *                                                                                                            *
 *  Summary   : Value type that handles money operations.                                                     *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
 
 namespace Empiria.DataTypes {
 
@@ -38,6 +39,11 @@ namespace Empiria.DataTypes {
 
     static public Money Parse(Currency currency, decimal amount) {
       return new Money(currency, amount);
+    }
+
+    static public Money Parse(Empiria.Data.JsonObject json) {
+      return Money.Parse(json.Find<Currency>("CurrencyId", Currency.Default),
+                         json.Find<Decimal>("Value", 0m));
     }
 
     static public Money Empty {

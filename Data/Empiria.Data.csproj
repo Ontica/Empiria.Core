@@ -200,6 +200,7 @@
     <Compile Include="Integration\DataIntegratorWSProxy.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Kernel\IExtensible.cs" />
     <Compile Include="Kernel\Merger.cs" />
     <Compile Include="Kernel\FixedListComparer.cs" />
     <Compile Include="Modeler\DbBaseQuery.cs">
@@ -273,6 +274,7 @@
     <Compile Include="RootTypes\EmpiriaDataException.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="RootTypes\JsonObject.cs" />
     <Compile Include="RootTypes\ObjectIdFactory.cs">
       <SubType>Code</SubType>
     </Compile>

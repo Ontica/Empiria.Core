@@ -7,12 +7,13 @@
 *                                                                                                            *
 *  Summary   : Empiria JSON serialization library. JSON operations are based on Json.NET.                    *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2013-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 
 using Newtonsoft.Json;
+using Empiria.Data;
 
 /// ToDo List:    OOJJOO
 /// Object slicing (include/exclude a list of properties)
@@ -48,15 +49,18 @@ namespace Empiria.Data {
                                     bool useInDerivedTypes = true) {
       string formatType = BuildDictionaryKey(type);
 
+      if (jsonConverters.ContainsKey(formatType)) {
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.DataConverterForTypeAlreadyExists, 
+                                       formatType);
+      }
+
       lock (jsonConverters) {
         if (!jsonConverters.ContainsKey(formatType)) {
           jsonConverters.Add(formatType, converter);
-        } else {
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.DataConverterForTypeAlreadyExists, formatType);
         }
-      }
-    }
+      } // lock
 
+    }
 
     /// <summary>
     /// Merges the items included in the JSON string into a loaded object, 
@@ -85,6 +89,13 @@ namespace Empiria.Data {
       }
     }
 
+    /// <summary>Converts a JSON string into an object dictionary.</summary>
+    /// <param name="jsonString">The JSON string to convert.</param>
+    /// <returns>IDictionary with the same items and structure as the JSON string.</returns>
+    static public IDictionary<string, object> ToDictionary(string jsonString) {
+      return (IDictionary<string, object>) JsonConvert.DeserializeObject<ExpandoObject>(jsonString);
+    }
+
     /// <summary>Converts an object into a JSON string.</summary>
     /// <param name="json">The object to convert.</param>
     /// <returns>The JSON string with properties and values equals to the supplied 
@@ -99,8 +110,12 @@ namespace Empiria.Data {
       }
     }
 
+    static public JsonObject ToJsonObject(string jsonString) {
+      return JsonObject.Parse(jsonString);
+    }
+
     /// <summary>Converts an object into a indented JSON string.</summary>
-    /// <param name="json">The object to convert.</param>
+    /// <param name="o">The object to convert.</param>
     /// <returns>The indented JSON string with properties and values equals to the supplied 
     /// object public properties.</returns>
     static public string ToJsonIndented(object o) {
@@ -118,12 +133,12 @@ namespace Empiria.Data {
     /// <summary>Converts a JSON string into a dynamic ExpandoObject.</summary>
     /// <param name="json">The JSON string to convert.</param>
     /// <returns>A .Net ExpandoObject with properties similar to the JSON string structure.</returns>
-    static public dynamic ToObject(string json) {
-      return JsonConvert.DeserializeObject<ExpandoObject>(json);
+    static public dynamic ToObject(string jsonString) {
+      return JsonConvert.DeserializeObject<ExpandoObject>(jsonString);
     }
 
     ///// <summary>Converts a JSON string into a dynamic ExpandoObject.</summary>
-    ///// <param name="json">The JSON string to convert.</param>
+    ///// <param name="jsonString">The JSON string to convert.</param>
     ///// <returns>A .Net ExpandoObject with properties similar to the JSON string structure.</returns>
     //static public dynamic ToObject(string json, string schema) {
     //  return JsonConvert.DeserializeObject<ExpandoObject>(json);
@@ -131,23 +146,23 @@ namespace Empiria.Data {
 
     /// <summary>Converts a JSON string into an object instance of type T.</summary>
     /// <typeparam name="T">The type of the object returned by this method.</typeparam>
-    /// <param name="json">The JSON string to convert.</param>
+    /// <param name="jsonString">The JSON string to convert.</param>
     /// <returns>The object instance of type T with the properties obtained from the JSON structure.</returns>
-    static public T ToObject<T>(string json) {    
-      return JsonConvert.DeserializeObject<T>(json);
+    static public T ToObject<T>(string jsonString) {
+      return JsonConvert.DeserializeObject<T>(jsonString);
     }
 
     /// <summary>Converts a JSON string into an object instance of type T</summary>
     /// <typeparam name="T">The object type of the returned instance. 
     /// Use implicit for anonymous objects.</typeparam> 
-    /// <param name="json">The JSON string to convert.</param>
+    /// <param name="jsonString">The JSON string to convert.</param>
     /// <param name="instance">The object instance of type T. Can be an anonymous object.</param>
     /// <returns>The object instance of type T with the properties obtained from the JSON structure.</returns>
-    static public T ToObject<T>(string json, T instance) {
+    static public T ToObject<T>(string jsonString, T instance) {
       if (instance.GetType().Namespace == null) {
-        return JsonConvert.DeserializeAnonymousType(json, instance);
+        return JsonConvert.DeserializeAnonymousType(jsonString, instance);
       } else {
-        instance = JsonConvert.DeserializeObject<T>(json);
+        instance = JsonConvert.DeserializeObject<T>(jsonString);
         return instance;
       }
     }

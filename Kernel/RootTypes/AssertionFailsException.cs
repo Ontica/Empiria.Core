@@ -25,6 +25,7 @@ namespace Empiria {
       EnsureFails,
       EnsureNotEmptyStringFails,
       EnsureNotNullObjectFails,
+      InvalidControlFlowReached,
       RequireFails,
       RequireNotEmptyStringFails,
       RequireNotNullObjectFails,

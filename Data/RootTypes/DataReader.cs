@@ -179,6 +179,10 @@ namespace Empiria.Data {
       }
     }
 
+    static public dynamic GetDynamicObject(DataRow row, string fieldName) {
+      return JsonConverter.ToObject((string) row[fieldName]);
+    }
+
     static public object GetFieldValue(DataOperation operation, string fieldName) {
       Assertion.EnsureObject(operation, "operation");
       Assertion.RequireObject(fieldName, "fieldName");
