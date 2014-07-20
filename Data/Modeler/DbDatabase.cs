@@ -16,7 +16,7 @@ namespace Empiria.Data.Modeler {
       dbDataSource = DbDataSource.Parse(this.DatabaseName);
     }    
 
-    public static DbDatabase Parse(string dataBaseName){
+    static public DbDatabase Parse(string dataBaseName){
       var dbDatabase = new DbDatabase(dataBaseName);
       return dbDatabase;
     }           

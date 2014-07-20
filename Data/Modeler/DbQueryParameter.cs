@@ -19,7 +19,7 @@ namespace Empiria.Data.Modeler {
       this.DefaultValue = string.Empty;
     }
 
-    public static DbQueryParameter Parse(string queryName){
+    static public DbQueryParameter Parse(string queryName){
       var queryParameter = new DbQueryParameter(queryName);
       return queryParameter;
     }

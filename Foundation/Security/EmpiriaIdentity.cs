@@ -67,7 +67,7 @@ namespace Empiria.Security {
       }
     }
 
-    public static bool TryAuthenticate(string sessionToken, out EmpiriaPrincipal principal) {
+    static public bool TryAuthenticate(string sessionToken, out EmpiriaPrincipal principal) {
       EmpiriaSession session;
       principal = null;
       if (EmpiriaSession.TryParseActive(sessionToken, out session)) {

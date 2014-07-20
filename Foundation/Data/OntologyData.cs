@@ -51,7 +51,13 @@ namespace Empiria.Ontology {
     }
 
     static internal int GetNextObjectId(ObjectTypeInfo objectTypeInfo) {
-      return DataWriter.CreateId(objectTypeInfo.DataSource);
+      int id = DataWriter.CreateId(objectTypeInfo.DataSource);
+      if (id == 0) {
+        Assertion.Assert(false,
+            "Object Id can't be zero. There is an error in GetNextObjectId or in DbRules table for type " + 
+            objectTypeInfo.Name);
+      }
+      return id;
     }
 
     static internal int GetNextRelationId(TypeRelationInfo typeRelationInfo) {

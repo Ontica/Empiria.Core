@@ -390,7 +390,7 @@ namespace Empiria.Security {
       return temp;
     }
 
-    private static string ConvertToString(byte[] data) {
+    static private string ConvertToString(byte[] data) {
       StringBuilder sBuilder = new StringBuilder();
 
       for (int i = 0; i < data.Length; i++) {
@@ -557,7 +557,7 @@ namespace Empiria.Security {
 
       }
 
-      private static bool CompareByteArrays(byte[] a, byte[] b) {
+      static private bool CompareByteArrays(byte[] a, byte[] b) {
         if (a.Length != b.Length) {
           return false;
         }
@@ -572,7 +572,7 @@ namespace Empiria.Security {
       }
 
       //  ------  Uses PBKD2 to derive a 3DES key and decrypts data --------
-      public static byte[] DecryptPBDK2(byte[] edata, byte[] salt, byte[] IV, SecureString secpswd, int iterations) {
+      static public byte[] DecryptPBDK2(byte[] edata, byte[] salt, byte[] IV, SecureString secpswd, int iterations) {
         CryptoStream decrypt = null;
 
         IntPtr unmanagedPswd = IntPtr.Zero;
@@ -599,7 +599,7 @@ namespace Empiria.Security {
       }
 
       //------- Parses binary asn.1 PKCS #8 PrivateKeyInfo; returns RSACryptoServiceProvider ---
-      public static RSACryptoServiceProvider DecodePrivateKeyInfo(byte[] pkcs8) {
+      static public RSACryptoServiceProvider DecodePrivateKeyInfo(byte[] pkcs8) {
         // encoded OID sequence for  PKCS #1 rsaEncryption szOID_RSA_RSA = "1.2.840.113549.1.1.1"
         // this byte[] includes the sequence byte and terminal encoded null 
         byte[] SeqOID = { 0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x01, 0x05, 0x00 };
@@ -660,7 +660,7 @@ namespace Empiria.Security {
       }
 
       //------- Parses binary ans.1 RSA private key; returns RSACryptoServiceProvider  ---
-      public static RSACryptoServiceProvider DecodeRSAPrivateKey(byte[] privkey) {
+      static public RSACryptoServiceProvider DecodeRSAPrivateKey(byte[] privkey) {
         byte[] MODULUS, E, D, P, Q, DP, DQ, IQ;
 
         // ---------  Set up stream to decode the asn.1 encoded RSA private key  ------
@@ -730,7 +730,7 @@ namespace Empiria.Security {
         } finally { binr.Close(); }
       }
 
-      private static int GetIntegerSize(BinaryReader binr) {
+      static private int GetIntegerSize(BinaryReader binr) {
         byte bt = 0;
         byte lowbyte = 0x00;
         byte highbyte = 0x00;
@@ -762,7 +762,7 @@ namespace Empiria.Security {
         return count;
       }
 
-      private static SecureString GetSecPswd() {
+      static private SecureString GetSecPswd() {
         SecureString password = new SecureString();
         string s = ConfigurationData.GetString("§RSACryptoFilePwd");
 

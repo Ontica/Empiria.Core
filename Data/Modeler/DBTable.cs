@@ -19,7 +19,7 @@ namespace Empiria.Data.Modeler {
       dbDataSource = DbDataSource.Parse(this.DatabaseName);
     }
 
-    public static DBTable Parse(string dataBaseName){
+    static public DBTable Parse(string dataBaseName){
       var dbTable = new DBTable(dataBaseName);
       return dbTable;
     }

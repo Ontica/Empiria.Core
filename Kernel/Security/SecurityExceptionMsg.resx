@@ -168,8 +168,8 @@
   <data name="InvalidClientID" xml:space="preserve">
     <value>Se recibió un ClientID o ApiKey que no está registrado: {0}. Es posible que se trate de un acceso no autorizado.</value>
   </data>
-  <data name="WrongRequestedVersionForDIF" xml:space="preserve">
-    <value>** SECURITY WARNING ** A wrong version ({0}) of the Data Integrity Field (DIF) was requested from an external program that must have asked for a valid version of the DIF.\n\nIf that program sent the version took out it from a protected data source, then this concern could be a SERIOUS SECURITY PROBLEM, because the PROTECED DATA could have been modified by an EXTERNAL SOURCE.\n\n Please call immediately to your system administrator and stop using this system.</value>
+  <data name="WrongDIFVersionRequested" xml:space="preserve">
+    <value>** SECURITY WARNING ** A wrong Data Integrity Field (DIF) version ({0}) was requested from an external program that must have asked for a valid version of the DIF.\n\nIf that program sent the version took out it from a protected data source, then this concern could be a SERIOUS SECURITY PROBLEM, because the PROTECED DATA could have been modified by an EXTERNAL SOURCE.\n\n Please call immediately to your system administrator and stop using this system.</value>
   </data>
   <data name="InvalidDIFDataItemDataType" xml:space="preserve">
     <value>The protected type '{0}' returns a data item with a value ({1}) that has an invalid or unrecognized type ({2}), in the position {3} using the Data Integrity Field version number {4}. The resource Id was {5}.</value>

@@ -19,7 +19,7 @@ namespace Empiria.Data.Modeler {
       dbDataSource = DbDataSource.Parse(databaseName);
     }
 
-    public static DBView Parse(string databaseName){
+    static public DBView Parse(string databaseName){
       var dbView = new DBView(databaseName);
       return dbView;
     }

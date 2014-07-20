@@ -11,7 +11,7 @@ namespace Empiria.Data.Modeler {
       this.Type = string.Empty;
     }
 
-    public static DbFunction Parse(string databaseName){
+    static public DbFunction Parse(string databaseName){
       var dbFuction = new DbFunction(databaseName);
       return dbFuction;
     }

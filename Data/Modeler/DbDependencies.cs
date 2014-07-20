@@ -15,7 +15,7 @@ namespace Empiria.Data.Modeler {
       this.Description = string.Empty;
     }
 
-    public static DbDependencies Parse(string databaseName, string tableName) {
+    static public DbDependencies Parse(string databaseName, string tableName) {
       var dbDependcies = new DbDependencies(databaseName, tableName);
       return dbDependcies;
     }

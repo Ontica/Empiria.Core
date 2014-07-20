@@ -39,11 +39,13 @@ namespace Empiria {
     private ObjectTypeInfo objectTypeInfo = null;
     private int objectId = 0;
     private bool isDirty = true;
+    private bool isNewFlag = true;
 
     private const int emptyInstanceId = -1;
     private const int unknownInstanceId = -2;
 
     private DynamicState dynamicState = null;
+
 
     #endregion Fields
 
@@ -66,8 +68,7 @@ namespace Empiria {
 
     static protected T Parse<T>(string typeName, int id) where T : BaseObject {
       if (id == 0) {
-        Assertion.Assert(id != 0, new OntologyException(OntologyException.Msg.TryToParseZeroObjectId,
-                                                        typeName));
+        throw new OntologyException(OntologyException.Msg.TryToParseZeroObjectId, typeName);
       }
       T item = cache.GetItem(typeName, id) as T;
       if (item != null) {
@@ -159,7 +160,7 @@ namespace Empiria {
     }
 
     public int Id {
-      get { return objectId; }
+      get { return this.objectId; }
     }
 
     protected bool IsDirty {
@@ -171,7 +172,7 @@ namespace Empiria {
     }
 
     public bool IsNew {
-      get { return (this.objectId == 0); }
+      get { return (this.objectId == 0 && isNewFlag == true); }
     }
 
     #endregion Public properties
@@ -259,12 +260,11 @@ namespace Empiria {
     }
 
     public void Save() {
-      if (this.IsNew) {
+      if (this.objectId == 0) {
         this.objectId = OntologyData.GetNextObjectId(this.ObjectTypeInfo);
       }
-      Assertion.Assert(this.objectId != 0,
-                       "Object Id can't be zero. There is an error in GetNextObjectId or in DbRules table.");
       ImplementsSave();
+      this.isNewFlag = false;
       lock (cache) {
         cache.Insert(this);
       }
@@ -293,6 +293,7 @@ namespace Empiria {
       item.objectId = (int) dataRow[typeInfo.IdFieldName];
       item.dynamicState = new DynamicState(item);
       item.ImplementsLoadObjectData(dataRow);
+      item.isNewFlag = false;
       lock (cache) {
         if (!typeInfo.UsesNamedKey) {
           cache.Insert(item);

@@ -21,13 +21,11 @@ namespace Empiria.Ontology {
 
     #region Constructors and parsers
 
-    private StaticTypeInfo(int id)
-      : base(MetaModelTypeFamily.StaticType, id) {
+    private StaticTypeInfo(int id) : base(MetaModelTypeFamily.StaticType, id) {
 
     }
 
-    private StaticTypeInfo(string name)
-      : base(MetaModelTypeFamily.StaticType, name) {
+    private StaticTypeInfo(string name) : base(MetaModelTypeFamily.StaticType, name) {
 
     }
 

@@ -173,9 +173,9 @@
     <Compile Include="Collections\EmpiriaHashList.cs" />
     <Compile Include="Collections\CachedList.cs" />
     <Compile Include="DataTypes\Calendar.cs" />
+    <Compile Include="RootTypes\EmpiriaMath.cs" />
     <Compile Include="RootTypes\EmpiriaString.cs" />
     <Compile Include="DataTypes\Keyword.cs" />
-    <Compile Include="DataTypes\EmpiriaMath.cs" />
     <Compile Include="Empiria.Kernel.AssemblyInfo.cs" />
     <Compile Include="Collections\EmpiriaList.cs">
       <SubType>Code</SubType>

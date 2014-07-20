@@ -15,8 +15,6 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 
-using Empiria.DataTypes;
-
 namespace Empiria {
 
   static public class EmpiriaString {
@@ -228,7 +226,7 @@ namespace Empiria {
       for (int i = 1; i <= stringA.Length; i++) {
         for (int j = 1; j <= stringB.Length; j++) {
           distanceMatrix[i][j] = EmpiriaMath.Min(distanceMatrix[i - 1][j] + 1, distanceMatrix[i][j - 1] + 1,
-                                               distanceMatrix[i - 1][j - 1] + ((stringA[i - 1] == stringB[j - 1]) ? 0 : 1));
+                                                 distanceMatrix[i - 1][j - 1] + ((stringA[i - 1] == stringB[j - 1]) ? 0 : 1));
 
           // Transposition
           if ((i > 1) && (j > 1) && (stringA[i - 1] == stringB[j - 2]) && (stringA[i - 2] == stringB[j - 1])) {

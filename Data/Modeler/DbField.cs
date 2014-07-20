@@ -33,7 +33,7 @@ namespace Empiria.Data.Modeler {
       dbDataSource = DbDataSource.Parse(this.DataBaseName);
     }
 
-    public static DbField Parse(string databaseName, string tableName, DbBaseTable.DbTableType tableType){
+    static public DbField Parse(string databaseName, string tableName, DbBaseTable.DbTableType tableType){
       var dbField = new DbField(databaseName,tableName,tableType);
       return dbField;
     }

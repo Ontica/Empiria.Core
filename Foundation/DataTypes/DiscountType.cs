@@ -2,50 +2,46 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Data Types Library                *
 *  Namespace : Empiria.DataTypes                                Assembly : Empiria.dll                       *
-*  Type      : InterestRateType                                 Pattern  : Storage Item Class                *
+*  Type      : DiscountType                                     Pattern  : Storage Item Class                *
 *  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
-*  Summary   : Represents an interest rate type.                                                             *
+*  Summary   : Represents a discount type.                                                                   *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.DataTypes {
 
-  public class InterestRateType : GeneralObject {
+  public class DiscountType : GeneralObject {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.GeneralObject.InterestRateType";
+    private const string thisTypeName = "ObjectType.GeneralObject.DiscountType";
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    public InterestRateType()
-      : base(thisTypeName) {
+    public DiscountType() : base(thisTypeName) {
 
     }
 
-    protected InterestRateType(string typeName)
-      : base(typeName) {
-      // Empiria Object Type pattern classes always has this constructor. Don't delete
+    protected DiscountType(string typeName) : base(typeName) {
+      // Empiria Object Type pattern classes always has this constructor. Don't delete.
     }
 
-    static public InterestRateType Parse(int id) {
-      return BaseObject.Parse<InterestRateType>(thisTypeName, id);
+    static public DiscountType Parse(int id) {
+      return BaseObject.Parse<DiscountType>(thisTypeName, id);
     }
 
-    static public InterestRateType Empty {
-      get { return BaseObject.ParseEmpty<InterestRateType>(thisTypeName); }
-    }
-
-    static public InterestRateType Unknown {
-      get { return BaseObject.ParseUnknown<InterestRateType>(thisTypeName); }
+    static public DiscountType Empty {
+      get {
+        return BaseObject.ParseEmpty<DiscountType>(thisTypeName);
+      }
     }
 
     #endregion Constructors and parsers
 
-  } // class InterestRateType
+  } // class DiscountType
 
 } // namespace Empiria.DataTypes

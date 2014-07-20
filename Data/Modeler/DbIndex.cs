@@ -15,7 +15,7 @@ namespace Empiria.Data.Modeler {
       this.Type = string.Empty;
     }
 
-    public static DbIndex Parse(string databaseName, string tableName) {
+    static public DbIndex Parse(string databaseName, string tableName) {
       var dbIndex = new DbIndex(databaseName, tableName);
       return dbIndex;
     }

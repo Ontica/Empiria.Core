@@ -10,7 +10,7 @@ namespace Empiria.Data.Modeler {
     private DbStoredProcedure(string databaseName): base(databaseName) {
     }
 
-    public static DbStoredProcedure Parse(string databaseName){
+    static public DbStoredProcedure Parse(string databaseName){
       var dbSp = new DbStoredProcedure(databaseName);
       return dbSp;
     }

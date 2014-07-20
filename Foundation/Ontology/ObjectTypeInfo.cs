@@ -35,7 +35,7 @@ namespace Empiria.Ontology {
       return MetaModelType.Parse<ObjectTypeInfo>(name);
     }
 
-    internal static bool TryParse(string typeName, out ObjectTypeInfo objectTypeInfo) {
+    static internal bool TryParse(string typeName, out ObjectTypeInfo objectTypeInfo) {
       try {
         objectTypeInfo = ObjectTypeInfo.Parse(typeName);
         return true;
@@ -45,7 +45,7 @@ namespace Empiria.Ontology {
       }
     }
 
-    public static ObjectTypeInfo Empty { 
+    static public ObjectTypeInfo Empty { 
       get { return ObjectTypeInfo.Parse(-1); }
     }
 

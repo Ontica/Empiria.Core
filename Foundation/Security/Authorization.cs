@@ -2,17 +2,24 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Security Framework                *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.dll                       *
-*  Type      : Authorization                                    Pattern  : Standard Class                    *
+*  Type      : Authorization                                    Pattern  : Storage Item Class                *
 *  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Sealed class that represents an authorization.                                                *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Data;
 
 namespace Empiria.Security {
 
-  public sealed class Authorization {
+  public sealed class Authorization: BaseObject {
+
+    #region Fields
+
+    private const string thisTypeName = "ObjectType.Authorization";
+
+    #endregion
 
     #region Member variable declaration
 
@@ -25,17 +32,22 @@ namespace Empiria.Security {
     private string code = String.Empty;
     private string observations = String.Empty;
     private DateTime date = DateTime.Now;
-    private bool isDirty = false;
 
     #endregion Member variable declaration
 
     #region Constructors and parsers
 
-    private Authorization() {
+    private Authorization() : base(thisTypeName) {
 
     }
 
-    private Authorization(int typeId, int authorizedById, int objectId, string code) {
+    private Authorization(string typeName) : base(typeName) {
+      // Required by Empiria Framework. Do not delete.
+      // Protected in not sealed classes, private otherwise
+    }
+
+    private Authorization(int typeId, int authorizedById, 
+                          int objectId, string code) : base(thisTypeName) {
       this.typeId = typeId;
       this.authorizedById = authorizedById;
       this.sessionToken = ExecutionServer.CurrentIdentity.Session.Token;
@@ -44,29 +56,29 @@ namespace Empiria.Security {
       Append();
     }
 
-    static public Authorization Create(string authorizationNS, int objectId, string authorizationCode) {
-      int typeId = GetAuthorizationType(authorizationNS);
-      int authorizedById = ExecutionServer.CurrentUserId;
-
-      if (authorizedById != 0) {
-        return new Authorization(typeId, authorizedById, objectId, authorizationCode);
-      } else {
-        return null;
-      }
-    }
-
     static public Authorization Create(string userName, string password, string publicKey,
                                        string authorizationNS, int objectId) {
-      int typeId = GetAuthorizationType(authorizationNS);
       EmpiriaUser user = EmpiriaUser.Authenticate(userName, password, publicKey);
 
-      if (typeId == 0) {
-        return null;
-      }
-      if (user != null) {
-        return new Authorization(typeId, user.Id, objectId, String.Empty);
-      } else {
-        return null;
+      throw new NotImplementedException();
+
+      //if (typeId == 0) {
+      //  return null;
+      //}
+      //if (user != null) {
+      //  return new Authorization(typeId, user.Id, objectId, String.Empty);
+      //} else {
+      //  return null;
+      //}
+    }
+
+    static public Authorization Parse(int authorizationId, object authorizedObjectData) {
+      throw new NotImplementedException();
+    }
+
+    static public Authorization Empty {
+      get {
+        return BaseObject.ParseEmpty<Authorization>(thisTypeName);
       }
     }
 
@@ -84,12 +96,12 @@ namespace Empiria.Security {
 
     public int ReasonId {
       get { return reasonId; }
-      set { reasonId = 0; isDirty = true; }
+      set { reasonId = 0; }
     }
 
     public int ObjectId {
       get { return objectId; }
-      set { objectId = 0; isDirty = true; }
+      set { objectId = 0; }
     }
 
     public int AuthorizedById {
@@ -106,7 +118,7 @@ namespace Empiria.Security {
 
     public string Observations {
       get { return observations; }
-      set { observations = value; isDirty = true; }
+      set { observations = value; }
     }
 
     public DateTime Date {
@@ -117,10 +129,12 @@ namespace Empiria.Security {
 
     #region Public methods
 
-    public void Save() {
-      if (isDirty) {
-        SecurityData.WriteAuthorization(this);
-      }
+    protected override void ImplementsLoadObjectData(DataRow row) {
+
+    }
+
+    protected override void ImplementsSave() {
+
     }
 
     #endregion Public methods
@@ -132,20 +146,6 @@ namespace Empiria.Security {
         code = GenerateAuthorizationCode();
       }
       SecurityData.WriteAuthorization(this);
-    }
-
-    static private int GetAuthorizationType(string authorizationNS) {
-      if (authorizationNS == "SaleWithoutStock") {
-        return 1;
-      } else if (authorizationNS == "SaleUnderRepositionValue") {
-        return 2;
-      } else if (authorizationNS == "CreditSaleCode") {
-        return 3;
-      } else if (authorizationNS == "CreditSaleCodeCOBOL") {
-        return 7;
-      } else {
-        return 0;
-      }
     }
 
     private string GenerateAuthorizationCode() {

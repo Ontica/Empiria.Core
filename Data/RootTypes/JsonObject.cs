@@ -28,7 +28,7 @@ namespace Empiria.Data {
       dictionary = new Dictionary<string, object>(8);
     }
 
-    public static JsonObject Empty {
+    static public JsonObject Empty {
       get { 
         return new JsonObject() {
           IsEmptyInstance = true

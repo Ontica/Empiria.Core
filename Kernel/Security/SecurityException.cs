@@ -34,8 +34,8 @@ namespace Empiria.Security {
       RequireExecuteMethod,
       UnauthenticatedIdentity,
       WrongAuthentication,
+      WrongDIFVersionRequested,
       WrongImpersonationToken,
-      WrongRequestedVersionForDIF,
       IntegrityValidatorAssertFails,
       InvalidDIFDataItemDataType,
     }

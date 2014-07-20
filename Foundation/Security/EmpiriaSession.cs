@@ -151,8 +151,6 @@ namespace Empiria.Security {
 
     #endregion Internal and private methods
 
-
-
   } //class EmpiriaSession
 
 } //namespace Empiria.Security
