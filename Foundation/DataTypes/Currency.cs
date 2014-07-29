@@ -8,6 +8,7 @@
 *  Summary   : Represents a currency data type.                                                              *
 *                                                                                                            *
 ********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
 
 namespace Empiria.DataTypes {
 

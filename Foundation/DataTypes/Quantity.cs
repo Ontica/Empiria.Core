@@ -2,15 +2,17 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Data Types Library                *
 *  Namespace : Empiria.DataTypes                                Assembly : Empiria.dll                       *
-*  Type      : Money                                            Pattern  : Value Type                        *
+*  Type      : Quantity                                         Pattern  : Value Type                        *
 *  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
-*  Summary   : Value type that handles money operations.                                                     *
+*  Summary   : Value type that handles quantity data, a pair unit-amount data type.                          *
 *                                                                                                            *
 ********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
 
 namespace Empiria.DataTypes {
 
+  /// <summary>Value type that handles quantity data, a pair unit-amount data type.</summary>
   public struct Quantity {
 
     #region Fields
@@ -130,4 +132,4 @@ namespace Empiria.DataTypes {
 
   } // class Quantity
 
-} // namespace Empiria.DataTypes
+} // namespace Empiria.Quantity

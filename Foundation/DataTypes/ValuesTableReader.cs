@@ -10,7 +10,6 @@
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
-
 namespace Empiria.DataTypes {
 
   /// <summary>Performs column read operations over a general purpose values table.</summary>

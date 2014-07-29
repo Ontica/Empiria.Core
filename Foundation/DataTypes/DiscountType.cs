@@ -40,6 +40,12 @@ namespace Empiria.DataTypes {
       }
     }
 
+    static public DiscountType Unknown {
+      get {
+        return BaseObject.ParseUnknown<DiscountType>(thisTypeName);
+      }
+    }
+
     #endregion Constructors and parsers
 
   } // class DiscountType

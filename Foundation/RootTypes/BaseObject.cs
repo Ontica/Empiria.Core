@@ -155,6 +155,11 @@ namespace Empiria {
 
     #region Public properties
 
+    protected AttributesBag AttributesBag {
+      get;
+      private set;
+    }
+
     public ObjectTypeInfo ObjectTypeInfo {
       get { return this.objectTypeInfo; }
     }
@@ -172,7 +177,7 @@ namespace Empiria {
     }
 
     public bool IsNew {
-      get { return (this.objectId == 0 && isNewFlag == true); }
+      get { return (this.objectId == 0 || isNewFlag == true); }
     }
 
     #endregion Public properties
@@ -257,6 +262,10 @@ namespace Empiria {
 
     protected void Link(TypeAssociationInfo assocationInfo, IStorable value) {
       OntologyData.WriteLink(assocationInfo, this, value);
+    }
+
+    protected void LoadAttributesBag(DataRow row) {
+      this.AttributesBag = new AttributesBag(this, row);
     }
 
     public void Save() {

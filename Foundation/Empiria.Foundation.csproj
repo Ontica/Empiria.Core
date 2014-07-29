@@ -213,6 +213,8 @@
     <Compile Include="Ontology.Modeler\TypeProperty.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="RootTypes\AttributesBag.cs" />
+    <Compile Include="RootTypes\AttributesBagBoxing.cs" />
     <Compile Include="RootTypes\KeyValuePair.cs" />
     <Compile Include="RootTypes\LazyObject.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />

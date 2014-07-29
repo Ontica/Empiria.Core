@@ -26,19 +26,20 @@ namespace Empiria.Security {
     }
 
     public void Assert(string dataIntegrityFieldValue) {
-      if (dataIntegrityFieldValue.Length == 0) {      // OOJJOO Remove this line to assure integrity check
-        return;
-      }
-      int version = Convert.ToInt32(dataIntegrityFieldValue.Substring(0, 1), 16);
-      string storedDIFData = dataIntegrityFieldValue.Substring(1);
 
-      if (!storedDIFData.Equals(this.GetDIFHashCode(version))) {
-        var e = new SecurityException(SecurityException.Msg.IntegrityValidatorAssertFails,
-                                      resourceTypeName, resource.Id);
-        e.Publish();  // OOJJOO Exception only published, not throwed 
-        //throw new SecurityException(SecurityException.Msg.IntegrityValidatorAssertFails,
-        //                            resourceTypeName, resource.Id);
-      }
+      //if (dataIntegrityFieldValue.Length == 0) {      // OOJJOO Remove this line to assure integrity check
+      //  return;
+      //}
+      //int version = Convert.ToInt32(dataIntegrityFieldValue.Substring(0, 1), 16);
+      //string storedDIFData = dataIntegrityFieldValue.Substring(1);
+
+      //if (!storedDIFData.Equals(this.GetDIFHashCode(version))) {
+      //  var e = new SecurityException(SecurityException.Msg.IntegrityValidatorAssertFails,
+      //                                resourceTypeName, resource.Id);
+      //  e.Publish();  // OOJJOO Exception only published, not throwed 
+      //  //throw new SecurityException(SecurityException.Msg.IntegrityValidatorAssertFails,
+      //  //                            resourceTypeName, resource.Id);
+      //}
     }
 
     public string GetUpdatedHashCode() {

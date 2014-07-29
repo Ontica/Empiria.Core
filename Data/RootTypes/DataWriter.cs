@@ -56,7 +56,6 @@ namespace Empiria.Data {
 
       DataPublisher.Publish(operation);
 
-
       return result;
     }
 
