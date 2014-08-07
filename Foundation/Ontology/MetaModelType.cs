@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
 *  Namespace : Empiria.Ontology                                 Assembly : Empiria.dll                       *
 *  Type      : MetaModelType                                    Pattern  : Abstract Class With items Cache   *
-*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : This type is the root of the item type metadata information hierarchy. All types information  *
 *              classes must be descendants of this type.                                                     *

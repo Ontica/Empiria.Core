@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Security Framework                *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.Kernel.dll                *
 *  Type      : IProtected                                       Pattern  : Loose coupling interface          *
-*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : This interface serves to control the data integrity of a stored entity.                       *
 *                                                                                                            *

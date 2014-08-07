@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *  Type      : EmpiriaException                                 Pattern  : Empiria Base Exception Class      *
-*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Class for run-time exceptions in Empiria Framework. All exception classes needs be            *
 *              derivated of this class.                                                                      *

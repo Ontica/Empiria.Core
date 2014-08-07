@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria.Collections                              Assembly : Empiria.Kernel.dll                *
 *  Type      : EmpiriaList                                      Pattern  : Empiria List Class                *
-*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Represents a generic named sortable list of items of specific reference type.                 *
 *                                                                                                            *

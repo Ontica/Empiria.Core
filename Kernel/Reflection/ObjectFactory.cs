@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria.Reflection                               Assembly : Empiria.Kernel.dll                *
 *  Type      : ObjectFactory                                    Pattern  : Static Class                      *
-*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : This class provides services for a empiria type instance creation.                            *
 *                                                                                                            *

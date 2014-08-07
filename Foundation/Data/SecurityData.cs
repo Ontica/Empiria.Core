@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Security Framework                *
 *  Namespace : Empiria.Security.Data                            Assembly : Empiria.dll                       *
 *  Type      : AttributeReader                                  Pattern  : Data Services Static Class        *
-*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Provides data read methods for security information.                                          *
 *                                                                                                            *

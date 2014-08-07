@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria.Collections                              Assembly : Empiria.Kernel.dll                *
 *  Type      : EmpiriaHashList                                  Pattern  : HashList Class                    *
-*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Represents a named list of pairs object-string, where object is a reference type.             *
 *                                                                                                            *

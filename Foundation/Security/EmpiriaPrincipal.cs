@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Security Framework                *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.dll                       *
 *  Type      : EmpiriaPrincipal                                 Pattern  : Standard Class                    *
-*  Version   : 5.5        Date: 25/Jun/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Represents the security context of the user or access account on whose behalf the Empiria     *
 *              framework code is running, including that user's identity (EmpiriaIdentity) and any domain    *
