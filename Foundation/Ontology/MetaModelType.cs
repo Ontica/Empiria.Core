@@ -76,7 +76,7 @@ namespace Empiria.Ontology {
 
     private List<KeyValuePair<string, object>> attibuteKeyValues = null;
 
-    private DynamicState dynamicState = null;
+    //private DynamicState dynamicState = null;
 
     #endregion Fields
 
@@ -86,14 +86,14 @@ namespace Empiria.Ontology {
       this.typeFamily = typeFamily;
       if (id != 0) {
         Load(OntologyData.GetTypeDataRow(id), id.ToString());
-        this.dynamicState = new DynamicState(this);
+        //this.dynamicState = new DynamicState(this);
       }
     }
 
     protected internal MetaModelType(MetaModelTypeFamily typeFamily, string typeName) {
       this.typeFamily = typeFamily;
       Load(OntologyData.GetTypeDataRow(typeName), typeName);
-      this.dynamicState = new DynamicState(this);
+      //this.dynamicState = new DynamicState(this);
     }
 
     static internal MetaModelType Parse(int typeId) {
@@ -356,7 +356,8 @@ namespace Empiria.Ontology {
     }
 
     protected T GetAttribute<T>(string attributeName) {
-      return dynamicState.GetValue<T>(attributeName);
+      throw new NotImplementedException();
+      //return dynamicState.GetValue<T>(attributeName);
     }
 
     public T GetExtensionData<T>() {

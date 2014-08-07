@@ -44,8 +44,7 @@ namespace Empiria {
     private const int emptyInstanceId = -1;
     private const int unknownInstanceId = -2;
 
-    private DynamicState dynamicState = null;
-
+    //private DynamicState dynamicState = null;
 
     #endregion Fields
 
@@ -54,14 +53,14 @@ namespace Empiria {
     protected BaseObject(string typeName) {
       if (typeName.Length != 0) {   // If typeName.Length == 0, is invoked with Parsing using reflection
         this.objectTypeInfo = ObjectTypeInfo.Parse(typeName);
-        dynamicState = new DynamicState(this);
+        //dynamicState = new DynamicState(this);
       }
     }
 
     static public T Create<T>(ObjectTypeInfo typeInfo) where T : BaseObject {
-      T item = (T) BaseObject.InvokeBaseObjectConstructor(typeInfo);
+      T item = typeInfo.CreateObject<T>();
       item.objectTypeInfo = typeInfo;
-      item.dynamicState = new DynamicState(item);
+      //item.dynamicState = new DynamicState(item);
 
       return item;
     }
@@ -70,17 +69,17 @@ namespace Empiria {
       if (id == 0) {
         throw new OntologyException(OntologyException.Msg.TryToParseZeroObjectId, typeName);
       }
-      T item = cache.GetItem(typeName, id) as T;
+      T item = cache.GetItem<T>(typeName, id);
       if (item != null) {
         return item;
       }
-      Tuple<ObjectTypeInfo, DataRow> objectData = GetBaseObjectData(typeName, id);
+      Tuple<ObjectTypeInfo, DataRow> objectData = BaseObject.GetBaseObjectData(typeName, id);
 
       return BaseObject.CreateBaseObject<T>(objectData.Item1, objectData.Item2);
     }
 
     static protected T Parse<T>(string typeName, string namedKey) where T : BaseObject {
-      T item = cache.GetItem(typeName, namedKey) as T;
+      T item = cache.GetItem<T>(typeName, namedKey);
       if (item != null) {
         return item;
       }
@@ -90,10 +89,9 @@ namespace Empiria {
     }
 
     static internal T Parse<T>(ObjectTypeInfo typeInfo, DataRow dataRow) where T : BaseObject {
-      T item = cache.GetItem(typeInfo.Name, (int) dataRow[typeInfo.IdFieldName]) as T;
-
+      T item = cache.GetItem<T>(typeInfo.Name, (int) dataRow[typeInfo.IdFieldName]);
       if (item != null) {
-        return item;  // Only use dataRow when item is not in cache
+        return item;      // Only use dataRow when item is not in cache
       }
       return BaseObject.Parse<T>(typeInfo.Name, dataRow);
     }
@@ -103,9 +101,9 @@ namespace Empiria {
         ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(typeName, dataRow);
         int objectIdFieldValue = (int) dataRow[derivedTypeInfo.IdFieldName];
 
-        T item = cache.GetItem(derivedTypeInfo.Name, objectIdFieldValue) as T;
+        T item = cache.GetItem<T>(derivedTypeInfo.Name, objectIdFieldValue);
         if (item != null) {
-          return item;  // Only use dataRow when item is not in cache
+          return item;    // Only use dataRow when item is not in cache
         }
         return BaseObject.CreateBaseObject<T>(derivedTypeInfo, dataRow);
       } catch (Exception e) {
@@ -184,6 +182,14 @@ namespace Empiria {
 
     #region Public methods
 
+    protected void LoadData(DataRow row) {
+      this.ObjectTypeInfo.LoadObject(this, row);
+    }
+
+    protected void LoadAttributesBagUsingHashTable(DataRow row) {
+      this.AttributesBag = new AttributesBag(this, row);
+    }
+
     public override bool Equals(object obj) {
       if (obj == null || GetType() != obj.GetType()) {
         return false;
@@ -199,7 +205,8 @@ namespace Empiria {
     }
 
     protected T GetAttribute<T>(string attributeName) {
-      return dynamicState.GetValue<T>(attributeName);
+      throw new NotImplementedException();
+      //return dynamicState.GetValue<T>(attributeName);
     }
 
     protected T GetLink<T>(string linkName) where T : BaseObject {
@@ -264,19 +271,13 @@ namespace Empiria {
       OntologyData.WriteLink(assocationInfo, this, value);
     }
 
-    protected void LoadAttributesBag(DataRow row) {
-      this.AttributesBag = new AttributesBag(this, row);
-    }
-
     public void Save() {
       if (this.objectId == 0) {
         this.objectId = OntologyData.GetNextObjectId(this.ObjectTypeInfo);
       }
       ImplementsSave();
       this.isNewFlag = false;
-      lock (cache) {
-        cache.Insert(this);
-      }
+      cache.Insert(this);
     }
 
     protected void SetAttribute<T>(string name, T value) {
@@ -295,20 +296,20 @@ namespace Empiria {
 
     #region Private methods
 
-    static private T CreateBaseObject<T>(ObjectTypeInfo typeInfo, DataRow dataRow) where T : BaseObject {
-      T item = (T) BaseObject.InvokeBaseObjectConstructor(typeInfo);
-
+    static private T CreateBaseObject<T>(ObjectTypeInfo typeInfo, 
+                                         DataRow dataRow) where T : BaseObject {
+      T item = typeInfo.CreateObject<T>();
+      
       item.objectTypeInfo = typeInfo;
       item.objectId = (int) dataRow[typeInfo.IdFieldName];
-      item.dynamicState = new DynamicState(item);
+      //item.dynamicState = new DynamicState(item);
       item.ImplementsLoadObjectData(dataRow);
       item.isNewFlag = false;
-      lock (cache) {
-        if (!typeInfo.UsesNamedKey) {
-          cache.Insert(item);
-        } else {
-          cache.Insert(item, (string) dataRow[typeInfo.NamedIdFieldName]);
-        }
+
+      if (!typeInfo.UsesNamedKey) {
+        cache.Insert(item);
+      } else {
+        cache.Insert(item, (string) dataRow[typeInfo.NamedIdFieldName]);
       }
       return item;
     }
@@ -351,11 +352,6 @@ namespace Empiria {
       } else {
         return ObjectTypeInfo.Parse((int) dataRow[objectTypeInfo.TypeIdFieldName]);
       }
-    }
-
-    static private BaseObject InvokeBaseObjectConstructor(ObjectTypeInfo typeInfo) {
-      return (BaseObject) ObjectFactory.CreateObject(typeInfo.UnderlyingSystemType, new Type[] { typeof(string) },
-                                                     new object[] { String.Empty });
     }
 
     static public int CacheCount {

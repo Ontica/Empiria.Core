@@ -8,23 +8,34 @@
 *  Summary   : Represents an object type definition.                                                         *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Reflection;
+
+using Empiria.Ontology.Modeler;
+using Empiria.Reflection;
 
 namespace Empiria.Ontology {
 
   public class ObjectTypeInfo : MetaModelType {
 
+    #region Fields
+
+    private ConstructorInfo _baseObjectConstructor = null;
+    private DataMappingRules _dataMappingRules = null;
+    private object _lockObject = new object();
+
+    #endregion Fields
+
     #region Constructors and parsers
 
-    protected internal ObjectTypeInfo(int id)
-      : base(MetaModelTypeFamily.ObjectType, id) {
+    protected internal ObjectTypeInfo(int id) : base(MetaModelTypeFamily.ObjectType, id) {
 
     }
 
     protected internal ObjectTypeInfo(string name)
       : base(MetaModelTypeFamily.ObjectType, name) {
-
     }
 
     static public new ObjectTypeInfo Parse(int id) {
@@ -77,6 +88,17 @@ namespace Empiria.Ontology {
 
     #region Public methods
 
+    internal T CreateObject<T>() where T : BaseObject {
+      return this.InvokeBaseObjectConstructor<T>();
+    }
+
+    internal void LoadObject(BaseObject baseObject, DataRow row) {
+      if (_dataMappingRules == null) {
+        this.LoadDataRules(row.Table.Columns);
+      }
+      _dataMappingRules.LoadObject(baseObject, row);
+    }
+
     public ObjectTypeInfo[] GetSubclasses() {
       DataTable dataTable = OntologyData.GetDerivedTypes(this.Id);
 
@@ -88,7 +110,7 @@ namespace Empiria.Ontology {
     }
 
     public bool IsBaseClassOf(ObjectTypeInfo typeInfo) {
-      return typeInfo.IsSubclassOf(this);
+     return typeInfo.IsSubclassOf(this);
     }
 
     public bool IsSubclassOf(ObjectTypeInfo typeInfo) {
@@ -105,6 +127,34 @@ namespace Empiria.Ontology {
     }
 
     #endregion Public methods
+
+    #region Private methods
+
+    private ConstructorInfo GetBaseObjectConstructor() {
+      return this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
+                                                      BindingFlags.NonPublic,
+                                                      null, CallingConventions.HasThis,
+                                                      new Type[] { typeof(string) }, null);
+    }
+
+    private T InvokeBaseObjectConstructor<T>() {
+      if (_baseObjectConstructor == null) {
+        _baseObjectConstructor = GetBaseObjectConstructor();
+      }
+      return (T) _baseObjectConstructor.Invoke(new object[] { String.Empty });
+    }
+
+    private void LoadDataRules(DataColumnCollection columns) {
+      if (_dataMappingRules == null) {
+        lock (_lockObject) {
+          if (_dataMappingRules == null) {
+            _dataMappingRules = DataMappingRules.Parse(base.UnderlyingSystemType, columns);
+          }
+        }
+      }
+    }
+
+    #endregion Private methods
 
   } // class ObjectTypeInfo
 

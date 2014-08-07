@@ -32,18 +32,12 @@ namespace Empiria {
 
     #region Public methods
 
-    public new BaseObject GetItem(string typeName, int id) {
-      if (!base.Contains(typeName, id)) {
-        return null;
-      }
-      return base.GetItem(typeName, id);
+    internal T GetItem<T>(string typeName, int id) where T : BaseObject {
+      return (T) base.GetItem(typeName, id);
     }
 
-    public new BaseObject GetItem(string typeName, string namedKey) {
-      if (!base.Contains(typeName, namedKey)) {
-        return null;
-      }
-      return base.GetItem(typeName, namedKey);
+    public T GetItem<T>(string typeName, string namedKey) where T : BaseObject {
+      return (T) base.GetItem(typeName, namedKey);
     }
 
     #endregion Public methods

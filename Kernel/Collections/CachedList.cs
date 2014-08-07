@@ -14,7 +14,7 @@ using System.Collections.Generic;
 namespace Empiria.Collections {
 
   /// <summary>Abstract generic that represents a dynamic cached collection of IIdentifiable objects.</summary>
-  public abstract class CachedList<T> : ICollection<T> where T : IIdentifiable {
+  public abstract class CachedList<T> : ICollection<T> where T : class, IIdentifiable  {
 
     #region Fields
 
@@ -140,26 +140,22 @@ namespace Empiria.Collections {
     protected T GetItem(string itemTypeName, int id) {
       string objectKey = id.ToString() + "." + itemTypeName.ToLowerInvariant();
 
-      lock (objects) {
-        if (this.Contains(itemTypeName, id)) {
-          lastAccess[objectKey] = DateTime.Now.Ticks;
-          return objects[objectKey];
-        } else {
-          throw new EmpiriaCollectionException(EmpiriaCollectionException.Msg.CollectionItemIdNotFound, id);
-        } // if
-      } // lock
+      if (this.Contains(itemTypeName, id)) {
+        lastAccess[objectKey] = DateTime.Now.Ticks;
+        return objects[objectKey];
+      } else {
+        return null;
+      } // if
     }
 
     protected T GetItem(string itemTypeName, string namedKey) {
-      lock (objects) {
-        if (this.Contains(itemTypeName, namedKey)) {
-          string objectKey = namedObjects[namedKey.ToLowerInvariant() + "." + itemTypeName.ToLowerInvariant()];
-
-          return objects[objectKey];
-        } else {
-          throw new EmpiriaCollectionException(EmpiriaCollectionException.Msg.CollectionKeyNotFound, namedKey);
-        } // if
-      } // lock
+      if (this.Contains(itemTypeName, namedKey)) {
+        string objectKey = namedObjects[namedKey.ToLowerInvariant() + "." + itemTypeName.ToLowerInvariant()];
+        lastAccess[objectKey] = DateTime.Now.Ticks;
+        return objects[objectKey];
+      } else {
+        return null;
+      } // if
     }
 
     bool ICollection<T>.Remove(T item) {

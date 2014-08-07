@@ -180,7 +180,7 @@ namespace Empiria {
       return methodName;
     }
 
-    /// <summary>Initialization function that gathers environment information safely.</summary>    
+    /// <summary>Initialization function that gathers environment information safely.</summary>
     private void InitializeEnvironmentInformation() {
       const string unavailableTag = "Unavailable";
 

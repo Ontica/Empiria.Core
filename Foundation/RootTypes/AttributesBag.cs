@@ -108,6 +108,7 @@ namespace Empiria {
         Type columnDataType = column.DataType;
 
         if (columnDataType == typeof(Int32)) {
+
           attributeIndexes.Add(column.ColumnName, int32Count);
           attributeDataTypes.Add(column.ColumnName, DataType.Int32);
           int32Count++;
