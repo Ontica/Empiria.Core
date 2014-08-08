@@ -182,7 +182,7 @@ namespace Empiria {
 
     #region Public methods
 
-    protected void LoadData(DataRow row) {
+    protected void DataBind(DataRow row) {
       this.ObjectTypeInfo.LoadObject(this, row);
     }
 

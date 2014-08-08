@@ -24,20 +24,27 @@ namespace Empiria.Ontology.Modeler {
     #region Constuctors and parsers
 
     internal DataMapping(MemberInfo memberInfo, DataColumn dataColumn, int dataColumnIndex) {
-      this.MappedMemberInfo = memberInfo;
+      this.MemberInfo = memberInfo;
       this.DataColumn = dataColumn;
       this.DataColumnIndex = dataColumnIndex;
-
       this.DataFieldName = DataColumn.ColumnName;
-      if (this.MappedMemberInfo is PropertyInfo) {
-        this.IsProperty = true;
-        this.DataType = ((PropertyInfo) this.MappedMemberInfo).PropertyType;
+      this.DataFieldType = DataColumn.DataType;
+
+      if (this.MemberInfo is PropertyInfo) {
+        this.MapToProperty = true;
+        this.MemberType = ((PropertyInfo) this.MemberInfo).PropertyType;
       } else {
-        this.IsProperty = false;
-        this.DataType = ((FieldInfo) this.MappedMemberInfo).FieldType;
+        this.MapToProperty = false;
+        this.MemberType = ((FieldInfo) this.MemberInfo).FieldType;
       }
-      this.SupportsLazyLoad = (this.DataType.IsGenericType &&
-                               this.DataType.GetGenericTypeDefinition() == typeof(LazyObject<>));
+      if (this.DataFieldType == typeof(int)) {
+        this.MapToLazyObject = (this.MemberType.IsGenericType &&
+                                   this.MemberType.GetGenericTypeDefinition() == typeof(LazyObject<>));
+        this.MapToBaseObject = (!this.MemberType.IsGenericType &&
+                                    this.MemberType.IsSubclassOf(typeof(Empiria.BaseObject)));
+      }
+
+      this.MapCharToEnum = (this.MemberType.IsEnum && this.DataFieldType == typeof(string));
     }
 
     #endregion Constructors and parsers
@@ -59,22 +66,37 @@ namespace Empiria.Ontology.Modeler {
       private set;
     }
 
-    internal Type DataType {
+    internal Type DataFieldType {
       get;
       private set;
     }
 
-    internal bool IsProperty {
+    internal bool MapCharToEnum {
       get;
       private set;
     }
 
-    internal MemberInfo MappedMemberInfo {
+    internal bool MapToProperty {
       get;
       private set;
     }
 
-    internal bool SupportsLazyLoad {
+    public bool MapToBaseObject {
+      get;
+      private set;
+    }
+
+    internal bool MapToLazyObject {
+      get;
+      private set;
+    }
+
+    internal MemberInfo MemberInfo {
+      get;
+      private set;
+    }
+
+    internal Type MemberType {
       get;
       private set;
     }
@@ -84,15 +106,23 @@ namespace Empiria.Ontology.Modeler {
     #region Public methods
 
     internal void InvokeSetValue(object instance, object value) {
-      if (this.IsProperty) {
-        ((PropertyInfo) this.MappedMemberInfo).SetMethod.Invoke(instance, new[] { value });
-      } else {      // IsField
-        if (this.SupportsLazyLoad) {
-          ((FieldInfo) this.MappedMemberInfo).SetValue(instance,
-                                              ObjectFactory.ParseObject(this.DataType, (int) value));
+      object setValue = null;
+
+      if (this.MapToBaseObject || this.MapToLazyObject) {
+        setValue = ObjectFactory.ParseObject(this.MemberType, (int) value);
+      } else  if (this.MapCharToEnum) {
+        if (((string) value).Length == 1) {
+          setValue = Enum.ToObject(this.MemberType, Convert.ToChar(value));
         } else {
-          ((FieldInfo) this.MappedMemberInfo).SetValue(instance, value);
+          setValue = Enum.Parse(this.MemberType, (string) value);
         }
+      } else {
+        setValue = value;
+      }
+      if (this.MapToProperty) {
+        ((PropertyInfo) this.MemberInfo).SetMethod.Invoke(instance, new[] { setValue });
+      } else {      // IsMemberField = true
+        ((FieldInfo) this.MemberInfo).SetValue(instance, setValue);
       }
     }
 
