@@ -94,7 +94,11 @@ namespace Empiria.Ontology {
 
     internal void LoadObject(BaseObject baseObject, DataRow row) {
       if (_dataMappingRules == null) {
-        this.LoadDataRules(row.Table.Columns);
+        lock (_lockObject) {
+          if (_dataMappingRules == null) {
+            _dataMappingRules = DataMappingRules.Parse(base.UnderlyingSystemType, row.Table.Columns);
+          }
+        }
       }
       _dataMappingRules.LoadObject(baseObject, row);
     }
@@ -144,17 +148,12 @@ namespace Empiria.Ontology {
       return (T) _baseObjectConstructor.Invoke(new object[] { String.Empty });
     }
 
-    private void LoadDataRules(DataColumnCollection columns) {
-      if (_dataMappingRules == null) {
-        lock (_lockObject) {
-          if (_dataMappingRules == null) {
-            _dataMappingRules = DataMappingRules.Parse(base.UnderlyingSystemType, columns);
-          }
-        }
-      }
-    }
-
     #endregion Private methods
+
+
+    internal void InitializeObject(BaseObject baseObject) {
+
+    }
 
   } // class ObjectTypeInfo
 

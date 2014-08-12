@@ -200,6 +200,8 @@
     <Compile Include="DataTypes\TempAddress.cs" />
     <Compile Include="Contacts\Organization.cs" />
     <Compile Include="DataTypes\InterestRateType.cs" />
+    <Compile Include="Ontology.Modeler\DataFieldMapping.cs" />
+    <Compile Include="Ontology.Modeler\DataPropertyMapping.cs" />
     <Compile Include="Ontology.Modeler\DataMapping.cs" />
     <Compile Include="Ontology.Modeler\TypeModeler.cs" />
     <Compile Include="Ontology.Modeler\TypeReader.cs">
@@ -219,7 +221,6 @@
     <Compile Include="RootTypes\AttributesBagBoxing.cs" />
     <Compile Include="RootTypes\DataFieldAttribute.cs" />
     <Compile Include="RootTypes\KeyValuePair.cs" />
-    <Compile Include="RootTypes\LazyObject.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />
     <Compile Include="RootTypes\TimePeriod.cs" />
     <Compile Include="RootTypes\ZZTypeList.cs" />

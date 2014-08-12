@@ -8,6 +8,7 @@
 *  Summary   : Type that represents and manage Empiria deploy web servers information.                       *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
 
 namespace Empiria.Security {
 
@@ -24,13 +25,7 @@ namespace Empiria.Security {
 
     #region Constructors and parsers
 
-    public WebServer()
-      : base(thisTypeName) {
-
-    }
-
-    private WebServer(string typeName)
-      : base(typeName) {
+    private WebServer(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
@@ -51,20 +46,28 @@ namespace Empiria.Security {
 
     #region Public properties
 
+    [DataField(ExtensionDataFieldName + ".WebSiteIPAddress")]
     public string WebSiteIPAddress {
-      get { return base.GetAttribute<string>("WebSiteIPAddress"); }
+      get;
+      private set;
     }
 
+    [DataField(ExtensionDataFieldName + ".WebSiteURL", IsOptional = false)]
     public string WebSiteURL {
-      get { return base.GetAttribute<string>("WebSiteURL"); }
+      get;
+      private set;
     }
 
+    [DataField(ExtensionDataFieldName + ".WebServicesSiteIPAddress")]
     public string WebServicesSiteIPAddress {
-      get { return base.GetAttribute<string>("WebServicesSiteIPAddress"); }
+      get;
+      private set;
     }
 
+    [DataField(ExtensionDataFieldName + ".WebServicesSiteURL", IsOptional = false)]
     public string WebServicesSiteURL {
-      get { return base.GetAttribute<string>("WebServicesSiteURL"); }
+      get;
+      private set;
     }
 
     #endregion Public properties

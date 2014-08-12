@@ -30,10 +30,10 @@ namespace Empiria.DataTypes {
       /// OOJJOO. Try to send all data read/write methods to isolated types ???      
       // interest = DataReader.GetInterestData(json);
 
-      interest.TermPeriods = json.Find<Int32>("TermPeriods", interest.TermPeriods);
-      interest.TermUnit = json.Find<Unit>("TermUnitId", interest.TermUnit);
-      interest.Rate = json.Find<Decimal>("InterestRate", interest.Rate);
-      interest.RateType = json.Find<InterestRateType>("InterestRateTypeId", interest.RateType);
+      interest.TermPeriods = json.Get<Int32>("TermPeriods", interest.TermPeriods);
+      interest.TermUnit = json.Get<Unit>("TermUnitId", interest.TermUnit);
+      interest.Rate = json.Get<Decimal>("InterestRate", interest.Rate);
+      interest.RateType = json.Get<InterestRateType>("InterestRateTypeId", interest.RateType);
 
       return interest;
     }

@@ -47,7 +47,7 @@ namespace Empiria.Contacts {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
-    static public Person Empty {
+    static public new Person Empty {
       get { return BaseObject.ParseEmpty<Person>(thisTypeName); }
     }
 

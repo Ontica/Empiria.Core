@@ -14,39 +14,49 @@ using System.Data;
 using System.Reflection;
 using System.Linq;
 
+using Empiria.Data;
 using Empiria.Reflection;
 
 namespace Empiria.Ontology.Modeler {
 
   /// <summary>Mapping rule between a type property or field and a data source element.</summary>
-  internal class DataMapping {
+  internal abstract class DataMapping {
+
+    #region Abstract members
+
+    internal abstract MemberInfo MemberInfo { get; }
+    internal abstract Type MemberType { get; }
+
+    protected abstract object ImplementsGetValue(object instance);
+    protected abstract void ImplementsSetValue(object instance, object value);
+
+    #endregion Abstract members
 
     #region Constuctors and parsers
 
-    internal DataMapping(MemberInfo memberInfo, DataColumn dataColumn, int dataColumnIndex) {
-      this.MemberInfo = memberInfo;
+    protected DataMapping(DataColumn dataColumn, string jsonFieldName) {
       this.DataColumn = dataColumn;
-      this.DataColumnIndex = dataColumnIndex;
-      this.DataFieldName = DataColumn.ColumnName;
-      this.DataFieldType = DataColumn.DataType;
-
-      if (this.MemberInfo is PropertyInfo) {
-        this.MapToProperty = true;
-        this.MemberType = ((PropertyInfo) this.MemberInfo).PropertyType;
-      } else {
-        this.MapToProperty = false;
-        this.MemberType = ((FieldInfo) this.MemberInfo).FieldType;
-      }
-      if (this.DataFieldType == typeof(int)) {
-        this.MapToLazyObject = (this.MemberType.IsGenericType &&
-                                   this.MemberType.GetGenericTypeDefinition() == typeof(LazyObject<>));
-        this.MapToBaseObject = (!this.MemberType.IsGenericType &&
-                                    this.MemberType.IsSubclassOf(typeof(Empiria.BaseObject)));
-      }
-
-      this.MapCharToEnum = (this.MemberType.IsEnum && this.DataFieldType == typeof(string));
+      this.JsonFieldName = jsonFieldName;
     }
 
+    static internal DataMapping MapDataColumn(MemberInfo memberInfo, DataColumn dataColumn) {
+      return DataMapping.MapDataColumn(memberInfo, dataColumn, String.Empty);
+    }
+
+    static internal DataMapping MapDataColumn(MemberInfo memberInfo, DataColumn dataColumn,
+                                              string jsonFieldName) {
+      DataMapping dataMapping = null;
+      if (memberInfo is PropertyInfo) {
+        dataMapping = new DataPropertyMapping((PropertyInfo) memberInfo, dataColumn, jsonFieldName);
+      } else if (memberInfo is FieldInfo) {
+        dataMapping = new DataFieldMapping((FieldInfo) memberInfo, dataColumn, jsonFieldName);
+      } else {
+        throw new AssertionFailsException(AssertionFailsException.Msg.InvalidControlFlowReached);
+      }
+      dataMapping.Load();
+      return dataMapping;
+    }
+    
     #endregion Constructors and parsers
 
     #region Public properties
@@ -61,6 +71,11 @@ namespace Empiria.Ontology.Modeler {
       private set;
     }
 
+    internal DataFieldAttribute DataFieldAttribute {
+      get;
+      set;
+    }
+
     internal string DataFieldName {
       get;
       private set;
@@ -71,17 +86,22 @@ namespace Empiria.Ontology.Modeler {
       private set;
     }
 
-    internal bool MapCharToEnum {
+    internal object DefaultValue {
       get;
       private set;
     }
 
-    internal bool MapToProperty {
+    internal string JsonFieldName {
       get;
       private set;
     }
 
-    public bool MapToBaseObject {
+    internal bool MapToEnumeration {
+      get;
+      private set;
+    }
+
+    internal bool MapToJsonItem {
       get;
       private set;
     }
@@ -91,12 +111,7 @@ namespace Empiria.Ontology.Modeler {
       private set;
     }
 
-    internal MemberInfo MemberInfo {
-      get;
-      private set;
-    }
-
-    internal Type MemberType {
+    public bool MapToParsableObject {
       get;
       private set;
     }
@@ -105,29 +120,156 @@ namespace Empiria.Ontology.Modeler {
 
     #region Public methods
 
-    internal void InvokeSetValue(object instance, object value) {
-      object setValue = null;
+    internal string GetExecutionData() {
+      string str = String.Empty;
+      
+      str = String.Format("Mapped type member: {0}\n", this.MemberInfo.Name);
+      str += String.Format("Mapped data field: {0}\n", this.DataFieldName);
+      if (this.JsonFieldName.Length != 0) {
+        str += String.Format("Mapped Json item: {0}\n", this.JsonFieldName);
+      }
+      return str;
+    }
 
-      if (this.MapToBaseObject || this.MapToLazyObject) {
-        setValue = ObjectFactory.ParseObject(this.MemberType, (int) value);
-      } else  if (this.MapCharToEnum) {
-        if (((string) value).Length == 1) {
-          setValue = Enum.ToObject(this.MemberType, Convert.ToChar(value));
-        } else {
-          setValue = Enum.Parse(this.MemberType, (string) value);
-        }
-      } else {
-        setValue = value;
-      }
-      if (this.MapToProperty) {
-        ((PropertyInfo) this.MemberInfo).SetMethod.Invoke(instance, new[] { setValue });
-      } else {      // IsMemberField = true
-        ((FieldInfo) this.MemberInfo).SetValue(instance, setValue);
-      }
+    /// <summary>Set instance member value according to this DataMapping rule.
+    /// Only for use when MapToJsonItem is false.</summary>
+    internal void SetValue(object instance, object value) {
+      //Assertion.Assert(this.MapToJsonItem == false, "Method for use only when this.MapToJsonItem is false.");
+      object invokeValue = this.TransformValueBeforeAssignToMember(value);
+      this.ImplementsSetValue(instance, invokeValue);
+    }
+
+    /// <summary>Set instance member value from a Json string according to this DataMapping rule.
+    ///  Only for use when MapToJsonItem is true.</summary>
+    internal void SetValue(object instance, object jsonString, 
+                           Dictionary<string, JsonObject> jsonObjectsCache) {
+      //Assertion.Assert(this.MapToJsonItem, "Method for use only when this.MapToJsonItem is true.");
+      object invokeValue = this.ExtractJsonFieldValue((string) jsonString, jsonObjectsCache);
+      invokeValue = this.TransformValueBeforeAssignToMember(invokeValue);
+      this.ImplementsSetValue(instance, invokeValue);
     }
 
     #endregion Public methods
 
-  } // class DataMappingRules
+    #region Private members
+
+    MethodInfo _jsonGetItemMethod = null;
+    /// <summary>Returns method Empiria.Data.JsonObject.Get<T>(string itemPath)</summary>
+    private MethodInfo JsonGetItemMethod {
+      get {
+        if (_jsonGetItemMethod == null) {
+          var method = typeof(JsonObject).GetMethod("Get", new Type[] { typeof(string) });
+          Assertion.AssertObject(method, "Expected generic 'Get<T>(string)' method is not " +
+                                         "defined in type JsonObject.");
+          _jsonGetItemMethod = method.MakeGenericMethod(this.MemberType);
+        }
+        return _jsonGetItemMethod;
+      }
+    }
+
+
+    MethodInfo _jsonGetItemMethodWDefault = null;
+    /// <summary>Returns method Empiria.Data.JsonObject.Get<T>(string itemPath, T defaultValue)</summary>
+    private MethodInfo JsonGetItemMethodWDefault {
+      get {
+        if (_jsonGetItemMethodWDefault == null) {
+          MethodInfo method = typeof(JsonObject).GetMethods(BindingFlags.Instance | BindingFlags.Public)
+                                                .Where(x => x.IsGenericMethod && x.Name == "Get" &&
+                                                            x.GetParameters().Length == 2)
+                                                .Single();
+          Assertion.AssertObject(method, "Expected generic 'Get<T>(string, T)' method is not " +
+                                         "defined in type JsonObject.");
+          _jsonGetItemMethodWDefault = method.MakeGenericMethod(this.MemberType);
+        }
+        return _jsonGetItemMethodWDefault;
+      }
+    }
+
+    /// <summary>Gets a Json item from a jsonString using a JsonObject's cache to avoid
+    /// unnecessary parsing.</summary>
+    private object ExtractJsonFieldValue(string jsonString, 
+                                         Dictionary<string, JsonObject> jsonObjectsCache) {
+      var jsonObject = jsonObjectsCache[this.DataFieldName];
+      if (jsonObject == null) {
+        jsonObject = JsonObject.Parse(jsonString);
+        jsonObjectsCache[this.DataFieldName] = jsonObject;
+      }
+      if (this.DataFieldAttribute.IsOptional) {
+        var parameters = new object[] { this.JsonFieldName, this.DefaultValue };
+        return this.JsonGetItemMethodWDefault.Invoke(jsonObject, parameters);
+      } else {
+        var parameter = new object[] { this.JsonFieldName };
+        return this.JsonGetItemMethod.Invoke(jsonObject, parameter);
+      }
+    }
+
+    static private object GetTypeDefaultValue(Type type) {
+      if (type == typeof(string)) {
+        return String.Empty;
+      } else if (type == typeof(int)) {
+        return (int) 0;
+      } else if (ObjectFactory.HasEmptyInstance(type)) {
+        return ObjectFactory.EmptyInstance(type);
+      } else if (ObjectFactory.IsLazy(type)) {
+        return ObjectFactory.LazyEmptyObject(type);
+      } else if (type == typeof(DateTime)) {
+        return ExecutionServer.DateMaxValue;
+      } else if (type == typeof(bool)) {
+        return false;
+      } else if (type == typeof(decimal)) {
+        return decimal.Zero;
+      } else {
+        throw new OntologyException(OntologyException.Msg.CannotGetDefaultValueforType, type.FullName);
+      }
+    }
+
+    private void Load() {
+      this.DataColumnIndex = DataColumn.Ordinal;
+      this.DataFieldName = DataColumn.ColumnName;
+      this.DataFieldType = DataColumn.DataType;
+      this.DataFieldAttribute = this.MemberInfo.GetCustomAttribute<DataFieldAttribute>();
+      if (this.DataFieldType == typeof(int)) {
+        this.MapToLazyObject = ObjectFactory.IsLazy(this.MemberType);
+        this.MapToParsableObject = ObjectFactory.HasParseWithIdMethod(this.MemberType);
+      } else if (this.JsonFieldName.Length != 0) {
+        Assertion.Assert(this.DataFieldType == typeof(string),
+                         "Json items can only be parsed from string type data columns.");
+        this.MapToJsonItem = true;
+      } else if (this.MemberType.IsEnum && this.DataFieldType == typeof(string)) {
+        this.MapToEnumeration = true;
+      }
+      this.DefaultValue = this.GetDataFieldDefaultValue();
+    }
+
+    private object GetDataFieldDefaultValue() {
+      if (this.DataFieldAttribute.Default == null) {
+        return DataMapping.GetTypeDefaultValue(this.MemberType);
+      }
+      if (this.DataFieldAttribute.Default.GetType() != this.MemberType) {
+        //this.DataFieldAttribute.Default = Convert.ChangeType(this.DataFieldAttribute.Default,
+        //                                                     this.MemberType);
+        return this.DataFieldAttribute.Default;
+      } else {
+        return this.DataFieldAttribute.Default;
+      }
+    }
+
+    private object TransformValueBeforeAssignToMember(object value) {
+      if (this.MapToParsableObject || this.MapToLazyObject) {
+        return ObjectFactory.ParseObject(this.MemberType, (int) value);
+      } else if (this.MapToEnumeration) {
+        if (((string) value).Length == 1) {
+          return Enum.ToObject(this.MemberType, Convert.ToChar(value));
+        } else {
+          return Enum.Parse(this.MemberType, (string) value);
+        }
+      } else {
+        return value;
+      }
+    }
+
+    #endregion Private members
+
+  } // class DataMapping
 
 } // namespace Empiria.Ontology.Modeler

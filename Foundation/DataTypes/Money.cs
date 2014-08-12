@@ -42,8 +42,8 @@ namespace Empiria.DataTypes {
     }
 
     static public Money Parse(Empiria.Data.JsonObject json) {
-      return Money.Parse(json.Find<Currency>("CurrencyId", Currency.Default),
-                         json.Find<Decimal>("Value", 0m));
+      return Money.Parse(json.Get<Currency>("CurrencyId", Currency.Default),
+                         json.Get<Decimal>("Value", 0m));
     }
 
     static public Money Empty {

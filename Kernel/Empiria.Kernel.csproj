@@ -209,6 +209,7 @@
     </Compile>
     <Compile Include="RootTypes\ExecutionServer.Tlaxcala.cs" />
     <Compile Include="RootTypes\IUnitOfWork.cs" />
+    <Compile Include="RootTypes\LazyObject.cs" />
     <Compile Include="RootTypes\ProductInformation.Tlaxcala.cs">
       <SubType>Code</SubType>
     </Compile>

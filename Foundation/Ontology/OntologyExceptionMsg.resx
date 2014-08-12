@@ -156,4 +156,13 @@
   <data name="WrongAssociatedObjectFound" xml:space="preserve">
     <value>El objeto con id {0} del tipo {1} (source) está incorrectamente relacionado con otro objeto usando la relación {2}. Es posible que el tipo de dicho objeto relacionado no sea del tipo que indica el tipo target de la relación, o bien, que no se encuentre en la tabla donde se almacenan los objetos de ese tipo.</value>
   </data>
+  <data name="CannotMapDataValue" xml:space="preserve">
+    <value>There was a problem trying to map an instance field or property with the data source:\n\n{0}</value>
+  </data>
+  <data name="MappingDataColumnNotFound" xml:space="preserve">
+    <value>The datarow doesn't contains a column with name '{2}', so the data mapping engine can't parse the value of the type member {1} belonging to type {0}.</value>
+  </data>
+  <data name="CannotGetDefaultValueforType" xml:space="preserve">
+    <value>There are not a default value defined for objects of type {0}.</value>
+  </data>
 </root>

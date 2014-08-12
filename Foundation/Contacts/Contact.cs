@@ -56,6 +56,10 @@ namespace Empiria.Contacts {
       return ContactsData.GetContacts(filter);
     }
 
+    static public Contact Empty {
+      get { return Person.Empty; }
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties

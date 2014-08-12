@@ -57,6 +57,20 @@ namespace Empiria.Reflection {
       }
     }
 
+    static public object EmptyInstance(Type type) {
+      try {
+        PropertyInfo property = ObjectFactory.GetEmptyInstanceProperty(type);
+        Assertion.AssertObject(property, "Type " + type.FullName + " doesn't has a static Empty property.");
+        return property.GetMethod.Invoke(null, null);
+      } catch (TargetException e) {
+        throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
+                                      type.FullName);
+      } catch (Exception e) {
+        throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
+                                      type.FullName);
+      }
+    }
+
     static public object GetPropertyValue(object instance, string propertyName) {
       Type type = instance.GetType();
       PropertyInfo propertyInfo = type.GetProperty(propertyName);
@@ -77,23 +91,55 @@ namespace Empiria.Reflection {
       return type;
     }
 
+    static public bool HasEmptyInstance(Type type) {
+      return (ObjectFactory.GetEmptyInstanceProperty(type) != null);
+    }
+
+    static public bool HasParseWithIdMethod(Type type) {
+      return (ObjectFactory.GetParseMethod(type) != null);
+    }
+     
+    static public bool IsLazy(Type type) {
+      return (type.IsGenericType && 
+              type.GetGenericTypeDefinition() == typeof(LazyObject<>));
+    }
+
+    static public bool IsStorable(Type type) {
+      return (type.GetInterface("Empiria.IStorable") != null);
+    }
+
+    static public object LazyEmptyObject(Type type) {
+      Type genericLazy = typeof(LazyObject<>).MakeGenericType(type);
+      PropertyInfo property = genericLazy.GetProperty("Empty", BindingFlags.Static | BindingFlags.Public);
+
+      return property.GetMethod.Invoke(null, null);
+    }
+
     static public T ParseObject<T>(int objectId) {
       return (T) ObjectFactory.ParseObject(typeof(T), objectId);
     }
 
     static public object ParseObject(Type type, int objectId) {
       try {
-        MethodInfo method = type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public,
-                                           null, CallingConventions.Any, new Type[] { typeof(int) }, null);
+        MethodInfo method = ObjectFactory.GetParseMethod(type);        
+        Assertion.AssertObject(method, "Type " + type.FullName + " doesn't has static Parse(int) method.");
         return method.Invoke(null, new object[] { objectId });
-      } catch (TargetInvocationException e) {
-        throw e.GetBaseException();
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
+                                      type.FullName + "[ Id = " + objectId + " ]");    
+      } catch (Exception e) {
+        throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
                                       type.FullName + "[ Id = " + objectId + " ]");
-      } catch {
-        throw;
       }
+    }
+
+    static private PropertyInfo GetEmptyInstanceProperty(Type type) {
+      return type.GetProperty("Empty", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public);
+    }
+
+    static private MethodInfo GetParseMethod(Type type) {
+      return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public,
+                            null, CallingConventions.Any, new Type[] { typeof(int) }, null);
     }
 
     #endregion Public methods

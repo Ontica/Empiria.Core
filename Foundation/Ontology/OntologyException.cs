@@ -19,8 +19,11 @@ namespace Empiria.Ontology {
   public sealed class OntologyException : EmpiriaException {
 
     public enum Msg {
+      CannotGetDefaultValueforType,
+      CannotMapDataValue,
       CannotParseObjectWithDataRow,
       ConvertionToTargetTypeFails,
+      MappingDataColumnNotFound,
       ObjectIdNotFound,
       ObjectNamedKeyNotFound,
       RelationMemberNameNotFound,
@@ -32,6 +35,7 @@ namespace Empiria.Ontology {
       TypeNamedIdFieldNameNotDefined,
       UndefinedTypeInfoFamily,
       WrongAssociatedObjectFound,
+
     }
 
     static private string resourceBaseName = "Empiria.Ontology.OntologyExceptionMsg";

@@ -72,10 +72,6 @@ namespace Empiria.Ontology {
       return DataWriter.CreateId("EOSTypeRelations");
     }
 
-    static internal DataTable GetObjectAttributes(MetaModelType metaModelType, IStorable instance) {
-      return DataReader.GetDataTable(DataOperation.Parse("qryEOSObjectAttributes", metaModelType.Name, instance.Id));
-    }
-
     static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IStorable source) {
       string filter = GetTableIdFieldEqualsTo(typeRelation.DataSource, typeRelation.TypeRelationIdFieldName,
                                               typeRelation.Id);

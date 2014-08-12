@@ -32,7 +32,7 @@ namespace Empiria.Contacts {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
-    static public Organization Empty {
+    static public new Organization Empty {
       get { return BaseObject.ParseEmpty<Organization>(thisTypeName); }
     }
 

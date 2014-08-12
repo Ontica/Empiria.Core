@@ -9,6 +9,7 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Contacts;
@@ -23,95 +24,102 @@ namespace Empiria {
 
     private const string thisTypeName = "ObjectType.GeneralObject";
 
-    private string namedKey = String.Empty;
-    private string name = String.Empty;
-    private string value = String.Empty;
-    private string description = String.Empty;
-    private string keywords = String.Empty;
-    private int index = -1;
-    private int referenceId = -1;
-    private Contact postedBy = Person.Empty;
-    private int replacedById = 0;
-    private GeneralObjectStatus status = GeneralObjectStatus.Active;
-    private DateTime startDate = DateTime.Today;
-    private DateTime endDate = ExecutionServer.DateMaxValue;
+    /// <summary>Use this field name in derived types to access extended fields items.</summary>
+    protected const string ExtensionDataFieldName = "GeneralObjectExtData";
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    protected GeneralObject(string typeName)
-      : base(typeName) {
-      // Empiria Object Type pattern classes always has this constructor. Don't delete
+    protected GeneralObject(string typeName) : base(typeName) {
+      // Empiria Object Type pattern classes always have this constructor. Don't delete
     }
 
     #endregion Constructors and parsers
 
     #region Public properties
 
+    [DataField("GeneralObjectDescription")]
     protected string Description {
-      get { return description; }
-      set { description = EmpiriaString.TrimAll(value); }
+      get;
+      set;
     }
 
+    [DataField("EndDate")]
     protected DateTime EndDate {
-      get { return endDate; }
-      set { endDate = value; }
+      get;
+      set;
     }
 
-    protected string Keywords {
-      get { return keywords; }
-      set { keywords = EmpiriaString.TrimAll(value); }
+    [DataField(GeneralObject.ExtensionDataFieldName)]
+    protected string ExtendedDataField {
+      get;
+      set;
     }
 
-    public string Name {
-      get { return name; }
-      protected set { name = EmpiriaString.TrimAll(value); }
-    }
-
-    protected string NamedKey {
-      get { return namedKey; }
-      set { namedKey = EmpiriaString.TrimAll(value); }
-    }
-
+    [DataField("GeneralObjectValue")]
     protected string Value {
-      get { return this.value; }
-      set { this.value = EmpiriaString.TrimAll(value); }
+      get;
+      set;
     }
 
+    [DataField("GeneralObjectIndex", Default = -1)]
     protected int Index {
-      get { return index; }
-      set { index = value; }
+      get;
+      set;
     }
 
-    protected int ReferenceId {
-      get { return referenceId; }
-      set { referenceId = value; }
+    [DataField("GeneralObjectKeywords")]
+    protected string Keywords {
+      get;
+      set;
     }
 
+    [DataField("GeneralObjectName")]
+    public string Name {
+      get;
+      protected set;
+    }
+
+    [DataField("GeneralObjectNamedKey")]
+    protected string NamedKey {
+      get;
+      set;
+    }
+
+    [DataField("PostedById")]
     protected Contact PostedBy {
-      get { return postedBy; }
-      set { postedBy = value; }
+      get;
+      set;
     }
 
+    [DataField("GeneralObjectReferenceId", Default = -1)]
+    protected int ReferenceId {
+      get;
+      set;
+    }
 
+    [DataField("ReplacedById")]
     protected int ReplacedById {
-      get { return replacedById; }
+      get;
+      private set;
     }
 
+    [DataField("StartDate", Default = "DateTime.Today")]
     protected DateTime StartDate {
-      get { return startDate; }
-      set { startDate = value; }
+      get;
+      private set;
     }
 
+    [DataField("GeneralObjectStatus", Default = GeneralObjectStatus.Active)]
     public GeneralObjectStatus Status {
-      get { return status; }
-      protected set { status = value; }
+      get;
+      protected set;
     }
 
     public string StatusName {
       get {
-        switch (status) {
+        switch (this.Status) {
           case GeneralObjectStatus.Active:
             return "Activo";
           case GeneralObjectStatus.Deleted:
@@ -131,22 +139,11 @@ namespace Empiria {
     #region Public methods
 
     protected override void ImplementsLoadObjectData(DataRow row) {
-      this.namedKey = (string) row["GeneralObjectNamedKey"];
-      this.name = (string) row["GeneralObjectName"];
-      this.value = (string) row["GeneralObjectValue"];
-      this.description = (string) row["GeneralObjectDescription"];
-      this.keywords = (string) row["GeneralObjectKeywords"];
-      this.index = (int) row["GeneralObjectIndex"];
-      this.referenceId = (int) row["GeneralObjectReferenceId"];
-      this.postedBy = Contact.Parse((int) row["PostedById"]);
-      this.replacedById = (int) row["ReplacedById"];
-      this.status = (GeneralObjectStatus) Convert.ToChar(row["GeneralObjectStatus"]);
-      this.startDate = (DateTime) row["StartDate"];
-      this.endDate = (DateTime) row["EndDate"];
+      base.DataBind(row);
     }
 
     protected override void ImplementsSave() {
-
+      throw new NotImplementedException();
     }
 
     #endregion Public methods

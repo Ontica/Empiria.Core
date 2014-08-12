@@ -11,6 +11,7 @@
 using System;
 
 using System.Collections.Generic;
+using Empiria.Reflection;
 
 namespace Empiria.Data {
 
@@ -58,8 +59,8 @@ namespace Empiria.Data {
     /// <param name="itemPath">The item path to search</param>
     /// <returns>The item relative to the searched path, or an exception if the object 
     /// was not found or if the path is not well-formed.</returns>
-    public T Find<T>(string itemPath) {
-      if (this.IsStorable(typeof(T))) {
+    public T Get<T>(string itemPath) {
+      if (ObjectFactory.IsStorable(typeof(T))) {
         return this.FindAndParseObject<T>(itemPath, true, default(T));
       } else {
         return this.Find<T>(itemPath, true, default(T));
@@ -71,8 +72,8 @@ namespace Empiria.Data {
     /// <param name="defaultValue">The default value if the searched item is not found.</param> 
     /// <returns>The item relative to the searched path, the defaultValue if the object 
     /// was not found or an exception if the path is not well-formed.</returns>
-    public T Find<T>(string itemPath, T defaultValue) {
-      if (this.IsStorable(typeof(T))) {
+    public T Get<T>(string itemPath, T defaultValue) {
+      if (ObjectFactory.IsStorable(typeof(T))) {
         return this.FindAndParseObject<T>(itemPath, false, defaultValue);
       } else {
         return this.Find<T>(itemPath, false, defaultValue);
@@ -182,10 +183,6 @@ namespace Empiria.Data {
         }
       }  // for
       throw new AssertionFailsException(AssertionFailsException.Msg.InvalidControlFlowReached);
-    }
-
-    private bool IsStorable(Type type) {
-      return (type.GetInterface("Empiria.IStorable") != null);
     }
 
     private string[] SplitItemPath(string itemPath) {

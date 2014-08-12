@@ -44,23 +44,20 @@ namespace Empiria {
     private const int emptyInstanceId = -1;
     private const int unknownInstanceId = -2;
 
-    //private DynamicState dynamicState = null;
-
     #endregion Fields
 
     #region Constructors and parsers
 
     protected BaseObject(string typeName) {
-      if (typeName.Length != 0) {   // If typeName.Length == 0, is invoked with Parsing using reflection
-        this.objectTypeInfo = ObjectTypeInfo.Parse(typeName);
-        //dynamicState = new DynamicState(this);
+      if (typeName.Length != 0) {   // If typeName.Length == 0, then is invoked with Parsing using reflection
+        objectTypeInfo = ObjectTypeInfo.Parse(typeName);
+        objectTypeInfo.InitializeObject(this);
       }
     }
 
     static public T Create<T>(ObjectTypeInfo typeInfo) where T : BaseObject {
       T item = typeInfo.CreateObject<T>();
       item.objectTypeInfo = typeInfo;
-      //item.dynamicState = new DynamicState(item);
 
       return item;
     }
@@ -204,11 +201,6 @@ namespace Empiria {
       return objectTypeInfo.Equals(obj.objectTypeInfo) && (this.Id == obj.Id);  // base.Equals(obj)
     }
 
-    protected T GetAttribute<T>(string attributeName) {
-      throw new NotImplementedException();
-      //return dynamicState.GetValue<T>(attributeName);
-    }
-
     protected T GetLink<T>(string linkName) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
@@ -280,10 +272,6 @@ namespace Empiria {
       cache.Insert(this);
     }
 
-    protected void SetAttribute<T>(string name, T value) {
-      throw new NotImplementedException("BaseObject.SetAttribute<T>");
-    }
-
     protected DataRow GetDataRow() {
       return OntologyData.GetBaseObjectDataRow(this.ObjectTypeInfo, this.Id);
     }
@@ -302,7 +290,6 @@ namespace Empiria {
       
       item.objectTypeInfo = typeInfo;
       item.objectId = (int) dataRow[typeInfo.IdFieldName];
-      //item.dynamicState = new DynamicState(item);
       item.ImplementsLoadObjectData(dataRow);
       item.isNewFlag = false;
 
@@ -352,10 +339,6 @@ namespace Empiria {
       } else {
         return ObjectTypeInfo.Parse((int) dataRow[objectTypeInfo.TypeIdFieldName]);
       }
-    }
-
-    static public int CacheCount {
-      get { return cache.Count; }
     }
 
     #endregion Private methods

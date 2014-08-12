@@ -24,8 +24,7 @@ namespace Empiria {
 
     #region Constructors and parsers
 
-    public KeyValuePair()
-      : base(thisTypeName) {
+    public KeyValuePair() : base(thisTypeName) {
 
     }
 

@@ -1,0 +1,72 @@
+﻿/* Empiria Foundation Framework 2014 *************************************************************************
+*                                                                                                            *
+*  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
+*  Namespace : Empiria.Ontology.Modeler                         Assembly : Empiria.dll                       *
+*  Type      : DataPropertyMapping                              Pattern  : Standard class                    *
+*  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*                                                                                                            *
+*  Summary   : Mapping rule between a type property and a data source element.                               *
+*                                                                                                            *
+********************************* Copyright (c) 2014-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Reflection;
+using System.Linq;
+
+using Empiria.Data;
+using Empiria.Reflection;
+
+namespace Empiria.Ontology.Modeler {
+
+  /// <summary>Mapping rule between a type property and a data source element.</summary>
+  internal class DataPropertyMapping : DataMapping {
+
+    #region Fields
+
+    private PropertyInfo propertyInfo = null;
+    private Type memberType = null;
+    private MethodInfo getMethod = null;
+    private MethodInfo setMethod = null;
+
+    #endregion Fields
+
+    #region Constuctors and parsers
+
+    protected internal DataPropertyMapping(PropertyInfo propertyInfo, DataColumn dataColumn, 
+                                           string jsonFieldName) : base(dataColumn, jsonFieldName) {
+      this.propertyInfo = propertyInfo;
+      this.memberType = this.propertyInfo.PropertyType;
+      this.getMethod = this.propertyInfo.GetMethod;
+      this.setMethod = this.propertyInfo.SetMethod;
+    }
+
+    #endregion Constructors and parsers
+
+    #region Public properties
+
+    internal override MemberInfo MemberInfo {
+      get { return propertyInfo; }
+    }
+
+    internal override Type MemberType {
+      get { return memberType; }
+    }
+
+    #endregion Public properties
+
+    #region Public methods
+
+    protected override object ImplementsGetValue(object instance) {
+      return getMethod.Invoke(instance, null);
+    }
+
+    protected override void ImplementsSetValue(object instance, object value) {
+      setMethod.Invoke(instance, new[] { value });
+    }
+
+    #endregion Public methods
+
+  } // class DataPropertyMapping
+
+} // namespace Empiria.Ontology.Modeler

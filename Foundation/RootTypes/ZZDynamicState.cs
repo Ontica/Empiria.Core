@@ -73,7 +73,9 @@ namespace Empiria {
     }
 
     int IIdentifiable.Id {
-      get { return instance.Id; }
+      get {
+        return instance.Id;
+      }
     }
 
     #endregion Public methods
@@ -85,15 +87,15 @@ namespace Empiria {
         return;
       }
       var array = this.metaModelType.GetAttibuteKeyValues();
-      state = new Dictionary<string,object>(array.Length);
+      state = new Dictionary<string, object>(array.Length);
       foreach (KeyValuePair<string, object> item in array) {
         state.Add(item.Key, item.Value);
       }
-      DataTable table = OntologyData.GetObjectAttributes(this.metaModelType, instance);
-      foreach(DataRow row in table.Rows) {
-        TypeAttributeInfo attribute = this.metaModelType.Attributes[(int) row["TypeRelationId"]];
-        state[attribute.Name] = attribute.Convert(row["AttributeValue"]);
-      }
+      //DataTable table = OntologyData.GetObjectAttributes(this.metaModelType, instance);
+      //foreach (DataRow row in table.Rows) {
+      //  TypeAttributeInfo attribute = this.metaModelType.Attributes[(int) row["TypeRelationId"]];
+      //  state[attribute.Name] = attribute.Convert(row["AttributeValue"]);
+      //}
     }
 
     #endregion Private methods
