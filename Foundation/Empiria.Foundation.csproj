@@ -203,19 +203,6 @@
     <Compile Include="Ontology.Modeler\DataFieldMapping.cs" />
     <Compile Include="Ontology.Modeler\DataPropertyMapping.cs" />
     <Compile Include="Ontology.Modeler\DataMapping.cs" />
-    <Compile Include="Ontology.Modeler\TypeModeler.cs" />
-    <Compile Include="Ontology.Modeler\TypeReader.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Ontology.Modeler\TypeClass.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Ontology.Modeler\TypeField.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Ontology.Modeler\TypeProperty.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="RootTypes\AttributesBag.cs" />
     <Compile Include="Ontology.Modeler\DataMappingRules.cs" />
     <Compile Include="RootTypes\AttributesBagBoxing.cs" />
@@ -223,6 +210,7 @@
     <Compile Include="RootTypes\KeyValuePair.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />
     <Compile Include="RootTypes\TimePeriod.cs" />
+    <Compile Include="RootTypes\ZZDynamicState.cs" />
     <Compile Include="RootTypes\ZZTypeList.cs" />
     <Compile Include="RootTypes\GeneralList.cs" />
     <Compile Include="Data\ContactsData.cs" />
@@ -253,7 +241,6 @@
     <Compile Include="RootTypes\BusinessRuleItem.cs" />
     <Compile Include="RootTypes\BaseObject.cs" />
     <Compile Include="RootTypes\BaseObjectCache.cs" />
-    <Compile Include="RootTypes\DynamicState.cs" />
     <Compile Include="RootTypes\PowerType.cs" />
     <Compile Include="RootTypes\GeneralObject.cs" />
     <Compile Include="RootTypes\RulesLibrary.cs" />

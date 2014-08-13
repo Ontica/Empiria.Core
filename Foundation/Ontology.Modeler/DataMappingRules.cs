@@ -26,33 +26,54 @@ namespace Empiria.Ontology.Modeler {
 
     #region Fields
 
-    private DataMapping[] dataRulesArray = null;
+    private Type mappedType = null;
+    private DataMapping[] dataMappingsArray = null;
     private List<string> jsonFieldsNames = null;
+    private bool dataColumnsAreMapped = false;
 
     #endregion Fields
 
     #region Constuctors and parsers
 
-    private DataMappingRules(Type type, DataColumnCollection dataColumns) {
-      dataRulesArray = this.GetTypeDataRules(type, dataColumns);
+    private DataMappingRules(Type type) {
+      this.mappedType = type;
+      this.dataMappingsArray = this.GetTypeMappings();
     }
 
-    static internal DataMappingRules Parse(Type type, DataColumnCollection dataColumns) {
-      return new DataMappingRules(type, dataColumns);
+    static internal DataMappingRules Parse(Type type) {
+      return new DataMappingRules(type);
     }
 
     #endregion Constructors and parsers
 
     #region Public methods
 
+    internal void InitializeObject(object instance) {
+      DataMapping rule = null;
+      try {
+        for (int i = 0; i < dataMappingsArray.Length; i++) {
+          rule = dataMappingsArray[i];
+          rule.SetDefaultValue(instance);
+        }
+      } catch (Exception e) {
+        throw this.GetCannotMapDataValueException(instance, rule, e);
+      }
+    }
+
     /// <summary>Loads the dataRow values into the instance fields and properties marked
     /// with the DataField attribute.</summary>
     internal void LoadObject(object instance, DataRow dataRow) {
+      if (!dataColumnsAreMapped) {
+        lock (dataMappingsArray) {
+          this.MapDataColumns(dataRow.Table.Columns);
+        }
+      }
+
       DataMapping rule = null;
       try {
         Dictionary<string, JsonObject> jsonObjectsCache = this.CreateJsonObjectsCache();
-        for (int i = 0; i < dataRulesArray.Length; i++) {
-          rule = dataRulesArray[i];
+        for (int i = 0; i < dataMappingsArray.Length; i++) {
+          rule = dataMappingsArray[i];
           if (rule.MapToJsonItem) {
             rule.SetValue(instance, dataRow[rule.DataColumnIndex], jsonObjectsCache);
           } else {
@@ -61,18 +82,7 @@ namespace Empiria.Ontology.Modeler {
         }
       } catch (Exception e) {
         throw this.GetCannotMapDataValueException(instance, rule, e);
-        //
       }
-    }
-
-    private OntologyException GetCannotMapDataValueException(object instance, DataMapping rule,
-                                                             Exception innerException) {
-      string str = rule.GetExecutionData();
-      str += String.Format("Instance Type: {0}\n", instance.GetType().FullName);
-      if (instance is IIdentifiable) {
-        str += String.Format("Instance Id: {0}\n", ((IIdentifiable) instance).Id);
-      }
-      throw new OntologyException(OntologyException.Msg.CannotMapDataValue, innerException, str);
     }
 
     #endregion Public methods
@@ -85,9 +95,20 @@ namespace Empiria.Ontology.Modeler {
       }
       var dictionary = new Dictionary<string, JsonObject>(jsonFieldsNames.Count);
       foreach (string item in jsonFieldsNames) {
-        dictionary.Add(item, null);   // JsonObject instances are created inside DataMapping.SetValue method
+        dictionary.Add(item, null);   // Items are nulls because JsonObject instances are
+                                      // created inside the method DataMapping.SetValue
       }
       return dictionary;
+    }
+
+    private OntologyException GetCannotMapDataValueException(object instance, DataMapping rule,
+                                                             Exception innerException) {
+      string str = rule.GetExecutionData();
+      str += String.Format("Instance Type: {0}\n", instance.GetType().FullName);
+      if (instance is IIdentifiable) {
+        str += String.Format("Instance Id: {0}\n", ((IIdentifiable) instance).Id);
+      }
+      throw new OntologyException(OntologyException.Msg.CannotMapDataValue, innerException, str);
     }
 
     /// <summary>Gets an array with all type properties and fields that have defined
@@ -98,49 +119,50 @@ namespace Empiria.Ontology.Modeler {
                  .OrderBy((x) => x.GetCustomAttribute<DataFieldAttribute>().Name).ToArray();
     }
 
-    /// <summary>Gets a list of DataMapping items, mapping each of the type's databound members
-    /// (those with the DataField attribute) with elements of the data columns collection.</summary>
-    private DataMapping[] GetTypeDataRules(Type type, DataColumnCollection dataColumns) {
-      var databoundMembers = DataMappingRules.GetDataboundPropertiesAndFields(type);
+    /// <summary>Gets an array of DataMapping objects, derived from those type members
+    /// that have a DataField attribute.</summary>
+    private DataMapping[] GetTypeMappings() {
+      var databoundMembers = DataMappingRules.GetDataboundPropertiesAndFields(mappedType);
 
-      var dataRules = new List<DataMapping>(databoundMembers.Length);
+      var dataMappingsList = new List<DataMapping>(databoundMembers.Length);
       for (int i = 0; i < databoundMembers.Length; i++) {
         MemberInfo memberInfo = databoundMembers[i];
+
+        var dataMapping = DataMapping.Parse(mappedType, memberInfo);
+        dataMappingsList.Add(dataMapping);
         
-        //Allows access to sets/gets of private properties defined in base types of 'type'
-        if (memberInfo.DeclaringType != type && memberInfo is PropertyInfo) {
-          memberInfo = memberInfo.DeclaringType.GetProperty(memberInfo.Name,
-                                                            BindingFlags.Instance | BindingFlags.Public |
-                                                            BindingFlags.NonPublic);
-        }
-
-        // Accept only those types properties and fields with a matching data column,
-        // otherwise throws an exception.
-        // That implies that there is only one dataRow source per data-mapped type, so types
-        // mapped from multiple data sources are not supported in this product version.
-        string dataFieldName = memberInfo.GetCustomAttribute<DataFieldAttribute>().Name;
-        int columnIndex = dataColumns.IndexOf(dataFieldName);
-
-        if (columnIndex != -1) {
-          dataRules.Add(DataMapping.MapDataColumn(memberInfo, dataColumns[columnIndex]));
-          continue;
-        } else if (dataFieldName.Contains('.')) {
-          string baseFieldName = dataFieldName.Substring(0, dataFieldName.IndexOf('.'));
-          string jsonFieldName = dataFieldName.Substring(dataFieldName.IndexOf('.') + 1);
-          columnIndex = dataColumns.IndexOf(baseFieldName);
-          if (columnIndex != -1) {
-            dataRules.Add(DataMapping.MapDataColumn(memberInfo, dataColumns[columnIndex], jsonFieldName));
-            this.TryToAddFieldNameToJsonCacheKeys(baseFieldName);
-          } else {
-            throw new OntologyException(OntologyException.Msg.MappingDataColumnNotFound,
-                                        type.Name, memberInfo.Name, baseFieldName);
-          } 
-        } else {
-          throw new OntologyException(OntologyException.Msg.MappingDataColumnNotFound,
-                                      type.Name, memberInfo.Name, dataFieldName);
+        if (dataMapping.MapToJsonItem) {
+          this.TryToAddFieldNameToJsonCacheKeys(dataMapping.JsonSourceFieldName);
         }
       }  // for
-      return dataRules.ToArray();
+      return dataMappingsList.ToArray();
+    }
+
+    ///// <summary>Gets a list of DataMapping items, mapping each of the type's databound members
+    ///// (those with the DataField attribute) with elements of the data columns collection.</summary>
+    private void MapDataColumns(DataColumnCollection dataColumns) {
+      if (dataColumnsAreMapped) {
+        return;
+      }
+
+      foreach(DataMapping mapping in dataMappingsArray) {
+        int columnIndex = dataColumns.IndexOf(mapping.DataFieldAttributeName);
+        if (columnIndex != -1) {
+          mapping.MapDataColumn(dataColumns[columnIndex]);        
+        } else if (mapping.MapToJsonItem) {        
+          columnIndex = dataColumns.IndexOf(mapping.JsonSourceFieldName);
+          if (columnIndex != -1) {
+            mapping.MapDataColumn(dataColumns[columnIndex]);
+          } else {
+            throw new OntologyException(OntologyException.Msg.MappingDataColumnNotFound,
+                                        mappedType.Name, mapping.MemberInfo.Name, mapping.JsonSourceFieldName);
+          }  // inner if
+        } else {
+          throw new OntologyException(OntologyException.Msg.MappingDataColumnNotFound,
+                                      mappedType.Name, mapping.MemberInfo.Name, mapping.DataFieldAttributeName);
+        }  // main if
+      } // foreach
+      this.dataColumnsAreMapped = true;
     }
 
     private void TryToAddFieldNameToJsonCacheKeys(string jsonBaseFieldName) {

@@ -9,13 +9,7 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2014-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Reflection;
-using System.Linq;
-
-using Empiria.Data;
-using Empiria.Reflection;
 
 namespace Empiria.Ontology.Modeler {
 
@@ -33,8 +27,7 @@ namespace Empiria.Ontology.Modeler {
 
     #region Constuctors and parsers
 
-    protected internal DataPropertyMapping(PropertyInfo propertyInfo, DataColumn dataColumn, 
-                                           string jsonFieldName) : base(dataColumn, jsonFieldName) {
+    protected internal DataPropertyMapping(PropertyInfo propertyInfo) {
       this.propertyInfo = propertyInfo;
       this.memberType = this.propertyInfo.PropertyType;
       this.getMethod = this.propertyInfo.GetMethod;

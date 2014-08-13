@@ -22,9 +22,8 @@ namespace Empiria.Ontology {
 
     #region Fields
 
-    private ConstructorInfo _baseObjectConstructor = null;
-    private DataMappingRules _dataMappingRules = null;
-    private object _lockObject = new object();
+    private ConstructorInfo baseObjectConstructor = null;
+    private DataMappingRules dataMappingRules = null;
 
     #endregion Fields
 
@@ -52,7 +51,7 @@ namespace Empiria.Ontology {
         return true;
       } catch {
         objectTypeInfo = null;
-        return false;  
+        return false;
       }
     }
 
@@ -92,15 +91,14 @@ namespace Empiria.Ontology {
       return this.InvokeBaseObjectConstructor<T>();
     }
 
+    internal void InitializeObject(BaseObject baseObject) {
+      AssertMappingRulesAreLoaded();
+      dataMappingRules.InitializeObject(baseObject);
+    }
+
     internal void LoadObject(BaseObject baseObject, DataRow row) {
-      if (_dataMappingRules == null) {
-        lock (_lockObject) {
-          if (_dataMappingRules == null) {
-            _dataMappingRules = DataMappingRules.Parse(base.UnderlyingSystemType, row.Table.Columns);
-          }
-        }
-      }
-      _dataMappingRules.LoadObject(baseObject, row);
+      AssertMappingRulesAreLoaded();
+      dataMappingRules.LoadObject(baseObject, row);
     }
 
     public ObjectTypeInfo[] GetSubclasses() {
@@ -134,6 +132,17 @@ namespace Empiria.Ontology {
 
     #region Private methods
 
+    private object _lockObject = new object();
+    private void AssertMappingRulesAreLoaded() {
+      if (dataMappingRules == null) {
+        lock (_lockObject) {
+          if (dataMappingRules == null) {
+            dataMappingRules = DataMappingRules.Parse(base.UnderlyingSystemType);
+          }
+        }
+      }
+    }
+
     private ConstructorInfo GetBaseObjectConstructor() {
       return this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
                                                       BindingFlags.NonPublic,
@@ -142,18 +151,13 @@ namespace Empiria.Ontology {
     }
 
     private T InvokeBaseObjectConstructor<T>() {
-      if (_baseObjectConstructor == null) {
-        _baseObjectConstructor = GetBaseObjectConstructor();
+      if (baseObjectConstructor == null) {
+        baseObjectConstructor = GetBaseObjectConstructor();
       }
-      return (T) _baseObjectConstructor.Invoke(new object[] { String.Empty });
+      return (T) baseObjectConstructor.Invoke(new object[] { String.Empty });
     }
 
     #endregion Private methods
-
-
-    internal void InitializeObject(BaseObject baseObject) {
-
-    }
 
   } // class ObjectTypeInfo
 

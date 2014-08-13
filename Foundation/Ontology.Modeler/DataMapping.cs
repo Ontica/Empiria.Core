@@ -34,29 +34,36 @@ namespace Empiria.Ontology.Modeler {
 
     #region Constuctors and parsers
 
-    protected DataMapping(DataColumn dataColumn, string jsonFieldName) {
-      this.DataColumn = dataColumn;
-      this.JsonFieldName = jsonFieldName;
+    protected DataMapping() {
+
     }
 
-    static internal DataMapping MapDataColumn(MemberInfo memberInfo, DataColumn dataColumn) {
-      return DataMapping.MapDataColumn(memberInfo, dataColumn, String.Empty);
-    }
-
-    static internal DataMapping MapDataColumn(MemberInfo memberInfo, DataColumn dataColumn,
-                                              string jsonFieldName) {
+    internal static DataMapping Parse(Type type, MemberInfo memberInfo) {
       DataMapping dataMapping = null;
+      MemberInfo declaredMemberInfo = null;
+
+      //Use DeclaringType for access to sets/gets of private properties defined in base types of 'type'
+      if (memberInfo.DeclaringType != type && memberInfo is PropertyInfo) {
+        declaredMemberInfo =
+                  memberInfo.DeclaringType.GetProperty(memberInfo.Name, BindingFlags.Instance |
+                                                                        BindingFlags.Public |
+                                                                        BindingFlags.NonPublic);
+      } else {
+        declaredMemberInfo = memberInfo;
+      }
+
       if (memberInfo is PropertyInfo) {
-        dataMapping = new DataPropertyMapping((PropertyInfo) memberInfo, dataColumn, jsonFieldName);
+        dataMapping = new DataPropertyMapping((PropertyInfo) declaredMemberInfo);
       } else if (memberInfo is FieldInfo) {
-        dataMapping = new DataFieldMapping((FieldInfo) memberInfo, dataColumn, jsonFieldName);
+        dataMapping = new DataFieldMapping((FieldInfo) declaredMemberInfo);
       } else {
         throw new AssertionFailsException(AssertionFailsException.Msg.InvalidControlFlowReached);
       }
-      dataMapping.Load();
+      dataMapping.LoadMemberRules();
+
       return dataMapping;
-    }
-    
+    }  
+  
     #endregion Constructors and parsers
 
     #region Public properties
@@ -76,6 +83,12 @@ namespace Empiria.Ontology.Modeler {
       set;
     }
 
+    public string DataFieldAttributeName {
+      get {
+        return this.DataFieldAttribute.Name;
+      }
+    }
+
     internal string DataFieldName {
       get;
       private set;
@@ -92,6 +105,11 @@ namespace Empiria.Ontology.Modeler {
     }
 
     internal string JsonFieldName {
+      get;
+      private set;
+    }
+
+    internal string JsonSourceFieldName {
       get;
       private set;
     }
@@ -126,9 +144,40 @@ namespace Empiria.Ontology.Modeler {
       str = String.Format("Mapped type member: {0}\n", this.MemberInfo.Name);
       str += String.Format("Mapped data field: {0}\n", this.DataFieldName);
       if (this.JsonFieldName.Length != 0) {
+        str += String.Format("Mapped Json source field: {0}\n", this.JsonSourceFieldName);
         str += String.Format("Mapped Json item: {0}\n", this.JsonFieldName);
       }
       return str;
+    }
+
+    internal void MapDataColumn(DataColumn dataColumn) {
+      this.DataColumn = dataColumn;
+      this.DataColumnIndex = this.DataColumn.Ordinal;
+      this.DataFieldName = this.DataColumn.ColumnName;
+      this.DataFieldType = this.DataColumn.DataType;
+
+      if (this.MapToLazyObject) {
+        Assertion.Assert(this.DataFieldType == typeof(int),
+                         "LazyObjects can only be parsed parsed from integer type data columns.");
+      }
+      if (this.MapToParsableObject) {
+        Assertion.Assert(this.DataFieldType == typeof(int),
+                         this.MemberInfo.Name + " can only be parsed from an integer type data column.");
+      }
+      if (this.MapToJsonItem) {
+        Assertion.Assert(this.DataFieldType == typeof(string),
+                         "Json items can only be parsed from string type data columns.");
+      }
+      if (this.MapToEnumeration) {
+        Assertion.Assert(this.DataFieldType == typeof(string),
+                         "Enumeration items can only be parsed from char(1) or string type data columns.");
+      }
+    }
+
+    /// <summary>Set instance member value according to both implicit and explicit
+    /// default values rules.</summary>
+    internal void SetDefaultValue(object instance) {
+      this.ImplementsSetValue(instance, this.DefaultValue);
     }
 
     /// <summary>Set instance member value according to this DataMapping rule.
@@ -203,6 +252,19 @@ namespace Empiria.Ontology.Modeler {
       }
     }
 
+    private object GetDataFieldDefaultValue() {
+      if (this.DataFieldAttribute.Default == null) {
+        return DataMapping.GetTypeDefaultValue(this.MemberType);
+      }
+      if (this.DataFieldAttribute.Default.GetType() != this.MemberType) {
+        //this.DataFieldAttribute.Default = Convert.ChangeType(this.DataFieldAttribute.Default,
+        //                                                     this.MemberType);
+        return this.DataFieldAttribute.Default;
+      } else {
+        return this.DataFieldAttribute.Default;
+      }
+    }
+
     static private object GetTypeDefaultValue(Type type) {
       if (type == typeof(string)) {
         return String.Empty;
@@ -223,34 +285,24 @@ namespace Empiria.Ontology.Modeler {
       }
     }
 
-    private void Load() {
-      this.DataColumnIndex = DataColumn.Ordinal;
-      this.DataFieldName = DataColumn.ColumnName;
-      this.DataFieldType = DataColumn.DataType;
-      this.DataFieldAttribute = this.MemberInfo.GetCustomAttribute<DataFieldAttribute>();
-      if (this.DataFieldType == typeof(int)) {
-        this.MapToLazyObject = ObjectFactory.IsLazy(this.MemberType);
-        this.MapToParsableObject = ObjectFactory.HasParseWithIdMethod(this.MemberType);
-      } else if (this.JsonFieldName.Length != 0) {
-        Assertion.Assert(this.DataFieldType == typeof(string),
-                         "Json items can only be parsed from string type data columns.");
-        this.MapToJsonItem = true;
-      } else if (this.MemberType.IsEnum && this.DataFieldType == typeof(string)) {
-        this.MapToEnumeration = true;
-      }
-      this.DefaultValue = this.GetDataFieldDefaultValue();
-    }
+    private void LoadMemberRules() {
+      this.DataColumnIndex = -1;
+      this.DataFieldName = String.Empty;
+      this.JsonSourceFieldName = String.Empty;
+      this.JsonFieldName = String.Empty;
 
-    private object GetDataFieldDefaultValue() {
-      if (this.DataFieldAttribute.Default == null) {
-        return DataMapping.GetTypeDefaultValue(this.MemberType);
-      }
-      if (this.DataFieldAttribute.Default.GetType() != this.MemberType) {
-        //this.DataFieldAttribute.Default = Convert.ChangeType(this.DataFieldAttribute.Default,
-        //                                                     this.MemberType);
-        return this.DataFieldAttribute.Default;
-      } else {
-        return this.DataFieldAttribute.Default;
+      this.DataFieldAttribute = this.MemberInfo.GetCustomAttribute<DataFieldAttribute>();
+      this.MapToLazyObject = ObjectFactory.IsLazy(this.MemberType);
+      this.MapToParsableObject = ObjectFactory.HasParseWithIdMethod(this.MemberType);
+      this.MapToEnumeration = this.MemberType.IsEnum;
+      this.DefaultValue = this.GetDataFieldDefaultValue();
+
+      if (this.DataFieldAttribute.Name.Contains('.')) {
+        string dataFieldAttrName = this.DataFieldAttribute.Name;
+
+        this.JsonSourceFieldName = dataFieldAttrName.Substring(0, dataFieldAttrName.IndexOf('.'));
+        this.JsonFieldName = dataFieldAttrName.Substring(dataFieldAttrName.IndexOf('.') + 1);
+        this.MapToJsonItem = true;
       }
     }
 
