@@ -49,7 +49,7 @@ namespace Empiria {
 
     #region Public properties
 
-    public new string NamedKey {
+    public string UniqueCode {
       get { return base.NamedKey; }
     }
 
@@ -76,7 +76,7 @@ namespace Empiria {
     }
 
     public FixedList<KeyValuePair> GetKeyValueList() {
-      return KeyValuePair.GetList(this.NamedKey);
+      return KeyValuePair.GetList(this.UniqueCode);
     }
 
     #endregion Public methods

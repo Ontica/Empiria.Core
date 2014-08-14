@@ -22,17 +22,15 @@ namespace Empiria.Contacts {
 
     #region Constructors and parsers
 
-    protected Organization()
-      : base(thisTypeName) {
+    protected Organization() : base(thisTypeName) {
 
     }
 
-    protected Organization(string typeName)
-      : base(typeName) {
+    protected Organization(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
-    static public new Organization Empty {
+    static public Organization Empty {
       get { return BaseObject.ParseEmpty<Organization>(thisTypeName); }
     }
 

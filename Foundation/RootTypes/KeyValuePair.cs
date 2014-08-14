@@ -60,9 +60,9 @@ namespace Empiria {
       private set { base.NamedKey = value; }
     }
 
-    public new string Value {
-      get { return base.Value; }
-      private set { base.Value = value; }
+    public string Value {
+      get { return base.ValueField; }
+      private set { base.ValueField = value; }
     }
 
     #endregion Public properties

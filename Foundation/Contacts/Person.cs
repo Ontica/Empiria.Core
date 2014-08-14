@@ -37,17 +37,15 @@ namespace Empiria.Contacts {
 
     #region Constructors and parsers
 
-    public Person()
-      : base(thisTypeName) {
+    public Person() : base(thisTypeName) {
 
     }
 
-    protected Person(string typeName)
-      : base(typeName) {
+    protected Person(string typeName) : base(typeName) {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
-    static public new Person Empty {
+    static public Person Empty {
       get { return BaseObject.ParseEmpty<Person>(thisTypeName); }
     }
 

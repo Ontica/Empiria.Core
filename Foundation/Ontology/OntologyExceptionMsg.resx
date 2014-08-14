@@ -172,9 +172,12 @@
     <value>There was a problem trying to initialize an object with their default values using the data field mapping rules:\n{0}</value>
   </data>
   <data name="TypeMemberMappingFails" xml:space="preserve">
-    <value>There was a problem trying to map the data field rules for member {1} of type {0}.</value>
+    <value>There was a problem trying to map the data field rules for member '{1}' of type {0}.</value>
   </data>
   <data name="WrongDefaultValueType" xml:space="preserve">
     <value>There was a problem trying to convert the default value of member '{1}' of type {0} from type {2} to type {3}.</value>
+  </data>
+  <data name="CannotGetUnderlyingSystemType" xml:space="preserve">
+    <value>There was a problem trying to get the underlying system type of Empiria Type '{1}' (id = {0}) using their defined assemblyName '{2}' and className '{3}' values.</value>
   </data>
 </root>

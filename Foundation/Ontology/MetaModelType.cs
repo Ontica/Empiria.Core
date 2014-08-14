@@ -132,11 +132,11 @@ namespace Empiria.Ontology {
     }
 
     static internal Type TryGetSystemType(string systemTypeName) {
-      var empiriaType = cache.FirstOrDefault((x) => x.UnderlyingSystemType.FullName == systemTypeName);
+      MetaModelType empiriaType = cache.FirstOrDefault((x) => x.className == systemTypeName);
       if (empiriaType != null) {
         return empiriaType.UnderlyingSystemType;
       }
-      DataRow dataRow = OntologyData.TryGetSystemType(systemTypeName);
+      DataRow dataRow = OntologyData.TryGetSystemTypeDataRow(systemTypeName);
       if (dataRow != null) {
         empiriaType = MetaModelType.Parse(dataRow);
       } 
@@ -324,7 +324,12 @@ namespace Empiria.Ontology {
     public Type UnderlyingSystemType {
       get {
         if (underlyingSystemType == null) {
-          underlyingSystemType = ObjectFactory.GetType(this.assemblyName, this.className);
+          try {
+            underlyingSystemType = ObjectFactory.GetType(this.assemblyName, this.className);
+          } catch (Exception e) {
+            throw new OntologyException(OntologyException.Msg.CannotGetUnderlyingSystemType, e,
+                                        this.Id, this.Name, this.assemblyName, this.className);
+          }
         }
         return underlyingSystemType;
       }

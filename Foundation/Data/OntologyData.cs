@@ -44,7 +44,7 @@ namespace Empiria.Ontology {
     }
 
     static internal FixedList<KeyValuePair> GetKeyValueListItems(GeneralList list) {
-      DataOperation dataOp = DataOperation.Parse("qryEOSKeyValueList", list.NamedKey);
+      DataOperation dataOp = DataOperation.Parse("qryEOSKeyValueList", list.UniqueCode);
       DataTable table = DataReader.GetDataTable(dataOp);
 
       return new FixedList<KeyValuePair>((x) => KeyValuePair.Parse(x), table);
@@ -160,7 +160,7 @@ namespace Empiria.Ontology {
       return DataReader.GetDataTable(DataOperation.Parse("qryEOSTypeRelations", typeName));
     }
 
-    static internal DataRow TryGetSystemType(string systemTypeName) {
+    static internal DataRow TryGetSystemTypeDataRow(string systemTypeName) {
       string filter = String.Format("([TypeName] = '{0}' OR ClassName LIKE '%{0}')", systemTypeName);
       
       DataTable table = GeneralDataOperations.GetEntities("EOSTypes", filter);

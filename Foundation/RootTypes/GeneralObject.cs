@@ -58,7 +58,7 @@ namespace Empiria {
     }
 
     [DataField("GeneralObjectValue")]
-    protected string Value {
+    protected string ValueField {
       get;
       set;
     }
@@ -87,7 +87,7 @@ namespace Empiria {
       set;
     }
 
-    [DataField("PostedById")]
+    [DataField("PostedById", Default = "Empiria.Contacts.Person.Empty")]
     protected Contact PostedBy {
       get;
       set;

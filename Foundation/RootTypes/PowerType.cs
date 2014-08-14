@@ -29,30 +29,7 @@ namespace Empiria {
 
     #region Constructors and parsers
 
-    //protected internal PowerType(int id)
-    //  : base(MetaModelTypeFamily.ObjectType, id) {
-
-    //}
-
-    //protected internal PowerType(string name)
-    //  : base(MetaModelTypeFamily.ObjectType, name) {
-
-    //}
-
-    //static public new PowerType Parse(int id) {
-    //  return MetaModelType.Parse<ObjectTypeInfo>(id);
-    //}
-
-    //static public new PowerType Parse(string name) {
-    //  return MetaModelType.Parse<ObjectTypeInfo>(name);
-    //}
-
-    #endregion Constructors and parsers
-
-    #region Constructors and parsers
-
-    protected PowerType(string powerTypeName, int typeId)
-      : base(typeId) {
+    protected PowerType(string powerTypeName, int typeId) : base(typeId) {
       this.powerTypeInfo = PowerTypeInfo.Parse(powerTypeName);
       this.partitionedType = ObjectTypeInfo.Parse(typeId);
     }
@@ -60,20 +37,16 @@ namespace Empiria {
     static public new U Parse<U>(int typeId) where U : PowerType<T> {
       ObjectTypeInfo typeInfo = ObjectTypeInfo.Parse(typeId);
       if (typeInfo is U) {
-        //Empiria.Messaging.Publisher.Publish("if (typeInfo is U) on typeid " + typeId);
         return (U) typeInfo;
       } else {
-        //Empiria.Messaging.Publisher.Publish("NOT if (typeInfo is U) on typeid " + typeId);
         return ObjectFactory.CreateObject<U>(new Type[] { typeof(int) }, new object[] { typeId });
       }
     }
 
     static public U Parse<U>(ObjectTypeInfo typeInfo) where U : PowerType<T> {
       if (typeInfo is U) {
-        //Empiria.Messaging.Publisher.Publish("if (typeInfo is U) on typeInfo " + typeInfo.Name);
         return (U) typeInfo;
       } else {
-        //Empiria.Messaging.Publisher.Publish("NOT if (typeInfo is U) on typeInfo " + typeInfo.Name);
         return ObjectFactory.CreateObject<U>(new Type[] { typeof(int) }, new object[] { typeInfo.Id });
       }
     }

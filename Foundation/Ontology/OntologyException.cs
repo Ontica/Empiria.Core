@@ -22,6 +22,7 @@ namespace Empiria.Ontology {
 
     public enum Msg {
       CannotGetDefaultValueforType,
+      CannotGetUnderlyingSystemType,
       CannotInitializeObject,
       CannotMapDataValue,
       CannotParseObjectWithDataRow,

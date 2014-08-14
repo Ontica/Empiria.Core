@@ -171,7 +171,7 @@ namespace Empiria.Ontology.Modeler {
 
       if (this.MapToLazyObject) {
         Assertion.Assert(this.DataFieldType == typeof(int),
-                         "LazyObjects can only be parsed parsed from integer type data columns.");
+                         "LazyObjects can only be parsed from integer type data columns.");
       }
       if (this.MapToParsableObject) {
         Assertion.Assert(this.DataFieldType == typeof(int),
