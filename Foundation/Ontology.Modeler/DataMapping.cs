@@ -57,7 +57,7 @@ namespace Empiria.Ontology.Modeler {
       } else if (memberInfo is FieldInfo) {
         dataMapping = new DataFieldMapping((FieldInfo) declaredMemberInfo);
       } else {
-        throw new AssertionFailsException(AssertionFailsException.Msg.InvalidControlFlowReached);
+        Assertion.AssertNoReachThisCode();
       }
       dataMapping.LoadMemberRules();
 
@@ -67,6 +67,11 @@ namespace Empiria.Ontology.Modeler {
     #endregion Constructors and parsers
 
     #region Public properties
+
+    internal bool ApplyOnInitialization {
+      get;
+      private set;
+    }
 
     internal DataColumn DataColumn {
       get;
@@ -99,9 +104,17 @@ namespace Empiria.Ontology.Modeler {
       private set;
     }
 
+    private object _defaultValue = null;
     internal object DefaultValue {
-      get;
-      private set;
+      get {
+        if (_defaultValue is PropertyInfo) {
+          return ((PropertyInfo) _defaultValue).GetMethod.Invoke(null, null);
+        }
+        return _defaultValue;
+      }
+      private set {
+        _defaultValue = value;
+      }
     }
 
     internal string JsonFieldName {
@@ -174,8 +187,7 @@ namespace Empiria.Ontology.Modeler {
       }
     }
 
-    /// <summary>Set instance member value according to both implicit and explicit
-    /// default values rules.</summary>
+    /// <summary>Set instance member value according to implicit or explicit default values rules.</summary>
     internal void SetDefaultValue(object instance) {
       this.ImplementsSetValue(instance, this.DefaultValue);
     }
@@ -184,7 +196,7 @@ namespace Empiria.Ontology.Modeler {
     /// Only for use when MapToJsonItem is false.</summary>
     internal void SetValue(object instance, object value) {
       //Assertion.Assert(this.MapToJsonItem == false, "Method for use only when this.MapToJsonItem is false.");
-      object invokeValue = this.TransformValueBeforeAssignToMember(value);
+      object invokeValue = this.TransformDataStoredValueBeforeAssignToMember(value);
       this.ImplementsSetValue(instance, invokeValue);
     }
 
@@ -194,7 +206,7 @@ namespace Empiria.Ontology.Modeler {
                            Dictionary<string, JsonObject> jsonObjectsCache) {
       //Assertion.Assert(this.MapToJsonItem, "Method for use only when this.MapToJsonItem is true.");
       object invokeValue = this.ExtractJsonFieldValue((string) jsonString, jsonObjectsCache);
-      invokeValue = this.TransformValueBeforeAssignToMember(invokeValue);
+      invokeValue = this.TransformDataStoredValueBeforeAssignToMember(invokeValue);
       this.ImplementsSetValue(instance, invokeValue);
     }
 
@@ -254,14 +266,44 @@ namespace Empiria.Ontology.Modeler {
 
     private object GetDataFieldDefaultValue() {
       if (this.DataFieldAttribute.Default == null) {
+        // If there is not a default value, then simply return the predefined value for instances
+        // of type this.MemberType.
         return DataMapping.GetTypeDefaultValue(this.MemberType);
       }
-      if (this.DataFieldAttribute.Default.GetType() != this.MemberType) {
-        //this.DataFieldAttribute.Default = Convert.ChangeType(this.DataFieldAttribute.Default,
-        //                                                     this.MemberType);
-        return this.DataFieldAttribute.Default;
+      Type defaultValueType = this.DataFieldAttribute.Default.GetType();
+      if (defaultValueType != this.MemberType && defaultValueType == typeof(string)) {
+        //Returns a PropertyInfo in order to execute it when this.DefaultValue has been invoked.
+        return this.GetPropertyInfoForDefaultValue();
+      } else if (defaultValueType != this.MemberType && defaultValueType != typeof(string)) {
+        //Try to convert the default value to member type
+        if (ObjectFactory.IsConvertible(defaultValueType, this.MemberType)) {
+          return System.Convert.ChangeType(this.DataFieldAttribute.Default, this.MemberType);
+        } else {
+          throw new OntologyException(OntologyException.Msg.WrongDefaultValueType, 
+                                      this.MemberInfo.DeclaringType, this.MemberInfo.Name,
+                                      defaultValueType.Name, this.MemberType.Name);
+        }
       } else {
         return this.DataFieldAttribute.Default;
+      }
+    }
+
+    private PropertyInfo GetPropertyInfoForDefaultValue() {
+      string defaultValueCode = (string) this.DataFieldAttribute.Default;
+      try {
+        string typeName = defaultValueCode.Substring(0, defaultValueCode.LastIndexOf('.'));
+        string propertyName = defaultValueCode.Substring(defaultValueCode.LastIndexOf('.') + 1);
+
+        Type type = MetaModelType.TryGetSystemType(typeName);
+        Assertion.AssertObject(type,
+                          new OntologyException(OntologyException.Msg.CannotParsePropertyForDefaultValue,
+                                                this.MemberInfo.DeclaringType, this.MemberInfo.Name,
+                                                defaultValueCode, this.GetExecutionData()));
+        return MethodInvoker.GetStaticProperty(type, propertyName);
+      } catch (Exception e) {
+        throw new OntologyException(OntologyException.Msg.CannotParsePropertyForDefaultValue, e,  
+                                    this.MemberInfo.DeclaringType, this.MemberInfo.Name,
+                                    defaultValueCode, this.GetExecutionData());
       }
     }
 
@@ -291,6 +333,7 @@ namespace Empiria.Ontology.Modeler {
       this.JsonSourceFieldName = String.Empty;
       this.JsonFieldName = String.Empty;
 
+      this.ApplyOnInitialization = (this.MemberInfo is PropertyInfo);
       this.DataFieldAttribute = this.MemberInfo.GetCustomAttribute<DataFieldAttribute>();
       this.MapToLazyObject = ObjectFactory.IsLazy(this.MemberType);
       this.MapToParsableObject = ObjectFactory.HasParseWithIdMethod(this.MemberType);
@@ -306,7 +349,7 @@ namespace Empiria.Ontology.Modeler {
       }
     }
 
-    private object TransformValueBeforeAssignToMember(object value) {
+    private object TransformDataStoredValueBeforeAssignToMember(object value) {
       if (this.MapToParsableObject || this.MapToLazyObject) {
         return ObjectFactory.ParseObject(this.MemberType, (int) value);
       } else if (this.MapToEnumeration) {

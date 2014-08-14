@@ -18,16 +18,15 @@ namespace Empiria.Reflection {
   public sealed class ReflectionException : EmpiriaException {
 
     public enum Msg {
-      ConstructorExecutionFails,
-      MethodExecutionFails,
-
       ConditionalOptionNotDefined,
+      ConstructorExecutionFails,
       ConstructorNotDefined,
+      MethodExecutionFails,
       MethodNotFound,
       NotImplemented,
       ObjectPropertyNotFound,
       ParseMethodNotDefined,
-      TypeNotDefined
+      TypeNotDefined,
     }
 
     static private string resourceBaseName = "Empiria.RootTypes.KernelExceptionMsg";

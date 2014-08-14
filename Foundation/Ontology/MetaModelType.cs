@@ -90,9 +90,9 @@ namespace Empiria.Ontology {
       }
     }
 
-    protected internal MetaModelType(MetaModelTypeFamily typeFamily, string typeName) {
+    protected internal MetaModelType(MetaModelTypeFamily typeFamily, string empiriaTypeName) {
       this.typeFamily = typeFamily;
-      Load(OntologyData.GetTypeDataRow(typeName), typeName);
+      Load(OntologyData.GetTypeDataRow(empiriaTypeName), empiriaTypeName);
       //this.dynamicState = new DynamicState(this);
     }
 
@@ -103,11 +103,11 @@ namespace Empiria.Ontology {
       return MetaModelType.Parse(OntologyData.GetTypeDataRow(typeId));
     }
 
-    static internal MetaModelType Parse(string typeName) {
-      if (cache.ContainsKey(typeName)) {
-        return cache[typeName];
+    static internal MetaModelType Parse(string empiriaTypeName) {
+      if (cache.ContainsKey(empiriaTypeName)) {
+        return cache[empiriaTypeName];
       }
-      return MetaModelType.Parse(OntologyData.GetTypeDataRow(typeName));
+      return MetaModelType.Parse(OntologyData.GetTypeDataRow(empiriaTypeName));
     }
 
     static protected MetaModelType Parse(DataRow row) {
@@ -123,11 +123,27 @@ namespace Empiria.Ontology {
       return (T) MetaModelType.Parse(typeId);
     }
 
-    static internal T Parse<T>(string typeName) where T : MetaModelType {
-      if (cache.ContainsKey(typeName)) {
-        return (T) cache[typeName];
+    static internal T Parse<T>(string empiriaTypeName) where T : MetaModelType {
+      if (cache.ContainsKey(empiriaTypeName)) {
+        return (T) cache[empiriaTypeName];
       } else {
-        return (T) MetaModelType.Parse(OntologyData.GetTypeDataRow(typeName));
+        return (T) MetaModelType.Parse(OntologyData.GetTypeDataRow(empiriaTypeName));
+      }
+    }
+
+    static internal Type TryGetSystemType(string systemTypeName) {
+      var empiriaType = cache.FirstOrDefault((x) => x.UnderlyingSystemType.FullName == systemTypeName);
+      if (empiriaType != null) {
+        return empiriaType.UnderlyingSystemType;
+      }
+      DataRow dataRow = OntologyData.TryGetSystemType(systemTypeName);
+      if (dataRow != null) {
+        empiriaType = MetaModelType.Parse(dataRow);
+      } 
+      if (empiriaType != null) {
+        return empiriaType.UnderlyingSystemType;
+      } else {
+        return null;
       }
     }
 

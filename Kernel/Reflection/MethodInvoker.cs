@@ -89,6 +89,22 @@ namespace Empiria.Reflection {
       }
     }
 
+    static public object ExecuteStaticProperty(Type type, string propertyName) {
+      PropertyInfo property = GetStaticProperty(type, propertyName);
+
+      return property.GetMethod.Invoke(null, null);
+    }
+
+    static public PropertyInfo GetStaticProperty(Type type, string propertyName) {
+      Assertion.AssertObject(type, "type");
+      Assertion.AssertObject(type, "propertyName");
+
+      PropertyInfo property = type.GetProperty(propertyName, BindingFlags.Static | BindingFlags.Public);
+      Assertion.AssertObject(property, String.Format("Type {0} doesn't has a static property with name '{1}'.",
+                                                     type.FullName, propertyName));
+      return property;
+    }
+
     #endregion Public methods
 
     #region Private methods

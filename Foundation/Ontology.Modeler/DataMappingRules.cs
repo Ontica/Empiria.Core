@@ -53,10 +53,12 @@ namespace Empiria.Ontology.Modeler {
       try {
         for (int i = 0; i < dataMappingsArray.Length; i++) {
           rule = dataMappingsArray[i];
-          rule.SetDefaultValue(instance);
+          if (rule.ApplyOnInitialization) {
+            rule.SetDefaultValue(instance);
+          }
         }
       } catch (Exception e) {
-        throw this.GetCannotMapDataValueException(instance, rule, e);
+        throw OntologyException.GetInitializeObjectException(instance, rule, e);
       }
     }
 
@@ -81,7 +83,7 @@ namespace Empiria.Ontology.Modeler {
           }
         }
       } catch (Exception e) {
-        throw this.GetCannotMapDataValueException(instance, rule, e);
+        throw OntologyException.GetDataValueMappingException(instance, rule, e);
       }
     }
 
@@ -101,16 +103,6 @@ namespace Empiria.Ontology.Modeler {
       return dictionary;
     }
 
-    private OntologyException GetCannotMapDataValueException(object instance, DataMapping rule,
-                                                             Exception innerException) {
-      string str = rule.GetExecutionData();
-      str += String.Format("Instance Type: {0}\n", instance.GetType().FullName);
-      if (instance is IIdentifiable) {
-        str += String.Format("Instance Id: {0}\n", ((IIdentifiable) instance).Id);
-      }
-      throw new OntologyException(OntologyException.Msg.CannotMapDataValue, innerException, str);
-    }
-
     /// <summary>Gets an array with all type properties and fields that have defined
     ///a DataField attribute, ordered by DataField attribute's name.</summary>
     static private MemberInfo[] GetDataboundPropertiesAndFields(Type type) {
@@ -122,20 +114,26 @@ namespace Empiria.Ontology.Modeler {
     /// <summary>Gets an array of DataMapping objects, derived from those type members
     /// that have a DataField attribute.</summary>
     private DataMapping[] GetTypeMappings() {
-      var databoundMembers = DataMappingRules.GetDataboundPropertiesAndFields(mappedType);
+      MemberInfo memberInfo = null;
+      try {
+        var databoundMembers = DataMappingRules.GetDataboundPropertiesAndFields(mappedType);
 
-      var dataMappingsList = new List<DataMapping>(databoundMembers.Length);
-      for (int i = 0; i < databoundMembers.Length; i++) {
-        MemberInfo memberInfo = databoundMembers[i];
+        var dataMappingsList = new List<DataMapping>(databoundMembers.Length);
+        for (int i = 0; i < databoundMembers.Length; i++) {
+          memberInfo = databoundMembers[i];
 
-        var dataMapping = DataMapping.Parse(mappedType, memberInfo);
-        dataMappingsList.Add(dataMapping);
-        
-        if (dataMapping.MapToJsonItem) {
-          this.TryToAddFieldNameToJsonCacheKeys(dataMapping.JsonSourceFieldName);
-        }
-      }  // for
-      return dataMappingsList.ToArray();
+          var dataMapping = DataMapping.Parse(mappedType, memberInfo);
+          dataMappingsList.Add(dataMapping);
+
+          if (dataMapping.MapToJsonItem) {
+            this.TryToAddFieldNameToJsonCacheKeys(dataMapping.JsonSourceFieldName);
+          }
+        }  // for
+        return dataMappingsList.ToArray();
+      } catch (Exception e) {
+        throw new OntologyException(OntologyException.Msg.TypeMemberMappingFails, e,
+                                    mappedType.FullName, memberInfo.Name);
+      }
     }
 
     ///// <summary>Gets a list of DataMapping items, mapping each of the type's databound members

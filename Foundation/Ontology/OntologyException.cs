@@ -11,6 +11,8 @@
 using System;
 using System.Reflection;
 
+using Empiria.Ontology.Modeler;
+
 namespace Empiria.Ontology {
 
   /// <summary>The exception that is thrown when a problem occurs in
@@ -20,8 +22,10 @@ namespace Empiria.Ontology {
 
     public enum Msg {
       CannotGetDefaultValueforType,
+      CannotInitializeObject,
       CannotMapDataValue,
       CannotParseObjectWithDataRow,
+      CannotParsePropertyForDefaultValue,
       ConvertionToTargetTypeFails,
       MappingDataColumnNotFound,
       ObjectIdNotFound,
@@ -31,11 +35,12 @@ namespace Empiria.Ontology {
       TypeAssociationInfoNotFound,
       TypeInfoFamilyNotMatch,
       TypeInfoNotFound,
+      TypeMemberMappingFails,
       TypeMethodInfoNotFound,
       TypeNamedIdFieldNameNotDefined,
       UndefinedTypeInfoFamily,
       WrongAssociatedObjectFound,
-
+      WrongDefaultValueType,
     }
 
     static private string resourceBaseName = "Empiria.Ontology.OntologyExceptionMsg";
@@ -61,9 +66,32 @@ namespace Empiria.Ontology {
       base.Publish();
     }
 
+
+    static internal OntologyException GetDataValueMappingException(object instance, DataMapping rule,
+                                                                   Exception innerException) {
+      throw new OntologyException(OntologyException.Msg.CannotMapDataValue, innerException, 
+                                  OntologyException.GetExecutionData(instance, rule));
+    }
+
+    static internal OntologyException GetInitializeObjectException(object instance, DataMapping rule,
+                                                                   Exception innerException) {
+      throw new OntologyException(OntologyException.Msg.CannotInitializeObject, innerException,
+                                  OntologyException.GetExecutionData(instance, rule));
+    }
+
     #endregion Constructors and parsers
 
     #region Private methods
+
+    static private string GetExecutionData(object instance, DataMapping rule) {
+      string str = rule.GetExecutionData();
+
+      str += String.Format("Instance Type: {0}\n", instance.GetType().FullName);
+      if (instance is IIdentifiable) {
+        str += String.Format("Instance Id: {0}\n", ((IIdentifiable) instance).Id);
+      }
+      return str;
+    }
 
     static private string GetMessage(Msg message, params object[] args) {
       return GetResourceMessage(message.ToString(), resourceBaseName, Assembly.GetExecutingAssembly(), args);

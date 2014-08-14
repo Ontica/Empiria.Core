@@ -60,7 +60,8 @@ namespace Empiria.Reflection {
     static public object EmptyInstance(Type type) {
       try {
         PropertyInfo property = ObjectFactory.GetEmptyInstanceProperty(type);
-        Assertion.AssertObject(property, "Type " + type.FullName + " doesn't has a static Empty property.");
+        Assertion.AssertObject(property, String.Format("Type {0} doesn't has a static Empty property.",
+                                                       type.FullName));
         return property.GetMethod.Invoke(null, null);
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
@@ -98,6 +99,16 @@ namespace Empiria.Reflection {
     static public bool HasParseWithIdMethod(Type type) {
       return (ObjectFactory.GetParseMethod(type) != null);
     }
+    
+    static public bool IsConvertible(Type sourceType, Type targetType) {
+      try {
+        var instanceOfSourceType = Activator.CreateInstance(sourceType);
+        Convert.ChangeType(instanceOfSourceType, targetType);
+        return true;
+      } catch {
+        return false;
+      }
+    }
      
     static public bool IsLazy(Type type) {
       return (type.IsGenericType && 
@@ -122,7 +133,8 @@ namespace Empiria.Reflection {
     static public object ParseObject(Type type, int objectId) {
       try {
         MethodInfo method = ObjectFactory.GetParseMethod(type);        
-        Assertion.AssertObject(method, "Type " + type.FullName + " doesn't has static Parse(int) method.");
+        Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(int) method.",
+                                                     type.FullName));
         return method.Invoke(null, new object[] { objectId });
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
