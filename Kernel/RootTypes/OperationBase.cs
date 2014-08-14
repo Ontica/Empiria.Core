@@ -31,21 +31,21 @@ namespace Empiria {
     }
 
     protected OperationBase(string name) {
-      Assertion.EnsureObject(name, "name");
+      Assertion.AssertObject(name, "name");
 
       this.name = name;
     }
 
     protected OperationBase(string name, object[] parameters) {
-      Assertion.EnsureObject(name, "name");
-      Assertion.EnsureObject(parameters, "parameters");
+      Assertion.AssertObject(name, "name");
+      Assertion.AssertObject(parameters, "parameters");
 
       this.name = name;
       this.parameters = parameters;
     }
 
     static protected void ExtractFromMessage(string message, out string name, out object[] parameters) {
-      Assertion.EnsureObject(message, "message");
+      Assertion.AssertObject(message, "message");
 
       name = message.Split('§')[0];
       string parametersString = message.Split('§')[1];
@@ -63,7 +63,7 @@ namespace Empiria {
     }
 
     static protected void ExtractFromMessageProtected(string message, out string name, out object[] parameters) {
-      Assertion.EnsureObject(message, "message");
+      Assertion.AssertObject(message, "message");
 
       message = Cryptographer.Decrypt(message);
       ExtractFromMessage(message, out name, out parameters);

@@ -37,8 +37,8 @@ namespace Empiria {
     }
 
     static public FixedListComparer<T> Parse(FixedList<T> listA, FixedList<T> listB, T nullObject) {
-      Assertion.EnsureObject(listA, "listA");
-      Assertion.EnsureObject(listB, "listB");
+      Assertion.AssertObject(listA, "listA");
+      Assertion.AssertObject(listB, "listB");
 
       FixedListComparer<T> comparer = new FixedListComparer<T>();
 

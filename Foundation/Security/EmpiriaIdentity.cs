@@ -31,7 +31,7 @@ namespace Empiria.Security {
     #region Constructors and parsers
 
     private EmpiriaIdentity(EmpiriaUser user) {
-      Assertion.RequireObject(user, "user");
+      Assertion.AssertObject(user, "user");
       this.user = user;
     }
 
@@ -224,7 +224,7 @@ namespace Empiria.Security {
     }
 
     static private void ValidateIdentity(EmpiriaIdentity identity) {
-      Assertion.Ensure((identity != null) && (identity.IsAuthenticated),
+      Assertion.Assert((identity != null) && (identity.IsAuthenticated),
                        SecurityException.GetMessage(SecurityException.Msg.WrongAuthentication));
     }
 

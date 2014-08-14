@@ -65,7 +65,7 @@ namespace Empiria.Data {
 
     static internal DataOperation Parse(DataSource dataSource, string sourceName,
                                         params object[] parameters) {
-      Empiria.Assertion.EnsureObject(dataSource, "dataSource");
+      Empiria.Assertion.AssertObject(dataSource, "dataSource");
 
       return new DataOperation(dataSource, sourceName, parameters);
     }

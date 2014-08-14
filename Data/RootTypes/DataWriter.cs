@@ -44,7 +44,7 @@ namespace Empiria.Data {
     }
 
     static public int Execute(DataOperation operation) {
-      Assertion.EnsureObject(operation, "operation");
+      Assertion.AssertObject(operation, "operation");
 
       if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
         return ExecuteExternal(operation);
@@ -60,8 +60,8 @@ namespace Empiria.Data {
     }
 
     static public int Execute(SingleSignOnToken token, DataOperation operation) {
-      Assertion.EnsureObject(token, "token");
-      Assertion.EnsureObject(operation, "operation");
+      Assertion.AssertObject(token, "token");
+      Assertion.AssertObject(operation, "operation");
 
       if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
         return ExecuteExternal(operation);
@@ -77,7 +77,7 @@ namespace Empiria.Data {
     }
 
     static public int Execute(DataOperationList operationList) {
-      Assertion.EnsureObject(operationList, "operationList");
+      Assertion.AssertObject(operationList, "operationList");
 
       using (DataWriterContext context = DataWriter.CreateContext(operationList.Name)) {
         ITransaction transaction = context.BeginTransaction();
@@ -89,8 +89,8 @@ namespace Empiria.Data {
     }
 
     static public int Execute(SingleSignOnToken token, DataOperationList operationList) {
-      Assertion.EnsureObject(token, "token");
-      Assertion.EnsureObject(operationList, "operationList");
+      Assertion.AssertObject(token, "token");
+      Assertion.AssertObject(operationList, "operationList");
 
       using (DataWriterContext context = DataWriter.CreateContext(operationList.Name)) {
         ITransaction transaction = context.BeginTransaction();

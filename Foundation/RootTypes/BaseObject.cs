@@ -310,7 +310,7 @@ namespace Empiria {
       }
       if ((objectId == emptyInstanceId || objectId == unknownInstanceId)) {
         if (derivedTypeInfo.IsAbstract) {
-          Assertion.EnsureObject(derivedTypeInfo.TypeIdFieldName, "derivedTypeInfo.TypeIdFieldName");
+          Assertion.AssertObject(derivedTypeInfo.TypeIdFieldName, "derivedTypeInfo.TypeIdFieldName");
           derivedTypeInfo = ObjectTypeInfo.Parse((int) dataRow[derivedTypeInfo.TypeIdFieldName]);
         }
       } else if (derivedTypeInfo.TypeIdFieldName.Length != 0) {      // Is base powertyped

@@ -113,9 +113,9 @@ namespace Empiria.Security {
     #region Public methods
 
     static internal EmpiriaUser Authenticate(string username, string password, string entropy) {
-      Assertion.RequireObject(username, "username");
-      Assertion.RequireObject(password, "password");
-      Assertion.RequireObject(entropy, "entropy");
+      Assertion.AssertObject(username, "username");
+      Assertion.AssertObject(password, "password");
+      Assertion.AssertObject(entropy, "entropy");
 
       //Remove this two lines
       username = Cryptographer.Decrypt(username, entropy);
@@ -144,7 +144,7 @@ namespace Empiria.Security {
     }
 
     static internal EmpiriaUser Authenticate(EmpiriaSession activeSession) {
-      Assertion.RequireObject(activeSession, "activeSession");
+      Assertion.AssertObject(activeSession, "activeSession");
 
       if (!activeSession.IsStillActive) {
         return null;
@@ -164,7 +164,7 @@ namespace Empiria.Security {
     }
 
     static internal EmpiriaUser Authenticate(FormsAuthenticationTicket remoteTicket) {
-      Assertion.RequireObject(remoteTicket, "remoteTicket");
+      Assertion.AssertObject(remoteTicket, "remoteTicket");
 
       int userId = ContactsData.GetContactIdWithUserName(remoteTicket.Name);
       if (userId == 0) {
@@ -204,9 +204,9 @@ namespace Empiria.Security {
     }
 
     public void ChangePassword(string currentPassword, string newPassword, string userID) {
-      Assertion.RequireObject(currentPassword, "currentPassword");
-      Assertion.RequireObject(newPassword, "newPassword");
-      Assertion.RequireObject(userID, "userName");
+      Assertion.AssertObject(currentPassword, "currentPassword");
+      Assertion.AssertObject(newPassword, "newPassword");
+      Assertion.AssertObject(userID, "userName");
 
       if (!isAuthenticated) {
         SecurityException exception =
@@ -236,8 +236,8 @@ namespace Empiria.Security {
     }
 
     public void SetPassword(string newPassword, string userID) {
-      Assertion.RequireObject(newPassword, "newPassword");
-      Assertion.RequireObject(userID, "userName");
+      Assertion.AssertObject(newPassword, "newPassword");
+      Assertion.AssertObject(userID, "userName");
 
       if (IsSystemUser) {
         //Security.Data.SecurityData.AppendAuditTrail(ExecutionServer.CurrentIdentity.Session.Guid,

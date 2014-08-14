@@ -125,8 +125,8 @@ namespace Empiria {
 
     static private string ReadValue(string typeName, string parameterName) {
       try {
-        Assertion.RequireObject(typeName, "typeName");
-        Assertion.RequireObject(parameterName, "parameterName");
+        Assertion.AssertObject(typeName, "typeName");
+        Assertion.AssertObject(parameterName, "parameterName");
 
         string value = null;
         if (XmlConfigurationFile.Exists()) {
@@ -134,7 +134,7 @@ namespace Empiria {
         } else {
           value = WindowsRegistryFile.ReadValue(typeName, parameterName);
         }
-        Assertion.EnsureObject(value, "ReadValue.Value");
+        Assertion.AssertObject(value, "ReadValue.Value");
         return value;
       } catch (Exception innerException) {
         throw new ConfigurationDataException(ConfigurationDataException.Msg.CantReadParameter,
@@ -153,9 +153,9 @@ namespace Empiria {
 
     static private void WriteValue(string typeName, string parameterName, string value) {
       try {
-        Assertion.RequireObject(typeName, "typeName");
-        Assertion.RequireObject(parameterName, "parameterName");
-        Assertion.RequireObject(value, "value");
+        Assertion.AssertObject(typeName, "typeName");
+        Assertion.AssertObject(parameterName, "parameterName");
+        Assertion.AssertObject(value, "value");
 
         if (XmlConfigurationFile.Exists()) {
           XmlConfigurationFile.WriteValue(typeName, parameterName, value);

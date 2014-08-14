@@ -5,30 +5,22 @@
 *  Type      : AssertionFailsException                          Pattern  : Empiria Exception Class           *
 *  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
-*  Summary   : The exception that is thrown when an assertion condition fails.                               *
+*  Summary   : The exception that is thrown when a code assertion fails.                                     *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Reflection;
 
-
 namespace Empiria {
 
-  /// <summary>The exception that is thrown when a licensing problem is detected.</summary>
+  /// <summary>The exception that is thrown when a code assertion fails. This exeptions always are 
+  /// replicated to the EventLog.</summary>
   [Serializable]
-  public sealed class AssertionFailsException : EmpiriaException {
+  internal sealed class AssertionFailsException : EmpiriaException {
 
-    public enum Msg {
+    internal enum Msg {
       AssertFails,
-      AssertNotEmptyStringFails,
-      AssertNotNullObjectFails,
-      EnsureFails,
-      EnsureNotEmptyStringFails,
-      EnsureNotNullObjectFails,
-      InvalidControlFlowReached,
-      RequireFails,
-      RequireNotEmptyStringFails,
-      RequireNotNullObjectFails,
+      AssertNoReachThisCode,
     }
 
     static private string resourceBaseName = "Empiria.RootTypes.KernelExceptionMsg";
@@ -39,7 +31,7 @@ namespace Empiria {
     /// message.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
-    public AssertionFailsException(Msg message, params object[] args)
+    public AssertionFailsException(Msg message, params object[] args) 
       : base(message.ToString(), GetMessage(message, args)) {
       try {
         base.Publish();

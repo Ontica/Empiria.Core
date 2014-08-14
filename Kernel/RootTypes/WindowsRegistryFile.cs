@@ -59,7 +59,7 @@ namespace Empiria {
           break;
         } // if
       } // while
-      Assertion.EnsureObject(retrivedValue, new ConfigurationDataException(ConfigurationDataException.Msg.ParameterNotExists,
+      Assertion.AssertObject(retrivedValue, new ConfigurationDataException(ConfigurationDataException.Msg.ParameterNotExists,
                                                                            parameterName, typeName));
       return retrivedValue;
     }

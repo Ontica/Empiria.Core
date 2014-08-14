@@ -37,136 +37,60 @@ namespace Empiria {
     /// if the postcondition fails.</param>
     static public void Assert(bool assertion, Exception onFailsException) {
       if (!assertion) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
-                                          onFailsException, GetSourceMethodName(), onFailsException.Message);
-      }
-    }
-
-    /// <summary>Special assertion used to check if an object is not null, and for strings, if not is
-    /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
-    /// <param name="instance">The object to check.</param>
-    /// <param name="instanceName">The name or identificator of the object in code.</param>    
-    static public void AssertObject(object instance, string instanceName) {
-      if (instance == null) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.AssertNotNullObjectFails,
-                                          GetSourceMethodName(), instanceName);
-      } else if ((instance is string) && (string.IsNullOrWhiteSpace((string) instance))) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.AssertNotEmptyStringFails,
-                                          GetSourceMethodName(), instanceName);
-      }
-    }
-
-    /// <summary>Special assertion used to check if an object is not null, and for strings, if not is
-    /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
-    /// <param name="instance">The object to check.</param>
-    /// <param name="instanceName">The name or identificator of the object in code.</param>    
-    static public void AssertObject(object instance, Exception onFailsException) {
-      if (instance == null) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.AssertNotNullObjectFails,
-                                          onFailsException, GetSourceMethodName(), onFailsException.Message);
-      } else if ((instance is string) && (string.IsNullOrWhiteSpace((string) instance))) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.AssertNotEmptyStringFails,
-                                          onFailsException, GetSourceMethodName(), onFailsException.Message);
-      }
-    }
-
-    /// <summary>Checks for a postcondition and throws an AssertionFailException if it fails.</summary>
-    /// <param name="postcondition">The postcondition to check.</param>
-    /// <param name="failsMessage">Used to indicate the description of the exception
-    /// if the postcondition fails.</param>
-    static public void Ensure(bool postcondition, string failsMessage) {
-      if (!postcondition) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.EnsureFails,
-                                          GetSourceMethodName(), failsMessage);
-      }
-    }
-
-    /// <summary>Checks for a postcondition and throws an AssertionFailException if it fails.</summary>
-    /// <param name="postcondition">The postcondition to check.</param>
-    /// <param name="failsMessage">Used to indicate the description of the exception
-    /// if the postcondition fails.</param>
-    static public void Ensure(bool postcondition, Exception onFailsException) {
-      if (!postcondition) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.EnsureFails,
-                                          onFailsException, GetSourceMethodName(), onFailsException.Message);
-      }
-    }
-
-    /// <summary>Special postcondition used to check if an object is not null, and for strings, if not is
-    /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
-    /// <param name="instance">The object to check.</param>
-    /// <param name="instanceName">The name or identificator of the object in code.</param>    
-    static public void EnsureObject(object instance, string instanceName) {
-      if (instance == null) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.EnsureNotNullObjectFails,
-                                          GetSourceMethodName(), instanceName);
-      } else if ((instance is string) && (string.IsNullOrWhiteSpace((string) instance))) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.EnsureNotEmptyStringFails,
-                                          GetSourceMethodName(), instanceName);
-      }
-    }
-
-    /// <summary>Special postcondition used to check if an object is not null, and for strings, if not is
-    /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
-    /// <param name="instance">The object to check.</param>
-    /// <param name="instanceName">The name or identificator of the object in code.</param>    
-    static public void EnsureObject(object instance, Exception onFailsException) {
-      if (instance == null) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.EnsureNotNullObjectFails,
-                                          onFailsException, GetSourceMethodName(), onFailsException.Message);
-      } else if ((instance is string) && (string.IsNullOrWhiteSpace((string) instance))) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.EnsureNotEmptyStringFails,
-                                          onFailsException, GetSourceMethodName(), onFailsException.Message);
-      }
-    }
-
-    /// <summary>Checks for a precondition and throws an AssertionFailException if it fails.</summary>
-    /// <param name="precondition">The precondition to check.</param>
-    /// <param name="failsMessage">Used to indicate the description of the exception
-    /// if the precondition fails.</param>
-    static public void Require(bool precondition, string failsMessage) {
-      if (!precondition) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.RequireFails,
-                                          GetSourceMethodName(), failsMessage);
-      }
-    }
-
-    /// <summary>Checks for a precondition and throws an AssertionFailException if it fails.</summary>
-    /// <param name="precondition">The precondition to check.</param>
-    /// <param name="onFailsException">The exception that is throw if the precondition fails.</param>
-    static public void Require(bool precondition, Exception onFailsException) {
-      if (!precondition) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.RequireFails, onFailsException,
+        throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, onFailsException, 
                                           GetSourceMethodName(), onFailsException.Message);
       }
     }
 
-    /// <summary>Special precondition used to check if an object is not null, and for strings, if not is
+    /// <summary>Used to protect code execution when the code flow reaches an invalid line.</summary>
+    /// <returns>Returns an exception in order to be used in methods that return values. Simply use
+    ///it as throw Assertion.AssertNoReachThisCode(); in place of a 'return value;' statement.</returns>
+    static public Exception AssertNoReachThisCode() {
+      throw new AssertionFailsException(AssertionFailsException.Msg.AssertNoReachThisCode);
+    }
+
+    /// <summary>Special assertion used to check if an object is not null, and for strings, if not is
     /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
-    /// <param name="postcondition">The precondition to check.</param>
-    /// <param name="failsMessage">Used to indicate the description of the exception
-    /// if the precondition fails.</param>
-    static public void RequireObject(object instance, string instanceName) {
+    /// <param name="instance">The object to check.</param>
+    /// <param name="messageOrInstanceName">A message or the name of the instance variable.</param>
+    static public void AssertObject(object instance, string messageOrInstanceName) {
       if (instance == null) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.RequireNotNullObjectFails,
-                                          GetSourceMethodName(), instanceName);
-      } else if ((instance is string) && (string.IsNullOrWhiteSpace((string) instance))) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.RequireNotEmptyStringFails,
-                                          GetSourceMethodName(), instanceName);
+        string msg = String.Empty;
+        if (messageOrInstanceName.Contains(" ")) {
+          msg = messageOrInstanceName;
+        } else {
+          msg = String.Format("Unexpected null value for object variable '{0}'.",
+                              messageOrInstanceName);
+        }
+        throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
+                                          Assertion.GetSourceMethodName(), msg);
       }
     }
 
-    /// <summary>Special precondition used to check if an object is not null, and for strings, if not is
+    static public void AssertObject(string instance, string messageOrInstanceName) {
+      if (instance == null || String.IsNullOrWhiteSpace(instance)) {
+        string msg = String.Empty;
+        if (messageOrInstanceName.Contains(" ")) {
+          msg = messageOrInstanceName;
+        } else {
+          msg = String.Format("Unexpected null or empty value for string variable '{0}'.", 
+                              messageOrInstanceName);
+        }
+        throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
+                                          Assertion.GetSourceMethodName(), msg);
+      }
+    }
+
+    /// <summary>Special assertion used to check if an object is not null, and for strings, if not is
     /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
-    /// <param name="postcondition">The precondition to check.</param>
-    /// <param name="failsMessage">Used to indicate the description of the exception
-    /// if the precondition fails.</param>
-    static public void RequireObject(object instance, Exception onFailsException) {
+    /// <param name="instance">The object to check.</param>
+    /// <param name="instanceName">The name or identificator of the object in code.</param>
+    static public void AssertObject(object instance, Exception onFailsException) {
       if (instance == null) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.RequireNotNullObjectFails,
+        throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
                                           onFailsException, GetSourceMethodName(), onFailsException.Message);
-      } else if ((instance is string) && (string.IsNullOrWhiteSpace((string) instance))) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.RequireNotEmptyStringFails,
+      } else if ((instance is string) && (String.IsNullOrWhiteSpace((string) instance))) {
+        throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
                                           onFailsException, GetSourceMethodName(), onFailsException.Message);
       }
     }

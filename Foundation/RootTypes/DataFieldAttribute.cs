@@ -19,7 +19,7 @@ namespace Empiria {
     /// <summary>Initializes a new instance of the <see cref="DataFieldAttribute"/> class.</summary>
     /// <param name="name">The name of the data item to map to the property or field.</param>
     public DataFieldAttribute(string name) {
-      Assertion.RequireObject(name, "name");
+      Assertion.AssertObject(name, "name");
       this.Name = name;
       this.IsOptional = true;
       this.Default = null;

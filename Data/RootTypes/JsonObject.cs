@@ -99,7 +99,7 @@ namespace Empiria.Data {
       object value = this.GetDictionaryValue(itemPath, required);  
       if (value == null && required) {
         // An exception should be thrown from the GetDictionaryValue call above.
-        throw new AssertionFailsException(AssertionFailsException.Msg.InvalidControlFlowReached);
+        Assertion.AssertNoReachThisCode();
       }
       if (value == null) {
         return JsonObject.Empty;
@@ -130,7 +130,7 @@ namespace Empiria.Data {
       object value = this.GetDictionaryValue(itemPath, required);
       if (value == null && required) {
         // An exception should be thrown from the GetDictionaryValue call above.
-        throw new AssertionFailsException(AssertionFailsException.Msg.InvalidControlFlowReached);
+        Assertion.AssertNoReachThisCode();
       }
       if (value == null) {
         return defaultValue;
@@ -143,7 +143,7 @@ namespace Empiria.Data {
       int objectId = this.Find<Int32>(itemPath, required, 0);
       if (objectId == 0 && required) {
         // An exception should be thrown from the GetDictionaryValue call above.
-        throw new AssertionFailsException(AssertionFailsException.Msg.InvalidControlFlowReached);
+        Assertion.AssertNoReachThisCode();
       }
       if (objectId != 0) {
         return Empiria.Reflection.ObjectFactory.ParseObject<T>(objectId);
@@ -182,7 +182,7 @@ namespace Empiria.Data {
                                          itemPath, pathMembers[i + 1]);
         }
       }  // for
-      throw new AssertionFailsException(AssertionFailsException.Msg.InvalidControlFlowReached);
+      throw Assertion.AssertNoReachThisCode();
     }
 
     private string[] SplitItemPath(string itemPath) {

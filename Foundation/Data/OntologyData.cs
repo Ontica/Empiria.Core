@@ -52,11 +52,8 @@ namespace Empiria.Ontology {
 
     static internal int GetNextObjectId(ObjectTypeInfo objectTypeInfo) {
       int id = DataWriter.CreateId(objectTypeInfo.DataSource);
-      if (id == 0) {
-        Assertion.Assert(false,
-            "Object Id can't be zero. There is an error in GetNextObjectId or in DbRules table for type " + 
-            objectTypeInfo.Name);
-      }
+      Assertion.Assert(id != 0, String.Format("Generated Id value can't be zero. Please review DbRules" +
+                                              "table for type {0}.", objectTypeInfo.Name));
       return id;
     }
 
@@ -163,12 +160,33 @@ namespace Empiria.Ontology {
       return DataReader.GetDataTable(DataOperation.Parse("qryEOSTypeRelations", typeName));
     }
 
-    static private string GetFieldName(string source, string fieldName) {
-      return "[" + source + "]." + "[" + fieldName + "]";
-    }
+    static internal DataRow TryGetSystemType(string systemTypeName) {
+      string filter = String.Format("([TypeName] = '{0}' OR ClassName LIKE '%{0}')", systemTypeName);
+      
+      DataTable table = GeneralDataOperations.GetEntities("EOSTypes", filter);
 
-    static private string GetTableIdFieldEqualsTo(string source, string fieldName, int idFieldValue) {
-      return "([" + source + "]." + "[" + fieldName + "] = " + idFieldValue.ToString() + ")";
+      if (table.Rows.Count == 0) {
+        return null;
+      } else if (table.Rows.Count == 1) {
+        return table.Rows[0];
+      }
+      DataRow[] select = table.Select(String.Format("[ClassName] = '{0}'", systemTypeName));
+      if (select.Length == 1) {
+        return select[0];
+      }
+      select = table.Select(String.Format("[TypeName] = '{0}'", systemTypeName));
+      if (select.Length == 1) {
+        return select[0];
+      }
+      select = table.Select(String.Format("[ClassName] = 'System.{0}'", systemTypeName));
+      if (select.Length == 1) {
+        return select[0];
+      }
+      select = table.Select(String.Format("[ClassName] = 'Empiria.{0}'", systemTypeName));
+      if (select.Length == 1) {
+        return select[0];
+      }
+      return null;
     }
 
     static internal void WriteLink(TypeAssociationInfo assocationInfo, IStorable source, IStorable target) {
@@ -181,6 +199,18 @@ namespace Empiria.Ontology {
     }
 
     #endregion Internal methods
+
+    #region Private methods
+
+    static private string GetFieldName(string source, string fieldName) {
+      return "[" + source + "]." + "[" + fieldName + "]";
+    }
+
+    static private string GetTableIdFieldEqualsTo(string source, string fieldName, int idFieldValue) {
+      return "([" + source + "]." + "[" + fieldName + "] = " + idFieldValue.ToString() + ")";
+    }
+
+    #endregion Private methods
 
   } // class OntologyData
 

@@ -150,32 +150,8 @@
   <data name="TypeNotDefined" xml:space="preserve">
     <value>No encontré el tipo {0} en el ensamblado. Esta es una deficiencia de programación o una inconsistencia en la definición de metadatos.</value>
   </data>
-  <data name="EnsureFails" xml:space="preserve">
-    <value>Una postcondición del método {0} no se cumplió: '{1}'.</value>
-  </data>
-  <data name="EnsureNotEmptyStringFails" xml:space="preserve">
-    <value>Una postcondición del método {0} no se cumplió: 'La cadena {1} no puede ser vacía'.</value>
-  </data>
-  <data name="EnsureNotNullObjectFails" xml:space="preserve">
-    <value>Una postcondición del método {0} no se cumplió: 'El objeto {1} no puede ser nulo'.</value>
-  </data>
-  <data name="RequireFails" xml:space="preserve">
-    <value>Una precondición del método {0} no se cumplió: '{1}'.</value>
-  </data>
-  <data name="RequireNotEmptyStringFails" xml:space="preserve">
-    <value>Una precondición del método {0} no se cumplió: 'La cadena {1} no puede ser vacía'.</value>
-  </data>
-  <data name="RequireNotNullObjectFails" xml:space="preserve">
-    <value>Una precondición del método {0} no se cumplió: 'El objeto {1} no puede ser nulo'.</value>
-  </data>
   <data name="AssertFails" xml:space="preserve">
-    <value>Una aserción en el método {0} no se cumplió: '{1}'.</value>
-  </data>
-  <data name="AssertNotEmptyStringFails" xml:space="preserve">
-    <value>Una aserción en el método {0} no se cumplió: 'La cadena {1} no puede ser vacía'.</value>
-  </data>
-  <data name="AssertNotNullObjectFails" xml:space="preserve">
-    <value>Una aserción en el método {0} no se cumplió: 'El objeto {1} no puede ser nulo'.</value>
+    <value>Assertion fails inside {0}: \n{1}</value>
   </data>
   <data name="ParameterNotExists" xml:space="preserve">
     <value>No encontré el parámetro '{0}' empleado por el tipo {1} en el archivo de configuración del sistema.</value>
@@ -234,7 +210,7 @@ Favor de notificar sobre este error al administrador del sistema ya que se trata
   <data name="ValidTypeNotFoundInStackTrace" xml:space="preserve">
     <value>Se ha intentando invocar el lector de datos de configuración del sistema desde un tipo que no pertenece al espacio de nombres Empiria:\n\nStack:\n{0}</value>
   </data>
-  <data name="InvalidControlFlowReached" xml:space="preserve">
-    <value>PROGRAMMING ERROR: The program has a coding error so their execution reaches an invalid code flow statement. Probably the program has a loop or switch that miss an exit condition. Please report this incident immediately to the system administrator or write us to support @ontica.org.</value>
+  <data name="AssertNoReachThisCode" xml:space="preserve">
+    <value>PROGRAMMING ERROR: The program reached an invalid code flow statement. Probably it has a loop, if or switch that miss an exit condition or there are data with unexpected values. Please report this incident immediately to the system administrator or send us a message to support @ontica.org.</value>
   </data>
 </root>
