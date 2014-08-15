@@ -49,20 +49,6 @@ namespace Empiria {
       }
     }
 
-    // User-defined conversion from LazyObject<T> to T
-    static public implicit operator T(LazyObject<T> t) {
-      Assertion.AssertObject(t, "LazyObject asignment to instance of T cannot be null.");
-
-      return t.Instance;
-    }
-
-    // User-defined conversion from T to LazyObject<T>
-    static public implicit operator LazyObject<T>(T instance) {
-      Assertion.AssertObject(instance, "T instance assignment to LazyObject cannot be null.");
-      
-      return new LazyObject<T>(instance);
-    }
-
     #endregion Constructors and parsers
 
     #region Properties
