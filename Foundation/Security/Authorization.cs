@@ -127,18 +127,6 @@ namespace Empiria.Security {
 
     #endregion Public properties
 
-    #region Public methods
-
-    protected override void ImplementsLoadObjectData(DataRow row) {
-
-    }
-
-    protected override void ImplementsSave() {
-
-    }
-
-    #endregion Public methods
-
     #region Private methods
 
     private void Append() {

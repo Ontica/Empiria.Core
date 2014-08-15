@@ -106,17 +106,13 @@ namespace Empiria.Contacts {
 
     #region Public methods
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
-      base.ImplementsLoadObjectData(row);
+    protected override void OnLoadObjectData(DataRow row) {
+      base.OnLoadObjectData(row);
       this.firstName = (string) row["FirstName"];
       this.lastName = (string) row["LastName"];
       this.lastName2 = (string) row["LastName2"];
       this.bornDate = (DateTime) row["BornDate"];
       this.gender = (Gender) Convert.ToChar(row["Gender"]);
-    }
-
-    protected override void ImplementsSave() {
-      base.ImplementsSave();
     }
 
     #endregion Public methods

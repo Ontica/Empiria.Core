@@ -136,18 +136,6 @@ namespace Empiria {
 
     #endregion Public properties
 
-    #region Public methods
-
-    protected override void ImplementsLoadObjectData(DataRow row) {
-      base.DataBind(row);
-    }
-
-    protected override void ImplementsSave() {
-      throw new NotImplementedException();
-    }
-
-    #endregion Public methods
-
   } // class GeneralObject
 
 } // namespace Empiria

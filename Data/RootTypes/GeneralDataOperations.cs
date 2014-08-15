@@ -43,7 +43,7 @@ namespace Empiria.Data {
       } else if (firstFilter.Length == 0 && secondFilter.Length == 0) {
         filter = string.Empty;
       } else {
-        throw new NotImplementedException();		// Bad code exception
+        Assertion.AssertNoReachThisCode();
       }
 
       for (int i = 0; i < otherFilters.Length; i++) {
@@ -108,7 +108,7 @@ namespace Empiria.Data {
       } else if (firstFilter.Length == 0 && secondFilter.Length == 0) {
         filter = string.Empty;
       } else {
-        throw new NotImplementedException();		// Bad code exception
+        Assertion.AssertNoReachThisCode();
       }
 
       for (int i = 0; i < otherFilters.Length; i++) {
@@ -164,7 +164,7 @@ namespace Empiria.Data {
         operation = DataOperation.Parse("@qryEntitiesFilteredAndSorted", sourceName,
                                         filterExpression, sortExpression);
       } else {
-        throw new NotImplementedException();
+        Assertion.AssertNoReachThisCode();
       }
       return DataReader.GetDataTable(operation);
     }
@@ -204,7 +204,7 @@ namespace Empiria.Data {
         operation = DataOperation.Parse("@qryEntitiesJoinedFilteredAndSorted", sourceName, joinedSourceName,
                                         sourceJoinField, joinedTargetField, filterExpression, sortExpression);
       } else {
-        throw new NotImplementedException();
+        Assertion.AssertNoReachThisCode();
       }      
       return DataReader.GetDataTable(operation);
     }
@@ -261,7 +261,7 @@ namespace Empiria.Data {
       } else if (!String.IsNullOrWhiteSpace(filter) && !String.IsNullOrWhiteSpace(sort)) {
         return " WHERE " + filter + " ORDER BY " + sort;
       } else {
-        throw new NotImplementedException();
+        throw Assertion.AssertNoReachThisCode();
       }
     }
 

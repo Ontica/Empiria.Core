@@ -91,14 +91,14 @@ namespace Empiria.Ontology {
       return this.InvokeBaseObjectConstructor<T>();
     }
 
+    internal void DataBind(BaseObject instance, DataRow row) {
+      AssertMappingRulesAreLoaded();
+      dataMappingRules.DataBind(instance, row);
+    }
+
     internal void InitializeObject(BaseObject baseObject) {
       AssertMappingRulesAreLoaded();
       dataMappingRules.InitializeObject(baseObject);
-    }
-
-    internal void LoadObject(BaseObject baseObject, DataRow row) {
-      AssertMappingRulesAreLoaded();
-      dataMappingRules.LoadObject(baseObject, row);
     }
 
     public ObjectTypeInfo[] GetSubclasses() {

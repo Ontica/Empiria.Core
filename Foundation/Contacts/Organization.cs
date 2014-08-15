@@ -40,22 +40,6 @@ namespace Empiria.Contacts {
 
     #endregion Constructors and parsers
 
-    #region Public properties
-
-    #endregion Public properties
-
-    #region Public methods
-
-    protected override void ImplementsLoadObjectData(DataRow row) {
-      base.ImplementsLoadObjectData(row);
-    }
-
-    protected override void ImplementsSave() {
-      base.ImplementsSave();
-    }
-
-    #endregion Public methods
-
   } // class Organization
 
 } // namespace Empiria.Contacts

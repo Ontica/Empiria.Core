@@ -62,9 +62,9 @@ namespace Empiria.Ontology.Modeler {
       }
     }
 
-    /// <summary>Loads the dataRow values into the instance fields and properties marked
+    /// <summary>Binds DataRow data into the instance fields and properties marked
     /// with the DataField attribute.</summary>
-    internal void LoadObject(object instance, DataRow dataRow) {
+    internal void DataBind(object instance, DataRow dataRow) {
       if (!dataColumnsAreMapped) {
         lock (dataMappingsArray) {
           this.MapDataColumns(dataRow.Table.Columns);

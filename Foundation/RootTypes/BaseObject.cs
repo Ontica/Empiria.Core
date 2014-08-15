@@ -25,13 +25,6 @@ namespace Empiria {
   /// </summary>
   public abstract class BaseObject : IStorable {
 
-    #region Abstract members
-
-    protected abstract void ImplementsLoadObjectData(DataRow row);
-    protected abstract void ImplementsSave();
-
-    #endregion Abstract members
-
     #region Fields
 
     static private BaseObjectCache cache = new BaseObjectCache();
@@ -51,7 +44,9 @@ namespace Empiria {
     protected BaseObject(string typeName) {
       if (typeName.Length != 0) {   // If typeName.Length == 0, then is invoked with Parsing using reflection
         objectTypeInfo = ObjectTypeInfo.Parse(typeName);
-        objectTypeInfo.InitializeObject(this);
+        if (objectTypeInfo.IsDatabound) {
+          objectTypeInfo.InitializeObject(this);
+        }
       }
     }
 
@@ -180,7 +175,7 @@ namespace Empiria {
     #region Public methods
 
     protected void DataBind(DataRow row) {
-      this.ObjectTypeInfo.LoadObject(this, row);
+      this.ObjectTypeInfo.DataBind(this, row);
     }
 
     protected void LoadAttributesBagUsingHashTable(DataRow row) {
@@ -228,7 +223,8 @@ namespace Empiria {
       return association.GetLinks<T>(this, period);
     }
 
-    protected FixedList<T> GetLinks<T>(string linkName, TimePeriod period, Comparison<T> sort) where T : BaseObject {
+    protected FixedList<T> GetLinks<T>(string linkName, TimePeriod period,
+                                       Comparison<T> sort) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
       FixedList<T> list = association.GetLinks<T>(this, period);
 
@@ -263,21 +259,28 @@ namespace Empiria {
       OntologyData.WriteLink(assocationInfo, this, value);
     }
 
+    /// <summary>Raised after initialization and after databinding if their type is 
+    /// marked as IsDatabounded.</summary>
+    protected virtual void OnLoadObjectData(DataRow row) {
+
+    }
+
+    /// <summary>Raised when Save() method is called and after objectId was created.</summary>
+    protected virtual void OnSave() {
+      throw new NotImplementedException();
+    }
+
     public void Save() {
       if (this.objectId == 0) {
         this.objectId = OntologyData.GetNextObjectId(this.ObjectTypeInfo);
       }
-      ImplementsSave();
+      this.OnSave();
       this.isNewFlag = false;
       cache.Insert(this);
     }
 
     protected DataRow GetDataRow() {
       return OntologyData.GetBaseObjectDataRow(this.ObjectTypeInfo, this.Id);
-    }
-
-    public virtual string ToJson() {
-      throw new NotImplementedException();
     }
 
     #endregion Public methods
@@ -290,7 +293,10 @@ namespace Empiria {
       
       item.objectTypeInfo = typeInfo;
       item.objectId = (int) dataRow[typeInfo.IdFieldName];
-      item.ImplementsLoadObjectData(dataRow);
+      if (item.objectTypeInfo.IsDatabound) {
+        item.DataBind(dataRow);
+      }
+      item.OnLoadObjectData(dataRow);
       item.isNewFlag = false;
 
       if (!typeInfo.UsesNamedKey) {

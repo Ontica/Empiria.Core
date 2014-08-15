@@ -61,6 +61,7 @@ namespace Empiria.Ontology {
     private string idFieldName = String.Empty;
     private string typeIdFieldName = String.Empty;
     private string namedIdFieldName = String.Empty;
+    private bool isDatabound = false;
     private bool isAbstract = false;
     private bool isSealed = false;
     private bool isHistorizable = false;
@@ -69,14 +70,9 @@ namespace Empiria.Ontology {
     private GeneralObjectStatus status = GeneralObjectStatus.Active;
 
     private Type underlyingSystemType = null;
-
     private DoubleKeyList<TypeAttributeInfo> attributeInfoList = null;
     private DoubleKeyList<TypeAssociationInfo> associationInfoList = null;
     private DoubleKeyList<TypeMethodInfo> methodsList = null;
-
-    private List<KeyValuePair<string, object>> attibuteKeyValues = null;
-
-    //private DynamicState dynamicState = null;
 
     #endregion Fields
 
@@ -181,12 +177,6 @@ namespace Empiria.Ontology {
       }
     }
 
-    static protected internal void ResetCache() {
-      foreach (MetaModelType metaModelType in cache.Values) {
-        metaModelType.Reload();
-      }
-    }
-
     #endregion Constructors and parsers
 
     #region Public properties
@@ -265,6 +255,11 @@ namespace Empiria.Ontology {
     internal string IdFieldName {
       get { return idFieldName; }
       set { idFieldName = EmpiriaString.TrimAll(value); }
+    }
+
+    public bool IsDatabound {
+      get { return isDatabound; }
+      protected set { isDatabound = value; }
     }
 
     public bool IsAbstract {
@@ -376,56 +371,8 @@ namespace Empiria.Ontology {
       return (this.Id == obj.Id);
     }
 
-    protected T GetAttribute<T>(string attributeName) {
-      throw new NotImplementedException();
-      //return dynamicState.GetValue<T>(attributeName);
-    }
-
-    public T GetExtensionData<T>() {
-      return JsonConverter.ToObject<T>(extensionData);
-    }
-
     public override int GetHashCode() {
       return this.Id;
-    }
-
-    //protected internal TypeAssociationInfo GetAssociationInfo(int id) {
-    //  if (this.Associations.ContainsId(id)) {
-    //    return this.Associations[id];
-    //  } else {
-    //    throw new OntologyException(OntologyException.Msg.TypeAssociationInfoNotFound, id, this.Name);
-    //  }
-    //}
-
-    //protected internal TypeAssociationInfo GetAssociationInfo(string key) {
-    //  if (this.Associations.ContainsKey(key)) {
-    //    return this.Associations[key];
-    //  } else {
-    //    throw new OntologyException(OntologyException.Msg.TypeAssociationInfoNotFound, key, this.Name);
-    //  }
-    //}
-
-    internal KeyValuePair<string, object>[] GetAttibuteKeyValues() {
-      Type thisType = this.GetType();
-      //this.TypeFamily == MetaModelTypeFamily.PowerType      
-      if (thisType.IsGenericType && thisType.IsSubclassOf(typeof(PowerType<>).GetGenericTypeDefinition())) {
-        //Empiria.Messaging.Publisher.Publish("1) PT GetAttibuteKeyValues for " + this.Id.ToString() + " " + this.Name);
-        return ((PowerType<BaseObject>) this).PartitionedType.GetAttibuteKeyValues();
-      } else {
-        //Empiria.Messaging.Publisher.Publish("2) GetAttibuteKeyValues for " + this.Id.ToString() + " / " + this.Name +
-        //                                    " / " + thisType.Name + " / " + thisType.BaseType.Name);
-      }
-      if (attibuteKeyValues == null) {
-        lock (this.Attributes) {
-          IList<TypeAttributeInfo> relationsList = this.Attributes.Values;
-          attibuteKeyValues = new List<KeyValuePair<string, object>>(relationsList.Count);
-          foreach (TypeAttributeInfo attributeInfo in relationsList) {
-            attibuteKeyValues.Add(new KeyValuePair<string, object>(attributeInfo.Name,
-                                                                    attributeInfo.GetDefaultValue()));
-          }  // foreach
-        }  // lock
-      }
-      return attibuteKeyValues.ToArray();
     }
 
     protected internal void Reload() {
@@ -488,6 +435,7 @@ namespace Empiria.Ontology {
       this.idFieldName = (string) dataRow["IdFieldName"];
       this.namedIdFieldName = (string) dataRow["NamedIdFieldName"];
       this.typeIdFieldName = (string) dataRow["TypeIdFieldName"];
+      this.isDatabound = (bool) dataRow["IsDatabound"];
       this.isAbstract = (bool) dataRow["IsAbstract"];
       this.isSealed = (bool) dataRow["IsSealed"];
       this.isHistorizable = (bool) dataRow["IsHistorizable"];
@@ -536,18 +484,6 @@ namespace Empiria.Ontology {
         throw new OntologyException(OntologyException.Msg.TypeInfoFamilyNotMatch,
                                     typeIdentifier, this.typeFamily.ToString());
       }
-    }
-
-    static public void DumpCache() {
-      string s = String.Empty;
-      System.Collections.Generic.IList<int> keys = cache.Ids;
-
-      for (int i = 0; i < keys.Count; i++) {
-        MetaModelType item = cache[keys[i]];
-        s += item.Id.ToString("0000") + "  " + item.Name + " \t ->" + item.GetType().Name + Environment.NewLine;
-      }
-      s = "Dump Cache de tipos " + Environment.NewLine + Environment.NewLine + s;
-      Empiria.Messaging.Publisher.Publish(s);
     }
 
     #endregion Private methods

@@ -224,14 +224,14 @@ namespace Empiria.Security {
       ContactsData.WriteContactAttribute(this.Contact, "UserPassword", password);
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
+    protected override void OnLoadObjectData(DataRow row) {
       this.userName = (string) row["UserName"];
       this.isActive = (bool) row["IsActiveUser"];
       this.namedKey = (string) row["Nickname"];
       this.uiTheme = "default";
     }
 
-    protected override void ImplementsSave() {
+    protected override void OnSave() {
       ContactsData.WriteUser(this);
     }
 

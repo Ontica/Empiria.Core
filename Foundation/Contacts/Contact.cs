@@ -115,18 +115,6 @@ namespace Empiria.Contacts {
       protected set { status = value; }
     }
 
-    #endregion Public properties
-
-    #region Public methods
-
-    public FixedList<T> GetContactsInRole<T>(string roleName) where T : Contact {
-      return base.GetLinks<T>(roleName);
-    }
-
-    public FixedList<T> GetContactsInRole<T>(string roleName, TimePeriod period) where T : Contact {
-      return base.GetLinks<T>(roleName, period);
-    }
-
     /// <summary>OOJJOO</summary>
     internal int organizationId {
       get;
@@ -139,11 +127,19 @@ namespace Empiria.Contacts {
       set;
     }
 
-    internal void SaveTempUserSettings() {
-      ContactsData.WriteTempUserSettings(this.Id, organizationId, externalObjectId);
+    #endregion Public properties
+
+    #region Public methods
+
+    public FixedList<T> GetContactsInRole<T>(string roleName) where T : Contact {
+      return base.GetLinks<T>(roleName);
     }
 
-    protected override void ImplementsLoadObjectData(DataRow row) {
+    public FixedList<T> GetContactsInRole<T>(string roleName, TimePeriod period) where T : Contact {
+      return base.GetLinks<T>(roleName, period);
+    }
+
+    protected override void OnLoadObjectData(DataRow row) {
       this.fullName = (string) row["ContactFullName"];
       this.alias = (string) row["ShortName"];
       this.nickname = (string) row["Nickname"];
@@ -159,8 +155,12 @@ namespace Empiria.Contacts {
       this.externalObjectId = (int) row["Phone2TypeId"];
     }
 
-    protected override void ImplementsSave() {
+    protected override void OnSave() {
       ContactsData.WriteContact(this);
+    }
+
+    internal void SaveTempUserSettings() {
+      ContactsData.WriteTempUserSettings(this.Id, organizationId, externalObjectId);
     }
 
     #endregion Public methods
