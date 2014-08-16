@@ -127,6 +127,11 @@ namespace Empiria.Ontology.Modeler {
       private set;
     }
 
+    internal bool MapToChar {
+      get;
+      private set;
+    }
+
     internal bool MapToEnumeration {
       get;
       private set;
@@ -182,8 +187,12 @@ namespace Empiria.Ontology.Modeler {
                          "Json items can only be parsed from string type data columns.");
       }
       if (this.MapToEnumeration) {
-        Assertion.Assert(this.DataFieldType == typeof(string),
+        Assertion.Assert(this.DataFieldType == typeof(string) || this.DataFieldType == typeof(char),
                          "Enumeration items can only be parsed from char(1) or string type data columns.");
+      }
+      if (this.MapToChar) {
+        Assertion.Assert(this.DataFieldType == typeof(string) || this.DataFieldType == typeof(char),
+                         "Char value items can only be parsed from char(1) or string type data columns.");
       }
     }
 
@@ -270,6 +279,7 @@ namespace Empiria.Ontology.Modeler {
         // of type this.MemberType.
         return DataMapping.GetTypeDefaultValue(this.MemberType);
       }
+
       Type defaultValueType = this.DataFieldAttribute.Default.GetType();
       if (defaultValueType != this.MemberType && defaultValueType == typeof(string)) {
         //Returns a PropertyInfo in order to execute it when this.DefaultValue has been invoked.
@@ -295,10 +305,7 @@ namespace Empiria.Ontology.Modeler {
         string propertyName = defaultValueCode.Substring(defaultValueCode.LastIndexOf('.') + 1);
 
         Type type = MetaModelType.TryGetSystemType(typeName);
-        Assertion.AssertObject(type,
-                          new OntologyException(OntologyException.Msg.CannotParsePropertyForDefaultValue,
-                                                this.MemberInfo.DeclaringType, this.MemberInfo.Name,
-                                                defaultValueCode, this.GetExecutionData()));
+        Assertion.AssertObject(type, "type");
         return MethodInvoker.GetStaticProperty(type, propertyName);
       } catch (Exception e) {
         throw new OntologyException(OntologyException.Msg.CannotParsePropertyForDefaultValue, e,  
@@ -338,6 +345,8 @@ namespace Empiria.Ontology.Modeler {
       this.MapToLazyObject = ObjectFactory.IsLazy(this.MemberType);
       this.MapToParsableObject = ObjectFactory.HasParseWithIdMethod(this.MemberType);
       this.MapToEnumeration = this.MemberType.IsEnum;
+      this.MapToChar = this.MemberType == typeof(char);
+
       this.DefaultValue = this.GetDataFieldDefaultValue();
 
       if (this.DataFieldAttribute.Name.Contains('.')) {
@@ -358,6 +367,8 @@ namespace Empiria.Ontology.Modeler {
         } else {
           return Enum.Parse(this.MemberType, (string) value);
         }
+      } else if (this.MapToChar) {
+        return Convert.ToChar((string) value);
       } else {
         return value;
       }

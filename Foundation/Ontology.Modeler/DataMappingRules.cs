@@ -44,6 +44,12 @@ namespace Empiria.Ontology.Modeler {
       return new DataMappingRules(type);
     }
 
+    static internal bool IsDataBound(Type type) {
+      var boundedMembers = DataMappingRules.GetDataboundPropertiesAndFields(type);
+
+      return (boundedMembers.Length != 0);
+    }
+
     #endregion Constructors and parsers
 
     #region Public methods

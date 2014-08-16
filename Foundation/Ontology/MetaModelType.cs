@@ -61,7 +61,6 @@ namespace Empiria.Ontology {
     private string idFieldName = String.Empty;
     private string typeIdFieldName = String.Empty;
     private string namedIdFieldName = String.Empty;
-    private bool isDatabound = false;
     private bool isAbstract = false;
     private bool isSealed = false;
     private bool isHistorizable = false;
@@ -82,14 +81,12 @@ namespace Empiria.Ontology {
       this.typeFamily = typeFamily;
       if (id != 0) {
         Load(OntologyData.GetTypeDataRow(id), id.ToString());
-        //this.dynamicState = new DynamicState(this);
       }
     }
 
     protected internal MetaModelType(MetaModelTypeFamily typeFamily, string empiriaTypeName) {
       this.typeFamily = typeFamily;
       Load(OntologyData.GetTypeDataRow(empiriaTypeName), empiriaTypeName);
-      //this.dynamicState = new DynamicState(this);
     }
 
     static internal MetaModelType Parse(int typeId) {
@@ -255,11 +252,6 @@ namespace Empiria.Ontology {
     internal string IdFieldName {
       get { return idFieldName; }
       set { idFieldName = EmpiriaString.TrimAll(value); }
-    }
-
-    public bool IsDatabound {
-      get { return isDatabound; }
-      protected set { isDatabound = value; }
     }
 
     public bool IsAbstract {
@@ -435,7 +427,6 @@ namespace Empiria.Ontology {
       this.idFieldName = (string) dataRow["IdFieldName"];
       this.namedIdFieldName = (string) dataRow["NamedIdFieldName"];
       this.typeIdFieldName = (string) dataRow["TypeIdFieldName"];
-      this.isDatabound = (bool) dataRow["IsDatabound"];
       this.isAbstract = (bool) dataRow["IsAbstract"];
       this.isSealed = (bool) dataRow["IsSealed"];
       this.isHistorizable = (bool) dataRow["IsHistorizable"];

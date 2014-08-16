@@ -33,8 +33,8 @@ namespace Empiria.Ontology {
 
     }
 
-    protected internal ObjectTypeInfo(string name)
-      : base(MetaModelTypeFamily.ObjectType, name) {
+    protected internal ObjectTypeInfo(string name) : base(MetaModelTypeFamily.ObjectType, name) {
+
     }
 
     static public new ObjectTypeInfo Parse(int id) {
@@ -43,16 +43,6 @@ namespace Empiria.Ontology {
 
     static public new ObjectTypeInfo Parse(string name) {
       return MetaModelType.Parse<ObjectTypeInfo>(name);
-    }
-
-    static internal bool TryParse(string typeName, out ObjectTypeInfo objectTypeInfo) {
-      try {
-        objectTypeInfo = ObjectTypeInfo.Parse(typeName);
-        return true;
-      } catch {
-        objectTypeInfo = null;
-        return false;
-      }
     }
 
     static public ObjectTypeInfo Empty { 
@@ -79,6 +69,16 @@ namespace Empiria.Ontology {
       get { return false; }
     }
 
+    private bool? _isDataBoundFlag = null;
+    public bool IsDataBound {
+      get {
+        if (!_isDataBoundFlag.HasValue) {
+          _isDataBoundFlag = DataMappingRules.IsDataBound(base.UnderlyingSystemType);
+        }
+        return _isDataBoundFlag.Value;
+      }
+    }
+
     public new Empiria.Collections.DoubleKeyList<TypeMethodInfo> Methods {
       get { return base.Methods; }
     }
@@ -92,13 +92,17 @@ namespace Empiria.Ontology {
     }
 
     internal void DataBind(BaseObject instance, DataRow row) {
-      AssertMappingRulesAreLoaded();
-      dataMappingRules.DataBind(instance, row);
+      if (this.IsDataBound) {
+        this.AssertMappingRulesAreLoaded();
+        dataMappingRules.DataBind(instance, row);
+      }
     }
 
     internal void InitializeObject(BaseObject baseObject) {
-      AssertMappingRulesAreLoaded();
-      dataMappingRules.InitializeObject(baseObject);
+      if (this.IsDataBound) {
+        this.AssertMappingRulesAreLoaded();
+        dataMappingRules.InitializeObject(baseObject);
+      }
     }
 
     public ObjectTypeInfo[] GetSubclasses() {
@@ -133,8 +137,9 @@ namespace Empiria.Ontology {
     #region Private methods
 
     private object _lockObject = new object();
+
     private void AssertMappingRulesAreLoaded() {
-      if (dataMappingRules == null) {
+      if (dataMappingRules == null && this.IsDataBound) {
         lock (_lockObject) {
           if (dataMappingRules == null) {
             dataMappingRules = DataMappingRules.Parse(base.UnderlyingSystemType);

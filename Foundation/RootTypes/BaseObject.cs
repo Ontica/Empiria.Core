@@ -44,7 +44,7 @@ namespace Empiria {
     protected BaseObject(string typeName) {
       if (typeName.Length != 0) {   // If typeName.Length == 0, then is invoked with Parsing using reflection
         objectTypeInfo = ObjectTypeInfo.Parse(typeName);
-        if (objectTypeInfo.IsDatabound) {
+        if (objectTypeInfo.IsDataBound) {
           objectTypeInfo.InitializeObject(this);
         }
       }
@@ -293,7 +293,7 @@ namespace Empiria {
       
       item.objectTypeInfo = typeInfo;
       item.objectId = (int) dataRow[typeInfo.IdFieldName];
-      if (item.objectTypeInfo.IsDatabound) {
+      if (item.objectTypeInfo.IsDataBound) {
         item.DataBind(dataRow);
       }
       item.OnLoadObjectData(dataRow);
