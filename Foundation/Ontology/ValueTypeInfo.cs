@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
 *  Namespace : Empiria.Ontology                                 Assembly : Empiria.dll                       *
-*  Type      : StructureTypeInfo                                Pattern  : Type metadata class               *
+*  Type      : ValueTypeInfo                                    Pattern  : Type metadata class               *
 *  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
-*  Summary   : Represents a structure type definition.                                                       *
+*  Summary   : Metatype used to describe ValueObject types.                                                  *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -13,26 +13,25 @@ using System.Collections.Generic;
 
 namespace Empiria.Ontology {
 
-  public sealed class StructureTypeInfo : MetaModelType {
+  /// <summary>Metatype used to describe ValueObject types.</summary>
+  public sealed class ValueTypeInfo : MetaModelType {
 
     #region Constructors and parsers
 
-    private StructureTypeInfo(int id)
-      : base(MetaModelTypeFamily.StructureType, id) {
+    private ValueTypeInfo(int id) : base(MetaModelTypeFamily.ValueType, id) {
 
     }
 
-    private StructureTypeInfo(string name)
-      : base(MetaModelTypeFamily.StructureType, name) {
+    private ValueTypeInfo(string name) : base(MetaModelTypeFamily.ValueType, name) {
 
     }
 
-    static public new StructureTypeInfo Parse(int id) {
-      return MetaModelType.Parse<StructureTypeInfo>(id);
+    static public new ValueTypeInfo Parse(int id) {
+      return MetaModelType.Parse<ValueTypeInfo>(id);
     }
 
-    static public new StructureTypeInfo Parse(string name) {
-      return MetaModelType.Parse<StructureTypeInfo>(name);
+    static public new ValueTypeInfo Parse(string name) {
+      return MetaModelType.Parse<ValueTypeInfo>(name);
     }
 
     #endregion Constructors and parsers
@@ -59,6 +58,6 @@ namespace Empiria.Ontology {
 
     #endregion Public methods
 
-  } // class StructureTypeInfo
+  } // class ValueTypeInfo
 
 } // namespace Empiria.Ontology

@@ -25,7 +25,7 @@ namespace Empiria.Ontology {
     ObjectType = 2,
     FundamentalType = 3,
     EnumerationType = 4,
-    StructureType = 5,
+    ValueType = 5,
     RelationType = 6,
     MethodType = 7,
     RuleType = 8,
@@ -157,8 +157,8 @@ namespace Empiria.Ontology {
           return ObjectFactory.CreateObject<PowerTypeInfo>(parTypes, pars);
         case MetaModelTypeFamily.EnumerationType:
           return ObjectFactory.CreateObject<EnumerationTypeInfo>(parTypes, pars);
-        case MetaModelTypeFamily.StructureType:
-          return ObjectFactory.CreateObject<StructureTypeInfo>(parTypes, pars);
+        case MetaModelTypeFamily.ValueType:
+          return ObjectFactory.CreateObject<ValueTypeInfo>(parTypes, pars);
         case MetaModelTypeFamily.RuleType:
           return ObjectFactory.CreateObject<RuleTypeInfo>(parTypes, pars);
         default:
