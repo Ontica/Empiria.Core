@@ -41,7 +41,7 @@ namespace Empiria.Collections {
       // no-op
     }
 
-    public EmpiriaList(List<T> items) : this(items, false) {
+    public EmpiriaList(List<T> list) : this(list, false) {
       // no-op
     }
 

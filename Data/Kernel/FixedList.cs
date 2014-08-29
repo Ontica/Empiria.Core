@@ -5,7 +5,7 @@
 *  Type      : FixedList                                        Pattern  : Empiria List Class                *
 *  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
-*  Summary   : Represents a list of IStorable objects that cannot be added, removed or changed.              *
+*  Summary   : Represents a list of objects that cannot be added, removed or changed.                        *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -20,14 +20,14 @@ namespace Empiria {
   static public class ListExtensionMethods {
 
     /// <summary>Extends List<T> objects to return a FixedList<T> type</summary>
-    static public FixedList<T> ToFixedList<T>(this List<T> list) where T : IStorable {
+    static public FixedList<T> ToFixedList<T>(this List<T> list) {
       return new FixedList<T>(list);
     }
 
   }
 
-  /// <summary>Represents a list of IStorable objects that cannot be added, removed or changed.</summary>
-  public class FixedList<T> : EmpiriaList<T> where T : IStorable {
+  /// <summary>Represents a list of objects that cannot be added, removed or changed.</summary>
+  public class FixedList<T> : EmpiriaList<T> {
 
     #region Constructors and parsers
 
@@ -83,10 +83,6 @@ namespace Empiria {
 
     public new void Sort(Comparison<T> comparison) {
       base.Sort(comparison);
-    }
-
-    public string ToJson() {
-      throw new NotImplementedException();
     }
 
     #endregion Public methods

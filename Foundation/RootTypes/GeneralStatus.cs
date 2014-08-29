@@ -34,11 +34,10 @@ namespace Empiria {
   }
 
   public enum GeneralObjectStatus {
-    Inactive = 'I',
-    Active = 'A',
     Pending = 'P',
+    Active = 'A',
     Suspended = 'S',
-    Deprecated = 'D',
+    Obsolete = 'O',
     Deleted = 'X',
   }
 

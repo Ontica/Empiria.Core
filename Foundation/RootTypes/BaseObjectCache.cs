@@ -17,14 +17,14 @@ namespace Empiria {
 
     #region Fields
 
-    static private readonly int objectCacheSize = ConfigurationData.GetInteger("Empiria.Ontology", "ObjectCache.Size");
+    static private readonly int objectCacheSize = 
+                                      ConfigurationData.GetInteger("Empiria.Ontology", "ObjectCache.Size");
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    internal BaseObjectCache()
-      : base(objectCacheSize) {
+    internal BaseObjectCache() : base(objectCacheSize) {
 
     }
 
@@ -51,6 +51,21 @@ namespace Empiria {
     internal void Insert(BaseObject item) {
       string typeInfoName = item.ObjectTypeInfo.Name;
 
+      // Empty and Unknown instances are unique per type, so don't create their base objects inside
+      // the inheritance hierarchy.
+      // Example: ReadItem.Book.Fiction.Empty generates only one item in the cache
+      // ('-1.ReadItem.Book.Fiction'), but not '-1.ReadItem.Book' That's because 
+      // ReadItem.Book.Empty could be defined and also it will use the same id but for its own type: 
+      // '-1.ReadItem.Book' of type Book. SpecialCase instances are unique and static per type
+      if (item.IsSpecialCase) {
+        base.Insert(typeInfoName, item);
+        return;
+      }
+
+      // Stores item object into the objects cache and additionally insert it again for each
+      // parent class defined on that item's inheritance hierarchy.
+      // Example: An object with typeInfoName = 'ReadItem.Book.Fiction' and Id = 1001 generates
+      // three items in the cache: '1001.ReadItem.Book.Fiction', '1001.ReadItem.Book' and '1001.ReadItem'
       while (true) {
         if (typeInfoName.LastIndexOf('.') > 0) {
           base.Insert(typeInfoName, item);

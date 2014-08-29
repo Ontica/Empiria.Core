@@ -48,6 +48,7 @@ namespace Empiria {
           objectTypeInfo.InitializeObject(this);
         }
       }
+      this.OnInitialize();
     }
 
     static public T Create<T>(ObjectTypeInfo typeInfo) where T : BaseObject {
@@ -81,6 +82,7 @@ namespace Empiria {
     }
 
     static internal T Parse<T>(ObjectTypeInfo typeInfo, DataRow dataRow) where T : BaseObject {
+      Type t = typeof(T);
       T item = cache.GetItem<T>(typeInfo.Name, (int) dataRow[typeInfo.IdFieldName]);
       if (item != null) {
         return item;      // Only use dataRow when item is not in cache
@@ -91,9 +93,9 @@ namespace Empiria {
     static protected T Parse<T>(string typeName, DataRow dataRow) where T : BaseObject {
       try {
         ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(typeName, dataRow);
-        int objectIdFieldValue = (int) dataRow[derivedTypeInfo.IdFieldName];
+        int objectId = (int) dataRow[derivedTypeInfo.IdFieldName];
 
-        T item = cache.GetItem<T>(derivedTypeInfo.Name, objectIdFieldValue);
+        T item = cache.GetItem<T>(derivedTypeInfo.Name, objectId);
         if (item != null) {
           return item;    // Only use dataRow when item is not in cache
         }
@@ -126,17 +128,6 @@ namespace Empiria {
       return BaseObject.CreateBaseObject<T>(derivedTypeInfo, dataRow);
     }
 
-    static protected FixedList<T> ParseList<T>(string typeName) where T : BaseObject {
-      ObjectTypeInfo objectTypeInfo = ObjectTypeInfo.Parse(typeName);
-
-      DataTable table = OntologyData.GetGeneralObjectsDataTable(objectTypeInfo);
-      List<T> list = new List<T>(table.Rows.Count);
-      for (int i = 0; i < table.Rows.Count; i++) {
-        list.Add(BaseObject.Parse<T>(objectTypeInfo, table.Rows[i]));
-      }
-      return list.ToFixedList();
-    }
-
     static protected T ParseUnknown<T>(string typeName) where T : BaseObject {
       return BaseObject.Parse<T>(typeName, unknownInstanceId);
     }
@@ -163,11 +154,18 @@ namespace Empiria {
     }
 
     public bool IsEmptyInstance {
-      get { return (this.objectId == -1); }
+      get { return (this.objectId == emptyInstanceId); }
     }
 
     public bool IsNew {
       get { return (this.objectId == 0 || isNewFlag == true); }
+    }
+
+    protected internal bool IsSpecialCase {
+      get {
+        return (this.objectId == emptyInstanceId || 
+                this.objectId == unknownInstanceId);
+      }
     }
 
     #endregion Public properties
@@ -183,7 +181,7 @@ namespace Empiria {
     }
 
     public override bool Equals(object obj) {
-      if (obj == null || GetType() != obj.GetType()) {
+      if (obj == null || this.GetType() != obj.GetType()) {
         return false;
       }
       return base.Equals(obj) && (this.Id == ((BaseObject) obj).Id);
@@ -193,14 +191,18 @@ namespace Empiria {
       if (obj == null) {
         return false;
       }
-      return objectTypeInfo.Equals(obj.objectTypeInfo) && (this.Id == obj.Id);  // base.Equals(obj)
+      return objectTypeInfo.Equals(obj.objectTypeInfo) && (this.Id == obj.Id);
     }
 
-    protected T GetLink<T>(string linkName) where T : BaseObject {
-      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
-
-      return association.GetLink<T>(this);
+    public override int GetHashCode() {
+      return (this.objectTypeInfo.GetHashCode() ^ this.Id);
     }
+
+    //protected T GetLink<T>(string linkName) where T : BaseObject {
+    //  TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
+
+    //  return association.GetLink<T>(this);
+    //}
 
     protected FixedList<T> GetLinks<T>(string linkName) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
@@ -239,10 +241,6 @@ namespace Empiria {
       return association.GetLinks<T>(this, predicate);
     }
 
-    public override int GetHashCode() {
-      return (this.objectTypeInfo.GetHashCode() ^ this.Id);
-    }
-
     protected FixedList<T> GetTypeLinks<T>(string linkName) where T : MetaModelType {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
@@ -257,6 +255,12 @@ namespace Empiria {
 
     protected void Link(TypeAssociationInfo assocationInfo, IStorable value) {
       OntologyData.WriteLink(assocationInfo, this, value);
+    }
+
+    /// <summary>Raised for new and stored instances, after object creation and before
+    /// databinding if their type is marked as IsDatabounded.</summary>
+    protected virtual void OnInitialize() {
+
     }
 
     /// <summary>Raised after initialization and after databinding if their type is 
@@ -348,6 +352,34 @@ namespace Empiria {
     }
 
     #endregion Private methods
+
+    protected void AssociateOne(IStorable instance) {
+      throw new NotImplementedException();
+    }
+
+    protected void AssociateOne(IStorable instance, string associationName) {
+      throw new NotImplementedException();
+    }
+
+    protected void AssociateWith(IStorable instance) {
+      throw new NotImplementedException();
+    }
+
+    protected void AssociateWith(IStorable instance, string associationName) {
+      throw new NotImplementedException();
+    }
+
+    protected FixedList<T> GetAssociations<T>() where T : IStorable {
+      throw new NotImplementedException();
+    }
+
+    protected FixedList<T> GetAssociations<T>(string associationName) where T : IStorable {
+      throw new NotImplementedException();
+    }
+
+    protected FixedList<T> GetAssociations<T>(Predicate<T> predicate) where T : IStorable {
+      throw new NotImplementedException();
+    }
 
   } // class BaseObject
 

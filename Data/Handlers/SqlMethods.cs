@@ -50,9 +50,9 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal int CountRows(DataOperation operation) {
-      SqlConnection connection = new SqlConnection(operation.DataSource.Source);
-      SqlCommand command = new SqlCommand(operation.SourceName, connection);
-      DataTable dataTable = new DataTable();
+      var connection = new SqlConnection(operation.DataSource.Source);
+      var command = new SqlCommand(operation.SourceName, connection);
+      var dataTable = new DataTable();
 
       try {
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
@@ -74,8 +74,8 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal int Execute(DataOperation operation) {
-      SqlConnection connection = new SqlConnection(operation.DataSource.Source);
-      SqlCommand command = new SqlCommand(operation.SourceName, connection);
+      var connection = new SqlConnection(operation.DataSource.Source);
+      var command = new SqlCommand(operation.SourceName, connection);
 
       int affectedRows = 0;
       try {
@@ -100,7 +100,7 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal int Execute(SqlConnection connection, DataOperation operation) {
-      SqlCommand command = new SqlCommand(operation.SourceName, connection);
+      var command = new SqlCommand(operation.SourceName, connection);
 
       int affectedRows = 0;
       try {
@@ -121,7 +121,7 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal int Execute(SqlTransaction transaction, DataOperation operation) {
-      SqlCommand command = new SqlCommand(operation.SourceName, transaction.Connection, transaction);
+      var command = new SqlCommand(operation.SourceName, transaction.Connection, transaction);
 
       int affectedRows = 0;
       try {
@@ -142,7 +142,7 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal SqlConnection GetConnection(string connectionString) {
-      SqlConnection connection = new SqlConnection(connectionString);
+      var connection = new SqlConnection(connectionString);
       if (ContextUtil.IsInTransaction) {
         connection.EnlistDistributedTransaction((System.EnterpriseServices.ITransaction) ContextUtil.Transaction);
       }
@@ -150,7 +150,7 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal byte[] GetBinaryFieldValue(DataOperation operation, string fieldName) {
-      SqlDataReader reader = (SqlDataReader) SqlMethods.GetDataReader(operation);
+      var reader = (SqlDataReader) SqlMethods.GetDataReader(operation);
 
       if (reader.Read()) {
         System.Data.SqlTypes.SqlBinary blob = reader.GetSqlBinary(reader.GetOrdinal(fieldName));
@@ -161,8 +161,8 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal IDataReader GetDataReader(DataOperation operation) {
-      SqlConnection connection = new SqlConnection(operation.DataSource.Source);
-      SqlCommand command = new SqlCommand(operation.SourceName, connection);
+      var connection = new SqlConnection(operation.DataSource.Source);
+      var command = new SqlCommand(operation.SourceName, connection);
       SqlDataReader dataReader;
 
       try {
@@ -183,9 +183,9 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal DataRow GetDataRow(DataOperation operation) {
-      SqlConnection connection = new SqlConnection(operation.DataSource.Source);
-      SqlCommand command = new SqlCommand(operation.SourceName, connection);
-      DataTable dataTable = new DataTable(operation.SourceName);
+      var connection = new SqlConnection(operation.DataSource.Source);
+      var command = new SqlCommand(operation.SourceName, connection);
+      var dataTable = new DataTable(operation.SourceName);
 
       try {
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
@@ -212,9 +212,9 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal DataTable GetDataTable(DataOperation operation, string dataTableName) {
-      SqlConnection connection = new SqlConnection(operation.DataSource.Source);
-      SqlCommand command = new SqlCommand(operation.SourceName, connection);
-      DataTable dataTable = new DataTable(dataTableName);
+      var connection = new SqlConnection(operation.DataSource.Source);
+      var command = new SqlCommand(operation.SourceName, connection);
+      var dataTable = new DataTable(dataTableName);
 
       try {
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
@@ -237,9 +237,9 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal DataView GetDataView(DataOperation operation, string filter, string sort) {
-      SqlConnection connection = new SqlConnection(operation.DataSource.Source);
-      SqlCommand command = new SqlCommand(operation.SourceName, connection);
-      DataTable dataTable = new DataTable(operation.SourceName);
+      var connection = new SqlConnection(operation.DataSource.Source);
+      var command = new SqlCommand(operation.SourceName, connection);
+      var dataTable = new DataTable(operation.SourceName);
 
       try {
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
@@ -261,8 +261,8 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal object GetFieldValue(DataOperation operation, string fieldName) {
-      SqlConnection connection = new SqlConnection(operation.DataSource.Source);
-      SqlCommand command = new SqlCommand(operation.SourceName, connection);
+      var connection = new SqlConnection(operation.DataSource.Source);
+      var command = new SqlCommand(operation.SourceName, connection);
       SqlDataReader dataReader;
       object fieldValue = null;
 
@@ -288,8 +288,8 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal object GetScalar(DataOperation operation) {
-      SqlConnection connection = new SqlConnection(operation.DataSource.Source);
-      SqlCommand command = new SqlCommand(operation.SourceName, connection);
+      var connection = new SqlConnection(operation.DataSource.Source);
+      var command = new SqlCommand(operation.SourceName, connection);
 
       try {
         command.CommandType = operation.CommandType;

@@ -21,9 +21,9 @@ namespace Empiria.Data.Handlers {
     #region Internal methods
 
     static internal int CountRows(DataOperation operation) {
-      MySqlConnection connection = new MySqlConnection(operation.DataSource.Source);
-      MySqlCommand command = new MySqlCommand(operation.SourceName, connection);
-      DataTable dataTable = new DataTable();
+      var connection = new MySqlConnection(operation.DataSource.Source);
+      var command = new MySqlCommand(operation.SourceName, connection);
+      var dataTable = new DataTable();
 
       try {
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
@@ -43,8 +43,8 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal int Execute(DataOperation operation) {
-      MySqlConnection connection = new MySqlConnection(operation.DataSource.Source);
-      MySqlCommand command = new MySqlCommand(operation.SourceName, connection);
+      var connection = new MySqlConnection(operation.DataSource.Source);
+      var command = new MySqlCommand(operation.SourceName, connection);
 
       int affectedRows = 0;
       try {
@@ -72,7 +72,7 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal int Execute(MySqlConnection connection, DataOperation operation) {
-      MySqlCommand command = new MySqlCommand(operation.SourceName, connection);
+      var command = new MySqlCommand(operation.SourceName, connection);
 
       int affectedRows = 0;
       try {
@@ -94,7 +94,7 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal int Execute(MySqlTransaction transaction, DataOperation operation) {
-      MySqlCommand command = new MySqlCommand(operation.SourceName, transaction.Connection, transaction);
+      var command = new MySqlCommand(operation.SourceName, transaction.Connection, transaction);
 
       int affectedRows = 0;
       try {
@@ -116,7 +116,7 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal MySqlConnection GetConnection(string connectionString) {
-      MySqlConnection connection = new MySqlConnection(connectionString);
+      var connection = new MySqlConnection(connectionString);
       // NOTE: DISTRIBUTED TRANSACTIONS NOT SUPPORTED YET FOR MYSQL
       //if (ContextUtil.IsInTransaction)  {
       //  connection.EnlistDistributedTransaction((System.EnterpriseServices.ITransaction) ContextUtil.Transaction);
@@ -125,8 +125,8 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal IDataReader GetDataReader(DataOperation operation) {
-      MySqlConnection connection = new MySqlConnection(operation.DataSource.Source);
-      MySqlCommand command = new MySqlCommand(operation.SourceName, connection);
+      var connection = new MySqlConnection(operation.DataSource.Source);
+      var command = new MySqlCommand(operation.SourceName, connection);
       MySqlDataReader dataReader;
 
       try {
@@ -144,9 +144,9 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal DataRow GetDataRow(DataOperation operation) {
-      MySqlConnection connection = new MySqlConnection(operation.DataSource.Source);
-      MySqlCommand command = new MySqlCommand(operation.SourceName, connection);
-      DataTable dataTable = new DataTable(operation.SourceName);
+      var connection = new MySqlConnection(operation.DataSource.Source);
+      var command = new MySqlCommand(operation.SourceName, connection);
+      var dataTable = new DataTable(operation.SourceName);
 
       try {
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
@@ -169,9 +169,9 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal DataTable GetDataTable(DataOperation operation, string dataTableName) {
-      MySqlConnection connection = new MySqlConnection(operation.DataSource.Source);
-      MySqlCommand command = new MySqlCommand(operation.SourceName, connection);
-      DataTable dataTable = new DataTable(dataTableName);
+      var connection = new MySqlConnection(operation.DataSource.Source);
+      var command = new MySqlCommand(operation.SourceName, connection);
+      var dataTable = new DataTable(dataTableName);
 
       try {
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
@@ -190,8 +190,8 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal DataView GetDataView(DataOperation operation, string filter, string sort) {
-      MySqlConnection connection = new MySqlConnection(operation.DataSource.Source);
-      MySqlCommand command = new MySqlCommand(operation.SourceName, connection);
+      var connection = new MySqlConnection(operation.DataSource.Source);
+      var command = new MySqlCommand(operation.SourceName, connection);
       DataTable dataTable = new DataTable(operation.SourceName);
 
       try {
@@ -212,8 +212,8 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal object GetFieldValue(DataOperation operation, string fieldName) {
-      MySqlConnection connection = new MySqlConnection(operation.DataSource.Source);
-      MySqlCommand command = new MySqlCommand(operation.SourceName, connection);
+      var connection = new MySqlConnection(operation.DataSource.Source);
+      var command = new MySqlCommand(operation.SourceName, connection);
       MySqlDataReader dataReader;
       object fieldValue = null;
 
@@ -236,8 +236,8 @@ namespace Empiria.Data.Handlers {
     }
 
     static internal object GetScalar(DataOperation operation) {
-      MySqlConnection connection = new MySqlConnection(operation.DataSource.Source);
-      MySqlCommand command = new MySqlCommand(operation.SourceName, connection);
+      var connection = new MySqlConnection(operation.DataSource.Source);
+      var command = new MySqlCommand(operation.SourceName, connection);
 
       try {
         command.CommandType = operation.CommandType;

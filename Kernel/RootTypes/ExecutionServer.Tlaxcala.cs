@@ -52,10 +52,6 @@ namespace Empiria {
 
     #endregion Fields
 
-    #region Constructors and parsers
-
-    #endregion Constructors and parsers
-
     #region Public properties
 
     static public string CustomerName {

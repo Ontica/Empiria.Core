@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Contacts;
+using Empiria.Ontology;
 
 namespace Empiria {
 
@@ -33,6 +34,17 @@ namespace Empiria {
 
     protected GeneralObject(string typeName) : base(typeName) {
       // Empiria Object Type pattern classes always have this constructor. Don't delete
+    }
+
+    static protected FixedList<T> ParseList<T>(string typeName) where T : BaseObject {
+      ObjectTypeInfo objectTypeInfo = ObjectTypeInfo.Parse(typeName);
+
+      DataTable table = OntologyData.GetGeneralObjectsDataTable(objectTypeInfo);
+      List<T> list = new List<T>(table.Rows.Count);
+      for (int i = 0; i < table.Rows.Count; i++) {
+        list.Add(BaseObject.Parse<T>(objectTypeInfo, table.Rows[i]));
+      }
+      return list.ToFixedList();
     }
 
     #endregion Constructors and parsers
