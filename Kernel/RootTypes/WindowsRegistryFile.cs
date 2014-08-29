@@ -45,7 +45,7 @@ namespace Empiria {
       tempTypeName = tempTypeName.Substring(tempTypeName.IndexOf('.') + 1);
       while (true) {
         if ((retrivedValue == null) && (tempTypeName != null)) {
-          retrivedValue = ReadRegistryValue(empiriaKey, tempTypeName, parameterName);
+          retrivedValue = TryReadRegistryValue(empiriaKey, tempTypeName, parameterName);
           if (retrivedValue == null) {   //Don´t search superkey if keyValue founded
             if (tempTypeName.IndexOf('.') != -1) {
               tempTypeName = tempTypeName.Substring(0, tempTypeName.LastIndexOf('.'));
@@ -70,7 +70,7 @@ namespace Empiria {
 
     #endregion Internal methods
 
-    #region Private methods
+    #region Private members
 
     static private void CreateSubKey(string absoluteKey) {
       Registry.LocalMachine.CreateSubKey(absoluteKey);
@@ -78,22 +78,41 @@ namespace Empiria {
       Registry.LocalMachine.Close();
     }
 
-    static private string ReadRegistryValue(string valueKey, string typeName, string parameterName) {
-      string absoluteKey = null;
-      string keyValue = null;
+    static private bool Is32BitsClient {
+      get {
+        return (IntPtr.Size == 4);
+      }
+    }
 
-      absoluteKey = String.Concat(valueKey, ExecutionServer.LicenseName, "\\", typeName);
+    static private string TryReadRegistryValue(string valueKey, string typeName, string parameterName) {
+      string absoluteKey = String.Concat(valueKey, ExecutionServer.LicenseName, "\\", typeName);
+
+      RegistryKey registryKey = null;
       try {
-        keyValue = Registry.LocalMachine.OpenSubKey(absoluteKey).GetValue(parameterName).ToString();
-      } catch {
-        if (keyValue == String.Empty) {
-          keyValue = null;
+        if (WindowsRegistryFile.Is32BitsClient) {
+          // In order to avoid reading on  HKLM\Software\Wow6432Node
+          var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+          registryKey = baseKey.OpenSubKey(absoluteKey);
+        } else {
+          registryKey = Registry.LocalMachine.OpenSubKey(absoluteKey);
+        }
+        if (registryKey == null) {
+          return null;
+        }
+        object keyValue = registryKey.GetValue(parameterName);
+        if (keyValue == null) {
+          return null;
+        }
+        if (parameterName.StartsWith("§")) {
+          return Cryptographer.Decrypt(keyValue.ToString(), ExecutionServer.LicenseName);
+        } else {
+          return keyValue.ToString();
+        }
+      } finally {
+        if (registryKey != null) {
+          registryKey.Close();
         }
       }
-      if ((keyValue != null) && parameterName.StartsWith("§")) {
-        keyValue = Cryptographer.Decrypt(keyValue, ExecutionServer.LicenseName);
-      }
-      return keyValue;
     }
 
     static private void WriteRegistryValue(string valueKey, string typeName, string name, string settingValue) {
@@ -117,7 +136,7 @@ namespace Empiria {
       Registry.LocalMachine.Close();
     }
 
-    #endregion Private methods
+    #endregion Private members
 
   } //class WindowsRegistryFile
 
