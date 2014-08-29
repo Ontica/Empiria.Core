@@ -93,7 +93,7 @@ namespace Empiria.Data {
     /// <param name="jsonString">The JSON string to convert.</param>
     /// <returns>IDictionary with the same items and structure as the JSON string.</returns>
     static public IDictionary<string, object> ToDictionary(string jsonString) {
-      return (IDictionary<string, object>) JsonConvert.DeserializeObject<ExpandoObject>(jsonString);
+      return JsonConvert.DeserializeObject<ExpandoObject>(jsonString);
     }
 
     /// <summary>Converts an object into a JSON string.</summary>

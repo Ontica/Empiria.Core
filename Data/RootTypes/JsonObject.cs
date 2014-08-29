@@ -21,20 +21,21 @@ namespace Empiria.Data {
 
     private IDictionary<string, object> dictionary = null;
 
+    static public readonly JsonObject Empty = new JsonObject() {IsEmptyInstance = true };
+
     #endregion Fields
 
     #region Constructors and parsers
 
-    public JsonObject() {
-      dictionary = new Dictionary<string, object>(8);
+    private JsonObject() {
+      dictionary = new Dictionary<string, object>(0);
     }
 
-    static public JsonObject Empty {
-      get { 
-        return new JsonObject() {
-          IsEmptyInstance = true
-        };
-      }
+    private JsonObject(IDictionary<string, object> dictionary) {
+      Assertion.AssertObject(dictionary, "dictionary");
+
+      this.dictionary = dictionary;
+      this.IsEmptyInstance = false;
     }
 
     #endregion Constructors and parsers
@@ -48,54 +49,123 @@ namespace Empiria.Data {
       if (String.IsNullOrWhiteSpace(jsonString)) {
         return JsonObject.Empty;
       }
-      JsonObject json = new JsonObject();
-      json.dictionary = JsonConverter.ToDictionary(jsonString);
-      return json;
+      var dictionary = JsonConverter.ToDictionary(jsonString);
+      return new JsonObject(dictionary);
     }
 
     #region Public members
 
     /// <summary>Searches for an item inside the JsonObject.</summary>
     /// <param name="itemPath">The item path to search</param>
-    /// <returns>The item relative to the searched path, or an exception if the object 
+    /// <returns>The item relative to the searched path, or an exception if the object
     /// was not found or if the path is not well-formed.</returns>
     public T Get<T>(string itemPath) {
+      Assertion.AssertObject(itemPath, "itemPath");
+
       if (ObjectFactory.IsStorable(typeof(T))) {
-        return this.FindAndParseObject<T>(itemPath, true, default(T));
+        return this.FindInt32AndParseAsObjectId<T>(itemPath, true, default(T));
       } else {
         return this.Find<T>(itemPath, true, default(T));
       }
     }
 
-    /// <summary>Extracts a new JsonObject from this instance given a itemPath.</summary>
-    /// <param name="itemPath">The item path to search</param>
+    /// <summary>Extracts a new JsonObject from this instance given an itemPath.</summary>
+    /// <param name="itemPath">The item path to search.</param>
     /// <param name="defaultValue">The default value if the searched item is not found.</param> 
     /// <returns>The item relative to the searched path, the defaultValue if the object 
     /// was not found or an exception if the path is not well-formed.</returns>
     public T Get<T>(string itemPath, T defaultValue) {
+      Assertion.AssertObject(itemPath, "itemPath");
+
       if (ObjectFactory.IsStorable(typeof(T))) {
-        return this.FindAndParseObject<T>(itemPath, false, defaultValue);
+        return this.FindInt32AndParseAsObjectId<T>(itemPath, false, defaultValue);
       } else {
         return this.Find<T>(itemPath, false, defaultValue);
       }
     }
 
-    /// <summary>Extracts a new JsonObject from this instance given a itemPath.</summary>
-    /// <param name="itemPath">The item path to search</param>
+    /// <summary>Searches for a list of objects inside the JsonObject.</summary>
+    /// <typeparam name="T">The type of the list elements.</typeparam>
+    /// <param name="listPath">The list path to search.</param>
+    /// <returns>The list of objects relative to the searched path, or an exception if the list
+    /// was not found or if the path is not well-formed.</returns>
+    public List<T> GetList<T>(string listPath) {
+      Assertion.AssertObject(listPath, "listPath");
+
+      return GetList<T>(listPath, true);
+    }
+
+    /// <summary>Searches for a list of objects inside the JsonObject.</summary>
+    /// <typeparam name="T">The type of the list elements.</typeparam>
+    /// <param name="listPath">The list path to search.</param>
+    /// <param name="required">Throws an exception if is true and the searched item was not found.</param>
+    /// <returns>The list of objects relative to the searched path, or an exception if the list
+    /// was not found or if the path is not well-formed.</returns>
+    public List<T> GetList<T>(string listPath, bool required) {
+      Assertion.AssertObject(listPath, "listPath");
+
+      List<object> objectsList;
+
+      if (required) {
+        objectsList = this.Get<List<object>>(listPath);
+      } else {
+        objectsList = this.Get<List<object>>(listPath, new List<object>());
+      }
+      if (ObjectFactory.IsStorable(typeof(T))) {
+        return objectsList.ConvertAll<T>((x) => ObjectFactory.ParseObject<T>(System.Convert.ToInt32(x)));
+      } else {
+        return objectsList.ConvertAll<T>((x) => JsonObject.Convert<T>(x));
+      }
+    }
+
+    /// <summary>Extracts a new JsonObject from this instance given an itemPath.</summary>
+    /// <param name="itemPath">The item path to search. If starts with '@' then the object name
+    /// is also included in the returned object, else only the item path contents.</param>
     /// <returns>The JsonObject relative to the searched path, or the JsonObject.Empty
     /// instance if the path is not found or an exception if the path is not well-formed.</returns>
     public JsonObject Slice(string itemPath) {
+      Assertion.AssertObject(itemPath, "itemPath");
+
       return this.Slice(itemPath, false);
     }
 
-    /// <summary>Extracts a new JsonObject from this instance given a itemPath.</summary>
-    /// <param name="itemPath">The item path to search</param>
-    /// <param name="required">Throws an exception if is true and the searched item is not found.</param>
+    /// <summary>Generates a new JsonObject from multiple itemPaths of this instance.</summary>
+    /// <param name="itemPaths">Array with the item paths to include in the new JsonObject.
+    /// If any of those paths start with '@', then that path's object name is also included in the
+    /// returned object, otherwise the objects inside it are returned as direct items of the root.</param>
+    /// <returns>The new JsonObject generated from the items path, or the JsonObject.Empty
+    /// instance if any path was found or an exception if one of the paths are not well-formed.</returns>
+    public JsonObject Slice(string[] itemPaths) {
+      Assertion.AssertObject(itemPaths, "itemPaths");
+
+      var root = new Dictionary<string, object>(itemPaths.Length);
+      for (int i = 0; i < itemPaths.Length; i++) {
+        var json = this.Slice(itemPaths[i]);
+        foreach (var item in json.dictionary) {
+          root.Add(item.Key, item.Value);
+        }
+      }
+      return new JsonObject(root);
+    }
+
+    /// <summary>Extracts a new JsonObject from this instance given an itemPath.</summary>
+    /// <param name="itemPath">The item path to search. If starts with '@' then the object name
+    /// is included in the returned object, else only the item path contents.</param>
+    /// <param name="itemPaths">The item path to search. If starts with '@', then that path's object name
+    /// is also included in the returned object, otherwise the objects inside it are returned
+    /// as direct items of the root.</param>
+    /// <param name="required">Throws an exception if is true and the searched item was not found.</param>
     /// <returns>The JsonObject relative to the searched path, or the JsonObject.Empty
     /// instance if the required flag is false. Otherwise throws an exception.</returns>
     public JsonObject Slice(string itemPath, bool required) {
       Assertion.AssertObject(itemPath, "itemPath");
 
+      bool includeitemNameInSlice = false;
+
+      if (itemPath.StartsWith("@")) {
+        includeitemNameInSlice = true;
+        itemPath = itemPath.Substring(1);   // Remove the special characeter @
+      }
       object value = this.GetDictionaryValue(itemPath, required);  
       if (value == null && required) {
         // An exception should be thrown from the GetDictionaryValue call above.
@@ -103,24 +173,47 @@ namespace Empiria.Data {
       }
       if (value == null) {
         return JsonObject.Empty;
-      } else if (value is IDictionary<string, object>) {
-        JsonObject slice = new JsonObject();
-        slice.dictionary = (IDictionary<string, object>) value;
-        return slice;
+      } else if (value is IDictionary<string, object> && !includeitemNameInSlice) {
+        return new JsonObject((IDictionary<string, object>) value);
       } else {
-        JsonObject slice = new JsonObject();
-        slice.dictionary.Add(this.GetDictionaryKey(itemPath), value);
-        return slice;
+        var dictionary = new Dictionary<string, object>(1);
+        dictionary.Add(this.GetDictionaryKey(itemPath), value);
+
+        return new JsonObject(dictionary);
       }
+    }
+
+    ///<summary>Returns this Json object as an unindented Json string. Overrides Object.ToString().</summary>
+    public override string ToString() {
+      return this.ToString(false);
+    }
+
+    /// <summary>Returns this Json object as a Json string.</summary>
+    /// <param name="indented">If true, returns the Json string in indented format.</param>
+    public string ToString(bool indented) {
+      if (indented) {
+        return JsonConverter.ToJsonIndented(this.dictionary);
+      } else {
+        return JsonConverter.ToJson(this.dictionary);
+      }
+    }
+
+    public IDictionary<string, object> ToDictionary() {
+      return this.dictionary;
     }
 
     #endregion Public members
 
     #region Private members
 
-    private T Convert<T>(object value) {
+    static private T Convert<T>(object value) {
       Assertion.AssertObject(value, "value");
 
+      if (typeof(T) == typeof(object)) {
+        return (T) value;
+      } else if (typeof(T) == value.GetType()) {
+        return (T) value;
+      }
       return (T) System.Convert.ChangeType(value, typeof(T));
     }
 
@@ -129,20 +222,20 @@ namespace Empiria.Data {
 
       object value = this.GetDictionaryValue(itemPath, required);
       if (value == null && required) {
-        // An exception should be thrown from the GetDictionaryValue call above.
+        // An exception should be thrown from the this.GetDictionaryValue call above.
         Assertion.AssertNoReachThisCode();
       }
       if (value == null) {
         return defaultValue;
       } else {
-        return this.Convert<T>(value);
+        return JsonObject.Convert<T>(value);
       }
     }
 
-    private T FindAndParseObject<T>(string itemPath, bool required, T defaultValue) {
+    private T FindInt32AndParseAsObjectId<T>(string itemPath, bool required, T defaultValue) {
       int objectId = this.Find<Int32>(itemPath, required, 0);
       if (objectId == 0 && required) {
-        // An exception should be thrown from the GetDictionaryValue call above.
+        // An exception should be thrown from the this.Find<int32> call above.
         Assertion.AssertNoReachThisCode();
       }
       if (objectId != 0) {
@@ -177,7 +270,7 @@ namespace Empiria.Data {
         if (item[pathMembers[i]] is IDictionary<string, object>) {
           item = (IDictionary<string, object>) item[pathMembers[i]];
         } else {   // This item is a scalar (not a subtree), so the next item
-                   // in the path necessarily doesn't exists.
+                   // in the path necessarily doesn't exist.
           throw new EmpiriaDataException(EmpiriaDataException.Msg.JsonPathItemNotFound,
                                          itemPath, pathMembers[i + 1]);
         }
