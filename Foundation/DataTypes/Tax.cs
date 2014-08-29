@@ -8,6 +8,7 @@
 *  Summary   : Represents a tax.                                                                             *
 *                                                                                                            *
 ********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
 
 namespace Empiria.DataTypes {
 
@@ -21,13 +22,11 @@ namespace Empiria.DataTypes {
 
     #region Constructors and parsers
 
-    public Tax()
-      : base(thisTypeName) {
+    public Tax() : base(thisTypeName) {
 
     }
 
-    protected Tax(string typeName)
-      : base(typeName) {
+    protected Tax(string typeName) : base(typeName) {
       // Empiria Object Type pattern classes always has this constructor. Don't delete
     }
 

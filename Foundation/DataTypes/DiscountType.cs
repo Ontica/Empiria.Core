@@ -22,10 +22,6 @@ namespace Empiria.DataTypes {
 
     #region Constructors and parsers
 
-    public DiscountType() : base(thisTypeName) {
-
-    }
-
     protected DiscountType(string typeName) : base(typeName) {
       // Empiria Object Type pattern classes always has this constructor. Don't delete.
     }

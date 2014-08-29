@@ -30,8 +30,18 @@ namespace Empiria.Contacts {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
+    static private readonly Organization _empty = BaseObject.ParseEmpty<Organization>(thisTypeName);
     static public Organization Empty {
-      get { return BaseObject.ParseEmpty<Organization>(thisTypeName); }
+      get {
+        return _empty.Clone<Organization>();
+      }
+    }
+
+    static private readonly Organization _unknown = BaseObject.ParseUnknown<Organization>(thisTypeName);
+    static public Organization Unknown {
+      get {
+        return _unknown.Clone<Organization>();
+      }
     }
 
     static public new Organization Parse(int id) {

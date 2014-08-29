@@ -45,16 +45,22 @@ namespace Empiria.Contacts {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
-    static public Person Empty {
-      get { return BaseObject.ParseEmpty<Person>(thisTypeName); }
-    }
-
     static public new Person Parse(int id) {
       return BaseObject.Parse<Person>(thisTypeName, id);
     }
 
+    static private readonly Person _empty = BaseObject.ParseEmpty<Person>(thisTypeName);
+    static public Person Empty {
+      get {
+        return _empty.Clone<Person>();
+      }
+    }
+
+    static private readonly Person _unknown = BaseObject.ParseUnknown<Person>(thisTypeName);
     static public Person Unknown {
-      get { return BaseObject.ParseUnknown<Person>(thisTypeName); }
+      get {
+        return _unknown.Clone<Person>();
+      }
     }
 
     #endregion Constructors and parsers

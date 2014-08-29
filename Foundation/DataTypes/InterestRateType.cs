@@ -22,13 +22,7 @@ namespace Empiria.DataTypes {
 
     #region Constructors and parsers
 
-    public InterestRateType()
-      : base(thisTypeName) {
-
-    }
-
-    protected InterestRateType(string typeName)
-      : base(typeName) {
+    protected InterestRateType(string typeName) : base(typeName) {
       // Empiria Object Type pattern classes always has this constructor. Don't delete
     }
 

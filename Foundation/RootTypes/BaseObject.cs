@@ -51,7 +51,8 @@ namespace Empiria {
       this.OnInitialize();
     }
 
-    static public T Create<T>(ObjectTypeInfo typeInfo) where T : BaseObject {
+    //TODO: Review usage
+    static protected T Create<T>(ObjectTypeInfo typeInfo) where T : BaseObject {
       T item = typeInfo.CreateObject<T>();
       item.objectTypeInfo = typeInfo;
 
@@ -109,7 +110,9 @@ namespace Empiria {
     }
 
     static protected T ParseEmpty<T>(string typeName) where T : BaseObject {
-      return BaseObject.Parse<T>(typeName, emptyInstanceId);
+      T emptyInstance = BaseObject.Parse<T>(typeName, emptyInstanceId);
+
+      return emptyInstance.Clone<T>();
     }
 
     static protected T ParseFromBelow<T>(string typeName, int id) where T : BaseObject {
@@ -129,7 +132,9 @@ namespace Empiria {
     }
 
     static protected T ParseUnknown<T>(string typeName) where T : BaseObject {
-      return BaseObject.Parse<T>(typeName, unknownInstanceId);
+      T unknownInstance = BaseObject.Parse<T>(typeName, unknownInstanceId);
+
+      return unknownInstance.Clone<T>();
     }
 
     #endregion Constructors and parsers
@@ -163,14 +168,25 @@ namespace Empiria {
 
     protected internal bool IsSpecialCase {
       get {
-        return (this.objectId == emptyInstanceId || 
+        return (this.objectId == emptyInstanceId ||
                 this.objectId == unknownInstanceId);
+      }
+    }
+
+    protected bool IsUnknownInstance {
+      get {
+        return (this.objectId == unknownInstanceId);
       }
     }
 
     #endregion Public properties
 
     #region Public methods
+
+    /// <summary>Virtual method that creates a shallow copy of the current instance.</summary>
+    protected virtual T Clone<T>() where T : BaseObject {
+      return (T) this.MemberwiseClone();
+    }
 
     protected void DataBind(DataRow row) {
       this.ObjectTypeInfo.DataBind(this, row);
@@ -275,6 +291,10 @@ namespace Empiria {
     }
 
     public void Save() {
+      // Never save special case instances (e.g. Empty or Unknown)
+      if (this.IsSpecialCase) {
+        return;
+      }
       if (this.objectId == 0) {
         this.objectId = OntologyData.GetNextObjectId(this.ObjectTypeInfo);
       }

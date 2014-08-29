@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 
+using Empiria.Collections;
 using Empiria.Ontology.Modeler;
 using Empiria.Reflection;
 
@@ -22,7 +23,6 @@ namespace Empiria.Ontology {
 
     #region Fields
 
-    private ConstructorInfo baseObjectConstructor = null;
     private DataMappingRules dataMappingRules = null;
 
     #endregion Fields
@@ -53,11 +53,11 @@ namespace Empiria.Ontology {
 
     #region Public properties
 
-    public new Empiria.Collections.DoubleKeyList<TypeAssociationInfo> Associations {
+    public new DoubleKeyList<TypeAssociationInfo> Associations {
       get { return base.Associations; }
     }
 
-    public new Empiria.Collections.DoubleKeyList<TypeAttributeInfo> Attributes {
+    public new DoubleKeyList<TypeAttributeInfo> Attributes {
       get { return base.Attributes; }
     }
 
@@ -79,7 +79,7 @@ namespace Empiria.Ontology {
       }
     }
 
-    public new Empiria.Collections.DoubleKeyList<TypeMethodInfo> Methods {
+    public new DoubleKeyList<TypeMethodInfo> Methods {
       get { return base.Methods; }
     }
 
@@ -155,14 +155,28 @@ namespace Empiria.Ontology {
                                                       new Type[] { typeof(string) }, null);
     }
 
+    private ConstructorInfo _baseObjectConstructor = null;
     private T InvokeBaseObjectConstructor<T>() {
-      if (baseObjectConstructor == null) {
-        baseObjectConstructor = GetBaseObjectConstructor();
+      if (_baseObjectConstructor == null) {
+        _baseObjectConstructor = this.GetBaseObjectConstructor();
       }
-      return (T) baseObjectConstructor.Invoke(new object[] { String.Empty });
+      return (T) _baseObjectConstructor.Invoke(new object[] { String.Empty });
     }
 
     #endregion Private methods
+
+
+    public static ObjectTypeInfo Parse<T>() where T : BaseObject {
+      throw new NotImplementedException();
+    }
+
+    public Data.DataOperation GetListDataOperation(string filter, string sort) {
+      string typeFilter = this.TypeIdFieldName + " = " + this.Id;
+
+      string sql = "SELECT * FROM " + this.DataSource + " WHERE " + filter + typeFilter;
+
+      return Data.DataOperation.Parse(sql);
+    }
 
   } // class ObjectTypeInfo
 

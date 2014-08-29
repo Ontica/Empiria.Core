@@ -23,14 +23,16 @@ namespace Empiria.Ontology {
       if (objectTypeInfo.DataSource.StartsWith("qry") || objectTypeInfo.DataSource.StartsWith("get")) {
         return DataReader.GetDataRow(DataOperation.Parse(objectTypeInfo.DataSource, objectId));
       }
-      return GeneralDataOperations.GetEntityById(objectTypeInfo.DataSource, objectTypeInfo.IdFieldName, objectId);
+      return GeneralDataOperations.GetEntityById(objectTypeInfo.DataSource, 
+                                                 objectTypeInfo.IdFieldName, objectId);
     }
 
     static internal DataRow GetBaseObjectDataRow(ObjectTypeInfo objectTypeInfo, string objectId) {
       if (objectTypeInfo.DataSource.StartsWith("qry") || objectTypeInfo.DataSource.StartsWith("get")) {
         return DataReader.GetDataRow(DataOperation.Parse(objectTypeInfo.DataSource, objectId));
       }
-      return GeneralDataOperations.GetEntityByKey(objectTypeInfo.DataSource, objectTypeInfo.NamedIdFieldName, objectId);
+      return GeneralDataOperations.GetEntityByKey(objectTypeInfo.DataSource, 
+                                                  objectTypeInfo.NamedIdFieldName, objectId);
     }
 
     static internal DataTable GetDerivedTypes(int baseTypeId) {
@@ -38,16 +40,15 @@ namespace Empiria.Ontology {
     }
 
     static internal DataTable GetGeneralObjectsDataTable(ObjectTypeInfo objectTypeInfo) {
-      DataOperation dataOp = DataOperation.Parse("qryEOSGeneralObjects", objectTypeInfo.Id);
+      var operation = DataOperation.Parse("qryEOSGeneralObjects", objectTypeInfo.Id);
 
-      return DataReader.GetDataTable(dataOp);
+      return DataReader.GetDataTable(operation);
     }
 
     static internal FixedList<KeyValuePair> GetKeyValueListItems(GeneralList list) {
-      DataOperation dataOp = DataOperation.Parse("qryEOSKeyValueList", list.UniqueCode);
-      DataTable table = DataReader.GetDataTable(dataOp);
+      var operation = DataOperation.Parse("qryEOSKeyValueList", list.UniqueCode);
 
-      return new FixedList<KeyValuePair>((x) => KeyValuePair.Parse(x), table);
+      return DataReader.GetFixedList<KeyValuePair>(operation, (x) => KeyValuePair.Parse(x));
     }
 
     static internal int GetNextObjectId(ObjectTypeInfo objectTypeInfo) {
@@ -61,20 +62,11 @@ namespace Empiria.Ontology {
       return DataWriter.CreateId(typeRelationInfo.DataSource);
     }
 
-    static internal int GetNextTypeId() {
-      return DataWriter.CreateId("EOSTypes");
-    }
-
-    static internal int GetNextTypeRelationId() {
-      return DataWriter.CreateId("EOSTypeRelations");
-    }
-
     static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IStorable source) {
       string filter = GetTableIdFieldEqualsTo(typeRelation.DataSource, typeRelation.TypeRelationIdFieldName,
                                               typeRelation.Id);
       filter += " AND ";
       filter += GetTableIdFieldEqualsTo(typeRelation.DataSource, typeRelation.SourceIdFieldName, source.Id);
-      //string sortExpression = GetFieldName(typeRelation.DataSource, "LinkIndex");
 
       return GeneralDataOperations.GetEntitiesJoined(typeRelation.TargetType.DataSource, typeRelation.DataSource,
                                                      typeRelation.TargetType.IdFieldName, typeRelation.TargetIdFieldName,

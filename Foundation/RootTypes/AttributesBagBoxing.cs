@@ -1,5 +1,5 @@
 ﻿//
-//* Simple attributes bag tha uses an object array (boxing/unboxing). See AttributesBag.
+//* Simple attributes bag that use an object array (boxing/unboxing). See AttributesBag.
 //
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using Empiria.Reflection;
 
 namespace Empiria {
 
-  /// <summary>Simple attributes bag tha uses an object array (boxing/unboxing). 
+  /// <summary>Simple attributes bag that use an object array (boxing/unboxing). 
   /// See AttributesBag.</summary>
   public class AttributesBagBoxing {
 
