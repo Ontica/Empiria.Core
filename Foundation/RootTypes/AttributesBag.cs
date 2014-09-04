@@ -164,7 +164,7 @@ namespace Empiria {
 
 } // namespace Empiria
 
-//public static Dictionary<string, object> DeepClone() {
+//static public Dictionary<string, object> DeepClone() {
 //  if (baseStructure == null) {
 //    baseStructure = GetBaseStructure();
 //  }

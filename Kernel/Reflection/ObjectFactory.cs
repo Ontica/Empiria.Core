@@ -119,6 +119,10 @@ namespace Empiria.Reflection {
       return (type.GetInterface("Empiria.IStorable") != null);
     }
 
+    static public bool IsValueObject(Type type) {
+      return (type.GetInterface("Empiria.IValueObject`1") != null);
+    }
+
     static public object LazyEmptyObject(Type type) {
       Type genericLazy = typeof(LazyObject<>).MakeGenericType(type);
       PropertyInfo property = genericLazy.GetProperty("Empty", BindingFlags.Static | BindingFlags.Public);
@@ -128,6 +132,10 @@ namespace Empiria.Reflection {
 
     static public T ParseObject<T>(int objectId) {
       return (T) ObjectFactory.ParseObject(typeof(T), objectId);
+    }
+
+    public static T ParseValueObject<T>(string value) {
+      return (T) ObjectFactory.ParseValueObject(typeof(T), value);
     }
 
     static public object ParseObject(Type type, int objectId) {
@@ -145,6 +153,21 @@ namespace Empiria.Reflection {
       }
     }
 
+    static public object ParseValueObject(Type type, string value) {
+      try {
+        MethodInfo method = ObjectFactory.GetParseValueMethod(type);
+        Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(string) method.",
+                                                     type.FullName));
+        return method.Invoke(null, new object[] { value });
+      } catch (TargetException e) {
+        throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
+                                      type.FullName + "[ Value = " + value + " ]");
+      } catch (Exception e) {
+        throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
+                                      type.FullName + "[ Value = " + value + " ]");
+      }
+    }
+
     static private PropertyInfo GetEmptyInstanceProperty(Type type) {
       return type.GetProperty("Empty", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public);
     }
@@ -152,6 +175,11 @@ namespace Empiria.Reflection {
     static private MethodInfo GetParseMethod(Type type) {
       return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public,
                             null, CallingConventions.Any, new Type[] { typeof(int) }, null);
+    }
+
+    static private MethodInfo GetParseValueMethod(Type type) {
+      return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public,
+                            null, CallingConventions.Any, new Type[] { typeof(string) }, null);
     }
 
     #endregion Public methods

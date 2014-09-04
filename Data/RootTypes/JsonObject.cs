@@ -21,14 +21,13 @@ namespace Empiria.Data {
 
     private IDictionary<string, object> dictionary = null;
 
-    static public readonly JsonObject Empty = new JsonObject() {IsEmptyInstance = true };
-
     #endregion Fields
 
     #region Constructors and parsers
 
     private JsonObject() {
-      dictionary = new Dictionary<string, object>(0);
+      this.dictionary = new Dictionary<string, object>(0);
+      this.IsEmptyInstance = true;
     }
 
     private JsonObject(IDictionary<string, object> dictionary) {
@@ -38,13 +37,6 @@ namespace Empiria.Data {
       this.IsEmptyInstance = false;
     }
 
-    #endregion Constructors and parsers
-
-    public bool IsEmptyInstance {
-      get;
-      private set;
-    }
-
     static public JsonObject Parse(string jsonString) {
       if (String.IsNullOrWhiteSpace(jsonString)) {
         return JsonObject.Empty;
@@ -52,6 +44,19 @@ namespace Empiria.Data {
       var dictionary = JsonConverter.ToDictionary(jsonString);
       return new JsonObject(dictionary);
     }
+
+    static public JsonObject Empty {
+      get {
+        return new JsonObject();
+      }
+    }
+
+    public bool IsEmptyInstance {
+      get;
+      private set;
+    }
+
+    #endregion Constructors and parsers
 
     #region Public members
 
@@ -113,6 +118,8 @@ namespace Empiria.Data {
       }
       if (ObjectFactory.IsStorable(typeof(T))) {
         return objectsList.ConvertAll<T>((x) => ObjectFactory.ParseObject<T>(System.Convert.ToInt32(x)));
+      } else if (ObjectFactory.IsValueObject(typeof(T))) {
+        return objectsList.ConvertAll<T>((x) => ObjectFactory.ParseValueObject<T>(System.Convert.ToString(x)));
       } else {
         return objectsList.ConvertAll<T>((x) => JsonObject.Convert<T>(x));
       }

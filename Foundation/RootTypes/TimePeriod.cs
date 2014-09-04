@@ -28,7 +28,7 @@ namespace Empiria {
       this.toDate = toDate;
     }
 
-    public static TimePeriod Default {
+    static public TimePeriod Default {
       get {
         return new TimePeriod(ExecutionServer.DateMinValue, ExecutionServer.DateMaxValue);
       }

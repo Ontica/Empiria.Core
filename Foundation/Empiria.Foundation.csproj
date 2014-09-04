@@ -184,11 +184,11 @@
     <Compile Include="RootTypes\AttributesBag.cs" />
     <Compile Include="Ontology.Modeler\DataMappingRules.cs" />
     <Compile Include="RootTypes\AttributesBagBoxing.cs" />
+    <Compile Include="RootTypes\ValueObject.cs" />
     <Compile Include="RootTypes\DataFieldAttribute.cs" />
     <Compile Include="RootTypes\IValueObject.cs" />
     <Compile Include="RootTypes\KeyValuePair.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />
-    <Compile Include="RootTypes\ListItem.cs" />
     <Compile Include="RootTypes\TimePeriod.cs" />
     <Compile Include="RootTypes\ZZDynamicState.cs" />
     <Compile Include="RootTypes\ZZTypeList.cs" />
@@ -285,9 +285,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Ontology\OntologyException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="RootTypes\ValueObject.cs">
       <SubType>Code</SubType>
     </Compile>
     <EmbeddedResource Include="Ontology\OntologyExceptionMsg.resx">

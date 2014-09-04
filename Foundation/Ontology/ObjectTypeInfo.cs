@@ -165,8 +165,7 @@ namespace Empiria.Ontology {
 
     #endregion Private methods
 
-
-    public static ObjectTypeInfo Parse<T>() where T : BaseObject {
+    static public ObjectTypeInfo Parse<T>() where T : BaseObject {
       throw new NotImplementedException();
     }
 

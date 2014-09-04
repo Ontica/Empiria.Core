@@ -11,6 +11,8 @@
 using System;
 using System.Collections.Generic;
 
+using Empiria.Data;
+
 namespace Empiria.Ontology {
 
   /// <summary>Metatype used to describe ValueObject types.</summary>
@@ -48,13 +50,21 @@ namespace Empiria.Ontology {
 
     #region Public methods
 
-    //public TypeAttributeInfo GetAttributeInfo(int id) {
-    //  return base.GetRelationInfo<TypeAttributeInfo>(id);
-    //}
+    /// <summary>Returns a fixed list of value instances that are defined as part of the 
+    /// ValueTypeInfo configuration.</summary>
+    /// <typeparam name="T">The type of the ValueObject instances.</typeparam>
+    /// <typeparam name="U">The type of the stored instances.</typeparam>
+    /// <param name="constructor">Method to call to build T instances from a U instance</param>
+    /// <returns></returns>
+    public FixedList<T> GetValuesList<T, U>(Func<U, T> constructor) where T : ValueObject<U> {
+      var json = JsonObject.Parse(this.ExtensionData);
 
-    //public TypeAttributeInfo GetAttributeInfo(string name) {
-    //  return base.GetRelationInfo<TypeAttributeInfo>(name);
-    //}
+      List<U> list = json.GetList<U>("Values");
+
+      List<T> valueObjectsList = list.ConvertAll<T>((x) => constructor.Invoke(x));
+
+      return valueObjectsList.ToFixedList();
+    }
 
     #endregion Public methods
 

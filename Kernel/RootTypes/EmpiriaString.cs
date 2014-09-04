@@ -203,7 +203,7 @@ namespace Empiria {
       string temp = String.Empty;
       for (int i = 0; i < tokens.Length; i++) {
         string token = tokens[i];
-        if (temp.IndexOf(token + " ") < 0 && !IsNoiseToken(token)) {
+        if (temp.IndexOf(token + " ") < 0 && !IsPrepositionOrConjuntion(token)) {
           temp += token + " ";
         }
       }
@@ -914,6 +914,24 @@ namespace Empiria {
       }
     }
 
+    static public string ToProperNoun(string noun) {
+      Assertion.AssertObject(noun, "noun");
+
+      string[] nounParts = EmpiriaString.TrimAll(noun).Split(' ');
+      string result = String.Empty;
+      foreach(string nounPart in nounParts) {
+        if (result.Length != 0) {
+          result += ' '; 
+        }
+        if (IsPrepositionOrConjuntion(nounPart)) {
+          result += nounPart;  // Prepositions and conjuntions are not capitalized.
+        } else {
+          result += nounPart.Substring(0, 1).ToUpperInvariant() + nounPart.Substring(1);
+        }
+      }
+      return result;
+    }
+
     static public string TrimAll(string source) {
       string temp = TrimAll(source, "  ", " ");
 
@@ -987,8 +1005,9 @@ namespace Empiria {
       return commonCharacters.ToString();
     }
 
-    static private bool IsNoiseToken(string token) {
-      string[] noiseTokens = new String[] { " ", "y", "o", "a", "e", "ó", "la", "el", "los", "las", "lo", "que", "con", "de" };
+    static private bool IsPrepositionOrConjuntion(string token) {
+      string[] noiseTokens = new String[] { " ", "y", "o", "a", "e", "ó", "la", "el", "los", "las", "lo", 
+                                            "que", "con", "de", "del" };
 
       token = token.ToLowerInvariant();
       for (int i = 0; i < noiseTokens.Length; i++) {
