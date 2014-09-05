@@ -180,4 +180,7 @@
   <data name="CannotGetUnderlyingSystemType" xml:space="preserve">
     <value>There was a problem trying to get the underlying system type of Empiria Type '{1}' (id = {0}) using their defined assemblyName '{2}' and className '{3}' values.</value>
   </data>
+  <data name="UnderlyingTypeNotFound" xml:space="preserve">
+    <value>There is none Empiria Type defined matching the underlying system type '{0}'.</value>
+  </data>
 </root>

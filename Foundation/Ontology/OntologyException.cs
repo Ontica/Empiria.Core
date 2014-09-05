@@ -40,6 +40,7 @@ namespace Empiria.Ontology {
       TypeMethodInfoNotFound,
       TypeNamedIdFieldNameNotDefined,
       UndefinedTypeInfoFamily,
+      UnderlyingTypeNotFound,
       WrongAssociatedObjectFound,
       WrongDefaultValueType,
     }

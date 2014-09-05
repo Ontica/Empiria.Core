@@ -23,7 +23,10 @@ namespace Empiria.Ontology {
 
     #region Fields
 
+    static private DoubleKeyList<ObjectTypeInfo> cacheByUnderlyingType = new DoubleKeyList<ObjectTypeInfo>();
+
     private DataMappingRules dataMappingRules = null;
+    private object lockThreadObject = new object();
 
     #endregion Fields
 
@@ -45,8 +48,22 @@ namespace Empiria.Ontology {
       return MetaModelType.Parse<ObjectTypeInfo>(name);
     }
 
-    static public ObjectTypeInfo Empty { 
-      get { return ObjectTypeInfo.Parse(-1); }
+    /// <summary>Returns the base ObjectTypeInfo for objects of type T.</summary>
+    /// <typeparam name="T">The underlying system type associated to the base ObjectTypeInfo
+    /// attempted to parse.</typeparam>
+    /// <returns>The base ObjectTypeInfo for objects of type T.</returns>
+    static public ObjectTypeInfo Parse<T>() where T : BaseObject {
+      string underlyingTypeFullName = typeof(T).FullName;
+      if (!cacheByUnderlyingType.ContainsKey(underlyingTypeFullName)) {
+        lock (cacheByUnderlyingType) {
+          if (!cacheByUnderlyingType.ContainsKey(underlyingTypeFullName)) {
+            var objectTypeInfo = (ObjectTypeInfo) 
+                   ObjectTypeInfo.Parse(OntologyData.GetBaseObjectTypeInfoDataRowWithType(typeof(T)));
+            cacheByUnderlyingType.Add(underlyingTypeFullName, objectTypeInfo);
+          }
+        }  // lock
+      }
+      return cacheByUnderlyingType[underlyingTypeFullName];
     }
 
     #endregion Constructors and parsers
@@ -105,14 +122,34 @@ namespace Empiria.Ontology {
       }
     }
 
+    private ObjectTypeInfo[] _subclassesArray = null;
     public ObjectTypeInfo[] GetSubclasses() {
-      DataTable dataTable = OntologyData.GetDerivedTypes(this.Id);
+      if (_subclassesArray == null) {
+        lock (lockThreadObject) {
+          if (_subclassesArray == null) {
+            DataTable dataTable = OntologyData.GetDerivedTypes(this.Id);
 
-      ObjectTypeInfo[] array = new ObjectTypeInfo[dataTable.Rows.Count];
-      for (int i = 0; i < dataTable.Rows.Count; i++) {
-        array[i] = ObjectTypeInfo.Parse((int) dataTable.Rows[i]["TypeId"]);
+            ObjectTypeInfo[] array = new ObjectTypeInfo[dataTable.Rows.Count];
+            for (int i = 0; i < dataTable.Rows.Count; i++) {
+              array[i] = ObjectTypeInfo.Parse((int) dataTable.Rows[i]["TypeId"]);
+            }
+            _subclassesArray = array;
+          }
+        }  // lock
       }
-      return array;
+      return _subclassesArray;
+    }
+
+    /// <summary>Returns a comma separated string with this ObjectType Id and all 
+    /// their subclasses Id's (e.g. "93, 192, 677")
+    /// </summary>
+    public string GetSubclassesFilter() {
+      ObjectTypeInfo[] subClasses = this.GetSubclasses();
+      string subclassesFilter = this.Id.ToString();
+      foreach (var subclassType in subClasses) {
+        subclassesFilter += "," + subclassType.Id.ToString();
+      }
+      return subclassesFilter;
     }
 
     public bool IsBaseClassOf(ObjectTypeInfo typeInfo) {
@@ -136,11 +173,9 @@ namespace Empiria.Ontology {
 
     #region Private methods
 
-    private object _lockObject = new object();
-
     private void AssertMappingRulesAreLoaded() {
       if (dataMappingRules == null && this.IsDataBound) {
-        lock (_lockObject) {
+        lock (lockThreadObject) {
           if (dataMappingRules == null) {
             dataMappingRules = DataMappingRules.Parse(base.UnderlyingSystemType);
           }
@@ -164,10 +199,6 @@ namespace Empiria.Ontology {
     }
 
     #endregion Private methods
-
-    static public ObjectTypeInfo Parse<T>() where T : BaseObject {
-      throw new NotImplementedException();
-    }
 
     public Data.DataOperation GetListDataOperation(string filter, string sort) {
       string typeFilter = this.TypeIdFieldName + " = " + this.Id;

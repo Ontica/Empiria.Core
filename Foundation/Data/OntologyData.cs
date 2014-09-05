@@ -35,6 +35,17 @@ namespace Empiria.Ontology {
                                                   objectTypeInfo.NamedIdFieldName, objectId);
     }
 
+    static internal DataRow GetBaseObjectTypeInfoDataRowWithType(Type type) {
+      var operation = DataOperation.Parse("qryEOSGetBaseObjectTypeInfoWithTypeName", type.FullName);
+
+      var row = DataReader.GetDataRow(operation);
+      if (row != null) {
+        return row;
+      } else {
+        throw new OntologyException(OntologyException.Msg.UnderlyingTypeNotFound, type.FullName);
+      }
+    }
+
     static internal DataTable GetDerivedTypes(int baseTypeId) {
       return GeneralDataOperations.GetEntitiesByField("EOSTypes", "BaseTypeId", baseTypeId);
     }
