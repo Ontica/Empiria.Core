@@ -38,11 +38,11 @@ namespace Empiria {
     }
 
     static public RulesLibrary Parse(int id) {
-      return BaseObject.Parse<RulesLibrary>(thisTypeName, id);
+      return BaseObject.ParseId<RulesLibrary>(id);
     }
 
     static public RulesLibrary Parse(string rulesLibraryName) {
-      return BaseObject.Parse<RulesLibrary>(thisTypeName, rulesLibraryName);
+      return BaseObject.ParseKey<RulesLibrary>(rulesLibraryName);
     }
 
     #endregion Constructors and parsers

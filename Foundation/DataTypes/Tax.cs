@@ -31,7 +31,7 @@ namespace Empiria.DataTypes {
     }
 
     static public Tax Parse(int id) {
-      return BaseObject.Parse<Tax>(thisTypeName, id);
+      return BaseObject.ParseId<Tax>(id);
     }
 
     #endregion Constructors and parsers

@@ -27,15 +27,15 @@ namespace Empiria.DataTypes {
     }
 
     static public Unit Parse(int id) {
-      return BaseObject.Parse<Unit>(thisTypeName, id);
+      return BaseObject.ParseId<Unit>(id);
     }
 
     static public Unit Parse(string unitNamedKey) {
-      return BaseObject.Parse<Unit>(thisTypeName, unitNamedKey);
+      return BaseObject.ParseKey<Unit>(unitNamedKey);
     }
 
     static public Unit Empty {
-      get { return BaseObject.ParseEmpty<Unit>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<Unit>(); }
     }
 
     static public Unit Percentage {
@@ -55,7 +55,7 @@ namespace Empiria.DataTypes {
     }
 
     static public Unit Unknown {
-      get { return BaseObject.ParseUnknown<Unit>(thisTypeName); }
+      get { return BaseObject.ParseUnknown<Unit>(); }
     }
 
     #endregion Constructors and parsers

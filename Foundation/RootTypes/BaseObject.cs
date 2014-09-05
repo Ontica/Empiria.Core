@@ -59,7 +59,8 @@ namespace Empiria {
       return item;
     }
 
-    static protected T Parse<T>(string typeName, int id) where T : BaseObject {
+    static protected T ParseId<T>(int id) where T : BaseObject {
+      string typeName = ObjectTypeInfo.Parse<T>().Name;
       if (id == 0) {
         throw new OntologyException(OntologyException.Msg.TryToParseZeroObjectId, typeName);
       }
@@ -72,7 +73,9 @@ namespace Empiria {
       return BaseObject.CreateBaseObject<T>(objectData.Item1, objectData.Item2);
     }
 
-    static protected T Parse<T>(string typeName, string namedKey) where T : BaseObject {
+    static protected T ParseKey<T>(string namedKey) where T : BaseObject {
+      string typeName = ObjectTypeInfo.Parse<T>().Name;
+
       T item = cache.GetItem<T>(typeName, namedKey);
       if (item != null) {
         return item;
@@ -91,7 +94,8 @@ namespace Empiria {
       return BaseObject.Parse<T>(typeInfo.Name, dataRow);
     }
 
-    static protected T Parse<T>(string typeName, DataRow dataRow) where T : BaseObject {
+    //TODO: Remove this method
+    static private T Parse<T>(string typeName, DataRow dataRow) where T : BaseObject {
       try {
         ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(typeName, dataRow);
         int objectId = (int) dataRow[derivedTypeInfo.IdFieldName];
@@ -109,8 +113,27 @@ namespace Empiria {
       }
     }
 
-    static protected T ParseEmpty<T>(string typeName) where T : BaseObject {
-      T emptyInstance = BaseObject.Parse<T>(typeName, emptyInstanceId);
+    static protected T Parse<T>(DataRow dataRow) where T : BaseObject {
+      string typeName = ObjectTypeInfo.Parse<T>().Name;
+      try {        
+        ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(typeName, dataRow);
+        int objectId = (int) dataRow[derivedTypeInfo.IdFieldName];
+
+        T item = cache.GetItem<T>(derivedTypeInfo.Name, objectId);
+        if (item != null) {
+          return item;    // Only use dataRow when item is not in cache
+        }
+        return BaseObject.CreateBaseObject<T>(derivedTypeInfo, dataRow);
+      } catch (Exception e) {
+        var exception = new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
+                                              e, typeName);
+        exception.Publish();
+        throw exception;
+      }
+    }
+
+    static protected T ParseEmpty<T>() where T : BaseObject {
+      T emptyInstance = BaseObject.ParseId<T>(emptyInstanceId);
 
       return emptyInstance.Clone<T>();
     }
@@ -131,8 +154,8 @@ namespace Empiria {
       return BaseObject.CreateBaseObject<T>(derivedTypeInfo, dataRow);
     }
 
-    static protected T ParseUnknown<T>(string typeName) where T : BaseObject {
-      T unknownInstance = BaseObject.Parse<T>(typeName, unknownInstanceId);
+    static protected T ParseUnknown<T>() where T : BaseObject {
+      T unknownInstance = BaseObject.ParseId<T>(unknownInstanceId);
 
       return unknownInstance.Clone<T>();
     }

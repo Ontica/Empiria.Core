@@ -44,7 +44,7 @@ namespace Empiria.Security {
     }
 
     static public EmpiriaUser Parse(int id) {
-      return BaseObject.Parse<EmpiriaUser>(thisTypeName, id);
+      return BaseObject.ParseId<EmpiriaUser>(id);
     }
 
     static public EmpiriaUser Current {

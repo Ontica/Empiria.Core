@@ -78,7 +78,7 @@ namespace Empiria.Security {
 
     static public Authorization Empty {
       get {
-        return BaseObject.ParseEmpty<Authorization>(thisTypeName);
+        return BaseObject.ParseEmpty<Authorization>();
       }
     }
 

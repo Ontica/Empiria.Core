@@ -27,15 +27,15 @@ namespace Empiria.DataTypes {
     }
 
     static public InterestRateType Parse(int id) {
-      return BaseObject.Parse<InterestRateType>(thisTypeName, id);
+      return BaseObject.ParseId<InterestRateType>(id);
     }
 
     static public InterestRateType Empty {
-      get { return BaseObject.ParseEmpty<InterestRateType>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<InterestRateType>(); }
     }
 
     static public InterestRateType Unknown {
-      get { return BaseObject.ParseUnknown<InterestRateType>(thisTypeName); }
+      get { return BaseObject.ParseUnknown<InterestRateType>(); }
     }
 
     #endregion Constructors and parsers

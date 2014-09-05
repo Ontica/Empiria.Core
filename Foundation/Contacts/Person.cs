@@ -46,17 +46,17 @@ namespace Empiria.Contacts {
     }
 
     static public new Person Parse(int id) {
-      return BaseObject.Parse<Person>(thisTypeName, id);
+      return BaseObject.ParseId<Person>(id);
     }
 
-    static private readonly Person _empty = BaseObject.ParseEmpty<Person>(thisTypeName);
+    static private readonly Person _empty = BaseObject.ParseEmpty<Person>();
     static public Person Empty {
       get {
         return _empty.Clone<Person>();
       }
     }
 
-    static private readonly Person _unknown = BaseObject.ParseUnknown<Person>(thisTypeName);
+    static private readonly Person _unknown = BaseObject.ParseUnknown<Person>();
     static public Person Unknown {
       get {
         return _unknown.Clone<Person>();

@@ -34,15 +34,15 @@ namespace Empiria {
     }
 
     static public KeyValuePair Parse(int id) {
-      return BaseObject.Parse<KeyValuePair>(thisTypeName, id);
+      return BaseObject.ParseId<KeyValuePair>(id);
     }
 
     static internal KeyValuePair Parse(DataRow row) {
-      return BaseObject.Parse<KeyValuePair>(thisTypeName, row);
+      return BaseObject.Parse<KeyValuePair>(row);
     }
 
     static public KeyValuePair Empty {
-      get { return BaseObject.ParseEmpty<KeyValuePair>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<KeyValuePair>(); }
     }
 
     static public FixedList<KeyValuePair> GetList(string listNamedKey) {

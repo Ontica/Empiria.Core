@@ -30,14 +30,14 @@ namespace Empiria.Contacts {
       // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
     }
 
-    static private readonly Organization _empty = BaseObject.ParseEmpty<Organization>(thisTypeName);
+    static private readonly Organization _empty = BaseObject.ParseEmpty<Organization>();
     static public Organization Empty {
       get {
         return _empty.Clone<Organization>();
       }
     }
 
-    static private readonly Organization _unknown = BaseObject.ParseUnknown<Organization>(thisTypeName);
+    static private readonly Organization _unknown = BaseObject.ParseUnknown<Organization>();
     static public Organization Unknown {
       get {
         return _unknown.Clone<Organization>();
@@ -45,7 +45,7 @@ namespace Empiria.Contacts {
     }
 
     static public new Organization Parse(int id) {
-      return BaseObject.Parse<Organization>(thisTypeName, id);
+      return BaseObject.ParseId<Organization>(id);
     }
 
     #endregion Constructors and parsers

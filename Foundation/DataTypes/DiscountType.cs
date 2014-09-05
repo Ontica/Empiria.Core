@@ -27,18 +27,18 @@ namespace Empiria.DataTypes {
     }
 
     static public DiscountType Parse(int id) {
-      return BaseObject.Parse<DiscountType>(thisTypeName, id);
+      return BaseObject.ParseId<DiscountType>(id);
     }
 
     static public DiscountType Empty {
       get {
-        return BaseObject.ParseEmpty<DiscountType>(thisTypeName);
+        return BaseObject.ParseEmpty<DiscountType>();
       }
     }
 
     static public DiscountType Unknown {
       get {
-        return BaseObject.ParseUnknown<DiscountType>(thisTypeName);
+        return BaseObject.ParseUnknown<DiscountType>();
       }
     }
 

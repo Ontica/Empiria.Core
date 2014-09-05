@@ -41,11 +41,11 @@ namespace Empiria.Contacts {
     }
 
     static public Contact Parse(int id) {
-      return BaseObject.Parse<Contact>(thisTypeName, id);
+      return BaseObject.ParseId<Contact>(id);
     }
 
     static public Contact Parse(DataRow dataRow) {
-      return BaseObject.Parse<Contact>(thisTypeName, dataRow);
+      return BaseObject.Parse<Contact>(dataRow);
     }
 
     static public Contact ParseFromBelow(int id) {

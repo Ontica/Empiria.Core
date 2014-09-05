@@ -34,15 +34,15 @@ namespace Empiria {
     }
 
     static public GeneralList Parse(int id) {
-      return BaseObject.Parse<GeneralList>(thisTypeName, id);
+      return BaseObject.ParseId<GeneralList>(id);
     }
 
     static public GeneralList Parse(string listNamedKey) {
-      return BaseObject.Parse<GeneralList>(thisTypeName, listNamedKey);
+      return BaseObject.ParseKey<GeneralList>(listNamedKey);
     }
 
     static public GeneralList Empty {
-      get { return BaseObject.ParseEmpty<GeneralList>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<GeneralList>(); }
     }
 
     #endregion Constructors and parsers

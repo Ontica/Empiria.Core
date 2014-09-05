@@ -30,7 +30,7 @@ namespace Empiria.Security {
     }
 
     static public WebServer Parse(int id) {
-      return BaseObject.Parse<WebServer>(thisTypeName, id);
+      return BaseObject.ParseId<WebServer>(id);
     }
 
     static public WebServer Current {

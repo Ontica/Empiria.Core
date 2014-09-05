@@ -36,8 +36,8 @@ namespace Empiria {
       // Empiria Object Type pattern classes always have this constructor. Don't delete
     }
 
-    static protected FixedList<T> ParseList<T>(string typeName) where T : BaseObject {
-      ObjectTypeInfo objectTypeInfo = ObjectTypeInfo.Parse(typeName);
+    static protected FixedList<T> ParseList<T>() where T : BaseObject {
+      ObjectTypeInfo objectTypeInfo = ObjectTypeInfo.Parse<T>();
 
       DataTable table = OntologyData.GetGeneralObjectsDataTable(objectTypeInfo);
       List<T> list = new List<T>(table.Rows.Count);

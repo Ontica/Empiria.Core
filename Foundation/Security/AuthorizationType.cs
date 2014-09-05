@@ -32,12 +32,12 @@ namespace Empiria.Security {
     }
 
     static public AuthorizationType Parse(int id) {
-      return BaseObject.Parse<AuthorizationType>(thisTypeName, id);
+      return BaseObject.ParseId<AuthorizationType>(id);
     }
 
     static public AuthorizationType Empty {
       get {
-        return BaseObject.ParseEmpty<AuthorizationType>(thisTypeName);
+        return BaseObject.ParseEmpty<AuthorizationType>();
       }
     }
 

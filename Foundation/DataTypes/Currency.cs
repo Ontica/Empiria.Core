@@ -35,7 +35,7 @@ namespace Empiria.DataTypes {
     }
 
     static public Currency Parse(int id) {
-      return BaseObject.Parse<Currency>(thisTypeName, id);
+      return BaseObject.ParseId<Currency>(id);
     }
 
     static public Currency Default {
@@ -43,15 +43,15 @@ namespace Empiria.DataTypes {
     }
 
     static public Currency Empty {
-      get { return BaseObject.ParseEmpty<Currency>(thisTypeName); }
+      get { return BaseObject.ParseEmpty<Currency>(); }
     }
 
     static public Currency NoLegible {
-      get { return BaseObject.Parse<Currency>(thisTypeName, "NoLegible.Currency"); }
+      get { return BaseObject.ParseKey<Currency>("NoLegible.Currency"); }
     }
 
     static public Currency Unknown {
-      get { return BaseObject.ParseUnknown<Currency>(thisTypeName); }
+      get { return BaseObject.ParseUnknown<Currency>(); }
     }
 
     #endregion Constructors and parsers
