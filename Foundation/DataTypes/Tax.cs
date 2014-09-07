@@ -14,20 +14,10 @@ namespace Empiria.DataTypes {
 
   public class Tax : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.Tax";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public Tax() : base(thisTypeName) {
-
-    }
-
-    protected Tax(string typeName) : base(typeName) {
-      // Empiria Object Type pattern classes always has this constructor. Don't delete
+    private Tax() {
+      // Required by Empiria Framework.
     }
 
     static public Tax Parse(int id) {

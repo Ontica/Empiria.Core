@@ -15,12 +15,6 @@ namespace Empiria.Security {
 
   public sealed class Authorization: BaseObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.Authorization";
-
-    #endregion
-
     #region Member variable declaration
 
     private Guid guid = Guid.NewGuid();
@@ -37,17 +31,12 @@ namespace Empiria.Security {
 
     #region Constructors and parsers
 
-    private Authorization() : base(thisTypeName) {
-
-    }
-
-    private Authorization(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete.
-      // Protected in not sealed classes, private otherwise
+    private Authorization() {
+      // Required by Empiria Framework.
     }
 
     private Authorization(int typeId, int authorizedById, 
-                          int objectId, string code) : base(thisTypeName) {
+                          int objectId, string code) {
       this.typeId = typeId;
       this.authorizedById = authorizedById;
       this.sessionToken = ExecutionServer.CurrentIdentity.Session.Token;

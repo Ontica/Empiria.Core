@@ -14,16 +14,10 @@ namespace Empiria.DataTypes {
 
   public class DiscountType : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.DiscountType";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    protected DiscountType(string typeName) : base(typeName) {
-      // Empiria Object Type pattern classes always has this constructor. Don't delete.
+    private DiscountType() {
+      // Required by Empiria Framework.
     }
 
     static public DiscountType Parse(int id) {

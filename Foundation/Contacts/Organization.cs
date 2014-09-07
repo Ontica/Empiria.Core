@@ -14,20 +14,10 @@ namespace Empiria.Contacts {
 
   public class Organization : Contact {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.Contact.Organization";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    protected Organization() : base(thisTypeName) {
-
-    }
-
-    protected Organization(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    protected Organization() {
+      // Required by Empiria Framework.
     }
 
     static private readonly Organization _empty = BaseObject.ParseEmpty<Organization>();

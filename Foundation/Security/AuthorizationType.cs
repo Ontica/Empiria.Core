@@ -15,20 +15,10 @@ namespace Empiria.Security {
   /// <summary>Represents an autorization type.</summary>
   public class AuthorizationType : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.AuthorizationType";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public AuthorizationType() : base(thisTypeName) {
-
-    }
-
-    protected AuthorizationType(string typeName) : base(typeName) {
-      // Empiria Object Type pattern classes always has this constructor. Don't delete.
+    private AuthorizationType() {
+      // Required by Empiria Framework.
     }
 
     static public AuthorizationType Parse(int id) {

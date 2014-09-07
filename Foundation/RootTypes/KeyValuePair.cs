@@ -16,21 +16,10 @@ namespace Empiria {
   /// <summary>Represents a stored key-value pair that can be used as list items.</summary>
   public class KeyValuePair : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.KeyValuePair";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public KeyValuePair() : base(thisTypeName) {
-
-    }
-
-    protected KeyValuePair(string typeName)
-      : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private KeyValuePair() {
+      // Required by Empiria Framework.
     }
 
     static public KeyValuePair Parse(int id) {
@@ -38,7 +27,7 @@ namespace Empiria {
     }
 
     static internal KeyValuePair Parse(DataRow row) {
-      return BaseObject.Parse<KeyValuePair>(row);
+      return BaseObject.ParseDataRow<KeyValuePair>(row);
     }
 
     static public KeyValuePair Empty {

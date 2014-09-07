@@ -19,22 +19,14 @@ namespace Empiria {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.GeneralObject.RulesLibrary";
-
     private BusinessRule[] rules = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    public RulesLibrary()
-      : this(thisTypeName) {
-
-    }
-
-    protected RulesLibrary(string typeName)
-      : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private RulesLibrary() {
+      // Required by Empiria Framework.
     }
 
     static public RulesLibrary Parse(int id) {

@@ -35,8 +35,8 @@ namespace Empiria.Contacts {
 
     #region Constructors and parsers
 
-    internal TempAddress() : base() {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private TempAddress() {
+
     }
 
     static public TempAddress Empty {

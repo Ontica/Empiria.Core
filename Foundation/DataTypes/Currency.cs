@@ -18,20 +18,12 @@ namespace Empiria.DataTypes {
 
     static readonly int defaultCurrencyId = ConfigurationData.GetInteger("Default.Currency.ID");
 
-    private const string thisTypeName = "ObjectType.GeneralObject.Currency";
-
     #endregion Fields
 
     #region Constructors and parsers
 
-    public Currency()
-      : base(thisTypeName) {
-
-    }
-
-    protected Currency(string typeName)
-      : base(typeName) {
-      // Empiria Object Type pattern classes always has this constructor. Don't delete
+    private Currency() {
+      // Required by Empiria Framework.
     }
 
     static public Currency Parse(int id) {

@@ -14,16 +14,10 @@ namespace Empiria.DataTypes {
 
   public class Unit : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.Unit";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    protected Unit(string typeName) : base(typeName) {
-      // Empiria Object Type pattern classes always has this constructor. Don't delete.
+    protected Unit() {
+      // Required by Empiria Framework.
     }
 
     static public Unit Parse(int id) {

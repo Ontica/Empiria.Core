@@ -25,8 +25,6 @@ namespace Empiria.Contacts {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.Contact.Person";
-
     private string firstName = String.Empty;
     private string lastName = String.Empty;
     private string lastName2 = String.Empty;
@@ -37,12 +35,8 @@ namespace Empiria.Contacts {
 
     #region Constructors and parsers
 
-    public Person() : base(thisTypeName) {
-
-    }
-
-    protected Person(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private Person() {
+      // Required by Empiria Framework.
     }
 
     static public new Person Parse(int id) {

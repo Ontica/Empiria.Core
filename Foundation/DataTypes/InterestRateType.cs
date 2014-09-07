@@ -14,16 +14,10 @@ namespace Empiria.DataTypes {
 
   public class InterestRateType : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.InterestRateType";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    protected InterestRateType(string typeName) : base(typeName) {
-      // Empiria Object Type pattern classes always has this constructor. Don't delete
+    private InterestRateType() {
+      // Required by Empiria Framework.
     }
 
     static public InterestRateType Parse(int id) {

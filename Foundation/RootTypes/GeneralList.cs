@@ -15,22 +15,10 @@ namespace Empiria {
   /// <summary>Represents a list type that holds BaseObject instances.</summary>
   public class GeneralList : GeneralObject {
 
-    #region Fields
-
-    private const string thisTypeName = "ObjectType.GeneralObject.GeneralList";
-
-    #endregion Fields
-
     #region Constructors and parsers
 
-    public GeneralList()
-      : base(thisTypeName) {
-
-    }
-
-    protected GeneralList(string typeName)
-      : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private GeneralList() {
+      // Required by Empiria Framework.
     }
 
     static public GeneralList Parse(int id) {

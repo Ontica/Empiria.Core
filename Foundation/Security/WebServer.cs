@@ -17,16 +17,14 @@ namespace Empiria.Security {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.GeneralObject.WebServer";
-
     static private WebServer currentServer = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    private WebServer(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private WebServer() {
+      // Required by Empiria Framework.
     }
 
     static public WebServer Parse(int id) {

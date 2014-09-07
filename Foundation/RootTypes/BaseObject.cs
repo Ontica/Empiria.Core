@@ -41,15 +41,31 @@ namespace Empiria {
 
     #region Constructors and parsers
 
-    protected BaseObject(string typeName) {
-      if (typeName.Length != 0) {   // If typeName.Length == 0, then is invoked with Parsing using reflection
-        objectTypeInfo = ObjectTypeInfo.Parse(typeName);
-        if (objectTypeInfo.IsDataBound) {
-          objectTypeInfo.InitializeObject(this);
-        }
+    protected BaseObject() {
+      objectTypeInfo = ObjectTypeInfo.Parse(this.GetType());
+      if (objectTypeInfo.IsDataBound) {
+        objectTypeInfo.InitializeObject(this);
       }
       this.OnInitialize();
     }
+
+    protected BaseObject(ObjectTypeInfo powertype) {
+      objectTypeInfo = powertype;
+      if (objectTypeInfo.IsDataBound) {
+        objectTypeInfo.InitializeObject(this);
+      }
+      this.OnInitialize();
+    }
+
+    //protected BaseObject(string typeName) {
+    //  if (typeName.Length != 0) {   // If typeName.Length == 0, then is invoked with Parsing using reflection
+    //    objectTypeInfo = ObjectTypeInfo.Parse(typeName);
+    //    if (objectTypeInfo.IsDataBound) {
+    //      objectTypeInfo.InitializeObject(this);
+    //    }
+    //  }
+    //  this.OnInitialize();
+    //}
 
     //TODO: Review usage
     static protected T Create<T>(ObjectTypeInfo typeInfo) where T : BaseObject {
@@ -85,6 +101,8 @@ namespace Empiria {
       return BaseObject.CreateBaseObject<T>(objectData.Item1, objectData.Item2);
     }
 
+
+    // TODO: review usage /// GeneralObject + TypeAssociationInfo
     static internal T Parse<T>(ObjectTypeInfo typeInfo, DataRow dataRow) where T : BaseObject {
       Type t = typeof(T);
       T item = cache.GetItem<T>(typeInfo.Name, (int) dataRow[typeInfo.IdFieldName]);
@@ -94,9 +112,9 @@ namespace Empiria {
       return BaseObject.Parse<T>(typeInfo.Name, dataRow);
     }
 
-    //TODO: Remove this method
-    static private T Parse<T>(string typeName, DataRow dataRow) where T : BaseObject {
-      try {
+    static protected T ParseDataRow<T>(DataRow dataRow) where T : BaseObject {
+      string typeName = ObjectTypeInfo.Parse<T>().Name;
+      try {        
         ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(typeName, dataRow);
         int objectId = (int) dataRow[derivedTypeInfo.IdFieldName];
 
@@ -113,9 +131,9 @@ namespace Empiria {
       }
     }
 
-    static protected T Parse<T>(DataRow dataRow) where T : BaseObject {
-      string typeName = ObjectTypeInfo.Parse<T>().Name;
-      try {        
+    //TODO: Remove this method
+    static private T Parse<T>(string typeName, DataRow dataRow) where T : BaseObject {
+      try {
         ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(typeName, dataRow);
         int objectId = (int) dataRow[derivedTypeInfo.IdFieldName];
 
@@ -138,7 +156,8 @@ namespace Empiria {
       return emptyInstance.Clone<T>();
     }
 
-    static protected T ParseFromBelow<T>(string typeName, int id) where T : BaseObject {
+    static protected T ParseFromBelow<T>(int id) where T : BaseObject {
+      string typeName = ObjectTypeInfo.Parse<T>().Name;
       if (id == 0) {
         Assertion.Assert(id != 0, new OntologyException(OntologyException.Msg.TryToParseZeroObjectId,
                                                         typeName));
@@ -148,7 +167,9 @@ namespace Empiria {
       return BaseObject.CreateBaseObject<T>(objectData.Item1, objectData.Item2);
     }
 
-    static protected T ParseFromBelow<T>(string typeName, DataRow dataRow) where T : BaseObject {
+    static protected T ParseFromBelow<T>(DataRow dataRow) where T : BaseObject {
+      string typeName = ObjectTypeInfo.Parse<T>().Name;
+
       ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(typeName, dataRow);
 
       return BaseObject.CreateBaseObject<T>(derivedTypeInfo, dataRow);
@@ -326,6 +347,8 @@ namespace Empiria {
       cache.Insert(this);
     }
 
+
+    // TODO: Review usage only in FilesFolder
     protected DataRow GetDataRow() {
       return OntologyData.GetBaseObjectDataRow(this.ObjectTypeInfo, this.Id);
     }
@@ -421,6 +444,10 @@ namespace Empiria {
     }
 
     protected FixedList<T> GetAssociations<T>(Predicate<T> predicate) where T : IStorable {
+      throw new NotImplementedException();
+    }
+
+    protected void ReclassifyAs(ObjectTypeInfo newObjectTypeInfo) {
       throw new NotImplementedException();
     }
 

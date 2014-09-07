@@ -53,12 +53,17 @@ namespace Empiria.Ontology {
     /// attempted to parse.</typeparam>
     /// <returns>The base ObjectTypeInfo for objects of type T.</returns>
     static public ObjectTypeInfo Parse<T>() where T : BaseObject {
-      string underlyingTypeFullName = typeof(T).FullName;
+      return ObjectTypeInfo.Parse(typeof(T));
+    }
+
+    static internal ObjectTypeInfo Parse(Type type) {
+      string underlyingTypeFullName = type.FullName;
+
       if (!cacheByUnderlyingType.ContainsKey(underlyingTypeFullName)) {
         lock (cacheByUnderlyingType) {
           if (!cacheByUnderlyingType.ContainsKey(underlyingTypeFullName)) {
-            var objectTypeInfo = (ObjectTypeInfo) 
-                   ObjectTypeInfo.Parse(OntologyData.GetBaseObjectTypeInfoDataRowWithType(typeof(T)));
+            var objectTypeInfo = (ObjectTypeInfo)
+                   ObjectTypeInfo.Parse(OntologyData.GetBaseObjectTypeInfoDataRowWithType(type));
             cacheByUnderlyingType.Add(underlyingTypeFullName, objectTypeInfo);
           }
         }  // lock
@@ -183,19 +188,21 @@ namespace Empiria.Ontology {
       }
     }
 
+    /// <summary>Gets the type default constructor, public or private, that takes no parameters.</summary>
     private ConstructorInfo GetBaseObjectConstructor() {
       return this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
                                                       BindingFlags.NonPublic,
                                                       null, CallingConventions.HasThis,
-                                                      new Type[] { typeof(string) }, null);
+                                                      new Type[0], null);
     }
 
     private ConstructorInfo _baseObjectConstructor = null;
+    /// <summary>Creates a new instance of type T invoking its default constructor.</summary>
     private T InvokeBaseObjectConstructor<T>() {
       if (_baseObjectConstructor == null) {
         _baseObjectConstructor = this.GetBaseObjectConstructor();
       }
-      return (T) _baseObjectConstructor.Invoke(new object[] { String.Empty });
+      return (T) _baseObjectConstructor.Invoke(null);
     }
 
     #endregion Private methods

@@ -2,11 +2,11 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
 *  Namespace : Empiria                                          Assembly : Empiria.dll                       *
-*  Type      : PowerType                                        Pattern  : Abstract Class                    *
+*  Type      : Powertype                                        Pattern  : Abstract Class                    *
 *  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
-*  Summary   : A power type is a an object type whose instances are subtypes of another object type, named   *
-*              the partitioned type. Powertyping enables dynamic specialization.                             *
+*  Summary   : A powertype is a an object type whose instances are subtypes of another object type, named    *
+*              the partitioned type. Powertypes enables dynamic specialization.                              *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -16,9 +16,9 @@ using Empiria.Reflection;
 
 namespace Empiria {
 
-  /// <summary>A power type is a an object type whose instances are subtypes of another object type, named 
-  ///the partitioned type. Powertyping enables dynamic specialization.</summary>
-  public abstract class PowerType<T> : ObjectTypeInfo where T : BaseObject {
+  /// <summary>A powertype is a an object type whose instances are subtypes of another object type, named 
+  ///the partitioned type. Powertypes enables dynamic specialization.</summary>
+  public abstract class Powertype<T> : ObjectTypeInfo where T : BaseObject {
 
     #region Fields
 
@@ -29,12 +29,12 @@ namespace Empiria {
 
     #region Constructors and parsers
 
-    protected PowerType(string powerTypeName, int typeId) : base(typeId) {
+    protected Powertype(string powerTypeName, int typeId) : base(typeId) {
       this.powerTypeInfo = PowerTypeInfo.Parse(powerTypeName);
       this.partitionedType = ObjectTypeInfo.Parse(typeId);
     }
 
-    static public new U Parse<U>(int typeId) where U : PowerType<T> {
+    static public new U Parse<U>(int typeId) where U : Powertype<T> {
       ObjectTypeInfo typeInfo = ObjectTypeInfo.Parse(typeId);
       if (typeInfo is U) {
         return (U) typeInfo;
@@ -43,7 +43,7 @@ namespace Empiria {
       }
     }
 
-    static public U Parse<U>(ObjectTypeInfo typeInfo) where U : PowerType<T> {
+    static public U Parse<U>(ObjectTypeInfo typeInfo) where U : Powertype<T> {
       if (typeInfo is U) {
         return (U) typeInfo;
       } else {
@@ -73,10 +73,11 @@ namespace Empiria {
 
     protected T CreateInstance() {
       return (T) ObjectFactory.CreateObject(partitionedType.UnderlyingSystemType, 
-                                            new Type[] { typeof(string) },
-                                            new object[] { partitionedType.Name });
+                                            new Type[] { typeof(ObjectTypeInfo) },
+                                            new object[] { partitionedType });
     }
 
+    // TODO: Review usage
     protected FixedList<U> GetLinks<U>(string name) where U : BaseObject {
       return powerTypeInfo.GetLinks<U>(partitionedType, name);
     }
@@ -89,6 +90,6 @@ namespace Empiria {
 
     #endregion Public methods
 
-  } // class PowerType
+  } // class Powertype
 
 } // namespace Empiria

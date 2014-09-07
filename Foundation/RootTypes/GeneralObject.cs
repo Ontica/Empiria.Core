@@ -23,8 +23,6 @@ namespace Empiria {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.GeneralObject";
-
     /// <summary>Use this field name in derived types to access extended fields items.</summary>
     protected const string ExtensionDataFieldName = "GeneralObjectExtData";
 
@@ -32,8 +30,8 @@ namespace Empiria {
 
     #region Constructors and parsers
 
-    protected GeneralObject(string typeName) : base(typeName) {
-      // Empiria Object Type pattern classes always have this constructor. Don't delete
+    protected GeneralObject() {
+      // Required by Empiria Framework.
     }
 
     static protected FixedList<T> ParseList<T>() where T : BaseObject {

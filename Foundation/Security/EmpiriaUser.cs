@@ -20,8 +20,6 @@ namespace Empiria.Security {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.EmpiriaUser";
-
     private string userName = String.Empty;
     private bool isActive = false;
     private string namedKey = String.Empty;
@@ -33,14 +31,8 @@ namespace Empiria.Security {
 
     #region Constructors and parsers
 
-    public EmpiriaUser()
-      : base(thisTypeName) {
-
-    }
-
-    private EmpiriaUser(string typeName)
-      : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    private EmpiriaUser() {
+      // Required by Empiria Framework.
     }
 
     static public EmpiriaUser Parse(int id) {

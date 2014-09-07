@@ -18,8 +18,6 @@ namespace Empiria.Contacts {
 
     #region Fields
 
-    private const string thisTypeName = "ObjectType.Contact";
-
     private string fullName = String.Empty;
     private string alias = String.Empty;
     private string nickname = String.Empty;
@@ -36,8 +34,8 @@ namespace Empiria.Contacts {
 
     #region Constructors and parsers
 
-    protected Contact(string typeName) : base(typeName) {
-      // Required by Empiria Framework. Do not delete. Protected in not sealed classes, private otherwise
+    protected Contact() {
+      // Required by Empiria Framework.
     }
 
     static public Contact Parse(int id) {
@@ -45,11 +43,11 @@ namespace Empiria.Contacts {
     }
 
     static public Contact Parse(DataRow dataRow) {
-      return BaseObject.Parse<Contact>(dataRow);
+      return BaseObject.ParseDataRow<Contact>(dataRow);
     }
 
     static public Contact ParseFromBelow(int id) {
-      return BaseObject.ParseFromBelow<Contact>(thisTypeName, id);
+      return BaseObject.ParseFromBelow<Contact>(id);
     }
 
     static public FixedList<Contact> GetList(string filter) {
