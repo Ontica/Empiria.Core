@@ -157,7 +157,7 @@ namespace Empiria.Collections {
         return null;
       } // if
     }
-
+ 
     bool ICollection<T>.Remove(T item) {
       throw new NotImplementedException();
     }

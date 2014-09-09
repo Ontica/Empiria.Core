@@ -44,18 +44,14 @@ namespace Empiria {
 
     #region Internal methods
 
-    internal new void Clear() {
-      base.Clear();
-    }
-
     internal void Insert(BaseObject item) {
       string typeInfoName = item.ObjectTypeInfo.Name;
 
       // Empty and Unknown instances are unique per type, so don't create their base objects inside
       // the inheritance hierarchy.
       // Example: ReadItem.Book.Fiction.Empty generates only one item in the cache
-      // ('-1.ReadItem.Book.Fiction'), but not '-1.ReadItem.Book' That's because 
-      // ReadItem.Book.Empty could be defined and also it will use the same id but for its own type: 
+      // ('-1.ReadItem.Book.Fiction'), but not '-1.ReadItem.Book' That's because
+      // ReadItem.Book.Empty could be defined and also it will use the same id but for its own type:
       // '-1.ReadItem.Book' of type Book. SpecialCase instances are unique and static per type
       if (item.IsSpecialCase) {
         base.Insert(typeInfoName, item);
@@ -87,6 +83,10 @@ namespace Empiria {
           break;
         }
       }
+    }
+
+    internal void Remove(BaseObject item) {
+      
     }
 
     #endregion Internal methods

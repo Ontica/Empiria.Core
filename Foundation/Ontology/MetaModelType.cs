@@ -21,17 +21,18 @@ using Empiria.Reflection;
 namespace Empiria.Ontology {
 
   public enum MetaModelTypeFamily {
-    MetaModelType = 1,
-    ObjectType = 2,
-    FundamentalType = 3,
-    EnumerationType = 4,
-    ValueType = 5,
-    RelationType = 6,
-    MethodType = 7,
-    RuleType = 8,
-    PowerType = 9,
-    InterfaceType = 10,
-    StaticType = 11,
+    EnumerationType,
+    FundamentalType,
+    InterfaceType,
+    MetaModelType,
+    MethodType,
+    ObjectType,
+    PartitionedType,
+    PowerType,
+    RelationType,
+    RuleType,
+    StaticType,
+    ValueType,
   }
 
   public abstract class MetaModelType : IStorable {
@@ -80,13 +81,13 @@ namespace Empiria.Ontology {
     protected internal MetaModelType(MetaModelTypeFamily typeFamily, int id) {
       this.typeFamily = typeFamily;
       if (id != 0) {
-        Load(OntologyData.GetTypeDataRow(id), id.ToString());
+        Load(OntologyData.GetTypeDataRow(id));
       }
     }
 
     protected internal MetaModelType(MetaModelTypeFamily typeFamily, string empiriaTypeName) {
       this.typeFamily = typeFamily;
-      Load(OntologyData.GetTypeDataRow(empiriaTypeName), empiriaTypeName);
+      Load(OntologyData.GetTypeDataRow(empiriaTypeName));
     }
 
     static internal MetaModelType Parse(int typeId) {
@@ -106,8 +107,8 @@ namespace Empiria.Ontology {
     static protected MetaModelType Parse(DataRow row) {
       MetaModelTypeFamily typeFamily = MetaModelType.ParseMetaModelTypeFamily((string) row["TypeFamily"]);
 
-      MetaModelType instance = CreateInstance(typeFamily);
-      instance.Load(row, ((int) row["TypeId"]).ToString());
+      MetaModelType instance = MetaModelType.CreateInstance(typeFamily, row);
+      instance.Load(row);
 
       return instance;
     }
@@ -140,7 +141,8 @@ namespace Empiria.Ontology {
       }
     }
 
-    static private MetaModelType CreateInstance(MetaModelTypeFamily typeFamily) {
+    static private MetaModelType CreateInstance(MetaModelTypeFamily typeFamily, 
+                                                DataRow row) {
       Type[] parTypes = new Type[] { typeof(int) };
       object[] pars = new object[] { 0 };
 
@@ -151,10 +153,27 @@ namespace Empiria.Ontology {
           return ObjectFactory.CreateObject<ObjectTypeInfo>(parTypes, pars);
         case MetaModelTypeFamily.FundamentalType:
           return ObjectFactory.CreateObject<FundamentalTypeInfo>(parTypes, pars);
+        case MetaModelTypeFamily.PowerType:
+          int typeId = (int) row["TypeId"];
+          string assembly = (string) row["AssemblyName"];
+          string className = (string) row["ClassName"];
+          Type type = ObjectFactory.GetType(assembly, className);
+
+          return (Powertype) ObjectFactory.CreateObject(type, parTypes,
+                                                        new object[] { typeId });
+        case MetaModelTypeFamily.PartitionedType:
+          typeId = (int) row["TypeId"];
+          assembly = (string) row["AssemblyName"];
+          className = (string) row["ClassName"];
+          type = ObjectFactory.GetType(assembly, className);
+
+          var attribute = (PartitionedTypeAttribute) 
+                           Attribute.GetCustomAttribute(type, typeof(PartitionedTypeAttribute));
+          
+          return (Powertype) ObjectFactory.CreateObject(attribute.Powertype, parTypes,
+                                                        new object[] { typeId });
         case MetaModelTypeFamily.StaticType:
           return ObjectFactory.CreateObject<StaticTypeInfo>(parTypes, pars);
-        case MetaModelTypeFamily.PowerType:
-          return ObjectFactory.CreateObject<PowerTypeInfo>(parTypes, pars);
         case MetaModelTypeFamily.EnumerationType:
           return ObjectFactory.CreateObject<EnumerationTypeInfo>(parTypes, pars);
         case MetaModelTypeFamily.ValueType:
@@ -162,7 +181,7 @@ namespace Empiria.Ontology {
         case MetaModelTypeFamily.RuleType:
           return ObjectFactory.CreateObject<RuleTypeInfo>(parTypes, pars);
         default:
-          throw new OntologyException(OntologyException.Msg.TypeInfoNotFound, typeFamily.ToString());
+          throw Assertion.AssertNoReachThisCode();
       }
     }
 
@@ -396,8 +415,8 @@ namespace Empiria.Ontology {
       }
     }
 
-    private void Load(DataRow dataRow, string parsingValue) {
-      Validate(dataRow, parsingValue);
+    private void Load(DataRow dataRow) {
+      Validate(dataRow);
       LoadDataRow(dataRow);
       if (!cache.ContainsId(this.Id)) {
         cache.Add(this.Name, this);
@@ -470,10 +489,17 @@ namespace Empiria.Ontology {
       }
     }
 
-    private void Validate(DataRow dataRow, string typeIdentifier) {
-      if (this.typeFamily != ParseMetaModelTypeFamily((string) dataRow["TypeFamily"])) {
+    private void Validate(DataRow dataRow) {
+      MetaModelTypeFamily readedFamily = ParseMetaModelTypeFamily((string) dataRow["TypeFamily"]);
+
+      if (this.typeFamily == MetaModelTypeFamily.ObjectType && 
+          (readedFamily == MetaModelTypeFamily.PartitionedType || 
+           readedFamily == MetaModelTypeFamily.PowerType)) {
+        return;
+      }
+      if (this.typeFamily != readedFamily) {
         throw new OntologyException(OntologyException.Msg.TypeInfoFamilyNotMatch,
-                                    typeIdentifier, this.typeFamily.ToString());
+                                    this.Id, this.typeFamily.ToString());
       }
     }
 

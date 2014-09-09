@@ -1,18 +1,18 @@
 ﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
-*  Namespace : Empiria.Ontology.Modeler                         Assembly : Empiria.dll                       *
-*  Type      : DataMappingRules                                 Pattern  : Attribute class                   *
+*  Namespace : Empiria                                          Assembly : Empiria.dll                       *
+*  Type      : DataFieldAttribute                               Pattern  : Attribute class                   *
 *  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
-*  Summary   : Represents data source field information for automatic object loading.                        *
+*  Summary   : Describes data source field information for automatic object loading.                         *
 *                                                                                                            *
 ********************************* Copyright (c) 2014-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria {
 
-  /// <summary>Represents data source field information for automatic object loading.</summary>
+  /// <summary>Describes data source field information for automatic object loading.</summary>
   [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
   public class DataFieldAttribute : Attribute {
 

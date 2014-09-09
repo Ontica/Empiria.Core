@@ -149,48 +149,6 @@ namespace Empiria.Ontology {
       return list.ToFixedList();
     }
 
-    // Object 1..* MetaModelType relation
-    internal FixedList<T> GetTypeLinks<T>(BaseObject source) where T : MetaModelType {
-      DataTable table = OntologyData.GetObjectLinksTable(this, source);
-
-      var list = new List<T>(table.Rows.Count);
-
-      if (this.TargetType.TypeFamily == MetaModelTypeFamily.PowerType) {
-        Type powerTypeSystemType = this.TargetType.UnderlyingSystemType;
-        foreach (DataRow row in table.Rows) {
-          T item = (T) ObjectFactory.ParseObject(powerTypeSystemType, (int) row[this.TargetType.IdFieldName]);
-          list.Add(item);
-        }
-        return list.ToFixedList();
-      } else {
-        foreach (DataRow row in table.Rows) {
-          list.Add(MetaModelType.Parse<T>((int) row[this.TargetType.IdFieldName]));
-        }
-        return list.ToFixedList();
-      }
-    }
-
-    // MetaModelType -> MetaModelType relation
-    internal FixedList<T> GetTypeLinks<T>(MetaModelType source) where T : MetaModelType {
-      DataTable table = OntologyData.GetObjectLinksTable(this, source);
-
-      var list = new List<T>(table.Rows.Count);
-
-      if (this.TargetType.TypeFamily == MetaModelTypeFamily.PowerType) {
-        Type powerTypeSystemType = this.TargetType.UnderlyingSystemType;
-        for (int i = 0; i < table.Rows.Count; i++) {
-          T item = (T) ObjectFactory.ParseObject(powerTypeSystemType, (int) table.Rows[i][this.TargetType.IdFieldName]);
-          list.Add(item);
-        }
-        return list.ToFixedList();
-      } else {
-        for (int i = 0; i < table.Rows.Count; i++) {
-          list.Add(MetaModelType.Parse<T>((int) table.Rows[i][this.TargetType.IdFieldName]));
-        }
-        return list.ToFixedList();
-      }
-    }
-
     internal FixedList<TypeAssociationInfo> GetAssociationLinks(BaseObject source) {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 

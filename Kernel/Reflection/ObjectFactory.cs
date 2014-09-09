@@ -17,36 +17,34 @@ namespace Empiria.Reflection {
 
     #region Public methods
 
-    static public object CreateObject(Type objectType) {
-      return CreateObject(objectType, new Type[] { }, new object[] { });
+    static public object CreateObject(Type type) {
+      return CreateObject(type, new Type[] { }, new object[] { });
     }
 
     static public T CreateObject<T>() {
       return (T) CreateObject(typeof(T), new Type[] { }, new object[] { });
     }
 
-    static public object CreateObject(Type objectType, Type[] parametersTypes, object[] parameters) {
+    static public object CreateObject(Type type, Type[] parametersTypes, object[] parameters) {
       try {
-        ConstructorInfo constructor = objectType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
-                                                                BindingFlags.NonPublic,
-                                                                null, CallingConventions.HasThis,
-                                                                parametersTypes, null);
+        var constructor = type.GetConstructor(BindingFlags.Instance | BindingFlags.Public | 
+                                              BindingFlags.NonPublic, null, CallingConventions.HasThis,
+                                              parametersTypes, null);
         return constructor.Invoke(parameters);
       } catch (TargetInvocationException innerException) {
         throw new ReflectionException(ReflectionException.Msg.ConstructorExecutionFails, innerException,
-                                      objectType.FullName);
+                                      type.FullName);
       } catch (Exception innerException) {
         throw new ReflectionException(ReflectionException.Msg.ConstructorNotDefined,
-                                       innerException, objectType.FullName);
+                                       innerException, type.FullName);
       }
     }
 
     static public T CreateObject<T>(Type[] parametersTypes, object[] parameters) {
       try {
-        ConstructorInfo constructor = typeof(T).GetConstructor(BindingFlags.Instance | BindingFlags.Public |
-                                                               BindingFlags.NonPublic,
-                                                               null, CallingConventions.HasThis,
-                                                               parametersTypes, null);
+        var constructor = typeof(T).GetConstructor(BindingFlags.Instance | BindingFlags.Public |
+                                                   BindingFlags.NonPublic, null, CallingConventions.HasThis,
+                                                   parametersTypes, null);
         return (T) constructor.Invoke(parameters);
       } catch (TargetInvocationException innerException) {
         throw new ReflectionException(ReflectionException.Msg.ConstructorExecutionFails, innerException,
@@ -155,7 +153,7 @@ namespace Empiria.Reflection {
 
     static public object ParseValueObject(Type type, string value) {
       try {
-        MethodInfo method = ObjectFactory.GetParseValueMethod(type);
+        MethodInfo method = ObjectFactory.GetParseStringMethod(type);
         Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(string) method.",
                                                      type.FullName));
         return method.Invoke(null, new object[] { value });
@@ -177,7 +175,7 @@ namespace Empiria.Reflection {
                             null, CallingConventions.Any, new Type[] { typeof(int) }, null);
     }
 
-    static private MethodInfo GetParseValueMethod(Type type) {
+    static private MethodInfo GetParseStringMethod(Type type) {
       return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public,
                             null, CallingConventions.Any, new Type[] { typeof(string) }, null);
     }

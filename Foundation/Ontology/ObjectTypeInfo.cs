@@ -40,8 +40,16 @@ namespace Empiria.Ontology {
 
     }
 
-    static public new ObjectTypeInfo Parse(int id) {
-      return MetaModelType.Parse<ObjectTypeInfo>(id);
+    static public new ObjectTypeInfo Parse(int typeId) {
+      return MetaModelType.Parse<ObjectTypeInfo>(typeId);
+    }
+
+    static public new T Parse<T>(int typeId) where T : ObjectTypeInfo {
+      return MetaModelType.Parse<T>(typeId);
+    }
+
+    static public new T Parse<T>(string typeName) where T : ObjectTypeInfo {
+      return MetaModelType.Parse<T>(typeName);
     }
 
     static public new ObjectTypeInfo Parse(string name) {
@@ -62,8 +70,15 @@ namespace Empiria.Ontology {
       if (!cacheByUnderlyingType.ContainsKey(underlyingTypeFullName)) {
         lock (cacheByUnderlyingType) {
           if (!cacheByUnderlyingType.ContainsKey(underlyingTypeFullName)) {
-            var objectTypeInfo = (ObjectTypeInfo)
-                   ObjectTypeInfo.Parse(OntologyData.GetBaseObjectTypeInfoDataRowWithType(type));
+            Type powertypeType = ObjectTypeInfo.TryGetPowertypeType(type);
+            ObjectTypeInfo objectTypeInfo = null;
+            if (powertypeType != null) {
+              int typeId = (int) OntologyData.GetBaseObjectTypeInfoDataRowWithType(type)["TypeId"];
+              objectTypeInfo = (ObjectTypeInfo) ObjectFactory.ParseObject(powertypeType, typeId);
+            } else {
+              objectTypeInfo = (ObjectTypeInfo)
+                ObjectTypeInfo.Parse(OntologyData.GetBaseObjectTypeInfoDataRowWithType(type));
+            }
             cacheByUnderlyingType.Add(underlyingTypeFullName, objectTypeInfo);
           }
         }  // lock
@@ -87,10 +102,6 @@ namespace Empiria.Ontology {
       get { return (ObjectTypeInfo) base.BaseType; }
     }
 
-    public virtual bool IsPowerType {
-      get { return false; }
-    }
-
     private bool? _isDataBoundFlag = null;
     public bool IsDataBound {
       get {
@@ -98,6 +109,15 @@ namespace Empiria.Ontology {
           _isDataBoundFlag = DataMappingRules.IsDataBound(base.UnderlyingSystemType);
         }
         return _isDataBoundFlag.Value;
+      }
+    }
+
+    /// <summary>Virtual method that indicates if this objecttype corresponds to a powertype.
+    /// Powertype types should override this property and return true. Furthermore they should
+    /// been decorated with the PowerType attribute.</summary>
+    public virtual bool IsPowertype {
+      get {
+        return false;
       }
     }
 
@@ -109,7 +129,7 @@ namespace Empiria.Ontology {
 
     #region Public methods
 
-    internal T CreateObject<T>() where T : BaseObject {
+    internal T CreateObject<T>() where T : BaseObject  {
       return this.InvokeBaseObjectConstructor<T>();
     }
 
@@ -117,13 +137,6 @@ namespace Empiria.Ontology {
       if (this.IsDataBound) {
         this.AssertMappingRulesAreLoaded();
         dataMappingRules.DataBind(instance, row);
-      }
-    }
-
-    internal void InitializeObject(BaseObject baseObject) {
-      if (this.IsDataBound) {
-        this.AssertMappingRulesAreLoaded();
-        dataMappingRules.InitializeObject(baseObject);
       }
     }
 
@@ -157,6 +170,13 @@ namespace Empiria.Ontology {
       return subclassesFilter;
     }
 
+    internal void InitializeObject(BaseObject baseObject) {
+      if (this.IsDataBound) {
+        this.AssertMappingRulesAreLoaded();
+        dataMappingRules.InitializeObject(baseObject);
+      }
+    }
+
     public bool IsBaseClassOf(ObjectTypeInfo typeInfo) {
      return typeInfo.IsSubclassOf(this);
     }
@@ -176,7 +196,7 @@ namespace Empiria.Ontology {
 
     #endregion Public methods
 
-    #region Private methods
+    #region Private properties and methods
 
     private void AssertMappingRulesAreLoaded() {
       if (dataMappingRules == null && this.IsDataBound) {
@@ -188,25 +208,53 @@ namespace Empiria.Ontology {
       }
     }
 
-    /// <summary>Gets the type default constructor, public or private, that takes no parameters.</summary>
+    /// <summary>Gets the type default constructor, public or private, that takes no parameters for
+    /// standard classes, or that take a powertype constructor for partitioned types.</summary>
     private ConstructorInfo GetBaseObjectConstructor() {
-      return this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
-                                                      BindingFlags.NonPublic,
-                                                      null, CallingConventions.HasThis,
-                                                      new Type[0], null);
+      if (this.IsPowertype) {
+        //Partitioned type instances are created using 'constructor(ObjectTypeInfo t)'
+        return this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
+                                                BindingFlags.NonPublic,
+                                                null, CallingConventions.HasThis,
+                                                new Type[] { this.GetType() }, null);
+      } else {
+        //No partitioned type instances are created using parameterless default 'constructor()'
+        return this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
+                                                BindingFlags.NonPublic,
+                                                null, CallingConventions.HasThis,
+                                                new Type[0], null);
+      }
     }
 
     private ConstructorInfo _baseObjectConstructor = null;
     /// <summary>Creates a new instance of type T invoking its default constructor.</summary>
-    private T InvokeBaseObjectConstructor<T>() {
+    private T InvokeBaseObjectConstructor<T>() where T : BaseObject {
       if (_baseObjectConstructor == null) {
         _baseObjectConstructor = this.GetBaseObjectConstructor();
       }
-      return (T) _baseObjectConstructor.Invoke(null);
+      if (this.IsPowertype) {
+        //Partitioned type instances are created using 'constructor(ObjectTypeInfo t)'
+        return (T) _baseObjectConstructor.Invoke(new object[] { this });     
+      } else {
+        //No partitioned type instances are created using parameterless default 'constructor()'
+        return (T) _baseObjectConstructor.Invoke(null);
+      }
     }
 
-    #endregion Private methods
+    static private Type TryGetPowertypeType(Type type) {
+      var attribute = (PartitionedTypeAttribute) 
+                            Attribute.GetCustomAttribute(type, typeof(PartitionedTypeAttribute));
+      if (attribute != null) {
+        return attribute.Powertype;
+      } else {
+        return null;
+      }
+    }
 
+    #endregion Private properties and methods
+
+
+    //TODO: Review this and maybe move it to other type
     public Data.DataOperation GetListDataOperation(string filter, string sort) {
       string typeFilter = this.TypeIdFieldName + " = " + this.Id;
 
