@@ -32,12 +32,12 @@ namespace Empiria {
 
     #region Public methods
 
-    internal T GetItem<T>(string typeName, int id) where T : BaseObject {
-      return (T) base.GetItem(typeName, id);
+    internal T TryGetItem<T>(string typeName, int id) where T : BaseObject {
+      return (T) base.TryGetItem(typeName, id);
     }
 
-    public T GetItem<T>(string typeName, string namedKey) where T : BaseObject {
-      return (T) base.GetItem(typeName, namedKey);
+    public T TryGetItem<T>(string typeName, string namedKey) where T : BaseObject {
+      return (T) base.TryGetItem(typeName, namedKey);
     }
 
     #endregion Public methods

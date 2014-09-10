@@ -81,7 +81,7 @@ namespace Empiria {
         ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(typeName, dataRow);
         int objectId = (int) dataRow[derivedTypeInfo.IdFieldName];
 
-        T item = cache.GetItem<T>(derivedTypeInfo.Name, objectId);
+        T item = cache.TryGetItem<T>(derivedTypeInfo.Name, objectId);
         if (item != null) {
           return item;    // Only use dataRow when item is not in cache
         }
@@ -99,7 +99,7 @@ namespace Empiria {
       if (id == 0) {
         throw new OntologyException(OntologyException.Msg.TryToParseZeroObjectId, typeName);
       }
-      T item = cache.GetItem<T>(typeName, id);
+      T item = cache.TryGetItem<T>(typeName, id);
       if (item != null) {
         return item;
       }
@@ -111,7 +111,7 @@ namespace Empiria {
     static protected T ParseKey<T>(string namedKey) where T : BaseObject {
       string typeName = ObjectTypeInfo.Parse(typeof(T)).Name;
 
-      T item = cache.GetItem<T>(typeName, namedKey);
+      T item = cache.TryGetItem<T>(typeName, namedKey);
       if (item != null) {
         return item;
       }
@@ -122,7 +122,7 @@ namespace Empiria {
 
     // TODO: review usage /// GeneralObject + TypeAssociationInfo
     static internal T Parse<T>(ObjectTypeInfo typeInfo, DataRow dataRow) where T : BaseObject {
-      T item = cache.GetItem<T>(typeInfo.Name, (int) dataRow[typeInfo.IdFieldName]);
+      T item = cache.TryGetItem<T>(typeInfo.Name, (int) dataRow[typeInfo.IdFieldName]);
       if (item != null) {
         return item;      // Only use dataRow when item is not in cache
       }
@@ -135,7 +135,7 @@ namespace Empiria {
         ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(typeName, dataRow);
         int objectId = (int) dataRow[derivedTypeInfo.IdFieldName];
 
-        T item = cache.GetItem<T>(derivedTypeInfo.Name, objectId);
+        T item = cache.TryGetItem<T>(derivedTypeInfo.Name, objectId);
         if (item != null) {
           return item;    // Only use dataRow when item is not in cache
         }

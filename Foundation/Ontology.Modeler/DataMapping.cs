@@ -360,7 +360,7 @@ namespace Empiria.Ontology.Modeler {
 
     private object TransformDataStoredValueBeforeAssignToMember(object value) {
       if (this.MapToParsableObject || this.MapToLazyObject) {
-        return ObjectFactory.ParseObject(this.MemberType, (int) value);
+        return ObjectFactory.InvokeParseMethod(this.MemberType, (int) value);
       } else if (this.MapToEnumeration) {
         if (((string) value).Length == 1) {
           return Enum.ToObject(this.MemberType, Convert.ToChar(value));

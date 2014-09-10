@@ -16,13 +16,7 @@ namespace Empiria.Ontology {
 
     #region Constructors and parsers
 
-    private EventTypeInfo(int id)
-      : base(MetaModelTypeFamily.MethodType, id) {
-
-    }
-
-    private EventTypeInfo(string name)
-      : base(MetaModelTypeFamily.MethodType, name) {
+    private EventTypeInfo() : base(MetaModelTypeFamily.MethodType) {
 
     }
 

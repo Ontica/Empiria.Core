@@ -117,9 +117,11 @@ namespace Empiria.Data {
         objectsList = this.Get<List<object>>(listPath, new List<object>());
       }
       if (ObjectFactory.IsStorable(typeof(T))) {
-        return objectsList.ConvertAll<T>((x) => ObjectFactory.ParseObject<T>(System.Convert.ToInt32(x)));
+        return objectsList.ConvertAll<T>((x) => 
+                                         ObjectFactory.InvokeParseMethod<T>(System.Convert.ToInt32(x)));
       } else if (ObjectFactory.IsValueObject(typeof(T))) {
-        return objectsList.ConvertAll<T>((x) => ObjectFactory.ParseValueObject<T>(System.Convert.ToString(x)));
+        return objectsList.ConvertAll<T>((x) =>
+                                         ObjectFactory.InvokeParseMethod<T>(System.Convert.ToString(x)));
       } else {
         return objectsList.ConvertAll<T>((x) => JsonObject.Convert<T>(x));
       }
@@ -246,7 +248,7 @@ namespace Empiria.Data {
         Assertion.AssertNoReachThisCode();
       }
       if (objectId != 0) {
-        return Empiria.Reflection.ObjectFactory.ParseObject<T>(objectId);
+        return Empiria.Reflection.ObjectFactory.InvokeParseMethod<T>(objectId);
       } else {
         return defaultValue;
       }

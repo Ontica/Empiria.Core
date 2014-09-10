@@ -58,7 +58,7 @@ namespace Empiria.Data.Integration {
 
         Type serverType = ObjectFactory.GetType("Empiria.Foundation", "Empiria.Security.WebServer");
 
-        return (IEmpiriaServer) ObjectFactory.ParseObject(serverType, serverId);
+        return (IEmpiriaServer) ObjectFactory.InvokeParseMethod(serverType, serverId);
       } catch (Exception innerException) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotParseDataIntegrationServer, innerException, serverId);
       }

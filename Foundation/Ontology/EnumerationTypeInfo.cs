@@ -17,13 +17,7 @@ namespace Empiria.Ontology {
 
     #region Constructors and parsers
 
-    private EnumerationTypeInfo(int id)
-      : base(MetaModelTypeFamily.EnumerationType, id) {
-
-    }
-
-    private EnumerationTypeInfo(string name)
-      : base(MetaModelTypeFamily.EnumerationType, name) {
+    private EnumerationTypeInfo() : base(MetaModelTypeFamily.EnumerationType) {
 
     }
 

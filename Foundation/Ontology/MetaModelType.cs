@@ -70,48 +70,69 @@ namespace Empiria.Ontology {
     private GeneralObjectStatus status = GeneralObjectStatus.Active;
 
     private Type underlyingSystemType = null;
-    private DoubleKeyList<TypeAttributeInfo> attributeInfoList = null;
     private DoubleKeyList<TypeAssociationInfo> associationInfoList = null;
-    private DoubleKeyList<TypeMethodInfo> methodsList = null;
+    private TypeMethodInfo[] methodsArray = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    protected internal MetaModelType(MetaModelTypeFamily typeFamily, int id) {
+    protected internal MetaModelType(MetaModelTypeFamily typeFamily) {
       this.typeFamily = typeFamily;
-      if (id != 0) {
-        Load(OntologyData.GetTypeDataRow(id));
-      }
-    }
-
-    protected internal MetaModelType(MetaModelTypeFamily typeFamily, string empiriaTypeName) {
-      this.typeFamily = typeFamily;
-      Load(OntologyData.GetTypeDataRow(empiriaTypeName));
     }
 
     static internal MetaModelType Parse(int typeId) {
-      if (cache.ContainsId(typeId)) {
-        return cache[typeId];
+      var value = cache.TryGetValue(typeId);
+      if (value != null) {
+        return value;
+      } else {
+        return MetaModelType.Parse(OntologyData.GetTypeDataRow(typeId));
       }
-      return MetaModelType.Parse(OntologyData.GetTypeDataRow(typeId));
     }
 
     static internal MetaModelType Parse(string empiriaTypeName) {
-      if (cache.ContainsKey(empiriaTypeName)) {
-        return cache[empiriaTypeName];
+      var value = cache.TryGetValue(empiriaTypeName);
+      if (value != null) {
+        return value;
+      } else {
+        return MetaModelType.Parse(OntologyData.GetTypeDataRow(empiriaTypeName));
       }
-      return MetaModelType.Parse(OntologyData.GetTypeDataRow(empiriaTypeName));
     }
 
     static protected MetaModelType Parse(DataRow row) {
       MetaModelTypeFamily typeFamily = MetaModelType.ParseMetaModelTypeFamily((string) row["TypeFamily"]);
 
       MetaModelType instance = MetaModelType.CreateInstance(typeFamily, row);
-      instance.Load(row);
+      instance.LoadDataRow(row);
+
+      //Load instance into cache
+      if (!cache.ContainsId(instance.Id)) {
+        cache.Add(instance.Name, instance);
+      } else {
+        cache[instance.Name] = instance;
+      }
+      instance.SetBaseType();
 
       return instance;
     }
+
+    protected static T Parse<T>(Type type) where T : MetaModelType {
+      DataRow dataRow = OntologyData.GetBaseObjectTypeInfoDataRowWithType(type);
+
+      return (T) MetaModelType.Parse(dataRow);
+    }
+
+    //  Type powertypeType = ObjectTypeInfo.TryGetPowertypeType(type);
+    //  ObjectTypeInfo objectTypeInfo = null;
+    //  if (powertypeType != null) {
+    //    int typeId = (int) OntologyData.GetBaseObjectTypeInfoDataRowWithType(type)["TypeId"];
+    //    objectTypeInfo = (ObjectTypeInfo) ObjectFactory.InvokeParseMethod(powertypeType, typeId);
+    //  } else {
+    //    objectTypeInfo = (ObjectTypeInfo)
+    //      ObjectTypeInfo.Parse(OntologyData.GetBaseObjectTypeInfoDataRowWithType(type));
+    //  }
+    //  return objectTypeInfo;
+    //}
 
     static internal T Parse<T>(int typeId) where T : MetaModelType {
       return (T) MetaModelType.Parse(typeId);
@@ -141,61 +162,20 @@ namespace Empiria.Ontology {
       }
     }
 
-    static private MetaModelType CreateInstance(MetaModelTypeFamily typeFamily, 
-                                                DataRow row) {
-      Type[] parTypes = new Type[] { typeof(int) };
-      object[] pars = new object[] { 0 };
-
-      switch (typeFamily) {
-        case MetaModelTypeFamily.MetaModelType:
-          return ObjectFactory.CreateObject<MetaModelTypeInfo>(parTypes, pars);
-        case MetaModelTypeFamily.ObjectType:
-          return ObjectFactory.CreateObject<ObjectTypeInfo>(parTypes, pars);
-        case MetaModelTypeFamily.FundamentalType:
-          return ObjectFactory.CreateObject<FundamentalTypeInfo>(parTypes, pars);
-        case MetaModelTypeFamily.PowerType:
-          int typeId = (int) row["TypeId"];
-          string assembly = (string) row["AssemblyName"];
-          string className = (string) row["ClassName"];
-          Type type = ObjectFactory.GetType(assembly, className);
-
-          return (Powertype) ObjectFactory.CreateObject(type, parTypes,
-                                                        new object[] { typeId });
-        case MetaModelTypeFamily.PartitionedType:
-          typeId = (int) row["TypeId"];
-          assembly = (string) row["AssemblyName"];
-          className = (string) row["ClassName"];
-          type = ObjectFactory.GetType(assembly, className);
-
-          var attribute = (PartitionedTypeAttribute) 
-                           Attribute.GetCustomAttribute(type, typeof(PartitionedTypeAttribute));
-          
-          return (Powertype) ObjectFactory.CreateObject(attribute.Powertype, parTypes,
-                                                        new object[] { typeId });
-        case MetaModelTypeFamily.StaticType:
-          return ObjectFactory.CreateObject<StaticTypeInfo>(parTypes, pars);
-        case MetaModelTypeFamily.EnumerationType:
-          return ObjectFactory.CreateObject<EnumerationTypeInfo>(parTypes, pars);
-        case MetaModelTypeFamily.ValueType:
-          return ObjectFactory.CreateObject<ValueTypeInfo>(parTypes, pars);
-        case MetaModelTypeFamily.RuleType:
-          return ObjectFactory.CreateObject<RuleTypeInfo>(parTypes, pars);
-        default:
-          throw Assertion.AssertNoReachThisCode();
-      }
-    }
-
-    static internal MetaModelTypeFamily ParseMetaModelTypeFamily(string typeFamilyName) {
-      try {
-        return (MetaModelTypeFamily) Enum.Parse(typeof(MetaModelTypeFamily), typeFamilyName);
-      } catch {
-        throw new OntologyException(OntologyException.Msg.UndefinedTypeInfoFamily, typeFamilyName);
-      }
-    }
-
     #endregion Constructors and parsers
 
     #region Public properties
+
+    protected internal DoubleKeyList<TypeAssociationInfo> Associations {
+      get {
+        if (associationInfoList == null) {
+          lock (this) {
+            LoadAssociations();
+          }
+        }
+        return associationInfoList;
+      }
+    }
 
     protected MetaModelType BaseType {
       get { return baseType; }
@@ -231,39 +211,6 @@ namespace Empiria.Ontology {
       protected set { femaleGenre = value; }
     }
 
-    protected internal DoubleKeyList<TypeAssociationInfo> Associations {
-      get {
-        if (associationInfoList == null) {
-          lock (this) {
-            LoadRelations();
-          }
-        }
-        return associationInfoList;
-      }
-    }
-
-    protected internal DoubleKeyList<TypeAttributeInfo> Attributes {
-      get {
-        if (attributeInfoList == null) {
-          lock (this) {
-            LoadRelations();
-          }
-        }
-        return attributeInfoList;
-      }
-    }
-
-    protected DoubleKeyList<TypeMethodInfo> Methods {
-      get {
-        if (methodsList == null) {
-          lock (this) {
-            LoadMethods();
-          }
-        }
-        return methodsList;
-      }
-    }
-
     public int Id {
       get { return id; }
     }
@@ -290,6 +237,17 @@ namespace Empiria.Ontology {
     public bool IsSealed {
       get { return isSealed; }
       protected set { isSealed = value; }
+    }
+
+    protected TypeMethodInfo[] Methods {
+      get {
+        if (methodsArray == null) {
+          lock (this) {
+            LoadMethods();
+          }
+        }
+        return methodsArray;
+      }
     }
 
     public string Name {
@@ -399,35 +357,91 @@ namespace Empiria.Ontology {
 
     #region Private methods
 
-    private string BuildKeywords() {
-      return EmpiriaString.BuildKeywords(typeFamily.ToString(), displayName, displayPluralName,
-                                         assemblyName, className, documentation);
-    }
-
-    private void ConstructBaseType() {
-      if (!IsPrimitive && !cache.ContainsId(this.baseTypeId)) {
-        baseType = MetaModelType.Parse(this.baseTypeId);
-      } else if (cache[this.baseTypeId].TypeFamily == this.TypeFamily) {
-        baseType = cache[this.baseTypeId];
-      } else {
+    private void AssertValidTypeFamily(MetaModelTypeFamily parametrizedTypeFamily) {
+      if (this.typeFamily == MetaModelTypeFamily.ObjectType &&
+          (parametrizedTypeFamily == MetaModelTypeFamily.PartitionedType ||
+           parametrizedTypeFamily == MetaModelTypeFamily.PowerType)) {
+        return;
+      }
+      if (this.typeFamily != parametrizedTypeFamily) {
         throw new OntologyException(OntologyException.Msg.TypeInfoFamilyNotMatch,
-                                    this.baseTypeId, typeFamily.ToString());
+                                    this.Id, this.typeFamily.ToString());
       }
     }
 
-    private void Load(DataRow dataRow) {
-      Validate(dataRow);
-      LoadDataRow(dataRow);
-      if (!cache.ContainsId(this.Id)) {
-        cache.Add(this.Name, this);
-      } else {
-        cache[this.Name] = this;
+    /// <summary> Factory method to create MetaModelType type instances.</summary>
+    static private MetaModelType CreateInstance(MetaModelTypeFamily typeFamily,
+                                                DataRow dataRow) {
+      switch (typeFamily) {
+        case MetaModelTypeFamily.MetaModelType:
+          return ObjectFactory.CreateObject<MetaModelTypeInfo>();
+
+        case MetaModelTypeFamily.ObjectType:
+          return ObjectFactory.CreateObject<ObjectTypeInfo>();
+
+        case MetaModelTypeFamily.FundamentalType:
+          return ObjectFactory.CreateObject<FundamentalTypeInfo>();
+
+        case MetaModelTypeFamily.PowerType:
+          Type type = MetaModelType.GetType(dataRow);
+
+          var powerType = (Powertype) ObjectFactory.CreateObject(type);
+          powerType.typeFamily = MetaModelTypeFamily.PowerType;
+          return powerType;
+
+        case MetaModelTypeFamily.PartitionedType:
+          type = MetaModelType.GetType(dataRow);
+          /// Partitioned types return the powertype instance defined with their PartitionedTypeAttribute.
+          var attribute = (PartitionedTypeAttribute)
+                           Attribute.GetCustomAttribute(type, typeof(PartitionedTypeAttribute));
+
+          powerType = (Powertype) ObjectFactory.CreateObject(attribute.Powertype);
+          powerType.typeFamily = MetaModelTypeFamily.PartitionedType;
+          return powerType;
+
+        case MetaModelTypeFamily.StaticType:
+          return ObjectFactory.CreateObject<StaticTypeInfo>();
+
+        case MetaModelTypeFamily.EnumerationType:
+          return ObjectFactory.CreateObject<EnumerationTypeInfo>();
+
+        case MetaModelTypeFamily.ValueType:
+          return ObjectFactory.CreateObject<ValueTypeInfo>();
+
+        case MetaModelTypeFamily.RuleType:
+          return ObjectFactory.CreateObject<RuleTypeInfo>();
+
+        default:
+          throw Assertion.AssertNoReachThisCode();
       }
-      ConstructBaseType();
+    }
+
+    static private Type GetType(DataRow dataRow) {
+      string assembly = (string) dataRow["AssemblyName"];
+      string className = (string) dataRow["ClassName"];
+
+      return ObjectFactory.GetType(assembly, className);
+    }
+
+    private void LoadAssociations() {
+      if (associationInfoList != null) {
+        return;
+      }
+
+      DataTable dataTable = OntologyData.GetTypeRelations(this.Name);
+      this.associationInfoList = new DoubleKeyList<TypeAssociationInfo>(0);
+      foreach (DataRow dataRow in dataTable.Rows) {
+        RelationTypeFamily family = TypeRelationInfo.ParseRelationTypeFamily((string) dataRow["RelationTypeFamily"]);
+        TypeAssociationInfo associationInfo = TypeAssociationInfo.Parse(this, dataRow);
+        this.associationInfoList.Add(associationInfo.Name, associationInfo);
+      }
     }
 
     private void LoadDataRow(DataRow dataRow) {
       this.id = (int) dataRow["TypeId"];
+
+      AssertValidTypeFamily(ParseMetaModelTypeFamily((string) dataRow["TypeFamily"]));
+
       this.name = (string) dataRow["TypeName"];
       this.baseTypeId = (int) dataRow["BaseTypeId"];
       this.assemblyName = (string) dataRow["AssemblyName"];
@@ -455,51 +469,33 @@ namespace Empiria.Ontology {
     }
 
     private void LoadMethods() {
-      if (methodsList != null) {
+      if (methodsArray != null) {
         return;
       }
 
       DataTable dataTable = OntologyData.GetTypeMethods(this.Id);
 
-      this.methodsList = new DoubleKeyList<TypeMethodInfo>(dataTable.Rows.Count);
-
+      this.methodsArray = new TypeMethodInfo[dataTable.Rows.Count];
       for (int i = 0, j = dataTable.Rows.Count; i < j; i++) {
-        TypeMethodInfo item = TypeMethodInfo.Parse(this, dataTable.Rows[i]);
-        this.methodsList.Add(item.Name, item);
+        this.methodsArray[i] = TypeMethodInfo.Parse(this, dataTable.Rows[i]);
       }
     }
 
-    private void LoadRelations() {
-      if (attributeInfoList != null || associationInfoList != null) {
-        return;
-      }
-
-      DataTable dataTable = OntologyData.GetTypeRelations(this.Name);
-      this.attributeInfoList = new DoubleKeyList<TypeAttributeInfo>(0);
-      this.associationInfoList = new DoubleKeyList<TypeAssociationInfo>(0);
-      foreach (DataRow dataRow in dataTable.Rows) {
-        RelationTypeFamily family = TypeRelationInfo.ParseRelationTypeFamily((string) dataRow["RelationTypeFamily"]);
-        if (family == RelationTypeFamily.Attribute) {
-          TypeAttributeInfo attribute = TypeAttributeInfo.Parse(this, dataRow);
-          this.attributeInfoList.Add(attribute.Name, attribute);
-        } else {
-          TypeAssociationInfo associationInfo = TypeAssociationInfo.Parse(this, dataRow);
-          this.associationInfoList.Add(associationInfo.Name, associationInfo);
-        }
+    static private MetaModelTypeFamily ParseMetaModelTypeFamily(string typeFamilyName) {
+      try {
+        return (MetaModelTypeFamily) Enum.Parse(typeof(MetaModelTypeFamily), typeFamilyName);
+      } catch {
+        throw new OntologyException(OntologyException.Msg.UndefinedTypeInfoFamily, typeFamilyName);
       }
     }
 
-    private void Validate(DataRow dataRow) {
-      MetaModelTypeFamily readedFamily = ParseMetaModelTypeFamily((string) dataRow["TypeFamily"]);
-
-      if (this.typeFamily == MetaModelTypeFamily.ObjectType && 
-          (readedFamily == MetaModelTypeFamily.PartitionedType || 
-           readedFamily == MetaModelTypeFamily.PowerType)) {
-        return;
-      }
-      if (this.typeFamily != readedFamily) {
-        throw new OntologyException(OntologyException.Msg.TypeInfoFamilyNotMatch,
-                                    this.Id, this.typeFamily.ToString());
+    private void SetBaseType() {
+      if (this.IsPrimitive) {
+        baseType = this;
+      } else if (cache.ContainsId(this.baseTypeId)) {
+        baseType = cache[this.baseTypeId];
+      } else {
+        baseType = MetaModelType.Parse(this.baseTypeId);
       }
     }
 

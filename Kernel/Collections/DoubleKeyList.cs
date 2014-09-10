@@ -5,7 +5,7 @@
 *  Type      : DoubleKeyList                                    Pattern  : Collection class                  *
 *  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
-*  Summary   : Sealed class that holds a double sorted list.                                                 *
+*  Summary   : Sealed class that holds a double dictionary list.                                             *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -14,38 +14,26 @@ using System.Collections.Generic;
 
 namespace Empiria.Collections {
 
-  /// <summary>Sealed class that holds a double sorted list.</summary>
-  public sealed class DoubleKeyList<T> : IEnumerable<T> where T : IIdentifiable {
+  /// <summary>Sealed class that holds a double dictionary list.</summary>
+  public sealed class DoubleKeyList<T> : IEnumerable<T> where T : class, IIdentifiable {
 
     #region Fields
 
-    private SortedList<int, T> items = null;
-    private SortedList<string, int> keys = null;
-
-    private string name = String.Empty;
+    private Dictionary<int, T> items = null;
+    private Dictionary<string, T> keys = null;
 
     #endregion Fields
 
     #region Constructors and parsers
 
     public DoubleKeyList() {
-      items = new SortedList<int, T>();
-      keys = new SortedList<string, int>();
+      items = new Dictionary<int, T>();
+      keys = new Dictionary<string, T>();
     }
 
     public DoubleKeyList(int capacity) {
-      items = new SortedList<int, T>(capacity);
-      keys = new SortedList<string, int>(capacity);
-    }
-
-    public DoubleKeyList(string name) {
-      this.name = name;
-    }
-
-    public DoubleKeyList(int capacity, string name) {
-      items = new SortedList<int, T>(capacity);
-      keys = new SortedList<string, int>(capacity);
-      this.name = name;
+      items = new Dictionary<int, T>(capacity);
+      keys = new Dictionary<string, T>(capacity);
     }
 
     #endregion Constructors and parsers
@@ -57,28 +45,12 @@ namespace Empiria.Collections {
     }
 
     public T this[string key] {
-      get { return items[keys[key]]; }
-      set { items[keys[key]] = value; }
+      get { return keys[key]; }
+      set { keys[key] = value; }
     }
 
     public int Count {
       get { return items.Count; }
-    }
-
-    public IList<int> Ids {
-      get { return items.Keys; }
-    }
-
-    public IList<string> Keys {
-      get { return keys.Keys; }
-    }
-
-    public string Name {
-      get { return this.name; }
-    }
-
-    public IList<T> Values {
-      get { return items.Values; }
     }
 
     #endregion Public properties
@@ -87,7 +59,7 @@ namespace Empiria.Collections {
 
     public void Add(string key, T item) {
       items.Add(item.Id, item);
-      keys.Add(key, item.Id);
+      keys.Add(key, item);
     }
 
     public bool ContainsId(int id) {
@@ -116,8 +88,31 @@ namespace Empiria.Collections {
     }
 
     public bool Remove(string key) {
-      items.Remove(keys[key]);
-      return keys.Remove(key);
+      if (!keys.ContainsKey(key)) {
+        return false;
+      }
+      var item = keys[key];
+      keys.Remove(key);
+      items.Remove(item.Id);
+      return true;
+    }
+
+    public T TryGetValue(int id) {
+      T value;
+      if (items.TryGetValue(id, out value)) {
+        return value;
+      } else {
+        return null;
+      }
+    }
+
+    public T TryGetValue(string key) {
+      T value;
+      if (keys.TryGetValue(key, out value)) {
+        return value;
+      } else {
+        return null;
+      }
     }
 
     #endregion Public methods

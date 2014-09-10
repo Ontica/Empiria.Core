@@ -166,7 +166,7 @@ namespace Empiria.Ontology {
       if (value.GetType().Equals(typeof(string)) && String.IsNullOrWhiteSpace((string) value)) {
         return null;
       }
-      return ObjectFactory.ParseObject(this.TargetType.UnderlyingSystemType, System.Convert.ToInt32(value));
+      return ObjectFactory.InvokeParseMethod(this.TargetType.UnderlyingSystemType, System.Convert.ToInt32(value));
     }
 
     protected override void LoadDataRow(DataRow row) {

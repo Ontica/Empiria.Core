@@ -18,7 +18,6 @@ namespace Empiria.Collections {
 
     #region Fields
 
-    private string name = String.Empty;
     private Dictionary<string, T> objects = null;
     private Dictionary<string, string> namedObjects = null;
     private Dictionary<string, long> lastAccess = null;
@@ -32,17 +31,15 @@ namespace Empiria.Collections {
       // Default constructor not allowed for derived classes
     }
 
-    protected CachedList(int size)
-      : this(String.Empty, size) {
-      // no-op
-    }
-
-    protected CachedList(string name, int size) {
-      this.name = name;
+    protected CachedList(int size) {
       this.size = size;
       this.objects = new Dictionary<string, T>(size);
       this.namedObjects = new Dictionary<string, string>(size);
       this.lastAccess = new Dictionary<string, long>(size);
+    }
+
+    protected CachedList(string name, int size) {
+
     }
 
     #endregion Constructors and parsers
@@ -55,14 +52,6 @@ namespace Empiria.Collections {
 
     public bool IsReadOnly {
       get { return false; }
-    }
-
-    public string Name {
-      get { return name; }
-    }
-
-    public int Size {
-      get { return size; }
     }
 
     #endregion Public properties
@@ -93,7 +82,7 @@ namespace Empiria.Collections {
     #region Protected methods
 
     protected void Insert(string itemTypeName, T item) {
-      string objectKey = item.Id.ToString() + "." + itemTypeName.ToLowerInvariant();
+      string objectKey = item.Id.ToString() + "." + itemTypeName;
       lock (objects) {
         objects[objectKey] = item;
         lastAccess[objectKey] = DateTime.Now.Ticks;
@@ -102,9 +91,9 @@ namespace Empiria.Collections {
     }
 
     protected void Insert(string itemTypeName, string namedKey, T item) {
-      namedKey = namedKey.ToLowerInvariant() + "." + itemTypeName.ToLowerInvariant();
+      namedKey = namedKey + "." + itemTypeName;
       lock (objects) {
-        namedObjects[namedKey] = item.Id.ToString() + "." + itemTypeName.ToLowerInvariant();
+        namedObjects[namedKey] = item.Id.ToString() + "." + itemTypeName;
         this.Insert(itemTypeName, item);
       } // lock
     }
@@ -126,40 +115,45 @@ namespace Empiria.Collections {
     }
 
     public bool Contains(string itemTypeName, int id) {
-      return objects.ContainsKey(id.ToString() + "." + itemTypeName.ToLowerInvariant());
+      return objects.ContainsKey(id.ToString() + "." + itemTypeName);
     }
 
     public bool Contains(string itemTypeName, string namedKey) {
-      return namedObjects.ContainsKey(namedKey.ToLowerInvariant() + "." + itemTypeName.ToLowerInvariant());
+      return namedObjects.ContainsKey(namedKey + "." + itemTypeName);
     }
 
     public bool Contains(T item) {
       return objects.ContainsValue(item);
     }
 
-    protected T GetItem(string itemTypeName, int id) {
-      string objectKey = id.ToString() + "." + itemTypeName.ToLowerInvariant();
-
-      if (this.Contains(itemTypeName, id)) {
-        lastAccess[objectKey] = DateTime.Now.Ticks;
-        return objects[objectKey];
-      } else {
-        return null;
-      } // if
+    private bool ContainsKey(string key) {
+      return objects.ContainsKey(key);
     }
 
-    protected T GetItem(string itemTypeName, string namedKey) {
-      if (this.Contains(itemTypeName, namedKey)) {
-        string objectKey = namedObjects[namedKey.ToLowerInvariant() + "." + itemTypeName.ToLowerInvariant()];
-        lastAccess[objectKey] = DateTime.Now.Ticks;
-        return objects[objectKey];
-      } else {
-        return null;
-      } // if
-    }
- 
     bool ICollection<T>.Remove(T item) {
       throw new NotImplementedException();
+    }
+
+    protected T TryGetItem(string itemTypeName, int id) {
+      string objectKey = id.ToString() + "." + itemTypeName;
+
+      T value;
+      if (objects.TryGetValue(objectKey, out value)) {
+        //lastAccess[objectKey] = DateTime.Now.Ticks;
+        return value;
+      } else {
+        return null;
+      }
+    }
+
+    protected T TryGetItem(string itemTypeName, string namedKey) {
+      if (this.Contains(itemTypeName, namedKey)) {
+        string objectKey = namedObjects[namedKey + "." + itemTypeName];
+        //lastAccess[objectKey] = DateTime.Now.Ticks;
+        return objects[objectKey];
+      } else {
+        return null;
+      } // if
     }
 
     #endregion Protected methods

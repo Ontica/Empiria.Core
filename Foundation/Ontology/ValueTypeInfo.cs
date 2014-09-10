@@ -20,11 +20,7 @@ namespace Empiria.Ontology {
 
     #region Constructors and parsers
 
-    private ValueTypeInfo(int id) : base(MetaModelTypeFamily.ValueType, id) {
-
-    }
-
-    private ValueTypeInfo(string name) : base(MetaModelTypeFamily.ValueType, name) {
+    private ValueTypeInfo() : base(MetaModelTypeFamily.ValueType) {
 
     }
 
@@ -37,16 +33,6 @@ namespace Empiria.Ontology {
     }
 
     #endregion Constructors and parsers
-
-    #region Public properties
-
-    public new IList<TypeAttributeInfo> Attributes {
-      get {
-        return base.Attributes.Values;
-      }
-    }
-
-    #endregion Public properties
 
     #region Public methods
 

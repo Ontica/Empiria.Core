@@ -45,11 +45,6 @@ namespace Empiria {
 
     #region Public methods
 
-    //ToDO --- Change THIS !!!!!
-    public FixedList<T> GetContacts<T>() where T : Empiria.Contacts.Contact {
-      return base.GetLinks<T>("GeneralList_Contacts");
-    }
-
     public FixedList<T> GetItems<T>() where T : BaseObject {
       return base.GetLinks<T>("GeneralList_Objects");
     }

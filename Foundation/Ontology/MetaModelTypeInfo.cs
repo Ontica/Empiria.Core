@@ -16,13 +16,7 @@ namespace Empiria.Ontology {
 
     #region Constructors and parsers
 
-    private MetaModelTypeInfo(int id)
-      : base(MetaModelTypeFamily.MetaModelType, id) {
-
-    }
-
-    private MetaModelTypeInfo(string name)
-      : base(MetaModelTypeFamily.MetaModelType, name) {
+    private MetaModelTypeInfo() : base(MetaModelTypeFamily.MetaModelType) {
 
     }
 

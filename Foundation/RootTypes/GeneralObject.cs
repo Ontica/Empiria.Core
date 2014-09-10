@@ -40,7 +40,7 @@ namespace Empiria {
       DataTable table = OntologyData.GetGeneralObjectsDataTable(objectTypeInfo);
       List<T> list = new List<T>(table.Rows.Count);
       for (int i = 0; i < table.Rows.Count; i++) {
-        list.Add(BaseObject.Parse<T>(objectTypeInfo, table.Rows[i]));
+        list.Add(BaseObject.ParseDataRow<T>(table.Rows[i]));
       }
       return list.ToFixedList();
     }

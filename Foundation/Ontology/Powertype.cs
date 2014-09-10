@@ -21,13 +21,9 @@ namespace Empiria.Ontology {
 
     #region Constructors and parsers
 
-    protected Powertype(int typeId) : base(typeId){
+    protected Powertype() {
       // Empiria powertype types always have this constructor.
 
-    }
-
-    protected Powertype(string typeName) : base(typeName) {
-      // Empiria powertype types always have this constructor.
     }
 
     #endregion Constructors and parsers

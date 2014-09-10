@@ -64,7 +64,7 @@ namespace Empiria {
         if (!isCreated) {
           lock (threadSafeObject) {
             if (!isCreated) {
-              instance = ObjectFactory.ParseObject<T>(this.instanceId);
+              instance = ObjectFactory.InvokeParseMethod<T>(this.instanceId);
               isCreated = true;
             }
           } // lock

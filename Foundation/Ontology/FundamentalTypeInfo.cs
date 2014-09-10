@@ -15,13 +15,7 @@ namespace Empiria.Ontology {
 
     #region Constructors and parsers
 
-    private FundamentalTypeInfo(int id)
-      : base(MetaModelTypeFamily.FundamentalType, id) {
-
-    }
-
-    private FundamentalTypeInfo(string name)
-      : base(MetaModelTypeFamily.FundamentalType, name) {
+    private FundamentalTypeInfo() : base(MetaModelTypeFamily.FundamentalType) {
 
     }
 

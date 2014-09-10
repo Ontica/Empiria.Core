@@ -21,11 +21,7 @@ namespace Empiria.Ontology {
 
     #region Constructors and parsers
 
-    private StaticTypeInfo(int id) : base(MetaModelTypeFamily.StaticType, id) {
-
-    }
-
-    private StaticTypeInfo(string name) : base(MetaModelTypeFamily.StaticType, name) {
+    private StaticTypeInfo() : base(MetaModelTypeFamily.StaticType) {
 
     }
 
@@ -42,11 +38,7 @@ namespace Empiria.Ontology {
     #region Public properties
 
     public TypeMethodInfo[] GetMethods() {
-      TypeMethodInfo[] array = new TypeMethodInfo[base.Methods.Count];
-
-      base.Methods.Values.CopyTo(array, 0);
-
-      return array;
+      return base.Methods;
     }
 
     #endregion Public properties

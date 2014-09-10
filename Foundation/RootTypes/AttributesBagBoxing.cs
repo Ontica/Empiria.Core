@@ -59,7 +59,7 @@ namespace Empiria {
 
       if (objectValues[index] is Int32) {
         lock (this) {
-          objectValues[index] = ObjectFactory.ParseObject<T>((int) objectValues[index]);
+          objectValues[index] = ObjectFactory.InvokeParseMethod<T>((int) objectValues[index]);
         }
       }
       return (T) objectValues[index];

@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq.Expressions;
 using System.Reflection;
 
 using Empiria.Collections;
@@ -23,8 +24,6 @@ namespace Empiria.Ontology {
 
     #region Fields
 
-    static private DoubleKeyList<ObjectTypeInfo> cacheByUnderlyingType = new DoubleKeyList<ObjectTypeInfo>();
-
     private DataMappingRules dataMappingRules = null;
     private object lockThreadObject = new object();
 
@@ -32,11 +31,7 @@ namespace Empiria.Ontology {
 
     #region Constructors and parsers
 
-    protected internal ObjectTypeInfo(int id) : base(MetaModelTypeFamily.ObjectType, id) {
-
-    }
-
-    protected internal ObjectTypeInfo(string name) : base(MetaModelTypeFamily.ObjectType, name) {
+    protected internal ObjectTypeInfo() : base(MetaModelTypeFamily.ObjectType) {
 
     }
 
@@ -64,26 +59,21 @@ namespace Empiria.Ontology {
       return ObjectTypeInfo.Parse(typeof(T));
     }
 
-    static internal ObjectTypeInfo Parse(Type type) {
-      string underlyingTypeFullName = type.FullName;
 
-      if (!cacheByUnderlyingType.ContainsKey(underlyingTypeFullName)) {
-        lock (cacheByUnderlyingType) {
-          if (!cacheByUnderlyingType.ContainsKey(underlyingTypeFullName)) {
-            Type powertypeType = ObjectTypeInfo.TryGetPowertypeType(type);
-            ObjectTypeInfo objectTypeInfo = null;
-            if (powertypeType != null) {
-              int typeId = (int) OntologyData.GetBaseObjectTypeInfoDataRowWithType(type)["TypeId"];
-              objectTypeInfo = (ObjectTypeInfo) ObjectFactory.ParseObject(powertypeType, typeId);
-            } else {
-              objectTypeInfo = (ObjectTypeInfo)
-                ObjectTypeInfo.Parse(OntologyData.GetBaseObjectTypeInfoDataRowWithType(type));
-            }
-            cacheByUnderlyingType.Add(underlyingTypeFullName, objectTypeInfo);
-          }
-        }  // lock
+    static private Dictionary<Type, ObjectTypeInfo> _cacheByUnderlyingType =
+                                                      new Dictionary<Type, ObjectTypeInfo>();
+    static internal ObjectTypeInfo Parse(Type type) {
+     // int typeHashCode = type.GUID;
+      ObjectTypeInfo value = null;
+      if (_cacheByUnderlyingType.TryGetValue(type, out value)) {
+        return value;
       }
-      return cacheByUnderlyingType[underlyingTypeFullName];
+      lock (_cacheByUnderlyingType) {
+        if (!_cacheByUnderlyingType.ContainsKey(type)) {
+          _cacheByUnderlyingType.Add(type, MetaModelType.Parse<ObjectTypeInfo>(type));
+        }
+      }  // lock
+      return _cacheByUnderlyingType[type];
     }
 
     #endregion Constructors and parsers
@@ -92,10 +82,6 @@ namespace Empiria.Ontology {
 
     public new DoubleKeyList<TypeAssociationInfo> Associations {
       get { return base.Associations; }
-    }
-
-    public new DoubleKeyList<TypeAttributeInfo> Attributes {
-      get { return base.Attributes; }
     }
 
     public new ObjectTypeInfo BaseType {
@@ -113,7 +99,7 @@ namespace Empiria.Ontology {
     }
 
     /// <summary>Virtual method that indicates if this objecttype corresponds to a powertype.
-    /// Powertype types should override this property and return true. Furthermore they should
+    /// Powertype types must override this property and return true. Furthermore they should
     /// been decorated with the PowerType attribute.</summary>
     public virtual bool IsPowertype {
       get {
@@ -121,7 +107,7 @@ namespace Empiria.Ontology {
       }
     }
 
-    public new DoubleKeyList<TypeMethodInfo> Methods {
+    public new TypeMethodInfo[] Methods {
       get { return base.Methods; }
     }
 
@@ -129,8 +115,24 @@ namespace Empiria.Ontology {
 
     #region Public methods
 
+    Delegate quickConstructor = null;
+    private ConstructorInfo _typeInstancesConstructor = null;
+    /// <summary>Creates a new instance of type T invoking its default constructor.</summary>
     internal T CreateObject<T>() where T : BaseObject  {
-      return this.InvokeBaseObjectConstructor<T>();
+      if (_typeInstancesConstructor == null) {
+        _typeInstancesConstructor = this.GetTypeInstancesConstructor();
+      }
+      if (this.IsPowertype) {
+        //Partitioned type instances are created using 'constructor(ObjectTypeInfo t)'
+        // return (T) _typeInstancesConstructor.Invoke(new object[] { this });
+
+        return (T) quickConstructor.DynamicInvoke(this);
+      } else {
+        //No partitioned type instances are created using parameterless default 'constructor()'
+
+        return (T) quickConstructor.DynamicInvoke(null);
+        //return (T) _typeInstancesConstructor.Invoke(null);
+      }
     }
 
     internal void DataBind(BaseObject instance, DataRow row) {
@@ -158,7 +160,7 @@ namespace Empiria.Ontology {
       return _subclassesArray;
     }
 
-    /// <summary>Returns a comma separated string with this ObjectType Id and all 
+    /// <summary>Returns a comma separated string with this ObjectType.Id and all 
     /// their subclasses Id's (e.g. "93, 192, 677")
     /// </summary>
     public string GetSubclassesFilter() {
@@ -210,8 +212,9 @@ namespace Empiria.Ontology {
 
     /// <summary>Gets the type default constructor, public or private, that takes no parameters for
     /// standard classes, or that take a powertype constructor for partitioned types.</summary>
-    private ConstructorInfo GetBaseObjectConstructor() {
+    private ConstructorInfo GetTypeInstancesConstructor() {
       if (this.IsPowertype) {
+        quickConstructor = GetConst();
         //Partitioned type instances are created using 'constructor(ObjectTypeInfo t)'
         return this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
                                                 BindingFlags.NonPublic,
@@ -219,6 +222,8 @@ namespace Empiria.Ontology {
                                                 new Type[] { this.GetType() }, null);
       } else {
         //No partitioned type instances are created using parameterless default 'constructor()'
+        quickConstructor = GetConst();
+
         return this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
                                                 BindingFlags.NonPublic,
                                                 null, CallingConventions.HasThis,
@@ -226,33 +231,25 @@ namespace Empiria.Ontology {
       }
     }
 
-    private ConstructorInfo _baseObjectConstructor = null;
-    /// <summary>Creates a new instance of type T invoking its default constructor.</summary>
-    private T InvokeBaseObjectConstructor<T>() where T : BaseObject {
-      if (_baseObjectConstructor == null) {
-        _baseObjectConstructor = this.GetBaseObjectConstructor();
-      }
+    private Delegate GetConst() {
       if (this.IsPowertype) {
-        //Partitioned type instances are created using 'constructor(ObjectTypeInfo t)'
-        return (T) _baseObjectConstructor.Invoke(new object[] { this });     
-      } else {
-        //No partitioned type instances are created using parameterless default 'constructor()'
-        return (T) _baseObjectConstructor.Invoke(null);
-      }
-    }
+        var constr = this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
+                                        BindingFlags.NonPublic,
+                                        null, CallingConventions.HasThis,
+                                        new Type[] { this.GetType() }, null);
+        ParameterExpression param =
+            Expression.Parameter(this.GetType(), "powertype");
 
-    static private Type TryGetPowertypeType(Type type) {
-      var attribute = (PartitionedTypeAttribute) 
-                            Attribute.GetCustomAttribute(type, typeof(PartitionedTypeAttribute));
-      if (attribute != null) {
-        return attribute.Powertype;
+        NewExpression body = Expression.New(constr, param);
+        return Expression.Lambda(body, param).Compile();
+
       } else {
-        return null;
+        NewExpression body = Expression.New(this.UnderlyingSystemType);
+        return Expression.Lambda(body).Compile();
       }
     }
 
     #endregion Private properties and methods
-
 
     //TODO: Review this and maybe move it to other type
     public Data.DataOperation GetListDataOperation(string filter, string sort) {
