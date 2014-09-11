@@ -44,7 +44,7 @@ namespace Empiria.Contacts {
     }
 
     static private readonly Person _empty = BaseObject.ParseEmpty<Person>();
-    static public Person Empty {
+    static public new Person Empty {
       get {
         return _empty.Clone<Person>();
       }

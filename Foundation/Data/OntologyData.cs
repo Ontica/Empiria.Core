@@ -59,7 +59,8 @@ namespace Empiria.Ontology {
     static internal FixedList<KeyValuePair> GetKeyValueListItems(GeneralList list) {
       var operation = DataOperation.Parse("qryEOSKeyValueList", list.UniqueCode);
 
-      return DataReader.GetFixedList<KeyValuePair>(operation, (x) => KeyValuePair.Parse(x));
+      return DataReader.GetList<KeyValuePair>(operation, 
+                        (x) => BaseObject.ParseList<KeyValuePair>(x)).ToFixedList();
     }
 
     static internal int GetNextObjectId(ObjectTypeInfo objectTypeInfo) {

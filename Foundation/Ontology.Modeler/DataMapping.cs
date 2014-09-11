@@ -132,6 +132,11 @@ namespace Empiria.Ontology.Modeler {
       private set;
     }
 
+    internal bool MapToEmptyObject {
+      get;
+      private set;
+    }
+
     internal bool MapToEnumeration {
       get;
       private set;
@@ -182,6 +187,7 @@ namespace Empiria.Ontology.Modeler {
         Assertion.Assert(this.DataFieldType == typeof(int),
                          this.MemberInfo.Name + " can only be parsed from an integer type data column.");
       }
+
       if (this.MapToJsonItem) {
         Assertion.Assert(this.DataFieldType == typeof(string),
                          "Json items can only be parsed from string type data columns.");
@@ -344,6 +350,7 @@ namespace Empiria.Ontology.Modeler {
       this.DataFieldAttribute = this.MemberInfo.GetCustomAttribute<DataFieldAttribute>();
       this.MapToLazyObject = ObjectFactory.IsLazy(this.MemberType);
       this.MapToParsableObject = ObjectFactory.HasParseWithIdMethod(this.MemberType);
+      this.MapToEmptyObject = ObjectFactory.HasEmptyInstance(this.MemberType);
       this.MapToEnumeration = this.MemberType.IsEnum;
       this.MapToChar = this.MemberType == typeof(char);
 
@@ -360,7 +367,12 @@ namespace Empiria.Ontology.Modeler {
 
     private object TransformDataStoredValueBeforeAssignToMember(object value) {
       if (this.MapToParsableObject || this.MapToLazyObject) {
-        return ObjectFactory.InvokeParseMethod(this.MemberType, (int) value);
+        int objectId = (int) value;
+        if (objectId == -1 && this.MapToEmptyObject) {
+          return ObjectFactory.EmptyInstance(this.MemberType);
+        } else {
+          return ObjectFactory.InvokeParseMethod(this.MemberType, objectId);
+        }
       } else if (this.MapToEnumeration) {
         if (((string) value).Length == 1) {
           return Enum.ToObject(this.MemberType, Convert.ToChar(value));

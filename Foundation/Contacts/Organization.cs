@@ -20,8 +20,12 @@ namespace Empiria.Contacts {
       // Required by Empiria Framework.
     }
 
+    static public new Organization Parse(int id) {
+      return BaseObject.ParseId<Organization>(id);
+    }
+
     static private readonly Organization _empty = BaseObject.ParseEmpty<Organization>();
-    static public Organization Empty {
+    static public new Organization Empty {
       get {
         return _empty.Clone<Organization>();
       }
@@ -32,10 +36,6 @@ namespace Empiria.Contacts {
       get {
         return _unknown.Clone<Organization>();
       }
-    }
-
-    static public new Organization Parse(int id) {
-      return BaseObject.ParseId<Organization>(id);
     }
 
     #endregion Constructors and parsers

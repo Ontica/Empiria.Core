@@ -208,69 +208,13 @@ namespace Empiria.Data {
       }
     }
 
-    static public FixedList<T> GetFixedList<T>(DataOperation operation,
-                                            Func<DataRow, T> parser) where T : IStorable {
+    static public List<T> GetList<T>(DataOperation operation, Func<DataTable, List<T>> parser) {
       Assertion.AssertObject(operation, "operation");
       Assertion.AssertObject(parser, "parser");
 
       DataTable dataTable = DataReader.GetDataTable(operation);
-
-      return new FixedList<T>(parser, dataTable);
-    }
-
-    static public FixedList<T> GetFixedList<T>(DataOperation operation, Func<DataRow, T> parser,
-                                               string filter) where T : IStorable {
-      return DataReader.GetFixedList<T>(operation, parser, filter, String.Empty);
-    }
-
-    static public FixedList<T> GetFixedList<T>(DataOperation operation, Func<DataRow, T> parser,
-                                               string filter, string sort) where T : IStorable {
-      Assertion.AssertObject(operation, "operation");
-      Assertion.AssertObject(parser, "parser");
-
-      DataView view = DataReader.GetDataView(operation, filter, sort);
-
-      return new FixedList<T>(parser, view);
-    }
-
-    static public List<T> GetList<T>(DataOperation operation, Func<DataRow, T> parser) {
-      Assertion.AssertObject(operation, "operation");
-      Assertion.AssertObject(parser, "parser");
-
-      DataTable dataTable = DataReader.GetDataTable(operation);
-
-      var list = new List<T>(dataTable.Rows.Count);
-      foreach (DataRow row in dataTable.Rows) {
-        list.Add(parser.Invoke(row));
-      }
-      return list;
-    }
-
-    static public List<T> GetList<T>(DataOperation operation, Func<DataRow, T> parser, string filter) {
-      return DataReader.GetList<T>(operation, parser, filter, String.Empty);
-    }
-
-    static public List<T> GetList<T>(DataOperation operation, Func<DataRow, T> parser,
-                                     string filter, string sort) {
-      Assertion.AssertObject(operation, "operation");
-      Assertion.AssertObject(parser, "parser");
-
-      DataView dataView = DataReader.GetDataView(operation, filter, sort);
-
-      var list = new List<T>(dataView.Count);
-      foreach (DataRowView row in dataView) {
-        list.Add(parser.Invoke(row.Row));
-      }
-      return list;
-    }
-
-    static public T GetObject<T>(DataOperation operation, Func<DataRow, T> parser) {
-      Assertion.AssertObject(operation, "operation");
-      Assertion.AssertObject(parser, "parser");
-
-      DataRow row = DataReader.GetDataRow(operation);
-
-      return parser.Invoke(row);
+      
+      return parser.Invoke(dataTable);
     }
 
     static public T GetScalar<T>(DataOperation operation, T defaultValue = default(T)) {

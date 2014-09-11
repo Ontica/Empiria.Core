@@ -59,21 +59,20 @@ namespace Empiria.Ontology {
       return ObjectTypeInfo.Parse(typeof(T));
     }
 
-
-    static private Dictionary<Type, ObjectTypeInfo> _cacheByUnderlyingType =
-                                                      new Dictionary<Type, ObjectTypeInfo>();
+    static private Dictionary<int, ObjectTypeInfo> _cacheByUnderlyingType =
+                                                      new Dictionary<int, ObjectTypeInfo>();
     static internal ObjectTypeInfo Parse(Type type) {
-     // int typeHashCode = type.GUID;
+     int typeHashCode = type.GetHashCode();
       ObjectTypeInfo value = null;
-      if (_cacheByUnderlyingType.TryGetValue(type, out value)) {
+      if (_cacheByUnderlyingType.TryGetValue(typeHashCode, out value)) {
         return value;
       }
       lock (_cacheByUnderlyingType) {
-        if (!_cacheByUnderlyingType.ContainsKey(type)) {
-          _cacheByUnderlyingType.Add(type, MetaModelType.Parse<ObjectTypeInfo>(type));
+        if (!_cacheByUnderlyingType.ContainsKey(typeHashCode)) {
+          _cacheByUnderlyingType.Add(typeHashCode, MetaModelType.Parse<ObjectTypeInfo>(type));
         }
       }  // lock
-      return _cacheByUnderlyingType[type];
+      return _cacheByUnderlyingType[typeHashCode];
     }
 
     #endregion Constructors and parsers
@@ -258,6 +257,23 @@ namespace Empiria.Ontology {
       string sql = "SELECT * FROM " + this.DataSource + " WHERE " + filter + typeFilter;
 
       return Data.DataOperation.Parse(sql);
+    }
+
+
+    private BaseObject _emptyInstance = null;
+    internal T GetEmptyInstance<T>() where T : BaseObject {
+      if (_emptyInstance == null) {
+        _emptyInstance = BaseObject.ParseIdNoCache<T>(-1);
+      }
+      return (T) _emptyInstance;
+    }
+
+    private BaseObject _unknownInstance = null;
+    internal T GetUnknownInstance<T>() where T : BaseObject {
+      if (_unknownInstance == null) {
+        _unknownInstance = BaseObject.ParseIdNoCache<T>(-2);
+      }
+      return (T) _unknownInstance;
     }
 
   } // class ObjectTypeInfo

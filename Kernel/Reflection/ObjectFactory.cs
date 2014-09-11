@@ -46,7 +46,7 @@ namespace Empiria.Reflection {
       try {
         PropertyInfo property = ObjectFactory.GetEmptyInstanceProperty(type);
         Assertion.AssertObject(property, String.Format("Type {0} doesn't has a static Empty property.",
-                                                       type.FullName));
+                                                        type.FullName));
         return property.GetMethod.Invoke(null, null);
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
@@ -123,53 +123,34 @@ namespace Empiria.Reflection {
       return (T) ObjectFactory.InvokeParseMethod(typeof(T), value);
     }
 
-    static private Dictionary<int, Delegate> _parseObjectMethods =
-                                                new Dictionary<int, Delegate>();
     static public object InvokeParseMethod(Type type, int objectId) {
-      int typeId = type.GetHashCode();
-      if (!_parseObjectMethods.ContainsKey(typeId)) {
-        lock (_parseObjectMethods) {
-          if (!_parseObjectMethods.ContainsKey(typeId)) {
-            try {
-              Delegate method = ObjectFactory.GetParseMethodDelegate(type);
-              Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(int) method.",
-                                                           type.FullName));
-              _parseObjectMethods.Add(typeId, method);
-            } catch (TargetException e) {
-              throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
-                                            type.FullName + "[ Id = " + objectId + " ]");
-            } catch (Exception e) {
-              throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
-                                            type.FullName + "[ Id = " + objectId + " ]");
-            } // try
-          }
-        } // lock
+      try {
+        MethodInfo method = ObjectFactory.GetParseMethod(type);
+        Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(int) method.",
+                                                      type.FullName));
+        return method.Invoke(null, new object[] { objectId });
+      } catch (TargetException e) {
+        throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
+                                      type.FullName + "[ Id = " + objectId + " ]");
+      } catch (Exception e) {
+        throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
+                                      type.FullName + "[ Id = " + objectId + " ]");
       }
-      return _parseObjectMethods[typeId].DynamicInvoke(objectId);
     }
 
-    static private Dictionary<string, MethodInfo> _parseValueObjectMethods =
-                                               new Dictionary<string, MethodInfo>();
     static public object InvokeParseMethod(Type type, string value) {
-      if (!_parseValueObjectMethods.ContainsKey(type.FullName)) {
-        lock (_parseValueObjectMethods) {
-          if (!_parseValueObjectMethods.ContainsKey(type.FullName)) {
-            try {
-              MethodInfo method = ObjectFactory.GetParseStringMethod(type);
-              Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(string) method.",
-                                                           type.FullName));
-              _parseValueObjectMethods.Add(type.FullName, method);
-            } catch (TargetException e) {
-              throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
-                                            type.FullName + "[ Value = " + value + " ]");
-            } catch (Exception e) {
-              throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
-                                            type.FullName + "[ Value = " + value + " ]");
-            }  // try
-          }
-        } // lock
+      try {
+        MethodInfo method = ObjectFactory.GetParseStringMethod(type);
+        Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(string) method.",
+                                                      type.FullName));
+        return method.Invoke(null, new object[] { value });
+      } catch (TargetException e) {
+        throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
+                                      type.FullName + "[ Value = " + value + " ]");
+      } catch (Exception e) {
+        throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
+                                      type.FullName + "[ Value = " + value + " ]");
       }
-      return _parseValueObjectMethods[type.FullName].Invoke(null, new object[] { value });
     }
 
     #endregion Public methods
@@ -188,6 +169,12 @@ namespace Empiria.Reflection {
       var body = Expression.Call(parseMethod, param);
 
       return Expression.Lambda(body, param).Compile();
+    }
+
+    static private Delegate GetPropertyGetDelegate(Type type, PropertyInfo property) {      
+      var body = Expression.Call(property.GetMethod);
+
+      return Expression.Lambda(body).Compile();
     }
 
     static private MethodInfo GetParseMethod(Type type) {

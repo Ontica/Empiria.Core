@@ -50,6 +50,13 @@ namespace Empiria.Contacts {
       return BaseObject.ParseFromBelow<Contact>(id);
     }
 
+    static private readonly Contact _empty = BaseObject.ParseEmpty<Contact>();
+    static public Contact Empty {
+      get {
+        return _empty.Clone<Contact>();
+      }
+    }
+
     static public FixedList<Contact> GetList(string filter) {
       return ContactsData.GetContacts(filter);
     }

@@ -97,7 +97,7 @@ namespace Empiria {
       set;
     }
 
-    [DataField("PostedById", Default = "Contacts.Person.Empty")]
+    [DataField("PostedById")]
     protected Contact PostedBy {
       get;
       set;

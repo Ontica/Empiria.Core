@@ -19,7 +19,7 @@ namespace Empiria.Collections {
     #region Fields
 
     private Dictionary<string, T> objects = null;
-    private Dictionary<string, string> namedObjects = null;
+    private Dictionary<string, T> namedObjects = null;
     private Dictionary<string, long> lastAccess = null;
     private int size = 0;
 
@@ -34,7 +34,7 @@ namespace Empiria.Collections {
     protected CachedList(int size) {
       this.size = size;
       this.objects = new Dictionary<string, T>(size);
-      this.namedObjects = new Dictionary<string, string>(size);
+      this.namedObjects = new Dictionary<string, T>(size);
       this.lastAccess = new Dictionary<string, long>(size);
     }
 
@@ -91,9 +91,9 @@ namespace Empiria.Collections {
     }
 
     protected void Insert(string itemTypeName, string namedKey, T item) {
-      namedKey = namedKey + "." + itemTypeName;
+      string key = namedKey + "." + itemTypeName;
       lock (objects) {
-        namedObjects[namedKey] = item.Id.ToString() + "." + itemTypeName;
+        namedObjects[key] = item;
         this.Insert(itemTypeName, item);
       } // lock
     }
@@ -139,7 +139,7 @@ namespace Empiria.Collections {
 
       T value;
       if (objects.TryGetValue(objectKey, out value)) {
-        //lastAccess[objectKey] = DateTime.Now.Ticks;
+        lastAccess[objectKey] = DateTime.Now.Ticks;
         return value;
       } else {
         return null;
@@ -147,13 +147,14 @@ namespace Empiria.Collections {
     }
 
     protected T TryGetItem(string itemTypeName, string namedKey) {
-      if (this.Contains(itemTypeName, namedKey)) {
-        string objectKey = namedObjects[namedKey + "." + itemTypeName];
-        //lastAccess[objectKey] = DateTime.Now.Ticks;
-        return objects[objectKey];
+      string objectKey = namedKey + "." + itemTypeName;
+      T value;
+      if (namedObjects.TryGetValue(objectKey, out value)) {
+        lastAccess[objectKey] = DateTime.Now.Ticks;
+        return value;
       } else {
         return null;
-      } // if
+      }
     }
 
     #endregion Protected methods
@@ -188,7 +189,7 @@ namespace Empiria.Collections {
 
         for (int i = 0; i < keys.Length; i++) {
           string namedKey = keys[i];
-          if (!objects.ContainsKey(namedObjects[namedKey])) {
+          if (!objects.ContainsKey(namedKey)) {
             namedObjects.Remove(namedKey);
           }
         }
