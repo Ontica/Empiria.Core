@@ -75,7 +75,7 @@ namespace Empiria {
       return item;
     }
 
-    static protected T ParseDataRow<T>(DataRow dataRow) where T : BaseObject {
+    static public T ParseDataRow<T>(DataRow dataRow) where T : BaseObject {
       try {
         ObjectTypeInfo baseObjectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 

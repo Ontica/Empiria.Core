@@ -45,9 +45,10 @@ namespace Empiria.Data {
       return new JsonObject(dictionary);
     }
 
+    static private readonly JsonObject _empty = new JsonObject();
     static public JsonObject Empty {
       get {
-        return new JsonObject();
+        return _empty;
       }
     }
 

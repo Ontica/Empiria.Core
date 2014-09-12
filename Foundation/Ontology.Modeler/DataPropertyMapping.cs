@@ -55,8 +55,26 @@ namespace Empiria.Ontology.Modeler {
     }
 
     protected override void ImplementsSetValue(object instance, object value) {
+     // ParseSetMethodDelegate.Invoke(instance, value);
+
       setMethod.Invoke(instance, new[] { value });
     }
+
+    //Action<int> valueSetter = (Action<object>) 
+    //  Delegate.CreateDelegate(typeof(Action<int>), tc, tc.GetType().GetProperty("Value").GetSetMethod());
+
+
+    //private delegate void SetMethodDelegate(object instance, object value);
+    //SetMethodDelegate _setMethodDelegate = null;
+    //private SetMethodDelegate ParseSetMethodDelegate {
+    //  get {
+    //    if (_setMethodDelegate == null) {
+    //      _setMethodDelegate = (SetMethodDelegate) Delegate.CreateDelegate(typeof(SetMethodDelegate),
+    //                                                                       this.propertyInfo.GetSetMethod());
+    //    }
+    //    return _setMethodDelegate;
+    //  }
+    //}
 
     #endregion Public methods
 

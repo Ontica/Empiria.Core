@@ -24,7 +24,7 @@ namespace Empiria.Security {
     private int regionId = 0;
     private bool disposed = false;
 
-    static readonly private string globalApiKey = ConfigurationData.GetString("Empiria.Trade.API.Key"); 
+    static private readonly string globalApiKey = ConfigurationData.GetString("Empiria.Trade.API.Key"); 
 
     #endregion Fields
 

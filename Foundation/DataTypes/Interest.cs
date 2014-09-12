@@ -38,15 +38,24 @@ namespace Empiria.DataTypes {
       return interest;
     }
 
+    static private readonly Interest _empty = new Interest() {
+      IsEmptyInstance = true
+    };
+
     static public Interest Empty {
       get {
-        return new Interest();
+        return _empty;
       }
     }
 
     #endregion Constructors and parsers
 
     #region Properties
+
+    public bool IsEmptyInstance {
+      get;
+      private set;
+    }
 
     public decimal Rate {
       get;
@@ -66,18 +75,6 @@ namespace Empiria.DataTypes {
     public Unit TermUnit {
       get; 
       set;
-    }
-
-    public bool IsEmptyInstance {
-      get {
-        if (this.Rate == decimal.Zero && 
-            this.RateType.IsEmptyInstance && 
-            this.TermPeriods == 0 &&
-            this.TermUnit.IsEmptyInstance) {
-          return true;
-        }
-        return false;
-      }
     }
 
     #endregion Properties

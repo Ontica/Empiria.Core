@@ -157,11 +157,11 @@ namespace Empiria.Reflection {
 
     #region Private methods
 
-    static private PropertyInfo GetEmptyInstanceProperty(Type type) {
+    static public PropertyInfo GetEmptyInstanceProperty(Type type) {
       return type.GetProperty("Empty", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public);
     }
 
-    static private Delegate GetParseMethodDelegate(Type type) {
+    static public Delegate GetParseMethodDelegate(Type type) {
       MethodInfo parseMethod = GetParseMethod(type);
 
       ParameterExpression param = Expression.Parameter(typeof(Int32), "id");
@@ -177,7 +177,7 @@ namespace Empiria.Reflection {
       return Expression.Lambda(body).Compile();
     }
 
-    static private MethodInfo GetParseMethod(Type type) {
+    static public MethodInfo GetParseMethod(Type type) {
       return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public,
                             null, CallingConventions.Any, new Type[] { typeof(int) }, null);
     }

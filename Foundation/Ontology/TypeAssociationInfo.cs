@@ -47,8 +47,11 @@ namespace Empiria.Ontology {
       return associationInfo;
     }
 
+    static private readonly TypeAssociationInfo _empty = TypeRelationInfo.Parse<TypeAssociationInfo>(-1);
     static public TypeAssociationInfo Empty {
-      get { return TypeRelationInfo.Parse<TypeAssociationInfo>(-1); }
+      get {
+        return _empty;
+      }
     }
 
     #endregion Constructors and parsers

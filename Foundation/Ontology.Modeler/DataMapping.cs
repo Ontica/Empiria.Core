@@ -217,10 +217,13 @@ namespace Empiria.Ontology.Modeler {
 
     /// <summary>Set instance member value from a Json string according to this DataMapping rule.
     ///  Only for use when MapToJsonItem is true.</summary>
-    internal void SetValue(object instance, object jsonString, 
+    internal void SetValue(object instance, string jsonString, 
                            Dictionary<string, JsonObject> jsonObjectsCache) {
       //Assertion.Assert(this.MapToJsonItem, "Method for use only when this.MapToJsonItem is true.");
-      object invokeValue = this.ExtractJsonFieldValue((string) jsonString, jsonObjectsCache);
+      if (jsonString.Length == 0) {
+        return;   // If not value, do nothing?
+      }
+      object invokeValue = this.ExtractJsonFieldValue(jsonString, jsonObjectsCache);
       invokeValue = this.TransformDataStoredValueBeforeAssignToMember(invokeValue);
       this.ImplementsSetValue(instance, invokeValue);
     }
@@ -238,6 +241,7 @@ namespace Empiria.Ontology.Modeler {
           Assertion.AssertObject(method, "Expected generic 'Get<T>(string)' method is not " +
                                          "defined in type JsonObject.");
           _jsonGetItemMethod = method.MakeGenericMethod(this.MemberType);
+
         }
         return _jsonGetItemMethod;
       }
@@ -369,9 +373,9 @@ namespace Empiria.Ontology.Modeler {
       if (this.MapToParsableObject || this.MapToLazyObject) {
         int objectId = (int) value;
         if (objectId == -1 && this.MapToEmptyObject) {
-          return ObjectFactory.EmptyInstance(this.MemberType);
+          return ParseEmptyObjectDelegate();   ///ObjectFactory.EmptyInstance(this.MemberType);
         } else {
-          return ObjectFactory.InvokeParseMethod(this.MemberType, objectId);
+          return ParseMemberTypeDelegate(objectId);  //ParseMemberTypeDelegate.DynamicInvoke(objectId);          
         }
       } else if (this.MapToEnumeration) {
         if (((string) value).Length == 1) {
@@ -383,6 +387,42 @@ namespace Empiria.Ontology.Modeler {
         return Convert.ToChar((string) value);
       } else {
         return value;
+      }
+    }
+
+    MethodInfo _parseMemberTypeMethod = null;
+    private MethodInfo ParseMemberTypeMethod {
+      get {
+        if (_parseMemberTypeMethod == null) {
+          _parseMemberTypeMethod = ObjectFactory.GetParseMethod(this.MemberType);
+        }
+        return _parseMemberTypeMethod;
+      }
+    }
+
+    private delegate object ParseMethodDelegate(int id);
+
+    ParseMethodDelegate _parseMethodDelegate = null;
+    private ParseMethodDelegate ParseMemberTypeDelegate {
+      get{
+        if (_parseMethodDelegate == null) {
+          _parseMethodDelegate = (ParseMethodDelegate) Delegate.CreateDelegate(typeof(ParseMethodDelegate),
+                                                                               ObjectFactory.GetParseMethod(this.MemberType));
+        }
+        return _parseMethodDelegate;
+      }
+    }
+
+    private delegate object EmptyMethodDelegate();
+
+    EmptyMethodDelegate _emptyMethodDelegate = null;
+    private EmptyMethodDelegate ParseEmptyObjectDelegate {
+      get {
+        if (_emptyMethodDelegate == null) {
+          _emptyMethodDelegate = (EmptyMethodDelegate) Delegate.CreateDelegate(typeof(EmptyMethodDelegate),
+                                                                               ObjectFactory.GetEmptyInstanceProperty(this.MemberType).GetGetMethod());
+        }
+        return _emptyMethodDelegate;
       }
     }
 

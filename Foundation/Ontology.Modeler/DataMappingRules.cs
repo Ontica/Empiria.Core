@@ -83,7 +83,7 @@ namespace Empiria.Ontology.Modeler {
         for (int i = 0; i < dataMappingsArray.Length; i++) {
           rule = dataMappingsArray[i];
           if (rule.MapToJsonItem) {
-            rule.SetValue(instance, dataRow[rule.DataColumnIndex], jsonObjectsCache);
+            rule.SetValue(instance, (string) dataRow[rule.DataColumnIndex], jsonObjectsCache);
           } else {
             rule.SetValue(instance, dataRow[rule.DataColumnIndex]);
           }
