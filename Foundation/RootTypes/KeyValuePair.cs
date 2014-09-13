@@ -26,10 +26,6 @@ namespace Empiria {
       return BaseObject.ParseId<KeyValuePair>(id);
     }
 
-    static internal KeyValuePair Parse(DataRow row) {
-      return BaseObject.ParseDataRow<KeyValuePair>(row);
-    }
-
     static public KeyValuePair Empty {
       get { return BaseObject.ParseEmpty<KeyValuePair>(); }
     }

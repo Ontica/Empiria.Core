@@ -42,14 +42,6 @@ namespace Empiria.Contacts {
       return BaseObject.ParseId<Contact>(id);
     }
 
-    static public Contact Parse(DataRow dataRow) {
-      return BaseObject.ParseDataRow<Contact>(dataRow);
-    }
-
-    static public Contact ParseFromBelow(int id) {
-      return BaseObject.ParseFromBelow<Contact>(id);
-    }
-
     static private readonly Contact _empty = BaseObject.ParseEmpty<Contact>();
     static public Contact Empty {
       get {

@@ -35,9 +35,8 @@ namespace Empiria.Contacts {
       string sql = "SELECT * FROM EOSContacts";
       sql += GeneralDataOperations.GetFilterSortSqlString(filter, sort);
 
-      DataTable table = DataReader.GetDataTable(DataOperation.Parse(sql));
-
-      return new FixedList<Contact>((x) => Contact.Parse(x), table);
+      return DataReader.GetList<Contact>(DataOperation.Parse(sql), 
+                                        (x) => BaseObject.ParseList<Contact>(x)).ToFixedList();
     }
 
     static internal int WriteContact(Contact o) {

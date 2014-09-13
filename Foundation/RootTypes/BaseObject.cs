@@ -78,14 +78,14 @@ namespace Empiria {
     static public T ParseDataRow<T>(DataRow dataRow) where T : BaseObject {
       try {
         ObjectTypeInfo baseObjectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
+        int objectId = (int) dataRow[baseObjectTypeInfo.IdFieldName];
 
-        ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(baseObjectTypeInfo, dataRow);
-        int objectId = (int) dataRow[derivedTypeInfo.IdFieldName];
-
-        T item = cache.TryGetItem<T>(derivedTypeInfo.Name, objectId);
+        T item = cache.TryGetItem<T>(baseObjectTypeInfo.Name, objectId);
         if (item != null) {
           return item;    // Only use dataRow when item is not in cache
         }
+        ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(baseObjectTypeInfo, dataRow);
+        
         return BaseObject.CreateBaseObject<T>(derivedTypeInfo, dataRow);
       } catch (Exception e) {
         var exception = new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
@@ -188,7 +188,7 @@ namespace Empiria {
       return BaseObject.CreateBaseObject<T>(objectData.Item1, objectData.Item2);
     }
 
-    static protected T ParseFromBelow<T>(DataRow dataRow) where T : BaseObject {
+    static public T ParseFromBelow<T>(DataRow dataRow) where T : BaseObject {
       ObjectTypeInfo baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(baseTypeInfo, dataRow);
@@ -203,14 +203,16 @@ namespace Empiria {
       ObjectTypeInfo typeInfo = ObjectTypeInfo.Parse(typeof(T));
       try {
         List<T> list = new List<T>(dataTable.Rows.Count);
-        foreach (DataRow dataRow in dataTable.Rows) {
-          ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(typeInfo, dataRow);
-          int objectId = (int) dataRow[derivedTypeInfo.IdFieldName];
 
-          T item = cache.TryGetItem<T>(derivedTypeInfo.Name, objectId);
+        foreach (DataRow dataRow in dataTable.Rows) {
+          int objectId = (int) dataRow[typeInfo.IdFieldName];
+
+          T item = cache.TryGetItem<T>(typeInfo.Name, objectId);
           if (item != null) {
             list.Add(item);    // Only use dataRow when item is not in cache
           } else {
+            ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(typeInfo, dataRow);
+
             list.Add(BaseObject.CreateBaseObject<T>(derivedTypeInfo, dataRow));
           }
         }
