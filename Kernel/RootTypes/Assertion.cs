@@ -42,6 +42,11 @@ namespace Empiria {
       }
     }
 
+    static public void AssertFail(string failsMessage) {
+      throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
+                                        GetSourceMethodName(), failsMessage);
+    }
+
     /// <summary>Used to protect code execution when the code flow reaches an invalid line.</summary>
     /// <returns>Returns an exception in order to be used in methods that return values. Simply use
     ///it as throw Assertion.AssertNoReachThisCode(); in place of a 'return value;' statement.</returns>

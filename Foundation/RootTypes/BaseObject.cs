@@ -34,14 +34,11 @@ namespace Empiria {
     private bool isDirty = true;
     private bool isNewFlag = true;
 
-    private const int emptyInstanceId = -1;
-    private const int unknownInstanceId = -2;
-
     #endregion Fields
 
     #region Constructors and parsers
 
-    protected BaseObject() {
+    protected BaseObject() {      
       objectTypeInfo = ObjectTypeInfo.Parse(this.GetType());
       if (objectTypeInfo.IsDataBound) {
         objectTypeInfo.InitializeObject(this);
@@ -50,6 +47,7 @@ namespace Empiria {
     }
 
     protected BaseObject(ObjectTypeInfo powertype) {
+      //var s = System.Environment.StackTrace;
       objectTypeInfo = powertype;
       if (objectTypeInfo.IsDataBound) {
         objectTypeInfo.InitializeObject(this);
@@ -77,16 +75,16 @@ namespace Empiria {
 
     static public T ParseDataRow<T>(DataRow dataRow) where T : BaseObject {
       try {
-        ObjectTypeInfo baseObjectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
-        int objectId = (int) dataRow[baseObjectTypeInfo.IdFieldName];
+        ObjectTypeInfo baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
+        int objectId = (int) dataRow[baseTypeInfo.IdFieldName];
 
-        T item = cache.TryGetItem<T>(baseObjectTypeInfo.Name, objectId);
+        T item = cache.TryGetItem<T>(baseTypeInfo.Name, objectId);
         if (item != null) {
           return item;    // Only use dataRow when item is not in cache
         }
-        ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(baseObjectTypeInfo, dataRow);
+        ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
         
-        return BaseObject.CreateBaseObject<T>(derivedTypeInfo, dataRow);
+        return BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow);
       } catch (Exception e) {
         var exception = new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
                                               e, typeof(T).FullName);
@@ -104,129 +102,99 @@ namespace Empiria {
       if (item != null) {
         return item;
       }
-      Tuple<ObjectTypeInfo, DataRow> objectData = BaseObject.GetBaseObjectData(typeInfo.Name, id);
+      Tuple<ObjectTypeInfo, DataRow> objectData = typeInfo.GetBaseObjectData(id);
 
-      return BaseObject.CreateBaseObject<T>(objectData.Item1, objectData.Item2);
+      return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
     }
 
-    static protected T ParseId<T>(int id) where T : BaseObject {
-      ObjectTypeInfo typeInfo = ObjectTypeInfo.Parse(typeof(T));
+    static protected internal T ParseId<T>(int id) where T : BaseObject {
+      var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
       if (id == 0) {
-        throw new OntologyException(OntologyException.Msg.TryToParseZeroObjectId, typeInfo.Name);
+        throw new OntologyException(OntologyException.Msg.TryToParseZeroObjectId, objectTypeInfo.Name);
       }
-      if (id == emptyInstanceId) {
-        return typeInfo.GetEmptyInstance<T>().Clone<T>();
+      if (id == ObjectTypeInfo.EmptyInstanceId) {
+        return objectTypeInfo.GetEmptyInstance<T>().Clone<T>();
       }
-      if (id == unknownInstanceId) {
-        return typeInfo.GetUnknownInstance<T>().Clone<T>();
+      if (id == ObjectTypeInfo.UnknownInstanceId) {
+        return objectTypeInfo.GetUnknownInstance<T>().Clone<T>();
       }
-      T item = cache.TryGetItem<T>(typeInfo.Name, id);
+      T item = cache.TryGetItem<T>(objectTypeInfo.Name, id);
       if (item != null) {
         return item;
       }
-      Tuple<ObjectTypeInfo, DataRow> objectData = BaseObject.GetBaseObjectData(typeInfo.Name, id);
+      Tuple<ObjectTypeInfo, DataRow> objectData = objectTypeInfo.GetBaseObjectData(id);
 
-      return BaseObject.CreateBaseObject<T>(objectData.Item1, objectData.Item2);
+      return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
     }
 
     static protected T ParseKey<T>(string namedKey) where T : BaseObject {
-      string typeName = ObjectTypeInfo.Parse(typeof(T)).Name;
+      var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-      T item = cache.TryGetItem<T>(typeName, namedKey);
+      T item = cache.TryGetItem<T>(objectTypeInfo.Name, namedKey);
       if (item != null) {
         return item;
       }
-      Tuple<ObjectTypeInfo, DataRow> objectData = GetBaseObjectData(typeName, namedKey);
+      Tuple<ObjectTypeInfo, DataRow> objectData = objectTypeInfo.GetBaseObjectData(namedKey);
 
-      return BaseObject.CreateBaseObject<T>(objectData.Item1, objectData.Item2);
-    }
-
-    // TODO: review usage /// GeneralObject + TypeAssociationInfo
-    static internal T Parse<T>(ObjectTypeInfo typeInfo, DataRow dataRow) where T : BaseObject {
-      T item = cache.TryGetItem<T>(typeInfo.Name, (int) dataRow[typeInfo.IdFieldName]);
-      if (item != null) {
-        return item;      // Only use dataRow when item is not in cache
-      }
-      return BaseObject.Parse<T>(typeInfo.Name, dataRow);
-    }
-
-    //TODO: Remove this method
-    static private T Parse<T>(string typeName, DataRow dataRow) where T : BaseObject {
-      try {
-        ObjectTypeInfo baseObjectTypeInfo = ObjectTypeInfo.Parse(typeName);
-
-        ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(baseObjectTypeInfo, dataRow);
-        int objectId = (int) dataRow[derivedTypeInfo.IdFieldName];
-
-        T item = cache.TryGetItem<T>(derivedTypeInfo.Name, objectId);
-        if (item != null) {
-          return item;    // Only use dataRow when item is not in cache
-        }
-        return BaseObject.CreateBaseObject<T>(derivedTypeInfo, dataRow);
-      } catch (Exception e) {
-        var exception = new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
-                                              e, typeName);
-        exception.Publish();
-        throw exception;
-      }
+      return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
     }
 
     static protected T ParseEmpty<T>() where T : BaseObject {
-      ObjectTypeInfo objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
+      var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
       
       return objectTypeInfo.GetEmptyInstance<T>().Clone<T>();
     }
 
     static protected T ParseFromBelow<T>(int id) where T : BaseObject {
-      string typeName = ObjectTypeInfo.Parse(typeof(T)).Name;
+      var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
       if (id == 0) {
         Assertion.Assert(id != 0, new OntologyException(OntologyException.Msg.TryToParseZeroObjectId,
-                                                        typeName));
+                                                        objectTypeInfo.Name));
       }
-      Tuple<ObjectTypeInfo, DataRow> objectData = GetBaseObjectData(typeName, id);
+      Tuple<ObjectTypeInfo, DataRow> objectData = objectTypeInfo.GetBaseObjectData(id);
 
-      return BaseObject.CreateBaseObject<T>(objectData.Item1, objectData.Item2);
+      return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
     }
 
     static public T ParseFromBelow<T>(DataRow dataRow) where T : BaseObject {
-      ObjectTypeInfo baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
+      var baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-      ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(baseTypeInfo, dataRow);
+      ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
 
-      return BaseObject.CreateBaseObject<T>(derivedTypeInfo, dataRow);
+      return BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow);
     }
 
     static public List<T> ParseList<T>(DataTable dataTable) where T : BaseObject {
       if (dataTable == null || dataTable.Rows.Count == 0) {
         return new List<T>();
       }
-      ObjectTypeInfo typeInfo = ObjectTypeInfo.Parse(typeof(T));
+      var baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
       try {
         List<T> list = new List<T>(dataTable.Rows.Count);
 
         foreach (DataRow dataRow in dataTable.Rows) {
-          int objectId = (int) dataRow[typeInfo.IdFieldName];
+          int objectId = (int) dataRow[baseTypeInfo.IdFieldName];
 
-          T item = cache.TryGetItem<T>(typeInfo.Name, objectId);
+          T item = cache.TryGetItem<T>(baseTypeInfo.Name, objectId);
           if (item != null) {
             list.Add(item);    // Only use dataRow when item is not in cache
           } else {
-            ObjectTypeInfo derivedTypeInfo = BaseObject.GetDerivedTypeInfo(typeInfo, dataRow);
+            ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
 
-            list.Add(BaseObject.CreateBaseObject<T>(derivedTypeInfo, dataRow));
+            list.Add(BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow));
           }
         }
         return list;
       } catch (Exception e) {
         var exception = new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
-                                              e, typeInfo.Name);
+                                              e, baseTypeInfo.Name);
         exception.Publish();
         throw exception;
       }
     }
 
     static protected T ParseUnknown<T>() where T : BaseObject {
-      ObjectTypeInfo objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
+      var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       return objectTypeInfo.GetUnknownInstance<T>().Clone<T>();
     }
@@ -240,10 +208,6 @@ namespace Empiria {
       private set;
     }
 
-    public ObjectTypeInfo ObjectTypeInfo {
-      get { return this.objectTypeInfo; }
-    }
-
     public int Id {
       get { return this.objectId; }
     }
@@ -253,7 +217,9 @@ namespace Empiria {
     }
 
     public bool IsEmptyInstance {
-      get { return (this.objectId == emptyInstanceId); }
+      get {
+        return (this.objectId == ObjectTypeInfo.EmptyInstanceId);
+      }
     }
 
     public bool IsNew {
@@ -262,14 +228,14 @@ namespace Empiria {
 
     protected internal bool IsSpecialCase {
       get {
-        return (this.objectId == emptyInstanceId ||
-                this.objectId == unknownInstanceId);
+        return (this.objectId == ObjectTypeInfo.EmptyInstanceId ||
+                this.objectId == ObjectTypeInfo.UnknownInstanceId);
       }
     }
 
     protected bool IsUnknownInstance {
       get {
-        return (this.objectId == unknownInstanceId);
+        return (this.objectId == ObjectTypeInfo.UnknownInstanceId);
       }
     }
 
@@ -280,14 +246,6 @@ namespace Empiria {
     /// <summary>Virtual method that creates a shallow copy of the current instance.</summary>
     protected virtual T Clone<T>() where T : BaseObject {
       return (T) this.MemberwiseClone();
-    }
-
-    protected void DataBind(DataRow row) {
-      this.ObjectTypeInfo.DataBind(this, row);
-    }
-
-    protected void LoadAttributesBagUsingHashTable(DataRow row) {
-      this.AttributesBag = new AttributesBag(this, row);
     }
 
     public override bool Equals(object obj) {
@@ -304,15 +262,13 @@ namespace Empiria {
       return objectTypeInfo.Equals(obj.objectTypeInfo) && (this.Id == obj.Id);
     }
 
+    public ObjectTypeInfo GetEmpiriaType() {
+      return this.objectTypeInfo;
+    }
+
     public override int GetHashCode() {
       return (this.objectTypeInfo.GetHashCode() ^ this.Id);
     }
-
-    //protected T GetLink<T>(string linkName) where T : BaseObject {
-    //  TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
-
-    //  return association.GetLink<T>(this);
-    //}
 
     protected FixedList<T> GetLinks<T>(string linkName) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
@@ -361,6 +317,10 @@ namespace Empiria {
       OntologyData.WriteLink(assocationInfo, this, value);
     }
 
+    protected void LoadAttributesBag(DataRow row) {
+      this.AttributesBag = new AttributesBag(this, row);
+    }
+
     /// <summary>Raised for new and stored instances, after object creation and before
     /// databinding if their type is marked as IsDatabounded.</summary>
     protected virtual void OnInitialize() {
@@ -384,30 +344,27 @@ namespace Empiria {
         return;
       }
       if (this.objectId == 0) {
-        this.objectId = OntologyData.GetNextObjectId(this.ObjectTypeInfo);
+        this.objectId = OntologyData.GetNextObjectId(this.GetEmpiriaType());
       }
       this.OnSave();
       this.isNewFlag = false;
       cache.Insert(this);
     }
 
-
-    // TODO: Review usage only in FilesFolder
-    protected DataRow GetDataRow() {
-      return OntologyData.GetBaseObjectDataRow(this.ObjectTypeInfo, this.Id);
-    }
-
     #endregion Public methods
 
     #region Private methods
 
-    static private T CreateBaseObject<T>(ObjectTypeInfo typeInfo, 
-                                         DataRow dataRow) where T : BaseObject {
+    private void DataBind(DataRow row) {
+      this.GetEmpiriaType().DataBind(this, row);
+    }
+
+    static private T ParseEmpiriaObject<T>(ObjectTypeInfo typeInfo,
+                                       DataRow dataRow) where T : BaseObject {
       T item = typeInfo.CreateObject<T>();
-      
       item.objectTypeInfo = typeInfo;
       item.objectId = (int) dataRow[typeInfo.IdFieldName];
-      if (item.objectTypeInfo.IsDataBound) {
+      if (typeInfo.IsDataBound) {
         item.DataBind(dataRow);
       }
       item.OnLoadObjectData(dataRow);
@@ -419,49 +376,6 @@ namespace Empiria {
         cache.Insert(item);
       }
       return item;
-    }
-
-    static private Tuple<ObjectTypeInfo, DataRow> GetBaseObjectData(string baseTypeName, int objectId) {
-      ObjectTypeInfo derivedTypeInfo = ObjectTypeInfo.Parse(baseTypeName);
-      DataRow dataRow = OntologyData.GetBaseObjectDataRow(derivedTypeInfo, objectId);
-      if (dataRow == null) {
-        throw new OntologyException(OntologyException.Msg.ObjectIdNotFound,
-                                    objectId, baseTypeName);
-      }
-      if ((objectId == emptyInstanceId || objectId == unknownInstanceId)) {
-        if (derivedTypeInfo.IsAbstract) {
-          Assertion.AssertObject(derivedTypeInfo.TypeIdFieldName, "derivedTypeInfo.TypeIdFieldName");
-          derivedTypeInfo = ObjectTypeInfo.Parse((int) dataRow[derivedTypeInfo.TypeIdFieldName]);
-        }
-      } else if (derivedTypeInfo.TypeIdFieldName.Length != 0) {      // Is base powertyped
-        derivedTypeInfo = ObjectTypeInfo.Parse((int) dataRow[derivedTypeInfo.TypeIdFieldName]);
-      }
-      return new Tuple<ObjectTypeInfo, DataRow>(derivedTypeInfo, dataRow);
-    }
-
-    static private Tuple<ObjectTypeInfo, DataRow> GetBaseObjectData(string baseTypeName, string objectNamedKey) {
-      ObjectTypeInfo derivedTypeInfo = ObjectTypeInfo.Parse(baseTypeName);
-      DataRow dataRow = OntologyData.GetBaseObjectDataRow(derivedTypeInfo, objectNamedKey);
-      if (dataRow == null) {
-        throw new OntologyException(OntologyException.Msg.ObjectNamedKeyNotFound,
-                                    baseTypeName, objectNamedKey);
-      }
-      if (derivedTypeInfo.TypeIdFieldName.Length != 0) {      // Is base powertyped
-        derivedTypeInfo = ObjectTypeInfo.Parse((int) dataRow[derivedTypeInfo.TypeIdFieldName]);
-      }
-      return new Tuple<ObjectTypeInfo, DataRow>(derivedTypeInfo, dataRow);
-    }
-
-    static private ObjectTypeInfo GetDerivedTypeInfo(ObjectTypeInfo baseTypeInfo, DataRow dataRow) {
-      if (baseTypeInfo.TypeIdFieldName.Length == 0) {
-        return baseTypeInfo;
-      }
-      int dataRowTypeIdValue = (int) dataRow[baseTypeInfo.TypeIdFieldName];
-      if (dataRowTypeIdValue == baseTypeInfo.Id) {
-        return baseTypeInfo;
-      } else {
-        return ObjectTypeInfo.Parse(dataRowTypeIdValue);
-      }
     }
 
     #endregion Private methods
@@ -496,9 +410,9 @@ namespace Empiria {
 
     protected void ReclassifyAs(ObjectTypeInfo newType) {
       Assertion.AssertObject(newType, "newType");
-      Assertion.Assert(!this.ObjectTypeInfo.Equals(newType),
+      Assertion.Assert(!this.GetEmpiriaType().Equals(newType),
                        "newType should be distinct to the current one.");
-      Assertion.Assert(!this.ObjectTypeInfo.UnderlyingSystemType.Equals(newType.UnderlyingSystemType),
+      Assertion.Assert(!this.GetEmpiriaType().UnderlyingSystemType.Equals(newType.UnderlyingSystemType),
                        "newType underlying system type should be the same to the current one's.");
 
       cache.Remove(this);

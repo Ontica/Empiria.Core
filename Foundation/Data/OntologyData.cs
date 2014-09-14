@@ -27,12 +27,12 @@ namespace Empiria.Ontology {
                                                  objectTypeInfo.IdFieldName, objectId);
     }
 
-    static internal DataRow GetBaseObjectDataRow(ObjectTypeInfo objectTypeInfo, string objectId) {
+    static internal DataRow GetBaseObjectDataRow(ObjectTypeInfo objectTypeInfo, string objectKey) {
       if (objectTypeInfo.DataSource.StartsWith("qry") || objectTypeInfo.DataSource.StartsWith("get")) {
-        return DataReader.GetDataRow(DataOperation.Parse(objectTypeInfo.DataSource, objectId));
+        return DataReader.GetDataRow(DataOperation.Parse(objectTypeInfo.DataSource, objectKey));
       }
       return GeneralDataOperations.GetEntityByKey(objectTypeInfo.DataSource, 
-                                                  objectTypeInfo.NamedIdFieldName, objectId);
+                                                  objectTypeInfo.NamedIdFieldName, objectKey);
     }
 
     static internal DataRow GetBaseObjectTypeInfoDataRowWithType(Type type) {

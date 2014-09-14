@@ -2,20 +2,21 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
-*  Type      : LazyObject                                       Pattern  : Standard Class                    *
+*  Type      : LazyInstance                                     Pattern  : Lazy Load                         *
 *  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
-*  Summary   : Performs lazy loading of IIdentifiable objects of types with static Parse(int) method.        *
+*  Summary   : Performs lazy loading of BaseObject instances of types.                                       *
 *                                                                                                            *
 ********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
+using Empiria.Ontology;
 using Empiria.Reflection;
 
 namespace Empiria {
 
-  /// <summary>Performs lazy loading of IIdentifiable objects of types with static Parse(int) method.</summary>
-  public class LazyObject<T> : IIdentifiable where T : class, IIdentifiable {
+  /// <summary>Performs lazy loading of BaseObject instances of types.</summary>
+  public class LazyInstance<T> : IIdentifiable where T : BaseObject {
 
     #region Fields
 
@@ -23,28 +24,26 @@ namespace Empiria {
     private T instance = null;
     private bool isCreated = false;
 
-    private object threadSafeObject = new object();
-    
     #endregion Fields
 
     #region Constructors and parsers
 
-    private LazyObject(int id) {
+    private LazyInstance(int id) {
       this.instanceId = id;
     }
 
-    private LazyObject(T instance) {
+    private LazyInstance(T instance) {
       this.instanceId = instance.Id;
       this.instance = instance;
       this.isCreated = true;
     }
 
-    static public LazyObject<T> Parse(int id) {
-      return new LazyObject<T>(id);
+    static public LazyInstance<T> Parse(int id) {
+      return new LazyInstance<T>(id);
     }
 
-    static private readonly LazyObject<T> _empty = LazyObject<T>.Parse(-1);
-    static public LazyObject<T> Empty {
+    static private readonly LazyInstance<T> _empty = LazyInstance<T>.Parse(ObjectTypeInfo.EmptyInstanceId);
+    static public LazyInstance<T> Empty {
       get {
         return _empty;
       }
@@ -60,20 +59,22 @@ namespace Empiria {
       }
     }
 
-    public T Instance {
+    public T Value {
       get {
-        if (!isCreated) {
-          lock (threadSafeObject) {
-            if (!isCreated) {
-              instance = ObjectFactory.InvokeParseMethod<T>(this.instanceId);
-              isCreated = true;
-            }
-          } // lock
+        if (!isCreated) {      
+          if (this.IsEmptyInstance) {
+            instance = ObjectTypeInfo.Parse(typeof(T)).GetEmptyInstance<T>();
+          } else {
+            instance = BaseObject.ParseId<T>(this.instanceId);
+          }
+          isCreated = true;
         }
         return instance;
       }
       set {
-        Assertion.AssertObject(value, "LazyObject.Instance cannot be set to a null value.");
+        if (value == null) {
+          Assertion.AssertFail("LazyInstance value cannot be set to null.");
+        }
         instanceId = value.Id;
         instance = value;
         isCreated = true;
@@ -88,12 +89,12 @@ namespace Empiria {
 
     public bool IsEmptyInstance {
       get {
-        return (instanceId == -1);
+        return (instanceId == ObjectTypeInfo.EmptyInstanceId);
       }
     }
 
     #endregion Properties
 
-  } // class LazyObject
+  } // class LazyInstance
 
 } // namespace Empiria

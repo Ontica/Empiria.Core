@@ -95,24 +95,12 @@ namespace Empiria.Reflection {
       }
     }
      
-    static public bool IsLazy(Type type) {
-      return (type.IsGenericType && 
-              type.GetGenericTypeDefinition() == typeof(LazyObject<>));
-    }
-
     static public bool IsStorable(Type type) {
       return (type.GetInterface("Empiria.IStorable") != null);
     }
 
     static public bool IsValueObject(Type type) {
       return (type.GetInterface("Empiria.IValueObject`1") != null);
-    }
-
-    static public object LazyEmptyObject(Type type) {
-      Type genericLazy = typeof(LazyObject<>).MakeGenericType(type);
-      PropertyInfo property = genericLazy.GetProperty("Empty", BindingFlags.Static | BindingFlags.Public);
-
-      return property.GetMethod.Invoke(null, null);
     }
 
     static public T InvokeParseMethod<T>(int objectId) {

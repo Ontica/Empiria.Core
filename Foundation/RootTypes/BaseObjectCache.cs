@@ -45,7 +45,7 @@ namespace Empiria {
     #region Internal methods
 
     internal void Insert(BaseObject item) {
-      string typeInfoName = item.ObjectTypeInfo.Name;
+      string typeInfoName = item.GetEmpiriaType().Name;
 
       // Empty and Unknown instances are unique per type, so don't create their base objects inside
       // the inheritance hierarchy.
@@ -73,7 +73,7 @@ namespace Empiria {
     }
 
     internal void Insert(BaseObject item, string namedKey) {
-      string typeInfoName = item.ObjectTypeInfo.Name;
+      string typeInfoName = item.GetEmpiriaType().Name;
 
       while (true) {
         if (typeInfoName.LastIndexOf('.') > 0) {

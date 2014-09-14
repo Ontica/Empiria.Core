@@ -187,6 +187,7 @@
     <Compile Include="Ontology\PartitionedTypeAttribute.cs" />
     <Compile Include="Ontology\PowertypeAttribute.cs" />
     <Compile Include="Ontology\Powertype.cs" />
+    <Compile Include="RootTypes\LazyInstance.cs" />
     <Compile Include="RootTypes\ValueObject.cs" />
     <Compile Include="RootTypes\DataFieldAttribute.cs" />
     <Compile Include="RootTypes\IValueObject.cs" />

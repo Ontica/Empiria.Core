@@ -62,7 +62,7 @@ namespace Empiria.Ontology.Modeler {
       dataMapping.LoadMemberRules();
 
       return dataMapping;
-    }  
+    }
   
     #endregion Constructors and parsers
 
@@ -147,7 +147,7 @@ namespace Empiria.Ontology.Modeler {
       private set;
     }
 
-    internal bool MapToLazyObject {
+    internal bool MapToLazyInstance {
       get;
       private set;
     }
@@ -179,7 +179,7 @@ namespace Empiria.Ontology.Modeler {
       this.DataFieldName = this.DataColumn.ColumnName;
       this.DataFieldType = this.DataColumn.DataType;
 
-      if (this.MapToLazyObject) {
+      if (this.MapToLazyInstance) {
         Assertion.Assert(this.DataFieldType == typeof(int),
                          "LazyObjects can only be parsed from integer type data columns.");
       }
@@ -295,14 +295,8 @@ namespace Empiria.Ontology.Modeler {
         //Returns a PropertyInfo in order to execute it when this.DefaultValue has been invoked.
         return this.GetPropertyInfoForDefaultValue();
       } else if (defaultValueType != this.MemberType && defaultValueType != typeof(string)) {
-        //Try to convert the default value to member type
-        if (ObjectFactory.IsConvertible(defaultValueType, this.MemberType)) {
-          return System.Convert.ChangeType(this.DataFieldAttribute.Default, this.MemberType);
-        } else {
-          throw new OntologyException(OntologyException.Msg.WrongDefaultValueType, 
-                                      this.MemberInfo.DeclaringType, this.MemberInfo.Name,
-                                      defaultValueType.Name, this.MemberType.Name);
-        }
+        //Convert the default value to member type
+        return System.Convert.ChangeType(this.DataFieldAttribute.Default, this.MemberType);
       } else {
         return this.DataFieldAttribute.Default;
       }
@@ -331,8 +325,6 @@ namespace Empiria.Ontology.Modeler {
         return (int) 0;
       } else if (ObjectFactory.HasEmptyInstance(type)) {
         return ObjectFactory.EmptyInstance(type);
-      } else if (ObjectFactory.IsLazy(type)) {
-        return ObjectFactory.LazyEmptyObject(type);
       } else if (type == typeof(DateTime)) {
         return ExecutionServer.DateMaxValue;
       } else if (type == typeof(bool)) {
@@ -352,7 +344,8 @@ namespace Empiria.Ontology.Modeler {
 
       this.ApplyOnInitialization = (this.MemberInfo is PropertyInfo);
       this.DataFieldAttribute = this.MemberInfo.GetCustomAttribute<DataFieldAttribute>();
-      this.MapToLazyObject = ObjectFactory.IsLazy(this.MemberType);
+      this.MapToLazyInstance = (this.MemberType.IsGenericType && 
+                                this.MemberType.GetGenericTypeDefinition() == typeof(LazyInstance<>));
       this.MapToParsableObject = ObjectFactory.HasParseWithIdMethod(this.MemberType);
       this.MapToEmptyObject = ObjectFactory.HasEmptyInstance(this.MemberType);
       this.MapToEnumeration = this.MemberType.IsEnum;
@@ -370,7 +363,7 @@ namespace Empiria.Ontology.Modeler {
     }
 
     private object TransformDataStoredValueBeforeAssignToMember(object value) {
-      if (this.MapToParsableObject || this.MapToLazyObject) {
+      if (this.MapToParsableObject || this.MapToLazyInstance) {
         int objectId = (int) value;
         if (objectId == -1 && this.MapToEmptyObject) {
           return ParseEmptyObjectDelegate();   ///ObjectFactory.EmptyInstance(this.MemberType);

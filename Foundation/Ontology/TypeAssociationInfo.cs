@@ -79,7 +79,7 @@ namespace Empiria.Ontology {
       DataRow row = OntologyData.GetObjectLinkDataRow(this, source);
 
       if (row != null) {
-        return BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, row);
+        return BaseObject.ParseDataRow<T>(row);
       } else {
         return defaultValue;
       }
@@ -89,7 +89,7 @@ namespace Empiria.Ontology {
       DataRow row = OntologyData.GetObjectLinkDataRow(this, source);
 
       if (row != null) {
-        return BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, row);
+        return BaseObject.ParseDataRow<T>(row);
       } else {
         return defaultValue;
       }
@@ -98,18 +98,9 @@ namespace Empiria.Ontology {
     // Object 1..* Object relation
     internal FixedList<T> GetLinks<T>(BaseObject source) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
-      List<T> list = new List<T>(table.Rows.Count);
+      
+      List<T> list = BaseObject.ParseList<T>(table);
 
-      try {
-        for (int i = 0; i < table.Rows.Count; i++) {
-          list.Add(BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, table.Rows[i]));
-        }
-      } catch (Exception e) {
-        OntologyException exception = new OntologyException(OntologyException.Msg.WrongAssociatedObjectFound, e, source.Id, 
-                                                            source.ObjectTypeInfo.Name, this.Name);
-
-        throw exception;
-      }
       return list.ToFixedList();
     }
 
@@ -117,11 +108,8 @@ namespace Empiria.Ontology {
     internal FixedList<T> GetLinks<T>(ObjectTypeInfo source) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
-      List<T> list = new List<T>(table.Rows.Count);
+      List<T> list = BaseObject.ParseList<T>(table);
 
-      for (int i = 0; i < table.Rows.Count; i++) {
-        list.Add(BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, table.Rows[i]));
-      }
       return list.ToFixedList();
     }
 
@@ -129,11 +117,8 @@ namespace Empiria.Ontology {
     internal FixedList<T> GetLinks<T>(BaseObject source, TimePeriod period) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source, period);
 
-      List<T> list = new List<T>(table.Rows.Count);
+      List<T> list = BaseObject.ParseList<T>(table);
 
-      for (int i = 0; i < table.Rows.Count; i++) {
-        list.Add(BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, table.Rows[i]));
-      }
       return list.ToFixedList();
     }
 
@@ -144,7 +129,7 @@ namespace Empiria.Ontology {
       List<T> list = new List<T>(table.Rows.Count);
 
       for (int i = 0; i < table.Rows.Count; i++) {
-        T item = BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, table.Rows[i]);
+        T item = BaseObject.ParseDataRow<T>(table.Rows[i]);
         if (predicate.Invoke(item)) {
           list.Add(item);
         }
