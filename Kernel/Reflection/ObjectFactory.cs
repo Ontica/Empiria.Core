@@ -38,7 +38,7 @@ namespace Empiria.Reflection {
                                       type.FullName);
       } catch (Exception innerException) {
         throw new ReflectionException(ReflectionException.Msg.ConstructorNotDefined,
-                                       innerException, type.FullName);
+                                      innerException, type.FullName);
       }
     }
 
@@ -64,7 +64,8 @@ namespace Empiria.Reflection {
       if (propertyInfo != null) {
         return propertyInfo.GetValue(instance, null);
       } else {
-        throw new ReflectionException(ReflectionException.Msg.ObjectPropertyNotFound, propertyName, type.FullName);
+        throw new ReflectionException(ReflectionException.Msg.ObjectPropertyNotFound,
+                                      propertyName, type.FullName);
       }
     }
 

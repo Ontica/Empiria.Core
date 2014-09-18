@@ -31,6 +31,15 @@ namespace Empiria.Ontology {
     internal const int EmptyInstanceId = -1;
     internal const int UnknownInstanceId = -2;
 
+    // Delegates definition
+    private delegate object DefaultConstructorDelegate();
+    private delegate object PowertypeConstructorDelegate(ObjectTypeInfo empiriaType);
+
+    // Delegate instances for either default or powertype instances
+    private DefaultConstructorDelegate defaultTypeConstructorDelegate;
+    private PowertypeConstructorDelegate powertypeConstructorDelegate;
+
+
     #endregion Fields
 
     #region Constructors and parsers
@@ -118,22 +127,16 @@ namespace Empiria.Ontology {
 
     #region Public methods
 
-    private ConstructorInfo _typeInstancesConstructor = null;
-    /// <summary>Creates a new instance of type T invoking its default constructor.</summary>
+    /// <summary>Creates a new instance of type T invoking its default or powertype constructor.</summary>
     internal T CreateObject<T>() where T : BaseObject  {
-      if (_typeInstancesConstructor == null) {
-        _typeInstancesConstructor = this.GetTypeInstancesConstructor();
-      }
+      this.AssertTypeInstancesConstructorIsAssigned();
       if (this.IsPowertype) {
-        //Partitioned type instances are created using 'constructor(ObjectTypeInfo t)'
-        // return (T) _typeInstancesConstructor.Invoke(new object[] { this });
-        return (T) powerTypeConstructorDelegate(this);
-        //return (T) quickConstructor.DynamicInvoke(this);
+        //Partitioned type instances are created using a delegate to 'constructor(ObjectTypeInfo t)'
+        return (T) powertypeConstructorDelegate(this);
       } else {
-        //No partitioned type instances are created using parameterless default 'constructor()'
-
-        return (T) defaultConstructorDelegate();
-        //return (T) _typeInstancesConstructor.Invoke(null);
+        // No partitioned type instances are created using a delegate to 
+        // the the parameterless default 'constructor()'
+        return (T) defaultTypeConstructorDelegate();
       }
     }
 
@@ -141,18 +144,6 @@ namespace Empiria.Ontology {
       if (this.IsDataBound) {
         this.AssertMappingRulesAreLoaded();
         dataMappingRules.DataBind(instance, row);
-      }
-    }
-
-    internal ObjectTypeInfo GetDerivedType(DataRow dataRow) {
-      if (this.TypeIdFieldName.Length == 0) {
-        return this;
-      }
-      int dataRowTypeIdValue = (int) dataRow[this.TypeIdFieldName];
-      if (dataRowTypeIdValue == this.Id) {
-        return this;
-      } else {
-        return ObjectTypeInfo.Parse(dataRowTypeIdValue);
       }
     }
 
@@ -171,7 +162,7 @@ namespace Empiria.Ontology {
         if (this.IsAbstract) {
           return new Tuple<ObjectTypeInfo, DataRow>(ObjectTypeInfo.Parse(derivedTypeId), dataRow);
         }
-      } else if (derivedTypeId != this.Id) {  // If types are distinct change basetype to derived
+      } else if (derivedTypeId != this.Id) {  // If types are distinct then change basetype to derived
         return new Tuple<ObjectTypeInfo, DataRow>(ObjectTypeInfo.Parse(derivedTypeId), dataRow);
       }
       return new Tuple<ObjectTypeInfo, DataRow>(this, dataRow);
@@ -188,10 +179,22 @@ namespace Empiria.Ontology {
       }
 
       int derivedTypeId = (int) dataRow[this.TypeIdFieldName];
-      if (derivedTypeId != this.Id) {   // If types are distinct change basetype to derived
+      if (derivedTypeId != this.Id) {   // If types are distinct then change basetype to derived
         new Tuple<ObjectTypeInfo, DataRow>(ObjectTypeInfo.Parse(derivedTypeId), dataRow);
       }
       return new Tuple<ObjectTypeInfo, DataRow>(this, dataRow);
+    }
+
+    internal ObjectTypeInfo GetDerivedType(DataRow dataRow) {
+      if (this.TypeIdFieldName.Length == 0) {
+        return this;
+      }
+      int dataRowTypeIdValue = (int) dataRow[this.TypeIdFieldName];
+      if (dataRowTypeIdValue == this.Id) {
+        return this;
+      } else {
+        return ObjectTypeInfo.Parse(dataRowTypeIdValue);
+      }
     }
 
     private BaseObject _emptyInstance = null;
@@ -281,103 +284,57 @@ namespace Empiria.Ontology {
 
     /// <summary>Gets the type default constructor, public or private, that takes no parameters for
     /// standard classes, or that take a powertype constructor for partitioned types.</summary>
-    private ConstructorInfo GetTypeInstancesConstructor() {
+    private void AssertTypeInstancesConstructorIsAssigned() {
+      if (defaultTypeConstructorDelegate != null || powertypeConstructorDelegate != null) {
+        return;
+      }
       if (this.IsPowertype) {
-        //quickConstructor = GetConst();
-        //Partitioned type instances are created using 'constructor(ObjectTypeInfo t)'
-        powerTypeConstructorDelegate = GetPowerTypeConstructorDelegate();
-
-        return this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
-                                                BindingFlags.NonPublic,
-                                                null, CallingConventions.HasThis,
-                                                new Type[] { this.GetType() }, null);
+        // Partitioned type instances are created using 'constructor(ObjectTypeInfo t)'
+        // through a PowertypeConstructorDelegate instance
+        powertypeConstructorDelegate = GetPowertypeConstructorDelegate();
       } else {
-        defaultConstructorDelegate = GetDefaultDelegate();
-        //No partitioned type instances are created using parameterless default 'constructor()'
-        //quickConstructor = GetConst();
-
-        return this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
-                                                BindingFlags.NonPublic,
-                                                null, CallingConventions.HasThis,
-                                                new Type[0], null);
+        // No partitioned type instances are created using parameterless default 'constructor()'
+        // through a DefaultConstructorDelegate instance
+        defaultTypeConstructorDelegate = GetDefaultConstructorDelegate();
       }
     }
 
-    private Delegate GetConst() {
-      if (this.IsPowertype) {
-        var constr = this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
-                                        BindingFlags.NonPublic,
-                                        null, CallingConventions.HasThis,
-                                        new Type[] { this.GetType() }, null);
-        ParameterExpression param =
-            Expression.Parameter(this.GetType(), "powertype");
-
-        NewExpression body = Expression.New(constr, param);
-        return Expression.Lambda(body, param).Compile();
-
-      } else {
-        NewExpression body = Expression.New(this.UnderlyingSystemType);
-        return Expression.Lambda(body).Compile();
-      }
-    }
-
-    private delegate object PowerTypeConstructorDelegate(ObjectTypeInfo empiriaType);
-    private PowerTypeConstructorDelegate powerTypeConstructorDelegate;
-
-
-    private PowerTypeConstructorDelegate GetPowerTypeConstructorDelegate() {
-      ConstructorInfo constructor = this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
-                                    BindingFlags.NonPublic,
-                                    null, CallingConventions.HasThis,
-                                    new Type[] { this.GetType() }, null);
-
-      // Create a new method.
-      var dynMethod = new DynamicMethod(this.UnderlyingSystemType.Name + "Ctor",
-                                        this.UnderlyingSystemType, new Type[] { this.GetType() },
-                                        constructor.Module, true);
-
-      // Generate the intermediate language.
-      ILGenerator lgen = dynMethod.GetILGenerator();
-      lgen.Emit(OpCodes.Ldarg_1);
-      lgen.Emit(OpCodes.Newobj, constructor);
-      lgen.Emit(OpCodes.Ret);
-
-      // Finish the method and create new delegate
-      // pointing at it.
-      return (PowerTypeConstructorDelegate) dynMethod.CreateDelegate(
-                                            typeof(PowerTypeConstructorDelegate));
-    }
-
-
-    private delegate object DefaultConstructorDelegate();
-    private DefaultConstructorDelegate defaultConstructorDelegate;
-
-    private DefaultConstructorDelegate GetDefaultDelegate() {
+    private DefaultConstructorDelegate GetDefaultConstructorDelegate() {
       ConstructorInfo constructor = this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
                                     BindingFlags.NonPublic,
                                     null, CallingConventions.HasThis,
                                     new Type[0], null);
 
-      // Create a new method.
       var dynMethod = new DynamicMethod(this.UnderlyingSystemType.Name + "Ctor",
                                         this.UnderlyingSystemType, null,
                                         constructor.Module, true);
 
-      // Generate the intermediate language.
-      ILGenerator lgen = dynMethod.GetILGenerator();
-      lgen.Emit(OpCodes.Newobj, constructor);
-      lgen.Emit(OpCodes.Ret);
+      ILGenerator codeGenerator = dynMethod.GetILGenerator();
+      codeGenerator.Emit(OpCodes.Newobj, constructor);
+      codeGenerator.Emit(OpCodes.Ret);
 
-      // Finish the method and create new delegate
-      // pointing at it.
-      return (DefaultConstructorDelegate) dynMethod.CreateDelegate(
-                                          typeof(DefaultConstructorDelegate));
-    
+      return (DefaultConstructorDelegate) dynMethod.CreateDelegate(typeof(DefaultConstructorDelegate)); 
     }
 
-   
+    private PowertypeConstructorDelegate GetPowertypeConstructorDelegate() {
+      var constructor = this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance |
+                                                                 BindingFlags.Public |
+                                                                 BindingFlags.NonPublic,
+                                                                 null, CallingConventions.HasThis,
+                                                                 new Type[] { this.GetType() }, null);
 
+      var dynMethod = new DynamicMethod(this.UnderlyingSystemType.Name + "Ctor",
+                                        this.UnderlyingSystemType, new Type[] { typeof(ObjectTypeInfo) },
+                                        constructor.Module, true);
 
+      // Generate the intermediate language.
+      ILGenerator codeGenerator = dynMethod.GetILGenerator();
+      codeGenerator.Emit(OpCodes.Ldarg_0);
+      codeGenerator.Emit(OpCodes.Newobj, constructor);
+      codeGenerator.Emit(OpCodes.Ret);
+
+      return (PowertypeConstructorDelegate) dynMethod.CreateDelegate(typeof(PowertypeConstructorDelegate));
+    }
 
     #endregion Private properties and methods
 
