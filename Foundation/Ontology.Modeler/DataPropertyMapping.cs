@@ -11,6 +11,8 @@
 using System;
 using System.Reflection;
 
+using Empiria.Reflection;
+
 namespace Empiria.Ontology.Modeler {
 
   /// <summary>Mapping rule between a type property and a data source element.</summary>
@@ -20,8 +22,8 @@ namespace Empiria.Ontology.Modeler {
 
     private PropertyInfo propertyInfo = null;
     private Type memberType = null;
-    private MethodInfo getMethod = null;
-    private MethodInfo setMethod = null;
+    private Func<object, object> getValueMethodDelegate;
+    private Action<object, object> setValueMethodDelegate;
 
     #endregion Fields
 
@@ -30,8 +32,8 @@ namespace Empiria.Ontology.Modeler {
     protected internal DataPropertyMapping(PropertyInfo propertyInfo) {
       this.propertyInfo = propertyInfo;
       this.memberType = this.propertyInfo.PropertyType;
-      this.getMethod = this.propertyInfo.GetMethod;
-      this.setMethod = this.propertyInfo.SetMethod;
+      this.getValueMethodDelegate = MethodInvoker.GetPropertyValueMethodDelegate(this.propertyInfo);
+      this.setValueMethodDelegate = MethodInvoker.SetPropertyValueMethodDelegate(this.propertyInfo);
     }
 
     #endregion Constructors and parsers
@@ -51,30 +53,12 @@ namespace Empiria.Ontology.Modeler {
     #region Public methods
 
     protected override object ImplementsGetValue(object instance) {
-      return getMethod.Invoke(instance, null);
+      return getValueMethodDelegate.Invoke(instance);
     }
 
     protected override void ImplementsSetValue(object instance, object value) {
-     // ParseSetMethodDelegate.Invoke(instance, value);
-
-      setMethod.Invoke(instance, new[] { value });
+      setValueMethodDelegate.Invoke(instance, value);
     }
-
-    //Action<int> valueSetter = (Action<object>) 
-    //  Delegate.CreateDelegate(typeof(Action<int>), tc, tc.GetType().GetProperty("Value").GetSetMethod());
-
-
-    //private delegate void SetMethodDelegate(object instance, object value);
-    //SetMethodDelegate _setMethodDelegate = null;
-    //private SetMethodDelegate ParseSetMethodDelegate {
-    //  get {
-    //    if (_setMethodDelegate == null) {
-    //      _setMethodDelegate = (SetMethodDelegate) Delegate.CreateDelegate(typeof(SetMethodDelegate),
-    //                                                                       this.propertyInfo.GetSetMethod());
-    //    }
-    //    return _setMethodDelegate;
-    //  }
-    //}
 
     #endregion Public methods
 

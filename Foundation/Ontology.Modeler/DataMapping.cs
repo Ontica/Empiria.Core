@@ -11,8 +11,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Reflection;
 using System.Linq;
+using System.Reflection;
 
 using Empiria.Data;
 using Empiria.Reflection;
@@ -105,12 +105,15 @@ namespace Empiria.Ontology.Modeler {
     }
 
     private object _defaultValue = null;
+    private Func<object> defaultValueDelegate = null;
+
     internal object DefaultValue {
       get {
-        if (_defaultValue is PropertyInfo) {
-          return ((PropertyInfo) _defaultValue).GetMethod.Invoke(null, null);
+        if (defaultValueDelegate != null) {
+          return defaultValueDelegate.Invoke();
+        } else {
+          return _defaultValue;
         }
-        return _defaultValue;
       }
       private set {
         _defaultValue = value;
@@ -285,15 +288,16 @@ namespace Empiria.Ontology.Modeler {
 
     private object GetDataFieldDefaultValue() {
       if (this.DataFieldAttribute.Default == null) {
-        // If there is not a default value, then simply return the predefined value for instances
-        // of type this.MemberType.
+        // If there is not defined a default value, then simply return the predefined value
+        // for instances of type this.MemberType.
         return DataMapping.GetTypeDefaultValue(this.MemberType);
       }
 
       Type defaultValueType = this.DataFieldAttribute.Default.GetType();
       if (defaultValueType != this.MemberType && defaultValueType == typeof(string)) {
-        //Returns a PropertyInfo in order to execute it when this.DefaultValue has been invoked.
-        return this.GetPropertyInfoForDefaultValue();
+        //Builds a delegate in order to execute it when this.DefaultValue has been invoked.
+        defaultValueDelegate = GetDelegateForDefaultValue();
+        return defaultValueDelegate.Invoke();
       } else if (defaultValueType != this.MemberType && defaultValueType != typeof(string)) {
         //Convert the default value to member type
         return System.Convert.ChangeType(this.DataFieldAttribute.Default, this.MemberType);
@@ -302,7 +306,7 @@ namespace Empiria.Ontology.Modeler {
       }
     }
 
-    private PropertyInfo GetPropertyInfoForDefaultValue() {
+    private Func<object> GetDelegateForDefaultValue() {
       string defaultValueCode = (string) this.DataFieldAttribute.Default;
       try {
         string typeName = defaultValueCode.Substring(0, defaultValueCode.LastIndexOf('.'));
@@ -310,7 +314,10 @@ namespace Empiria.Ontology.Modeler {
 
         Type type = MetaModelType.TryGetSystemType(typeName);
         Assertion.AssertObject(type, "type");
-        return MethodInvoker.GetStaticProperty(type, propertyName);
+
+        PropertyInfo propertyInfo = MethodInvoker.GetStaticProperty(type, propertyName);
+
+        return MethodInvoker.GetStaticPropertyValueMethodDelegate(propertyInfo);
       } catch (Exception e) {
         throw new OntologyException(OntologyException.Msg.CannotParsePropertyForDefaultValue, e,  
                                     this.MemberInfo.DeclaringType, this.MemberInfo.Name,

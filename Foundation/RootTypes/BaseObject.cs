@@ -27,7 +27,7 @@ namespace Empiria {
 
     #region Fields
 
-    static private BaseObjectCache cache = new BaseObjectCache();
+    static private ObjectsCache cache = new ObjectsCache();
 
     private ObjectTypeInfo objectTypeInfo = null;
     private int objectId = 0;

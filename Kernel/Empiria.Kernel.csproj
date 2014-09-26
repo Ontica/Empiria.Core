@@ -171,7 +171,6 @@
     <Compile Include="Collections\EmpiriaCollection.cs" />
     <Compile Include="Collections\EmpiriaCollectionException.cs" />
     <Compile Include="Collections\EmpiriaHashList.cs" />
-    <Compile Include="Collections\CachedList.cs" />
     <Compile Include="DataTypes\Calendar.cs" />
     <Compile Include="RootTypes\EmpiriaMath.cs" />
     <Compile Include="RootTypes\EmpiriaString.cs" />

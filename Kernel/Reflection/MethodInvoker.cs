@@ -10,6 +10,7 @@
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace Empiria.Reflection {
 
@@ -93,6 +94,83 @@ namespace Empiria.Reflection {
       PropertyInfo property = GetStaticProperty(type, propertyName);
 
       return property.GetMethod.Invoke(null, null);
+    }
+
+    static public Func<object, object> GetPropertyValueMethodDelegate(PropertyInfo propertyInfo) {
+      var dynMethod = new DynamicMethod("_get_" + propertyInfo.Name, typeof(object),
+                                        new Type[] { typeof(object) },
+                                        propertyInfo.DeclaringType.Module, true);
+
+      // Generate the intermediate language.
+      ILGenerator codeGenerator = dynMethod.GetILGenerator();
+      codeGenerator.Emit(OpCodes.Ldarg_0);
+      codeGenerator.Emit(OpCodes.Castclass, propertyInfo.DeclaringType);
+      codeGenerator.Emit(OpCodes.Call, propertyInfo.GetMethod);
+      if (propertyInfo.GetMethod.ReturnType.IsValueType) {
+        codeGenerator.Emit(OpCodes.Box, propertyInfo.GetMethod.ReturnType);
+      }
+      codeGenerator.Emit(OpCodes.Ret);
+
+      return (Func<object, object>) dynMethod.CreateDelegate(typeof(Func<object, object>));
+    }
+
+    static public Action<object, object> SetPropertyValueMethodDelegate(PropertyInfo propertyInfo) {
+      var argumentTypes = new Type[] { typeof(object), typeof(object) };
+
+      var dynMethod = new DynamicMethod("_set_" + propertyInfo.Name, null, argumentTypes,
+                                        propertyInfo.DeclaringType.Module, true);
+
+      // Generate the intermediate language.
+      ILGenerator codeGenerator = dynMethod.GetILGenerator();
+      codeGenerator.Emit(OpCodes.Ldarg_0);
+      codeGenerator.Emit(OpCodes.Castclass, propertyInfo.DeclaringType);
+      codeGenerator.Emit(OpCodes.Ldarg_1);
+      if (propertyInfo.PropertyType.IsValueType) {
+        codeGenerator.Emit(OpCodes.Unbox_Any, propertyInfo.PropertyType);
+      } else {
+        codeGenerator.Emit(OpCodes.Castclass, propertyInfo.PropertyType);
+      }
+      codeGenerator.Emit(OpCodes.Callvirt, propertyInfo.SetMethod);
+      codeGenerator.Emit(OpCodes.Ret);
+
+      return (Action<object, object>) dynMethod.CreateDelegate(typeof(Action<object, object>));
+    }
+
+    static public Action<object, object> GetFieldValueSetMethodDelegate(FieldInfo fieldInfo) {
+      var argumentTypes = new Type[] { typeof(object), typeof(object) };
+
+      var dynMethod = new DynamicMethod("_setField_" + fieldInfo.Name, null, argumentTypes,
+                                        fieldInfo.DeclaringType.Module, true);
+
+      // Generate the intermediate language.
+      ILGenerator codeGenerator = dynMethod.GetILGenerator();
+      codeGenerator.Emit(OpCodes.Ldarg_0);
+      codeGenerator.Emit(OpCodes.Castclass, fieldInfo.DeclaringType);
+      codeGenerator.Emit(OpCodes.Ldarg_1);
+      if (fieldInfo.FieldType.IsValueType) {
+        codeGenerator.Emit(OpCodes.Unbox_Any, fieldInfo.FieldType); // unbox the value parameter to the value-type
+      } else {
+        codeGenerator.Emit(OpCodes.Castclass, fieldInfo.FieldType); // cast the value on the stack to the field type
+      }
+      codeGenerator.Emit(OpCodes.Stfld, fieldInfo);
+      codeGenerator.Emit(OpCodes.Ret);
+
+      return (Action<object, object>) dynMethod.CreateDelegate(typeof(Action<object, object>));
+    }
+
+    static public Func<object> GetStaticPropertyValueMethodDelegate(PropertyInfo propertyInfo) {
+      var dynMethod = new DynamicMethod("_get_" + propertyInfo.Name, typeof(object),
+                                        null, propertyInfo.DeclaringType.Module, true);
+
+      // Generate the intermediate language.
+      ILGenerator codeGenerator = dynMethod.GetILGenerator();
+      codeGenerator.Emit(OpCodes.Call, propertyInfo.GetMethod);
+      if (propertyInfo.GetMethod.ReturnType.IsValueType) {
+        codeGenerator.Emit(OpCodes.Box, propertyInfo.GetMethod.ReturnType);
+      }
+      codeGenerator.Emit(OpCodes.Ret);
+
+      return (Func<object>) dynMethod.CreateDelegate(typeof(Func<object>));
     }
 
     static public PropertyInfo GetStaticProperty(Type type, string propertyName) {

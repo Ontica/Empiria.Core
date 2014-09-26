@@ -11,6 +11,8 @@
 using System;
 using System.Reflection;
 
+using Empiria.Reflection;
+
 namespace Empiria.Ontology.Modeler {
 
   /// <summary>Mapping rule between a type field and a data source element.</summary>
@@ -20,6 +22,7 @@ namespace Empiria.Ontology.Modeler {
 
     private FieldInfo fieldInfo = null;
     private Type memberType = null;
+    private Action<object, object> setValueMethodDelegate;
 
     #endregion Fields
 
@@ -28,6 +31,7 @@ namespace Empiria.Ontology.Modeler {
     internal DataFieldMapping(FieldInfo fieldInfo) {
       this.fieldInfo = fieldInfo;
       this.memberType = fieldInfo.FieldType;
+      this.setValueMethodDelegate = MethodInvoker.GetFieldValueSetMethodDelegate(this.fieldInfo);
     }
 
     #endregion Constructors and parsers
@@ -51,7 +55,7 @@ namespace Empiria.Ontology.Modeler {
     }
 
     protected override void ImplementsSetValue(object instance, object value) {
-      fieldInfo.SetValue(instance, value);
+      setValueMethodDelegate.Invoke(instance, value);
     }
 
     #endregion Public methods

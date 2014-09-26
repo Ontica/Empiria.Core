@@ -300,10 +300,11 @@ namespace Empiria.Ontology {
     }
 
     private DefaultConstructorDelegate GetDefaultConstructorDelegate() {
-      ConstructorInfo constructor = this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
-                                    BindingFlags.NonPublic,
-                                    null, CallingConventions.HasThis,
-                                    new Type[0], null);
+      ConstructorInfo constructor = this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | 
+                                                                             BindingFlags.Public |
+                                          BindingFlags.NonPublic,
+                                          null, CallingConventions.HasThis,
+                                          new Type[0], null);
 
       var dynMethod = new DynamicMethod(this.UnderlyingSystemType.Name + "Ctor",
                                         this.UnderlyingSystemType, null,
