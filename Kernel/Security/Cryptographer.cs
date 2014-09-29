@@ -39,6 +39,15 @@ namespace Empiria.Security {
 
     #region Public methods
 
+    static private string ConvertToString(byte[] data) {
+      StringBuilder sBuilder = new StringBuilder();
+
+      for (int i = 0; i < data.Length; i++) {
+        sBuilder.AppendFormat("{0:x2}", data[i]);
+      }
+      return sBuilder.ToString();
+    }
+
     static public string CreateDigitalSign(string text) {
       return CreateDigitalSign(text, String.Empty);
     }
@@ -219,60 +228,6 @@ namespace Empiria.Security {
       return Convert.ToBase64String(memoryStream.ToArray());
     }
 
-    static private void SetLicenseKey() {
-      byte[] result = new byte[32];
-      byte[] key = ReadByteArray("LKey");
-
-      string licenseName = ExecutionServer.LicenseName;
-      string license = ExecutionServer.LicenseNumber;
-
-      int x = 0;
-      for (int i = 1; i < license.Length; i++) {
-        x += licenseName[i % licenseName.Length] +
-             (key[i] * ((license[license.Length - i - 1] % 5) + 1)) -
-             (license[i] * ((key[key.Length - i - 1] % 3) + 1));
-      }
-      result[0] = (byte) (Math.Abs(x) % 255);
-      for (int i = 1; i < key.Length / 2; i++) {
-        result[i] = (byte) (((x * result[i - 1]) + key[i]) + (x * key[key.Length - i - 1]) % 255);
-        x += license[i] + license[license.Length - i - 1];
-      }
-
-      licenseKey = result;
-    }
-
-    static private byte[] ParseEntropyKey(string publicKey, byte[] byteArray) {
-      byte[] result = new byte[byteArray.Length];
-
-      if (publicKey.IndexOf('.') != -1) {
-        publicKey = publicKey.Substring(0, publicKey.IndexOf('.'));
-      }
-      for (int i = 0; i < byteArray.Length; i++) {
-        result[i] = (byte) (byteArray[i] + publicKey[i % publicKey.Length] % 255);
-      }
-      return result;
-    }
-
-    static private void StartEngine() {
-      if (licenseKey != null) {
-        return;
-      }
-      string license = ExecutionServer.LicenseNumber.Replace("-", String.Empty);
-      if (license.Length != 32) {
-        throw new ExecutionServerException(ExecutionServerException.Msg.InvalidLicense);
-      }
-      if (GetLicenseHashCode(license.Substring(8)) != license.Substring(0, 8)) {
-        throw new ExecutionServerException(ExecutionServerException.Msg.InvalidLicense);
-      }
-      if (ExecutionServer.LicenseSerialNumber.Length != 63) {
-        throw new ExecutionServerException(ExecutionServerException.Msg.InvalidLicense);
-      }
-      if (GetSerialNumber() != ExecutionServer.LicenseSerialNumber) {
-        throw new ExecutionServerException(ExecutionServerException.Msg.InvalidLicense);
-      }
-      SetLicenseKey();
-    }
-
     static private string GetLicenseHashCode(string license) {
       char[] licenseArray = license.ToCharArray();
       string hashCode = String.Empty;
@@ -308,50 +263,20 @@ namespace Empiria.Security {
       return hashCode;
     }
 
-    //static private string GenerateSerialNumberPart(string hashCode, string hardwareCode) {
-    //  SHA256Managed sha = new SHA256Managed();
-    //  byte[] hash = sha.ComputeHash(ASCIIEncoding.ASCII.GetBytes(hashCode + hardwareCode));
-
-    //  return GetLicenseHashCode(Convert.ToBase64String(hash).ToUpper());
-    //}
-
     static private string GetSerialNumber() {
-      //string hardwareCode = GetSerialNumberSeed();
-
-      //string serialNumber = String.Empty;
-      //string[] licArray = ExecutionServer.LicenseNumber.Split('-');
-
-      //for (int i = 0; i < licArray.Length; i++) {
-      //  string part = hardwareCode.Substring(i * 11, 11) + licArray[i];
-      //  serialNumber += GenerateSerialNumberPart(GetLicenseHashCode(part), hardwareCode) + "-";
-      //}
-      //return serialNumber.TrimEnd('-');
       return ExecutionServer.LicenseSerialNumber;
     }
 
-    //static private string GetSerialNumberSeed() {
-    //  string temp = String.Empty;
+    static private byte[] ParseEntropyKey(string publicKey, byte[] byteArray) {
+      byte[] result = new byte[byteArray.Length];
 
-    //  string[] seedParts = ReadString("SNSeeds").Split('|');
-
-    //  for (int i = 0; i < (seedParts.Length / 2); i++) {
-    //    temp += GetSerialNumberSeedPart(seedParts[2 * i], seedParts[(2 * i) + 1], String.Empty);
-    //  }
-    //  temp += ExecutionServer.LicenseName;
-    //  temp = Convert.ToBase64String(new SHA256Managed().ComputeHash(ASCIIEncoding.ASCII.GetBytes(temp)));
-
-    //  return temp.PadRight(16, '0');
-    //}
-
-    static private string ReadString(string name) {
-      string data = ConfigurationData.GetString(name);
-
-      byte[] bytes = Convert.FromBase64String(data);
-      byte[] entropy = ASCIIEncoding.ASCII.GetBytes(name + "-" + ExecutionServer.LicenseSerialNumber);
-
-      byte[] returnBytes = ProtectedData.Unprotect(bytes, entropy, DataProtectionScope.LocalMachine);
-
-      return ASCIIEncoding.ASCII.GetString(returnBytes);
+      if (publicKey.IndexOf('.') != -1) {
+        publicKey = publicKey.Substring(0, publicKey.IndexOf('.'));
+      }
+      for (int i = 0; i < byteArray.Length; i++) {
+        result[i] = (byte) (byteArray[i] + publicKey[i % publicKey.Length] % 255);
+      }
+      return result;
     }
 
     static private byte[] ReadByteArray(string name) {
@@ -365,40 +290,54 @@ namespace Empiria.Security {
       return bytes;
     }
 
-    static private string GetSerialNumberSeedPart(string className, string propertyName, string propertyMustBeTrue) {
-      string temp = String.Empty;
-      try {
-        using (ManagementClass mc = new ManagementClass(className)) {
-          ManagementObjectCollection moc = mc.GetInstances();
-          foreach (ManagementObject mo in moc) {
-            if (propertyMustBeTrue.Length == 0) {
-              temp = mo[propertyName].ToString();
-              break;
-            } else if (propertyMustBeTrue.Length != 0 && (bool) mo[propertyMustBeTrue]) {
-              temp = mo[propertyName].ToString();
-              break;
-            }
-            mo.Dispose();
-          }
-          moc.Dispose();
-        }
-      } catch {
-        temp = "N/A";
-      }
-      temp = temp.Replace(":", String.Empty).Replace(" ", String.Empty).Replace(".", String.Empty);
+    static private string ReadString(string name) {
+      string data = ConfigurationData.GetString(name);
 
-      return temp;
+      byte[] bytes = Convert.FromBase64String(data);
+      byte[] entropy = ASCIIEncoding.ASCII.GetBytes(name + "-" + ExecutionServer.LicenseSerialNumber);
+
+      byte[] returnBytes = ProtectedData.Unprotect(bytes, entropy, DataProtectionScope.LocalMachine);
+
+      return ASCIIEncoding.ASCII.GetString(returnBytes);
     }
 
-    static private string ConvertToString(byte[] data) {
-      StringBuilder sBuilder = new StringBuilder();
+    static private void SetLicenseKey() {
+      byte[] result = new byte[32];
+      byte[] key = ReadByteArray("LKey");
 
-      for (int i = 0; i < data.Length; i++) {
-        sBuilder.AppendFormat("{0:x2}", data[i]);
+      string licenseName = ExecutionServer.LicenseName;
+      string license = ExecutionServer.LicenseNumber;
+
+      int x = 0;
+      for (int i = 1; i < license.Length; i++) {
+        x += licenseName[i % licenseName.Length] +
+             (key[i] * ((license[license.Length - i - 1] % 5) + 1)) -
+             (license[i] * ((key[key.Length - i - 1] % 3) + 1));
       }
-      return sBuilder.ToString();
+      result[0] = (byte) (Math.Abs(x) % 255);
+      for (int i = 1; i < key.Length / 2; i++) {
+        result[i] = (byte) (((x * result[i - 1]) + key[i]) + (x * key[key.Length - i - 1]) % 255);
+        x += license[i] + license[license.Length - i - 1];
+      }
+      licenseKey = result;
     }
 
+    static private void StartEngine() {
+      if (licenseKey != null) {
+        return;
+      }
+      string license = ExecutionServer.LicenseNumber.Replace("-", String.Empty);
+      if (license.Length != 32) {
+        throw new ExecutionServerException(ExecutionServerException.Msg.InvalidLicense);
+      }
+      if (GetLicenseHashCode(license.Substring(8)) != license.Substring(0, 8)) {
+        throw new ExecutionServerException(ExecutionServerException.Msg.InvalidLicense);
+      }
+      if (GetSerialNumber() != ExecutionServer.LicenseSerialNumber) {
+        throw new ExecutionServerException(ExecutionServerException.Msg.InvalidLicense);
+      }
+      SetLicenseKey();
+    }
 
     #endregion Private methods
 
@@ -553,8 +492,9 @@ namespace Empiria.Security {
           return rsa;
         } catch (Exception) {
           return null;
-        } finally { binr.Close(); }
-
+        } finally {
+          binr.Close();
+        }
       }
 
       static private bool CompareByteArrays(byte[] a, byte[] b) {
@@ -572,7 +512,8 @@ namespace Empiria.Security {
       }
 
       //  ------  Uses PBKD2 to derive a 3DES key and decrypts data --------
-      static public byte[] DecryptPBDK2(byte[] edata, byte[] salt, byte[] IV, SecureString secpswd, int iterations) {
+      static public byte[] DecryptPBDK2(byte[] edata, byte[] salt, byte[] IV, 
+                                        SecureString secpswd, int iterations) {
         CryptoStream decrypt = null;
 
         IntPtr unmanagedPswd = IntPtr.Zero;

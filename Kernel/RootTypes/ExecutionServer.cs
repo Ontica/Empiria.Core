@@ -1,13 +1,13 @@
 ﻿/* Empiria® Foundation Framework 2014 ************************************************************************
-*																																																						 *
-*	 Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
-*	 Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
-*	 Type      : ExecutionServer                                  Pattern  : Static Class                      *
-*  Version   : 5.5   Date: 28/Mar/2014                          License  : GNU AGPLv3  (See license.txt)     *
+*                                                                                                            *
+*  Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
+*  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
+*  Type      : ExecutionServer                                  Pattern  : Static Class                      *
+*  Version   : 6.0   Date: 23/Oct/2014                          License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
 *  Summary   : Static class that returns Empiria current execution server information.                       *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Web;
 
@@ -24,15 +24,13 @@ namespace Empiria {
     WindowsApplication = 4,
     WebApiServer = 5,
   }
-  
+
   #endregion Enumerations
-  
+
   /// <summary>Static class that returns Empiria current execution server information.</summary>
   static public class ExecutionServer {
 
     #region Fields
-
-    static private readonly string EmpiriaPrincipalTag = "Empiria.Land.Zacatecas.Principal";
 
     static private string customerName = null;
     static private string customerUrl = null;
@@ -52,35 +50,28 @@ namespace Empiria {
 
     #endregion Fields
 
-    #region Constructors and parsers
-
-    #endregion Constructors and parsers
-
     #region Public properties
 
     static public string CustomerName {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         return customerName;
       }
     }
 
     static public string CustomerUrl {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         return customerUrl;
       }
     }
 
     static public IEmpiriaIdentity CurrentIdentity {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         if (ExecutionServer.CurrentPrincipal != null) {
           return ExecutionServer.CurrentPrincipal.Identity as IEmpiriaIdentity;
         } else {
@@ -98,9 +89,9 @@ namespace Empiria {
             HttpContext.Current.Session == null) {
           return null;
         }
-        if (!isStarted) {
-          Start();
-        }
+
+        AssertIsStarted();
+
         if (ServerType != ExecutionServerType.WebApiServer) {
           return HttpContext.Current.Session[EmpiriaPrincipalTag] as IEmpiriaPrincipal;
         } else {
@@ -108,9 +99,8 @@ namespace Empiria {
         }
       }
       set {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         if (HttpContext.Current != null && ServerType != ExecutionServerType.WebApiServer) {
           HttpContext.Current.Session.Add(ExecutionServer.EmpiriaPrincipalTag, null);
         }
@@ -124,9 +114,8 @@ namespace Empiria {
 
     static public IEmpiriaSession CurrentSession {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         if (CurrentIdentity != null) {
           return CurrentIdentity.Session;
         } else {
@@ -137,9 +126,8 @@ namespace Empiria {
 
     static public string CurrentSessionToken {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         if (CurrentSession != null) {
           return CurrentSession.Token;
         } else {
@@ -150,9 +138,8 @@ namespace Empiria {
 
     static public IEmpiriaUser CurrentUser {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         if (CurrentIdentity != null) {
           return CurrentIdentity.User;
         } else {
@@ -163,9 +150,8 @@ namespace Empiria {
 
     static public int CurrentUserId {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         if (CurrentUser != null) {
           return CurrentUser.Id;
         } else {
@@ -176,18 +162,16 @@ namespace Empiria {
 
     static public DateTime DateMaxValue {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         return dateMaxValue;
       }
     }
 
     static public DateTime DateMinValue {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         return dateMinValue;
       }
     }
@@ -197,50 +181,47 @@ namespace Empiria {
     }
 
     static public string LicenseName {
-      get { return "Zacatecas"; }
+      get {
+        return "Tlaxcala";
+      }
     }
 
     static public string LicenseNumber {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         return licenseNumber;
       }
     }
 
     static public string LicenseSerialNumber {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         return licenseSerialNumber;
       }
     }
 
     static public string Name {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         return serverName;
       }
     }
 
     static public int OrganizationId {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         return organizationId;
       }
     }
 
     static public int ServerId {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         return serverId;
       }
     }
@@ -251,18 +232,16 @@ namespace Empiria {
 
     static public string ServiceProvider {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         return serviceProvider;
       }
     }
 
     static public string SupportUrl {
       get {
-        if (!isStarted) {
-          Start();
-        }
+        AssertIsStarted();
+
         return supportUrl;
       }
     }
@@ -270,6 +249,11 @@ namespace Empiria {
     #endregion Public properties
 
     #region Public methods
+
+    static public void AssertSession() {
+      Assertion.Assert(ExecutionServer.CurrentSession != null,
+                "This operation needs an active system session. Please Sign-in with a valid user account.", 1);
+    }
 
     static public bool IsWebServicesServer() {
       return (ServerType == ExecutionServerType.WebServicesServer ||
@@ -315,12 +299,24 @@ namespace Empiria {
 
     #endregion Public methods
 
-    #region Private methods
+    #region Private members
 
-    static private readonly object locker = new object();
+    static private void AssertIsStarted() {
+      if (!isStarted) {
+        Start();
+      }
+    }
+
+    static private string EmpiriaPrincipalTag {
+      get {
+        return String.Format("{0}.Empiria.Principal", LicenseName);
+      }
+    }
+
+    static private readonly object _locker = new object();
     static private void Start() {
       if (!IsStarted) {
-        lock (locker) {
+        lock (_locker) {
           if (!IsStarted) {
             Start(ExecutionServerType.WebApplicationServer);
           }
@@ -328,7 +324,7 @@ namespace Empiria {
       }
     }
 
-    #endregion Private methods
+    #endregion Private members
 
   } // class ExecutionServer
 

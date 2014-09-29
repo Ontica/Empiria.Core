@@ -11,6 +11,8 @@
 using System;
 using System.Data;
 
+using System.Web;
+
 namespace Empiria.Security {
 
   internal sealed class EmpiriaSession : IEmpiriaSession {
@@ -46,29 +48,26 @@ namespace Empiria.Security {
       this.Create();
     }
 
-    static internal bool TryParseActive(string sessionToken, out EmpiriaSession session) {
-      DataRow row = SecurityData.GetSessionData(sessionToken);
-      session = null;
-      if (row != null) {
-        session = new EmpiriaSession();
-        session.Load(row);
-        if (session.IsStillActive) {
-          return true;
-        }
-      }
-      return false;
+    static internal EmpiriaSession Create(IEmpiriaIdentity identity) {
+      Assertion.AssertObject(identity, "identity");
+
+      return new EmpiriaSession(identity.User.Id,
+                                HttpContext.Current.Session != null ? HttpContext.Current.Session.SessionID : "Session-less",
+                                HttpContext.Current.Request.UserHostAddress,
+                                HttpContext.Current.Request.UserAgent);
     }
 
-    private void Load(DataRow row) {
-      this.id = (int) row["SessionId"];
-      this.token = (string) row["SessionToken"];
-      this.serverId = (int) row["ServerId"];
-      this.userId = (int) row["UserId"];
-      this.systemSession = (string) row["SystemSession"];
-      this.clientAddress = (string) row["ClientAddress"];
-      this.clientEnvironment = (string) row["ClientEnvironment"];
-      this.startTime = (DateTime) row["StartTime"];
-      this.endTime = (DateTime) row["EndTime"];
+    static internal EmpiriaSession TryParseActive(string sessionToken) {
+      DataRow row = SecurityData.GetSessionData(sessionToken);
+
+      if (row != null) {
+        var session = new EmpiriaSession();
+        session.Load(row);
+        if (session.IsStillActive) {
+          return session;
+        }
+      }
+      return null;
     }
 
     #endregion Constructors and parsers
@@ -98,10 +97,6 @@ namespace Empiria.Security {
       }
     }
 
-    public string Token {
-      get { return token; }
-    }
-
     public int ServerId {
       get { return serverId; }
     }
@@ -114,16 +109,72 @@ namespace Empiria.Security {
       get { return systemSession; }
     }
 
+    public string Token {
+      get { return token; }
+    }
+
     public int UserId {
       get { return userId; }
     }
 
     #endregion Public properties
 
-    #region Internal and private methods
+    #region Public methods
 
     internal void Close() {
       SecurityData.WriteSession(this);
+    }
+
+    public T GetObject<T>(string key) {
+      AssertHttpContextSession();
+      if (this.HasObject(key)) {
+        return (T) System.Web.HttpContext.Current.Session[key];
+      }
+      return default(T);
+    }
+
+    public bool HasObject(string key) {
+      AssertHttpContextSession();
+
+      return (System.Web.HttpContext.Current.Session[key] != null);
+    }
+
+    public void RemoveObject(string key) {
+      AssertHttpContextSession();
+
+      if (this.HasObject(key)) {
+        System.Web.HttpContext.Current.Session.Remove(key);
+      }
+    }
+
+    public void SetObject(string key, object value) {
+      Assertion.AssertObject(key, "key");
+      Assertion.AssertObject(value, "value");
+
+      AssertHttpContextSession();
+
+      System.Web.HttpContext.Current.Session[key] = value;
+    }
+
+    internal string RegenerateToken() {
+      this.token = CreateToken(); 
+      SecurityData.WriteSession(this);
+
+      return this.token;
+    }
+
+    internal void UpdateEndTime() {
+      endTime = DateTime.Now;
+    }
+
+    #endregion Public methods
+
+    #region Private methods
+
+    private void AssertHttpContextSession() {
+      if (System.Web.HttpContext.Current == null || System.Web.HttpContext.Current.Session != null) {
+        Assertion.AssertFail("HttpContext.Session cannot be null.");
+      }
     }
 
     private void Create() {
@@ -138,18 +189,19 @@ namespace Empiria.Security {
       return Guid.NewGuid().ToString() + "-" + Empiria.Security.Cryptographer.CreateHashCode(token);
     }
 
-    internal string RegenerateToken() {
-      this.token = CreateToken(); 
-      SecurityData.WriteSession(this);
-
-      return this.token;
+    private void Load(DataRow row) {
+      this.id = (int) row["SessionId"];
+      this.token = (string) row["SessionToken"];
+      this.serverId = (int) row["ServerId"];
+      this.userId = (int) row["UserId"];
+      this.systemSession = (string) row["SystemSession"];
+      this.clientAddress = (string) row["ClientAddress"];
+      this.clientEnvironment = (string) row["ClientEnvironment"];
+      this.startTime = (DateTime) row["StartTime"];
+      this.endTime = (DateTime) row["EndTime"];
     }
 
-    internal void UpdateEndTime() {
-      endTime = DateTime.Now;
-    }
-
-    #endregion Internal and private methods
+    #endregion Private methods
 
   } //class EmpiriaSession
 

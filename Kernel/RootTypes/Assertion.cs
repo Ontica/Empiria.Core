@@ -23,7 +23,7 @@ namespace Empiria {
     /// <summary>Checks for an assertion and throws an AssertionFailException if it fails.</summary>
     /// <param name="assertion">The assertion to check.</param>
     /// <param name="failsMessage">Used to indicate the description of the exception
-    /// if the postcondition fails.</param>
+    /// if the assertion fails.</param>
     static public void Assert(bool assertion, string failsMessage) {
       if (!assertion) {
         throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
@@ -34,7 +34,20 @@ namespace Empiria {
     /// <summary>Checks for an assertion and throws an AssertionFailException if it fails.</summary>
     /// <param name="assertion">The assertion to check.</param>
     /// <param name="failsMessage">Used to indicate the description of the exception
-    /// if the postcondition fails.</param>
+    /// if the assertion fails.</param>
+    /// <param name="skipFrames">Used to indicate the number of frames skipped to change 
+    /// the method source of the assertion.</param> 
+    static public void Assert(bool assertion, string failsMessage, int skipFrames) {
+      if (!assertion) {
+        throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
+                                          GetSourceMethodName(skipFrames), failsMessage);
+      }
+    }
+
+    /// <summary>Checks for an assertion and throws an AssertionFailException if it fails.</summary>
+    /// <param name="assertion">The assertion to check.</param>
+    /// <param name="failsMessage">Used to indicate the description of the exception
+    /// if the assertion fails.</param>
     static public void Assert(bool assertion, Exception onFailsException) {
       if (!assertion) {
         throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, onFailsException, 
@@ -105,7 +118,11 @@ namespace Empiria {
     #region Private methods
 
     static private string GetSourceMethodName() {
-      MethodBase sourceMethod = new StackFrame(2).GetMethod();
+      return GetSourceMethodName(1);
+    }
+
+    static private string GetSourceMethodName(int skipFrames) {
+      MethodBase sourceMethod = new StackFrame(skipFrames + 2).GetMethod();
       ParameterInfo[] methodPars = sourceMethod.GetParameters();
 
       string methodName = String.Format("{0}.{1}", sourceMethod.DeclaringType, sourceMethod.Name);

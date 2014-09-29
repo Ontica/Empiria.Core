@@ -21,10 +21,8 @@ namespace Empiria.Security {
     private EmpiriaUser user = null;
     private EmpiriaSession session = null;
     private bool isAuthenticated = false;
-    private int regionId = 0;
+    private int regionId = -1;
     private bool disposed = false;
-
-    static private readonly string globalApiKey = ConfigurationData.GetString("Empiria.Trade.API.Key"); 
 
     #endregion Fields
 
@@ -33,18 +31,17 @@ namespace Empiria.Security {
     private EmpiriaIdentity(EmpiriaUser user) {
       Assertion.AssertObject(user, "user");
       this.user = user;
+      this.isAuthenticated = true;
+      this.session = EmpiriaSession.Create(this);
+      this.EnsureValid();
     }
 
     static public EmpiriaIdentity Authenticate(string username, string password, string entropy, int regionId) {
-      EmpiriaUser user = Empiria.Security.EmpiriaUser.Authenticate(username, password, entropy);
+      EmpiriaUser user = EmpiriaUser.Authenticate(username, password, entropy);
 
       if (user != null) {
         EmpiriaIdentity identity = new EmpiriaIdentity(user);
-
-        identity.session = CreateSession(user.Id);
-        identity.isAuthenticated = true;
         identity.regionId = regionId;
-        ValidateIdentity(identity);
         return identity;
       } else {
         return null;
@@ -52,37 +49,31 @@ namespace Empiria.Security {
     }
 
     static internal EmpiriaIdentity Authenticate(EmpiriaSession session) {
-      EmpiriaUser user = Empiria.Security.EmpiriaUser.Authenticate(session);
+      EmpiriaUser user = EmpiriaUser.Authenticate(session);
 
       if (user != null) {
-        EmpiriaIdentity identity = new EmpiriaIdentity(user);
-
-        identity.session = session;
-        identity.isAuthenticated = true;
-        identity.regionId = -1;
-        ValidateIdentity(identity);
-        return identity;
+        return new EmpiriaIdentity(user);
       } else {
         return null;
       }
     }
 
-    static public bool TryAuthenticate(string sessionToken, out EmpiriaPrincipal principal) {
-      EmpiriaSession session;
-      principal = null;
-      if (EmpiriaSession.TryParseActive(sessionToken, out session)) {
+    static public EmpiriaPrincipal TryAuthenticate(string sessionToken) {
+      EmpiriaSession session = EmpiriaSession.TryParseActive(sessionToken);
+      if (session != null) {
         var identity = EmpiriaIdentity.Authenticate(session);
         if (identity != null) {
-          principal = new EmpiriaPrincipal(identity);
-          return true;
+          return new EmpiriaPrincipal(identity);
         }
       }
-      return false;
+      return null;
     }
 
     // For Empiria Web-Api's authentication 
     static public EmpiriaPrincipal Authenticate(string apiClientKey, string userName, string password,
                                                 string entropy,  int contextId) {
+      string globalApiKey = ConfigurationData.GetString("Empiria.Trade.API.Key"); 
+
       if (!globalApiKey.Equals(apiClientKey)) {
         new SecurityException(SecurityException.Msg.InvalidClientID, apiClientKey);
         return null;
@@ -98,29 +89,17 @@ namespace Empiria.Security {
       //CheckClient(referrer);
       EmpiriaUser user = EmpiriaUser.Authenticate(remoteTicket);
       if (user != null) {
-        EmpiriaIdentity identity = new EmpiriaIdentity(user);
-
-        identity.session = CreateSession(user.Id);
-        identity.isAuthenticated = true;
-        ValidateIdentity(identity);
-        return identity;
+        return new EmpiriaIdentity(user);
       } else {
         return null;
       }
     }  
 
     static public EmpiriaIdentity AuthenticateGuest() {
-      EmpiriaUser user = Empiria.Security.EmpiriaUser.AuthenticateGuest();
+      EmpiriaUser user = EmpiriaUser.AuthenticateGuest();
 
       if (user != null) {
-        EmpiriaIdentity identity = new EmpiriaIdentity(user);
-
-        identity.session = CreateSession(user.Id);
-        identity.isAuthenticated = true;
-        identity.regionId = 0;
-        ValidateIdentity(identity);
-
-        return identity;
+        return new EmpiriaIdentity(user);
       } else {
         throw new SecurityException(SecurityException.Msg.GuestUserNotFound);
       }
@@ -172,7 +151,9 @@ namespace Empiria.Security {
 
     public EmpiriaUser User {
       get {
-        session.UpdateEndTime();
+        if (session != null) {
+          session.UpdateEndTime();
+        }
         return user;
       }
     }
@@ -204,11 +185,13 @@ namespace Empiria.Security {
 
     #region Private methods
 
-    static private EmpiriaSession CreateSession(int userId) {
-      return new EmpiriaSession(userId,
-                                HttpContext.Current.Session != null ? HttpContext.Current.Session.SessionID : "Session-less",
-                                HttpContext.Current.Request.UserHostAddress,
-                                HttpContext.Current.Request.UserAgent);
+    private void EnsureValid() {
+      Assertion.Assert(this.User != null,
+                       SecurityException.GetMessage(SecurityException.Msg.WrongAuthentication));
+      Assertion.Assert(this.IsAuthenticated,
+                       SecurityException.GetMessage(SecurityException.Msg.WrongAuthentication));
+      Assertion.Assert(this.Session != null,
+                       SecurityException.GetMessage(SecurityException.Msg.WrongAuthentication));
     }
 
     private void Dispose(bool disposing) {
@@ -221,11 +204,6 @@ namespace Empiria.Security {
       } finally {
 
       }
-    }
-
-    static private void ValidateIdentity(EmpiriaIdentity identity) {
-      Assertion.Assert((identity != null) && (identity.IsAuthenticated),
-                       SecurityException.GetMessage(SecurityException.Msg.WrongAuthentication));
     }
 
     static private bool ValidateReferrerHost(Uri referrer) {

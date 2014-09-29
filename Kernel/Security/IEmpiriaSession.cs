@@ -33,6 +33,14 @@ namespace Empiria.Security {
 
     int UserId { get; }
 
+    T GetObject<T>(string key);
+
+    bool HasObject(string key);
+
+    void RemoveObject(string key);
+
+    void SetObject(string key, object value);
+
     #endregion Members definition
 
   } //interface IEmpiriaSession

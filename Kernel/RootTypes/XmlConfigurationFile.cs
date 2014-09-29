@@ -131,38 +131,6 @@ namespace Empiria {
 
     static private void WriteXmlConfigurationValue(string typeName, string name, string settingValue) {
       throw new NotImplementedException();
-
-      //if (name.ToUpperInvariant().StartsWith(dbConnectionString)) {   //Enforce database key encryption
-      //  name = "§" + name;
-      //}
-      //if (name.ToUpperInvariant().StartsWith(impersonationTokenString)) {   //Enforce impersonation key encryption
-      //  name = "§" + name;
-      //}
-      //if (name.StartsWith("§")) {
-      //  settingValue = Cryptographer.Encrypt(settingValue, ExecutionServer.LicenseName);
-      //}
-
-      //string fileName = GetFileName();
-
-      //if (!Exists()) {
-      //  parametersCache = null;
-      //  throw new
-      //      ConfigurationDataException(ConfigurationDataException.Msg.XmlConfigurationFileNotExists, fileName);
-      //}
-
-      //using (XmlTextWriter xmlTextWriter = new XmlTextWriter(fileName, null)) {
-      //  xmlTextReader.WriteElementString();
-      //  parametersCache = new Dictionary<string, string>(16);
-      //  while (xmlTextReader.Read()) {
-      //    if (xmlTextReader.NodeType == XmlNodeType.Element) {
-      //      string typeName = xmlTextReader.GetAttribute("type");
-      //      string parameterName = xmlTextReader.GetAttribute("name");
-      //      string parameterValue = xmlTextReader.GetAttribute("value");
-
-      //      parametersCache.Add(typeName + "." + parameterName, parameterValue);
-      //    } // if
-      //  } // while
-      //} // using
     }
 
     #endregion Private methods
