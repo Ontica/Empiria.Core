@@ -8,7 +8,7 @@
 *  Summary   : Represents a government entity or agency, an enterprise or a non-profit organization.         *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
-using System.Data;
+using System;
 
 namespace Empiria.Contacts {
 

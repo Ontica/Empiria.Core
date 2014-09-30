@@ -147,7 +147,7 @@ namespace Empiria.Ontology {
       }
     }
 
-    internal Tuple<ObjectTypeInfo, DataRow> GetBaseObjectData(int objectId) {
+    internal Tuple<ObjectTypeInfo, DataRow> GetObjectTypeAndDataRow(int objectId) {
       DataRow dataRow = OntologyData.GetBaseObjectDataRow(this, objectId);
       if (dataRow == null) {
         throw new OntologyException(OntologyException.Msg.ObjectIdNotFound,
@@ -168,7 +168,7 @@ namespace Empiria.Ontology {
       return new Tuple<ObjectTypeInfo, DataRow>(this, dataRow);
     }
 
-    internal Tuple<ObjectTypeInfo, DataRow> GetBaseObjectData(string objectNamedKey) {
+    internal Tuple<ObjectTypeInfo, DataRow> GetObjectTypeAndDataRow(string objectNamedKey) {
       DataRow dataRow = OntologyData.GetBaseObjectDataRow(this, objectNamedKey);
       if (dataRow == null) {
         throw new OntologyException(OntologyException.Msg.ObjectNamedKeyNotFound,
@@ -201,7 +201,7 @@ namespace Empiria.Ontology {
     /// <summary>Return the empty instance for this type.</summary>
     internal T GetEmptyInstance<T>() where T : BaseObject {
       if (_emptyInstance == null) {
-        _emptyInstance = BaseObject.ParseIdNoCache<T>(EmptyInstanceId);
+        _emptyInstance = BaseObject.ParseIdInternal<T>(this, EmptyInstanceId, false);
       }
       return (T) _emptyInstance;
     }
@@ -239,7 +239,7 @@ namespace Empiria.Ontology {
     private BaseObject _unknownInstance = null;
     internal T GetUnknownInstance<T>() where T : BaseObject {
       if (_unknownInstance == null) {
-        _unknownInstance = BaseObject.ParseIdNoCache<T>(UnknownInstanceId);
+        _unknownInstance = BaseObject.ParseIdInternal<T>(this, UnknownInstanceId, false);
       }
       return (T) _unknownInstance;
     }

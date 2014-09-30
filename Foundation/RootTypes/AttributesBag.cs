@@ -35,7 +35,7 @@ namespace Empiria {
 
     #endregion Fields
 
-    #region Constuctors and parsers
+    #region Constructors and parsers
 
     internal AttributesBag(BaseObject instance, DataRow row) {
       if (attributeIndexes == null) {

@@ -19,7 +19,7 @@ namespace Empiria {
 
     #endregion Fields
 
-    #region Constuctors and parsers
+    #region Constructors and parsers
 
     internal AttributesBagBoxing(BaseObject instance, DataRow row) {
       if (attributeIndexes == null) {

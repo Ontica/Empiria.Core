@@ -5,12 +5,10 @@
 *  Type      : Person                                           Pattern  : Ontology Object Type              *
 *  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
-*  Summary   : Information specific to a person, where a person references one and only one single world     *
-*              person.                                                                                       *
+*  Summary   : Information specific to a person.                                                             *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Data;
 
 namespace Empiria.Contacts {
 
@@ -21,6 +19,7 @@ namespace Empiria.Contacts {
     Unknown = 'U',
   }
 
+  /// <summary>Information specific to a person.</summary>
   public class Person : Contact {
 
     #region Fields
@@ -61,6 +60,7 @@ namespace Empiria.Contacts {
 
     #region Public properties
 
+    [DataField("BornDate", Default = "ExecutionServer.DateMinValue")]
     public DateTime BornDate {
       get { return bornDate; }
       set { bornDate = value; }
@@ -72,11 +72,11 @@ namespace Empiria.Contacts {
       }
     }
 
+    [DataField("FirstName")]
     public string FirstName {
       get { return firstName; }
       set { firstName = value; }
     }
-
 
     public new string FullName {
       get {
@@ -87,35 +87,25 @@ namespace Empiria.Contacts {
       }
     }
 
+    [DataField("Gender", Default = Gender.Unknown)]
     public Gender Gender {
       get { return gender; }
       set { gender = value; }
     }
 
+    [DataField("LastName")]
     public string LastName {
       get { return lastName; }
       set { lastName = value; }
     }
 
+    [DataField("LastName2")]
     public string LastName2 {
       get { return lastName2; }
       set { lastName2 = value; }
     }
 
     #endregion Public properties
-
-    #region Public methods
-
-    protected override void OnLoadObjectData(DataRow row) {
-      base.OnLoadObjectData(row);
-      this.firstName = (string) row["FirstName"];
-      this.lastName = (string) row["LastName"];
-      this.lastName2 = (string) row["LastName2"];
-      this.bornDate = (DateTime) row["BornDate"];
-      this.gender = (Gender) Convert.ToChar(row["Gender"]);
-    }
-
-    #endregion Public methods
 
   } // class Person
 

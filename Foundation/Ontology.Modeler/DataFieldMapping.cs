@@ -26,7 +26,7 @@ namespace Empiria.Ontology.Modeler {
 
     #endregion Fields
 
-    #region Constuctors and parsers
+    #region Constructors and parsers
 
     internal DataFieldMapping(FieldInfo fieldInfo) {
       this.fieldInfo = fieldInfo;

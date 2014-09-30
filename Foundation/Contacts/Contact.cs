@@ -16,22 +16,6 @@ namespace Empiria.Contacts {
 
   public class Contact : BaseObject {
 
-    #region Fields
-
-    private string fullName = String.Empty;
-    private string alias = String.Empty;
-    private string nickname = String.Empty;
-    private string taxTag = String.Empty;
-    private string image = String.Empty;
-    private string keywords = String.Empty;
-    private string eMail = String.Empty;
-    private TempAddress address = TempAddress.Empty;
-    private string extensionData = String.Empty;
-
-    private GeneralObjectStatus status = GeneralObjectStatus.Active;
-
-    #endregion Fields
-
     #region Constructors and parsers
 
     protected Contact() {
@@ -58,23 +42,26 @@ namespace Empiria.Contacts {
     #region Public properties
 
     public TempAddress Address {
-      get { return address; }
-      set { address = value; }
+      get;
+      set;
     }
 
+    [DataField("ShortName")]
     public string Alias {
-      get { return alias; }
-      protected set { alias = value; }
+      get;
+      protected set;
     }
 
+    [DataField("EMail")]
     public string EMail {
-      get { return eMail; }
-      set { eMail = value; }
+      get;
+      set;
     }
 
+    [DataField("TaxIDNumber")]
     public string TaxTag {
-      get { return taxTag; }
-      protected set { taxTag = value; }
+      get;
+      protected set;
     }
 
     public string FormattedTaxTag {
@@ -83,42 +70,55 @@ namespace Empiria.Contacts {
       }
     }
 
+    [DataField("ImageFilename")]
     public string Image {
-      get { return image; }
-      protected set { image = value; }
+      get;
+      protected set;
     }
 
-    public string Keywords {
-      get { return keywords; }
-      protected set { keywords = value; }
+    public virtual string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(FullName, Alias, Nickname, EMail, TaxTag);
+      }
+    }
+
+    [DataField("FingerprintTemplate")]
+    protected string ExtendedData {
+      get;
+      set;
     }
 
     public T GetExtensionData<T>() {
-      return Empiria.Data.JsonConverter.ToObject<T>(extensionData);
+      return Empiria.Data.JsonConverter.ToObject<T>(this.ExtendedData);
     }
 
+    [DataField("ContactFullName")]
     public string FullName {
-      get { return fullName; }
-      protected set { fullName = value; }
+      get;
+      protected set;
     }
 
+    [DataField("Nickname")]
     public string Nickname {
-      get { return nickname; }
-      set { nickname = value; }
+      get;
+      set;
     }
 
+    [DataField("ContactStatus", Default = GeneralObjectStatus.Active)]
     public GeneralObjectStatus Status {
-      get { return status; }
-      protected set { status = value; }
+      get;
+      protected set;
     }
 
     /// <summary>OOJJOO</summary>
+    [DataField("EMail2TypeId")]
     internal int organizationId {
       get;
       set;
     }
 
-    /// <summary>OOJJOO</summary> 
+    /// <summary>OOJJOO</summary>
+    [DataField("Phone2TypeId")]
     internal int externalObjectId {
       get;
       set;
@@ -137,19 +137,7 @@ namespace Empiria.Contacts {
     }
 
     protected override void OnLoadObjectData(DataRow row) {
-      this.fullName = (string) row["ContactFullName"];
-      this.alias = (string) row["ShortName"];
-      this.nickname = (string) row["Nickname"];
-      this.taxTag = (string) row["TaxIDNumber"];
-      this.image = (string) row["ImageFilename"];
-      this.extensionData = (string) row["FingerprintTemplate"];
-      this.eMail = (string) row["EMail"];
-      this.address = TempAddress.Parse(row);
-      this.keywords = (string) row["ContactKeywords"];
-      this.status = (GeneralObjectStatus) Convert.ToChar(row["ContactStatus"]);
-     
-      this.organizationId = (int) row["EMail2TypeId"];
-      this.externalObjectId = (int) row["Phone2TypeId"];
+      this.Address = TempAddress.Parse(row);
     }
 
     protected override void OnSave() {

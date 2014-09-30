@@ -32,7 +32,7 @@ namespace Empiria {
 
     private Guid guid = DataWriter.CreateGuid();
     private string name = String.Empty;
-    private DateTime timeStamp = DateTime.Today;
+    private DateTime timeStamp = DateTime.Now;
 
     StorageChangeItemList changesList = new StorageChangeItemList();
     DataWriterContext dataWriterContext = null;
@@ -102,20 +102,10 @@ namespace Empiria {
       return dataWriterContext.BeginUpdate(callback, state);
     }
 
-    //public void Activate(StorageObject storageObject) {
-    //  if (storageObject.StorageStatus == StorageStatus.Suspended) {
-    //    changesList.Add(new StorageChangeItem(StorageContextOperation.Activate, storageObject));
-    //  }
-    //}
-
     public void Close() {
       Dispose(true);
       GC.SuppressFinalize(this);
     }
-
-    //public void Delete(StorageObject storageObject) {
-    //  changesList.Add(new StorageChangeItem(StorageContextOperation.Delete, storageObject));
-    //}
 
     public void Dispose() {
       Close();
@@ -134,23 +124,12 @@ namespace Empiria {
       throw new NotImplementedException();
     }
 
-    //public void Promote(StorageObject storageObject) {
-    //  changesList.Add(new StorageChangeItem(StorageContextOperation.Promote, storageObject));
-    //}
-
     public void Save(IStorable storableObject) {
       if (storableObject == null) {
         return;
       }
       changesList.Add(new StorageChangeItem(StorageContextOperation.Save, storableObject));
-      //storableObject.ImplementsOnStorageUpdateEnds();  OOJJOO
     }
-
-    //public void Suspend(StorageObject storageObject) {
-    //  if (storageObject.StorageStatus == StorageStatus.Active) {
-    //    changesList.Add(new StorageChangeItem(StorageContextOperation.Suspend, storageObject));
-    //  }
-    //}
 
     public int Update() {
       FillDataWriterContext();

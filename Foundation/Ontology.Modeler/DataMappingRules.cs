@@ -33,7 +33,7 @@ namespace Empiria.Ontology.Modeler {
 
     #endregion Fields
 
-    #region Constuctors and parsers
+    #region Constructors and parsers
 
     private DataMappingRules(Type type) {
       this.mappedType = type;

@@ -20,7 +20,7 @@ namespace Empiria {
 
     #region Fields
 
-    private int instanceId = -1;
+    private int instanceId = ObjectTypeInfo.EmptyInstanceId;
     private T instance = null;
     private bool isCreated = false;
 

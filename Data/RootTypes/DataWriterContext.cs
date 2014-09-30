@@ -294,10 +294,6 @@ namespace Empiria.Data {
       }
     }
 
-    public void Save() {
-      throw new NotImplementedException();
-    }
-
     public int Update() {
       try {
         wasUpdated = true;

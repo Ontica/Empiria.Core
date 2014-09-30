@@ -27,7 +27,7 @@ namespace Empiria.Ontology.Modeler {
 
     #endregion Fields
 
-    #region Constuctors and parsers
+    #region Constructors and parsers
 
     protected internal DataPropertyMapping(PropertyInfo propertyInfo) {
       this.propertyInfo = propertyInfo;

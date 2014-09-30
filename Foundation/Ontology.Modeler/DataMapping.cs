@@ -32,7 +32,7 @@ namespace Empiria.Ontology.Modeler {
 
     #endregion Abstract members
 
-    #region Constuctors and parsers
+    #region Constructors and parsers
 
     protected DataMapping() {
 
