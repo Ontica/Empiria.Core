@@ -14,9 +14,9 @@ using System.Runtime.Serialization;
 
 namespace Empiria {
 
-  /// <summary>Interface that represents an identificable and serializable unit of work, that consists in
-  /// a serializable set of ordered operations, a guid identificator and status.</summary>
-  public interface IUnitOfWork : ISerializable, IDisposable {
+  /// <summary>Interface that represents a unit of work, that consists in a set of ordered operations
+  /// that can be commited all at once.</summary>
+  public interface IUnitOfWork : IDisposable {
 
     #region Members definition
 
@@ -24,7 +24,7 @@ namespace Empiria {
 
     string Name { get; }
 
-    DateTime TimeStamp { get; }
+    DateTime Timestamp { get; }
 
     int Update();
 

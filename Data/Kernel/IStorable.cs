@@ -5,21 +5,21 @@
 *  Type      : IStorable                                        Pattern  : Loose coupling interface          *
 *  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
-*  Summary   : Interface that represents an storable.                                                        *
+*  Summary   : Interface that represents a storable identifiable object.                                     *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria {
 
-  /// <summary>Interface that represents an identifiable object throw an integer Id.</summary>
+  /// <summary>Interface that represents a storable identifiable object.</summary>
   public interface IStorable : IIdentifiable {
 
     #region Members definition
 
-    //DataOperationList ImplementsStorageUpdate(StorageContextOperation operation, DateTime timestamp);
+    //StorageVersion Version { get; }
 
-    //void ImplementsOnStorageUpdateEnds();
+    //void Save();
 
     #endregion Members definition
 

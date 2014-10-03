@@ -46,17 +46,37 @@ namespace Empiria.Data {
     static public int Execute(DataOperation operation) {
       Assertion.AssertObject(operation, "operation");
 
+      if (StorageContext.IsStorageContextDefined) {
+        return StorageContext.ActiveStorageContext.Add(operation);
+      }
+
       if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
         return ExecuteExternal(operation);
       }
 
-      int result = ExecuteInternal(operation);
+      int result = DataWriter.ExecuteInternal(operation);
 
-      DoPostExecutionTask(operation);
+      DataWriter.DoPostExecutionTask(operation);
 
       DataPublisher.Publish(operation);
 
       return result;
+    }
+
+    static public int Execute(DataOperationList operationList) {
+      Assertion.AssertObject(operationList, "operationList");
+
+      if (StorageContext.IsStorageContextDefined) {
+        return StorageContext.ActiveStorageContext.Add(operationList);
+      }
+
+      using (DataWriterContext context = DataWriter.CreateContext(operationList.Name)) {
+        ITransaction transaction = context.BeginTransaction();
+
+        context.Add(operationList);
+        context.Update();
+        return transaction.Commit();
+      }
     }
 
     static public int Execute(SingleSignOnToken token, DataOperation operation) {
@@ -74,18 +94,6 @@ namespace Empiria.Data {
       DataPublisher.Publish(token, operation);
 
       return result;
-    }
-
-    static public int Execute(DataOperationList operationList) {
-      Assertion.AssertObject(operationList, "operationList");
-
-      using (DataWriterContext context = DataWriter.CreateContext(operationList.Name)) {
-        ITransaction transaction = context.BeginTransaction();
-
-        context.Add(operationList);
-        context.Update();
-        return transaction.Commit();
-      }
     }
 
     static public int Execute(SingleSignOnToken token, DataOperationList operationList) {

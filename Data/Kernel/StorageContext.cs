@@ -9,8 +9,6 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Runtime.Serialization;
-using System.Security.Permissions;
 
 using Empiria.Data;
 
@@ -30,39 +28,62 @@ namespace Empiria {
 
     #region Fields
 
-    private Guid guid = DataWriter.CreateGuid();
-    private string name = String.Empty;
-    private DateTime timeStamp = DateTime.Now;
+    private static readonly string storageContextKey = "Empiria.DataWriter.StorageContext";
 
-    StorageChangeItemList changesList = new StorageChangeItemList();
+    private Guid guid = DataWriter.CreateGuid();
+    private DateTime timestamp = DateTime.Now;
+    private string name = String.Empty;
+
+    DataOperationList dataOperations = null;
     DataWriterContext dataWriterContext = null;
-    private bool isRemote = false;
-    private bool disposed = false;
 
     #endregion Fields
 
     #region Constructors and parsers
 
     private StorageContext() {
-      // instances of this class are created using one of the Open() methods
+      // Instances of this class are created using one of the static StorageContext.Open() methods.
+      this.name = "Context " + guid.ToString().Substring(24);
+      this.dataWriterContext = DataWriter.CreateContext(this.name);
+      this.dataOperations = new DataOperationList(this.name);
+    }
+
+    private StorageContext(string contextName) {
+      // Instances of this class are created using one of the static StorageContext.Open() methods.
+      this.name = contextName;
+      this.dataWriterContext = DataWriter.CreateContext(this.name);
+      this.dataOperations = new DataOperationList(this.name);
+    }
+
+    internal static StorageContext ActiveStorageContext {
+      get {
+        return ExecutionServer.CurrentSession.GetObject<StorageContext>(storageContextKey);
+      }
+    }
+
+    internal static bool IsStorageContextDefined {
+      get {
+        return (ExecutionServer.CurrentSession != null &&
+                ExecutionServer.CurrentSession.HasObject(storageContextKey));
+      }
     }
 
     static public StorageContext Open() {
-      StorageContext context = new StorageContext();
+      ExecutionServer.AssertSession();
 
-      context.name = context.guid.ToString();
-      context.dataWriterContext = DataWriter.CreateContext("StorageContext");
-
-      return context;
+      if (!ExecutionServer.CurrentSession.HasObject(storageContextKey)) {
+        ExecutionServer.CurrentSession.SetObject(storageContextKey, new StorageContext());
+      }
+      return ExecutionServer.CurrentSession.GetObject<StorageContext>(storageContextKey);
     }
 
     static public StorageContext Open(string contextName) {
-      StorageContext context = new StorageContext();
+      ExecutionServer.AssertSession();
 
-      context.name = contextName;
-      context.dataWriterContext = DataWriter.CreateContext(contextName);
-
-      return context;
+      if (!IsStorageContextDefined) {
+        ExecutionServer.CurrentSession.SetObject(storageContextKey, new StorageContext(contextName));
+      }
+      return ExecutionServer.CurrentSession.GetObject<StorageContext>(storageContextKey);
     }
 
     ~StorageContext() {
@@ -77,29 +98,54 @@ namespace Empiria {
       get { return guid; }
     }
 
-    public bool IsRemote {
-      get { return isRemote; }
-    }
-
     public string Name {
       get { return name; }
     }
 
-    public DateTime TimeStamp {
-      get { return timeStamp; }
+    public DateTime Timestamp {
+      get { return timestamp; }
     }
 
     #endregion Public properties
 
     #region Public methods
 
-    public ITransaction BeginTransaction() {
-      return dataWriterContext.BeginTransaction();
+    public int Add(DataOperation operation) {
+      dataOperations.Add(operation);
+
+      return 1;
     }
 
-    public IAsyncResult BeginUpdate(AsyncCallback callback, object state) {
-      FillDataWriterContext();
-      return dataWriterContext.BeginUpdate(callback, state);
+    public int Add(DataOperationList operationList) {
+      dataOperations.Add(operationList);
+
+      return operationList.Count;
+    }
+
+    public void Assert(IStorable instance, StorageVersion version) {
+      //if (instance.Version != version) {
+      //  Assertion.AssertFail("Instance with id " + instance.Id + " has an inconsistent data version.");
+      //}
+    }
+
+    public int Update() {
+      if (dataOperations.Count == 0) {
+        return 0;
+      }
+      int operationsCount = 0;
+      using (DataWriterContext writerContext = DataWriter.CreateContext(this.Name)) {
+        ITransaction transaction = writerContext.BeginTransaction();
+        writerContext.Add(dataOperations);
+        writerContext.Update();
+        operationsCount = transaction.Commit();
+      }
+      dataOperations.Clear();
+
+      return operationsCount;
+    }
+
+    public void Watch(IStorable instance) {
+
     }
 
     public void Close() {
@@ -111,48 +157,17 @@ namespace Empiria {
       Close();
     }
 
-    public void EndTransaction() {
-      dataWriterContext.EndTransaction();
-    }
-
-    public int EndUpdate(IAsyncResult ayncResult) {
-      return dataWriterContext.EndUpdate(ayncResult);
-    }
-
-    [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-    public void GetObjectData(SerializationInfo info, StreamingContext context) {
-      throw new NotImplementedException();
-    }
-
-    public void Save(IStorable storableObject) {
-      if (storableObject == null) {
-        return;
-      }
-      changesList.Add(new StorageChangeItem(StorageContextOperation.Save, storableObject));
-    }
-
-    public int Update() {
-      FillDataWriterContext();
-      return dataWriterContext.Update();
-    }
-
     #endregion Public methods
 
     #region Private methods
 
+    private bool _disposed = false;
     private void Dispose(bool disposing) {
-      if (!disposed) {
-        disposed = true;
+      if (!_disposed) {
+        _disposed = true;
         if (disposing) {
-          dataWriterContext.Close();
+          // no-op
         }
-      }
-    }
-
-    private void FillDataWriterContext() {
-      foreach (StorageChangeItem changeItem in changesList) {  
-      // OOJJOO
-      //  dataWriterContext.Add(changeItem.StorableObject.ImplementsStorageUpdate(changeItem.Operation, timeStamp));
       }
     }
 

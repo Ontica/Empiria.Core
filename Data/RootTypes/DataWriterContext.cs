@@ -13,8 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.EnterpriseServices;
-using System.Runtime.Serialization;
-using System.Security.Permissions;
 using System.Threading;
 
 using Empiria.Data.Integration;
@@ -40,7 +38,7 @@ namespace Empiria.Data {
 
     private Guid guid = Guid.NewGuid();
     private string name = String.Empty;
-    private DateTime timeStamp = DateTime.Today;
+    private DateTime timestamp = DateTime.Now;
 
     private DataOperationList internalOp = null;
     private DataOperationList transactionalOp = null;
@@ -96,8 +94,8 @@ namespace Empiria.Data {
       get { return (currentTransaction != null); }
     }
 
-    public DateTime TimeStamp {
-      get { return timeStamp; }
+    public DateTime Timestamp {
+      get { return timestamp; }
     }
 
     #endregion Public properties
@@ -258,11 +256,6 @@ namespace Empiria.Data {
     public int EndUpdate(IAsyncResult asyncResult) {
       wasUpdated = false;
       return updateDelegate.EndInvoke(asyncResult);
-    }
-
-    [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-    public void GetObjectData(SerializationInfo info, StreamingContext context) {
-      throw new NotImplementedException();
     }
 
     public void RemoveLast(int count) {

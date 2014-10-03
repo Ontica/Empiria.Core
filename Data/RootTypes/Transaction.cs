@@ -119,23 +119,6 @@ namespace Empiria.Data {
 
     #region Internal methods
 
-    //internal void Add(DataOperation operation) {
-    //  lock(operations) {
-    //    operations.Add(operation);
-    //  }
-    //}
-
-    //internal int Clear() {
-    //  int count = operations.Count;
-
-    //  operations.Clear();
-    //  return count;
-    //}
-
-    //internal void Execute(DataOperationList collection) {
-    //  operations = collection;
-    //}   
-
     internal int PerformCommit() {
       if (wasCommited == true) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.TransactionAlreadyCommited);
@@ -159,14 +142,6 @@ namespace Empiria.Data {
         working = false;
       }
     }
-
-    //internal void RemoveLast(int count) {
-    //  if (operations.Count >= count) {
-    //    operations.RemoveLast(count);
-    //  } else {
-    //    throw new EmpiriaDataException(EmpiriaDataException.Msg.DataContextTooManyItemsForRemove);
-    //  }
-    //}
 
     #endregion Internal methods
 

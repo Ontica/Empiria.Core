@@ -67,12 +67,12 @@ namespace Empiria.Data {
 
     public void Execute(string contextName) {
       using (DataWriterContext context = new DataWriterContext(contextName)) {
-        if (base.Count > 1) {
+        if (this.Count > 1) {
           ITransaction transaction = context.BeginTransaction();
           context.Add(this);
           context.Update();
           transaction.Commit();
-        } else if (base.Count == 1) {
+        } else if (this.Count == 1) {
           context.Add(this);
           context.Update();
         }
