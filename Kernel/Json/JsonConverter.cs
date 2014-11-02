@@ -1,19 +1,18 @@
 ﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
-*  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
+*  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
+*  Namespace : Empiria.Json                                     Assembly : Empiria.Kernel.dll                *
 *  Type      : JsonConverter                                    Pattern  : Static Class                      *
-*  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 6.0        Date: 23/Oct/2014                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Empiria JSON serialization library. JSON operations are based on Json.NET.                    *
 *                                                                                                            *
-********************************* Copyright (c) 2013-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2013-2014. Ontica LLC, La Vía Óntica SC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 
 using Newtonsoft.Json;
-using Empiria.Data;
 
 /// ToDo List:    OOJJOO
 /// Object slicing (include/exclude a list of properties)
@@ -26,15 +25,15 @@ using Empiria.Data;
 /// Merge two JSON objects
 /// JSON to XML support?
 
-namespace Empiria.Data {
+namespace Empiria.Json {
 
   /// <summary>Empiria JSON serialization library. JSON operations are based on Json.NET.</summary>
   static public class JsonConverter {
 
     #region Fields
 
-    static private Dictionary<string, Func<object, string>> jsonConverters = 
-                                                       new Dictionary<string,Func<object, string>>();
+    static private Dictionary<string, Func<object, string>> jsonConverters =
+                                                       new Dictionary<string, Func<object, string>>();
 
     #endregion Fields
 
@@ -45,13 +44,12 @@ namespace Empiria.Data {
     /// <param name="converter">The method delegate that performs the object to JSON convertion.</param>
     /// <param name="useInDerivedTypes">Flag that indicates if the convertion rule will be applied also to 
     /// any derived instances of the giving type if there are not more specific rules for them.</param> 
-    static public void AddConverter(Type type, Func<object, string> converter, 
+    static public void AddConverter(Type type, Func<object, string> converter,
                                     bool useInDerivedTypes = true) {
       string formatType = BuildDictionaryKey(type);
 
       if (jsonConverters.ContainsKey(formatType)) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.DataConverterForTypeAlreadyExists, 
-                                       formatType);
+        throw new JsonDataException(JsonDataException.Msg.JsonConverterForTypeAlreadyExists, formatType);
       }
 
       lock (jsonConverters) {
@@ -84,7 +82,7 @@ namespace Empiria.Data {
         if (jsonConverters.ContainsKey(formatType)) {
           jsonConverters.Remove(formatType);
         } else {
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.DataConverterForTypeNotFound, formatType);
+          throw new JsonDataException(JsonDataException.Msg.JsonConverterForTypeNotFound, formatType);
         }
       }
     }
@@ -123,7 +121,7 @@ namespace Empiria.Data {
 
       if (jsonConverters.ContainsKey(typeFullName)) {
         string json = jsonConverters[typeFullName].Invoke(o);
-        return JsonConvert.SerializeObject(JsonConvert.DeserializeObject(json), 
+        return JsonConvert.SerializeObject(JsonConvert.DeserializeObject(json),
                                            Formatting.Indented);
       } else {
         return JsonConvert.SerializeObject(o, Formatting.Indented);
@@ -183,4 +181,4 @@ namespace Empiria.Data {
 
   } // class JsonConverter
 
-} // namespace Empiria.Data
+} // namespace Empiria.Json

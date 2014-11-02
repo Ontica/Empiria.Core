@@ -1,19 +1,19 @@
 ﻿/* Empiria Foundation Framework 2014 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
-*  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
+*  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
+*  Namespace : Empiria.Json                                     Assembly : Empiria.Kernel.dll                *
 *  Type      : JsonObject                                       Pattern  : Standard Class                    *
-*  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 6.0        Date: 23/Oct/2014                     License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Empiria JSON object allows data reading and parsing of JSON strings.                          *
+*  Summary   : Allows data reading and parsing of JSON strings.                                              *
 *                                                                                                            *
-********************************* Copyright (c) 2013-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2013-2014. Ontica LLC, La Vía Óntica SC and contributors.  **/
 using System;
 
 using System.Collections.Generic;
 using Empiria.Reflection;
 
-namespace Empiria.Data {
+namespace Empiria.Json {
 
   public class JsonObject {
 
@@ -42,6 +42,7 @@ namespace Empiria.Data {
         return JsonObject.Empty;
       }
       var dictionary = JsonConverter.ToDictionary(jsonString);
+
       return new JsonObject(dictionary);
     }
 
@@ -77,8 +78,8 @@ namespace Empiria.Data {
 
     /// <summary>Extracts a new JsonObject from this instance given an itemPath.</summary>
     /// <param name="itemPath">The item path to search.</param>
-    /// <param name="defaultValue">The default value if the searched item is not found.</param> 
-    /// <returns>The item relative to the searched path, the defaultValue if the object 
+    /// <param name="defaultValue">The default value if the searched item is not found.</param>
+    /// <returns>The item relative to the searched path, the defaultValue if the object
     /// was not found or an exception if the path is not well-formed.</returns>
     public T Get<T>(string itemPath, T defaultValue) {
       Assertion.AssertObject(itemPath, "itemPath");
@@ -118,7 +119,7 @@ namespace Empiria.Data {
         objectsList = this.Get<List<object>>(listPath, new List<object>());
       }
       if (ObjectFactory.IsStorable(typeof(T))) {
-        return objectsList.ConvertAll<T>((x) => 
+        return objectsList.ConvertAll<T>((x) =>
                                          ObjectFactory.InvokeParseMethod<T>(System.Convert.ToInt32(x)));
       } else if (ObjectFactory.IsValueObject(typeof(T))) {
         return objectsList.ConvertAll<T>((x) =>
@@ -176,7 +177,7 @@ namespace Empiria.Data {
         includeitemNameInSlice = true;
         itemPath = itemPath.Substring(1);   // Remove the special characeter @
       }
-      object value = this.GetDictionaryValue(itemPath, required);  
+      object value = this.TryGetDictionaryValue(itemPath, required);
       if (value == null && required) {
         // An exception should be thrown from the GetDictionaryValue call above.
         Assertion.AssertNoReachThisCode();
@@ -230,7 +231,7 @@ namespace Empiria.Data {
     private T Find<T>(string itemPath, bool required, T defaultValue) {
       Assertion.AssertObject(itemPath, "itemPath");
 
-      object value = this.GetDictionaryValue(itemPath, required);
+      object value = this.TryGetDictionaryValue(itemPath, required);
       if (value == null && required) {
         // An exception should be thrown from the this.GetDictionaryValue call above.
         Assertion.AssertNoReachThisCode();
@@ -261,33 +262,6 @@ namespace Empiria.Data {
       return pathMembers[pathMembers.Length - 1];
     }
 
-    private object GetDictionaryValue(string itemPath, bool required) {
-      string[] pathMembers = this.SplitItemPath(itemPath);
-
-      IDictionary<string, object> item = dictionary;
-      for (int i = 0; i < pathMembers.Length; i++) {
-        if (!item.ContainsKey(pathMembers[i])) {
-          if (!required) {
-            return null;
-          } else {
-            throw new EmpiriaDataException(EmpiriaDataException.Msg.JsonPathItemNotFound,
-                                           itemPath, pathMembers[i]);
-          }
-        }
-        if (i == (pathMembers.Length - 1)) {  // The last item is the searched item in the path
-          return item[pathMembers[i]];
-        }
-        if (item[pathMembers[i]] is IDictionary<string, object>) {
-          item = (IDictionary<string, object>) item[pathMembers[i]];
-        } else {   // This item is a scalar (not a subtree), so the next item
-                   // in the path necessarily doesn't exist.
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.JsonPathItemNotFound,
-                                         itemPath, pathMembers[i + 1]);
-        }
-      }  // for
-      throw Assertion.AssertNoReachThisCode();
-    }
-
     private string[] SplitItemPath(string itemPath) {
       itemPath = itemPath.Trim(' ');
       itemPath = itemPath.Replace("//", "/");
@@ -297,8 +271,35 @@ namespace Empiria.Data {
       return itemPath.Split('.');
     }
 
+    private object TryGetDictionaryValue(string itemPath, bool required) {
+      string[] pathMembers = this.SplitItemPath(itemPath);
+
+      IDictionary<string, object> item = dictionary;
+      for (int i = 0; i < pathMembers.Length; i++) {
+        if (!item.ContainsKey(pathMembers[i])) {
+          if (!required) {
+            return null;
+          } else {
+            throw new JsonDataException(JsonDataException.Msg.JsonPathItemNotFound,
+                                        itemPath, pathMembers[i]);
+          }
+        }
+        if (i == (pathMembers.Length - 1)) {  // The last item is the searched item in the path
+          return item[pathMembers[i]];
+        }
+        if (item[pathMembers[i]] is IDictionary<string, object>) {
+          item = (IDictionary<string, object>) item[pathMembers[i]];
+        } else {   // This item is a scalar (not a subtree), so the next item
+          // in the path necessarily doesn't exist.
+          throw new JsonDataException(JsonDataException.Msg.JsonPathItemNotFound,
+                                      itemPath, pathMembers[i + 1]);
+        }
+      }  // for
+      throw Assertion.AssertNoReachThisCode();
+    }
+
     #endregion Private members
 
   }  // class JsonObject
 
-}  // namespace Empiria.Data
+}  // namespace Empiria.Json

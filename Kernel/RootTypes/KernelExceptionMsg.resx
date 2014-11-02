@@ -213,4 +213,22 @@ Favor de notificar sobre este error al administrador del sistema ya que se trata
   <data name="AssertNoReachThisCode" xml:space="preserve">
     <value>PROGRAMMING ERROR: The program reached an invalid code flow statement. Probably it has a loop, if or switch that miss an exit condition or there are data with unexpected values. Please report this incident immediately to the system administrator or send us a message to support @ontica.org.</value>
   </data>
+  <data name="ListKeyAlreadyExists" xml:space="preserve">
+    <value>The list already contains an item with key '{0}'.</value>
+  </data>
+  <data name="JsonConverterForTypeAlreadyExists" xml:space="preserve">
+    <value>JsonConverterForTypeAlreadyExists</value>
+  </data>
+  <data name="JsonConverterForTypeNotFound" xml:space="preserve">
+    <value>JsonConverterForTypeNotFound</value>
+  </data>
+  <data name="JsonPathItemNotFound" xml:space="preserve">
+    <value>The Json object doesn't has the item '{1}' over the path '{0}'.</value>
+  </data>
+  <data name="JsonSlicePathNotFound" xml:space="preserve">
+    <value>Json slicing operation failed because there's not a Json item in the path '{}'. </value>
+  </data>
+  <data name="NotStarted" xml:space="preserve">
+    <value>Execution server was not started using a call to the static method ExecutionServer.Start().</value>
+  </data>
 </root>
