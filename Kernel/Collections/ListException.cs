@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria.Collections                              Assembly : Empiria.Kernel.dll                *
-*  Type      : EmpiriaListException                             Pattern  : Empiria Exception Class           *
+*  Type      : ListException                                    Pattern  : Empiria Exception Class           *
 *  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
 *                                                                                                            *
-*  Summary   : The exception that is thrown when a collection problem occurs.                                *
+*  Summary   : The exception that is thrown when a list or collection problem occurs.                        *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -13,14 +13,15 @@ using System.Reflection;
 
 namespace Empiria.Collections {
 
-  /// <summary>The exception that is thrown when an assertion condition fails.</summary>
+  /// <summary>The exception that is thrown when a list or collection problem occurs.</summary>
   [Serializable]
-  public sealed class EmpiriaListException : EmpiriaException {
+  public sealed class ListException : EmpiriaException {
 
     public enum Msg {
       ListIndexOutOfRange,
-      ListKeyNotFound,
       ListItemTypeNotMatch,
+      ListKeyAlreadyExists,
+      ListKeyNotFound,
     }
 
     static private string resourceBaseName = "Empiria.RootTypes.KernelExceptionMsg";
@@ -31,7 +32,7 @@ namespace Empiria.Collections {
     /// message.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
-    public EmpiriaListException(Msg message, params object[] args)
+    public ListException(Msg message, params object[] args)
       : base(message.ToString(), GetMessage(message, args)) {
 
     }
@@ -41,7 +42,7 @@ namespace Empiria.Collections {
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="innerException">This is the inner exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
-    public EmpiriaListException(Msg message, Exception innerException, params object[] args)
+    public ListException(Msg message, Exception innerException, params object[] args)
       : base(message.ToString(), GetMessage(message, args), innerException) {
 
     }
@@ -56,6 +57,6 @@ namespace Empiria.Collections {
 
     #endregion Private methods
 
-  } // class EmpiriaListException
+  } // class ListException
 
 } // namespace Empiria.Collections

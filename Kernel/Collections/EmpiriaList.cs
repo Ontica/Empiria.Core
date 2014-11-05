@@ -110,14 +110,14 @@ namespace Empiria.Collections {
         if ((0 <= index) && (index < items.Count)) {
           return items[index];
         } else {
-          throw new EmpiriaListException(EmpiriaListException.Msg.ListIndexOutOfRange, index);
+          throw new ListException(ListException.Msg.ListIndexOutOfRange, index);
         }
       }
       protected set {
         if ((0 <= index) && (index < items.Count)) {
           SetItemAt(index, value);
         } else {
-          throw new EmpiriaListException(EmpiriaListException.Msg.ListIndexOutOfRange, index);
+          throw new ListException(ListException.Msg.ListIndexOutOfRange, index);
         }
       }
     }
@@ -319,14 +319,14 @@ namespace Empiria.Collections {
           if ((0 <= index) && (index <= items.Count)) {
             items[index] = item;
           } else {
-            throw new EmpiriaListException(EmpiriaListException.Msg.ListIndexOutOfRange, index);
+            throw new ListException(ListException.Msg.ListIndexOutOfRange, index);
           }
         } // lock
       } else {
         if ((0 <= index) && (index <= items.Count)) {
           items[index] = item;
         } else {
-          throw new EmpiriaListException(EmpiriaListException.Msg.ListIndexOutOfRange, index);
+          throw new ListException(ListException.Msg.ListIndexOutOfRange, index);
         }
       } // if
     }

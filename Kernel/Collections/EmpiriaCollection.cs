@@ -64,7 +64,7 @@ namespace Empiria.Collections {
           return itemsDictionary[keysList[index]];
         } else {
           throw
-            new EmpiriaCollectionException(EmpiriaCollectionException.Msg.CollectionIndexOutOfRange, index);
+            new ListException(ListException.Msg.ListIndexOutOfRange, index);
         }
       }
     }
@@ -142,7 +142,7 @@ namespace Empiria.Collections {
       if ((0 <= index) && (index < keysList.Count)) {
         return keysList[index];
       } else {
-        throw new EmpiriaCollectionException(EmpiriaCollectionException.Msg.CollectionIndexOutOfRange, index);
+        throw new ListException(ListException.Msg.ListIndexOutOfRange, index);
       }
     }
 
@@ -166,7 +166,7 @@ namespace Empiria.Collections {
 
     protected void Add(TKey key, TItem item) {
       if (Contains(key)) {
-        throw new EmpiriaCollectionException(EmpiriaCollectionException.Msg.CollectionItemAlreadyExists, key);
+        throw new ListException(ListException.Msg.ListKeyAlreadyExists, key);
       }
       itemsDictionary.Add(key, item);
       keysList.Add(key);
@@ -190,7 +190,7 @@ namespace Empiria.Collections {
       if (Contains(key)) {
         return itemsDictionary[key];
       } else {
-        throw new EmpiriaCollectionException(EmpiriaCollectionException.Msg.CollectionKeyNotFound, key);
+        throw new ListException(ListException.Msg.ListKeyNotFound, key);
       }
     }
 
@@ -220,7 +220,7 @@ namespace Empiria.Collections {
 
         return item;
       } else {
-        throw new EmpiriaCollectionException(EmpiriaCollectionException.Msg.CollectionKeyNotFound, key);
+        throw new ListException(ListException.Msg.ListKeyNotFound, key);
       }
     }
 
@@ -235,7 +235,7 @@ namespace Empiria.Collections {
       if (Contains(key)) {
         itemsDictionary[key] = item;
       } else {
-        throw new EmpiriaCollectionException(EmpiriaCollectionException.Msg.CollectionKeyNotFound, key);
+        throw new ListException(ListException.Msg.ListKeyNotFound, key);
       }
     }
 
@@ -247,7 +247,7 @@ namespace Empiria.Collections {
         TKey key = keysList[index];
         itemsDictionary[key] = item;
       } else {
-        throw new EmpiriaCollectionException(EmpiriaCollectionException.Msg.CollectionIndexOutOfRange, index);
+        throw new ListException(ListException.Msg.ListIndexOutOfRange, index);
       }
     }
 

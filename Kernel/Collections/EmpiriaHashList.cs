@@ -83,7 +83,7 @@ namespace Empiria.Collections {
         if (ContainsKey(key)) {
           return items[key.ToLowerInvariant()];
         } else {
-          throw new EmpiriaListException(EmpiriaListException.Msg.ListKeyNotFound, key);
+          throw new ListException(ListException.Msg.ListKeyNotFound, key);
         }
       }
       set {
@@ -212,7 +212,7 @@ namespace Empiria.Collections {
             items.Remove(key);
             return item;
           } else {
-            throw new EmpiriaListException(EmpiriaListException.Msg.ListKeyNotFound, key);
+            throw new ListException(ListException.Msg.ListKeyNotFound, key);
           }
         }
       } else {
@@ -222,7 +222,7 @@ namespace Empiria.Collections {
           items.Remove(key);
           return item;
         } else {
-          throw new EmpiriaListException(EmpiriaListException.Msg.ListKeyNotFound, key);
+          throw new ListException(ListException.Msg.ListKeyNotFound, key);
         }
       }
     }
