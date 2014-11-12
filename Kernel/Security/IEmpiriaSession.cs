@@ -17,29 +17,15 @@ namespace Empiria.Security {
 
     #region Members definition
 
-    string ClientAddress { get; }
-
-    string ClientEnvironment { get; }
-
     DateTime EndTime { get; }
 
     int ServerId { get; }
 
     DateTime StartTime { get; }
 
-    string SystemSession { get; }
-
     string Token { get; }
 
     int UserId { get; }
-
-    T GetObject<T>(string key);
-
-    bool HasObject(string key);
-
-    void RemoveObject(string key);
-
-    void SetObject(string key, object value);
 
     #endregion Members definition
 

@@ -12,17 +12,17 @@
 using System;
 using System.Security.Principal;
 
+using Empiria.Collections;
+
 namespace Empiria.Security {
 
   public interface IEmpiriaPrincipal : IPrincipal, IDisposable {
 
     #region Members definition
 
-    bool CanExecute(int typeId, char operationType);
+    AssortedDictionary ContextItems { get; }
 
-    bool CanExecute(int typeId, char operationType, int instanceId);
-
-    bool IsAuditable(int typeId, char operationType);
+    IEmpiriaSession Session { get; }
 
     #endregion Members definition
 

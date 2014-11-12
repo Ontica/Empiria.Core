@@ -9,6 +9,7 @@
 *              interface for integrate Empiria.Kernel.dll assembly with Empiria.dll assembly.                *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
 
 namespace Empiria.Security {
 

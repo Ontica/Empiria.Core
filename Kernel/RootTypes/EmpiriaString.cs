@@ -71,7 +71,7 @@ namespace Empiria {
             if (propertyValue != null) {
               strInfo.AppendFormat("{0}{1}: {2}", Environment.NewLine, property.Name, propertyValue);
             }
-          }
+          }  // if
         } // foreach
         if (tempException.StackTrace != null) {
           strInfo.AppendFormat("{0}{0}{1}) <u>Stack Trace Information</u>{0}{0}", Environment.NewLine,

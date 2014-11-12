@@ -18,26 +18,34 @@ namespace Empiria.Security {
   public sealed class SecurityException : EmpiriaException {
 
     public enum Msg {
+      AuthenticationHeaderMissed,
+      BadAuthenticationHeaderFormat,
       CantChangePasswordOnUnauthenticatedUser,
       CantCloseSession,
       CantDecryptString,
       CantEncryptString,
       CantVerifyPasswordOnUnauthenticatedUser,
       EncryptedObjectWasAltered,
+      ExpiredSessionToken,
       GuestUserNotFound,
+      IntegrityValidatorAssertFails,
       InvalidAuthenticationClient,
-      InvalidClientID,
+      InvalidClientAppKey,
+      InvalidDIFDataItemDataType,
       InvalidHttpMethod,
       InvalidProtectionMode,
       InvalidRequestPath,
       InvalidSingleSignOnToken,
+      NotActiveUser,
+      NotActiveClientAppKey,
       RequireExecuteMethod,
+      SessionTokenNotFound,
       UnauthenticatedIdentity,
+      UserIDPasswordNotFound,
+      UserPasswordExpired,
       WrongAuthentication,
       WrongDIFVersionRequested,
       WrongImpersonationToken,
-      IntegrityValidatorAssertFails,
-      InvalidDIFDataItemDataType,
     }
 
     static private string resourceBaseName = "Empiria.Security.SecurityExceptionMsg";

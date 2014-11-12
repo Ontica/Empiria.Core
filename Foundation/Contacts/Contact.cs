@@ -12,6 +12,8 @@
 using System;
 using System.Data;
 
+using Empiria.Json;
+
 namespace Empiria.Contacts {
 
   public class Contact : BaseObject {
@@ -42,8 +44,9 @@ namespace Empiria.Contacts {
     #region Public properties
 
     public TempAddress Address {
-      get;
-      set;
+      get {
+        return this.ExtendedData.Get<TempAddress>("Address", TempAddress.Empty);
+      }
     }
 
     [DataField("ShortName")]
@@ -52,44 +55,34 @@ namespace Empiria.Contacts {
       protected set;
     }
 
-    [DataField("EMail")]
+    [DataField("ContactEmail")]
     public string EMail {
       get;
       set;
     }
 
-    [DataField("TaxIDNumber")]
-    public string TaxTag {
-      get;
-      protected set;
-    }
-
-    public string FormattedTaxTag {
+    public string TaxIDNumber {
       get {
-        return EmpiriaString.FormatTaxTag(this.TaxTag);
+        return this.ExtendedData.Get<string>("TaxIDNumber", String.Empty);
       }
     }
 
-    [DataField("ImageFilename")]
-    public string Image {
-      get;
-      protected set;
+    public string FormattedTaxIDNumber {
+      get {
+        return EmpiriaString.FormatTaxTag(this.TaxIDNumber);
+      }
     }
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(FullName, Alias, Nickname, EMail, TaxTag);
+        return EmpiriaString.BuildKeywords(FullName, Alias, Nickname, EMail, TaxIDNumber);
       }
     }
 
-    [DataField("FingerprintTemplate")]
-    protected string ExtendedData {
+    [DataField("ContactExtData")]
+    public JsonObject ExtendedData {
       get;
-      set;
-    }
-
-    public T GetExtensionData<T>() {
-      return Empiria.Data.JsonConverter.ToObject<T>(this.ExtendedData);
+      private set;
     }
 
     [DataField("ContactFullName")]
@@ -110,20 +103,6 @@ namespace Empiria.Contacts {
       protected set;
     }
 
-    /// <summary>OOJJOO</summary>
-    [DataField("EMail2TypeId")]
-    internal int organizationId {
-      get;
-      set;
-    }
-
-    /// <summary>OOJJOO</summary>
-    [DataField("Phone2TypeId")]
-    internal int externalObjectId {
-      get;
-      set;
-    }
-
     #endregion Public properties
 
     #region Public methods
@@ -136,16 +115,8 @@ namespace Empiria.Contacts {
       return base.GetLinks<T>(roleName, period);
     }
 
-    protected override void OnLoadObjectData(DataRow row) {
-      this.Address = TempAddress.Parse(row);
-    }
-
     protected override void OnSave() {
       ContactsData.WriteContact(this);
-    }
-
-    internal void SaveTempUserSettings() {
-      ContactsData.WriteTempUserSettings(this.Id, organizationId, externalObjectId);
     }
 
     #endregion Public methods

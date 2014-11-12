@@ -150,6 +150,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -165,11 +169,17 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\AssortedDictionary.cs" />
     <Compile Include="Collections\DoubleKeyList.cs" />
     <Compile Include="Collections\EmpiriaCollection.cs" />
-    <Compile Include="Collections\EmpiriaCollectionException.cs" />
     <Compile Include="Collections\EmpiriaHashList.cs" />
+    <Compile Include="Collections\ObjectsCache.cs" />
     <Compile Include="DataTypes\Calendar.cs" />
+    <Compile Include="Json\JsonConverter.cs" />
+    <Compile Include="Json\JsonDataException.cs" />
+    <Compile Include="Json\JsonItem.cs" />
+    <Compile Include="Json\JsonObject.cs" />
+    <Compile Include="Json\JsonRoot.cs" />
     <Compile Include="RootTypes\EmpiriaMath.cs" />
     <Compile Include="RootTypes\EmpiriaString.cs" />
     <Compile Include="DataTypes\Keyword.cs" />
@@ -177,7 +187,7 @@
     <Compile Include="Collections\EmpiriaList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Collections\EmpiriaListException.cs">
+    <Compile Include="Collections\ListException.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Messaging\IQueueFactory.cs" />
@@ -238,15 +248,6 @@
     <Compile Include="Security\SecurityException.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="Collections\EmpiriaCollectionExceptionMsg.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RootTypes\KernelExceptionMsg.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Security\SecurityExceptionMsg.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
@@ -270,6 +271,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="empiria.strong.name.public.key.snk" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RootTypes\KernelExceptionMsg.resx" />
+    <EmbeddedResource Include="Security\SecurityExceptionMsg.resx" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -55,9 +55,14 @@ namespace Empiria {
       }
     }
 
-    static public void AssertFail(string failsMessage) {
+    static public void AssertFail(string failMessage) {
       throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
-                                        GetSourceMethodName(), failsMessage);
+                                        GetSourceMethodName(), failMessage);
+    }
+
+    public static void AssertFail(Exception onFailException) {
+      throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
+                                        onFailException, GetSourceMethodName(), onFailException.Message);
     }
 
     /// <summary>Used to protect code execution when the code flow reaches an invalid line.</summary>
@@ -103,13 +108,13 @@ namespace Empiria {
     /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
     /// <param name="instance">The object to check.</param>
     /// <param name="instanceName">The name or identificator of the object in code.</param>
-    static public void AssertObject(object instance, Exception onFailsException) {
+    static public void AssertObject(object instance, Exception onFailException) {
       if (instance == null) {
         throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
-                                          onFailsException, GetSourceMethodName(), onFailsException.Message);
+                                          onFailException, GetSourceMethodName(), onFailException.Message);
       } else if ((instance is string) && (String.IsNullOrWhiteSpace((string) instance))) {
         throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
-                                          onFailsException, GetSourceMethodName(), onFailsException.Message);
+                                          onFailException, GetSourceMethodName(), onFailException.Message);
       }
     }
 

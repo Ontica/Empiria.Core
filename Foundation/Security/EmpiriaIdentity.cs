@@ -9,104 +9,76 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Web;
-using System.Web.Security;
 
 namespace Empiria.Security {
 
-  public sealed class EmpiriaIdentity : IEmpiriaIdentity, IDisposable {
-    
-    #region Fields
+  public enum AuthenticationMode {
+    None = -1,
+    Basic = 1,
+    Forms = 2,
+    Realm = 3,
+  }
 
-    private EmpiriaUser user = null;
-    private EmpiriaSession session = null;
-    private bool isAuthenticated = false;
-    private int regionId = -1;
-    private bool disposed = false;
+  public enum SystemUser {
+    Administrator = -3,
+    Guest = -5,
+    UnitTester = -4,
+  }
 
-    #endregion Fields
+  public sealed class EmpiriaIdentity : IEmpiriaIdentity {    
 
     #region Constructors and parsers
 
     private EmpiriaIdentity(EmpiriaUser user) {
-      Assertion.AssertObject(user, "user");
-      this.user = user;
-      this.isAuthenticated = true;
-      this.session = EmpiriaSession.Create(this);
-      this.EnsureValid();
+      this.User = user;
     }
 
-    static public EmpiriaIdentity Authenticate(string username, string password, string entropy, int regionId) {
-      EmpiriaUser user = EmpiriaUser.Authenticate(username, password, entropy);
+    static public EmpiriaPrincipal Authenticate(string sessionToken) {
+      Assertion.AssertObject(sessionToken, "sessionToken");
 
-      if (user != null) {
-        EmpiriaIdentity identity = new EmpiriaIdentity(user);
-        identity.regionId = regionId;
-        return identity;
-      } else {
-        return null;
+      EmpiriaPrincipal principal = EmpiriaPrincipal.TryParseWithToken(sessionToken);
+      if (principal != null) {
+        principal.Identity.SetAuthenticationType(AuthenticationMode.Realm);
+        return principal;
       }
-    }
+      EmpiriaSession session = EmpiriaSession.ParseActive(sessionToken);
 
-    static internal EmpiriaIdentity Authenticate(EmpiriaSession session) {
       EmpiriaUser user = EmpiriaUser.Authenticate(session);
 
-      if (user != null) {
-        return new EmpiriaIdentity(user);
-      } else {
-        return null;
-      }
+      var identity = new EmpiriaIdentity(user);
+      identity.SetAuthenticationType(AuthenticationMode.Realm);
+      return new EmpiriaPrincipal(identity, session);
     }
 
-    static public EmpiriaPrincipal TryAuthenticate(string sessionToken) {
-      EmpiriaSession session = EmpiriaSession.TryParseActive(sessionToken);
-      if (session != null) {
-        var identity = EmpiriaIdentity.Authenticate(session);
-        if (identity != null) {
-          return new EmpiriaPrincipal(identity);
-        }
-      }
-      return null;
+    static public EmpiriaPrincipal Authenticate(string clientAppKey,
+                                                SystemUser systemUser, int contextId = -1) {
+      Assertion.AssertObject(clientAppKey, "clientAppKey");
+
+      var clientApplication = ClientApplication.ParseActive(clientAppKey);
+      EmpiriaUser user = EmpiriaUser.Authenticate(systemUser);
+
+      Assertion.AssertObject(user, "user");
+
+      var identity = new EmpiriaIdentity(user);
+      identity.SetAuthenticationType(AuthenticationMode.Basic);
+      return new EmpiriaPrincipal(identity, clientApplication, contextId);
     }
 
-    // For Empiria Web-Api's authentication 
-    static public EmpiriaPrincipal Authenticate(string apiClientKey, string userName, string password,
-                                                string entropy,  int contextId) {
-      string globalApiKey = ConfigurationData.GetString("Empiria.Trade.API.Key"); 
+    static public EmpiriaPrincipal Authenticate(string clientAppKey, string username, string password,
+                                                string entropy = "", int contextId = -1) {
+      Assertion.AssertObject(clientAppKey, "clientAppKey");
+      Assertion.AssertObject(username, "username");
+      Assertion.AssertObject(password, "password");
 
-      if (!globalApiKey.Equals(apiClientKey)) {
-        new SecurityException(SecurityException.Msg.InvalidClientID, apiClientKey);
-        return null;
-      }
-      var identity = EmpiriaIdentity.Authenticate(userName, password, entropy, contextId);
-      if (identity != null) {
-        return new EmpiriaPrincipal(identity);
-      }
-      return null;
-    }
+      var clientApplication = ClientApplication.ParseActive(clientAppKey);
 
-    static public EmpiriaIdentity Authenticate(Uri referrer, FormsAuthenticationTicket remoteTicket) {
-      //CheckClient(referrer);
-      EmpiriaUser user = EmpiriaUser.Authenticate(remoteTicket);
-      if (user != null) {
-        return new EmpiriaIdentity(user);
-      } else {
-        return null;
-      }
-    }  
+      EmpiriaUser user = EmpiriaUser.Authenticate(username, password, entropy);
 
-    static public EmpiriaIdentity AuthenticateGuest() {
-      EmpiriaUser user = EmpiriaUser.AuthenticateGuest();
+      Assertion.AssertObject(user, "user");
 
-      if (user != null) {
-        return new EmpiriaIdentity(user);
-      } else {
-        throw new SecurityException(SecurityException.Msg.GuestUserNotFound);
-      }
-    }
-
-    ~EmpiriaIdentity() {
-      Dispose(false);
+      var identity = new EmpiriaIdentity(user);
+      identity.SetAuthenticationType(AuthenticationMode.Basic);
+      return new EmpiriaPrincipal(identity, clientApplication, contextId);
     }
 
     #endregion Constructors and parsers
@@ -114,34 +86,18 @@ namespace Empiria.Security {
     #region Public properties
 
     public string AuthenticationType {
-      get {
-        session.UpdateEndTime();
-        return "EmpiriaLogon";
-      }
+      get;
+      private set;
     }
 
     public bool IsAuthenticated {
-      get {
-        session.UpdateEndTime();
-        return isAuthenticated;
-      }
-    }
-
-    public int CurrentRegionId {
-      get {
-        session.UpdateEndTime();
-        return regionId;
-      }
-      set {
-        session.UpdateEndTime();
-        regionId = value;
-      }
+      get;
+      private set;
     }
 
     public string Name {
       get {
-        session.UpdateEndTime();
-        return user.UserName;
+        return this.User.UserName;
       }
     }
 
@@ -150,38 +106,17 @@ namespace Empiria.Security {
     }
 
     public EmpiriaUser User {
-      get {
-        if (session != null) {
-          session.UpdateEndTime();
-        }
-        return user;
-      }
+      get;
+      private set;
     }
 
     public int UserId {
       get {
-        session.UpdateEndTime();
-        return user.Id;
-      }
-    }
-
-    public IEmpiriaSession Session {
-      get {
-        session.UpdateEndTime();
-        return session;
+        return this.User.Id;
       }
     }
 
     #endregion Public properties
-
-    #region Public methods
-
-    public void Dispose() {
-      Dispose(true);
-      GC.SuppressFinalize(this);
-    }
-
-    #endregion Public methods
 
     #region Private methods
 
@@ -190,24 +125,29 @@ namespace Empiria.Security {
                        SecurityException.GetMessage(SecurityException.Msg.WrongAuthentication));
       Assertion.Assert(this.IsAuthenticated,
                        SecurityException.GetMessage(SecurityException.Msg.WrongAuthentication));
-      Assertion.Assert(this.Session != null,
-                       SecurityException.GetMessage(SecurityException.Msg.WrongAuthentication));
     }
 
-    private void Dispose(bool disposing) {
-      try {
-        if (!disposed) {
-          disposed = true;
-          session.Close();
-          ExecutionServer.DisposeSession();
-        }
-      } finally {
-
+    private void SetAuthenticationType(AuthenticationMode authenticationMode) {
+      switch (authenticationMode) {
+        case AuthenticationMode.Basic:
+          this.AuthenticationType = "Basic";
+          this.IsAuthenticated = true;
+          return;
+        case AuthenticationMode.Realm:
+          this.AuthenticationType = "Realm";
+          this.IsAuthenticated = true;
+          return;
+        case AuthenticationMode.Forms:
+          this.AuthenticationType = "Forms";
+          this.IsAuthenticated = true;
+          return;
+        case AuthenticationMode.None:
+          this.AuthenticationType = "None";
+          this.IsAuthenticated = false;
+          return;
+        default:
+          throw Assertion.AssertNoReachThisCode();
       }
-    }
-
-    static private bool ValidateReferrerHost(Uri referrer) {
-      return true;
     }
 
     #endregion Private methods

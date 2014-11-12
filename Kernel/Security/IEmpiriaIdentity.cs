@@ -17,11 +17,7 @@ namespace Empiria.Security {
 
     #region Members definition
 
-    IEmpiriaSession Session { get; }
-
     IEmpiriaUser User { get; }
-
-    int CurrentRegionId { get; set; }
 
     #endregion Members definition
 

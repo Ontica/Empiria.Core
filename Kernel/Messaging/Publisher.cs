@@ -64,7 +64,7 @@ namespace Empiria.Messaging {
         queue.Send(message);
       } catch (Exception innerException) {
         throw new MessagingCoreException(MessagingCoreException.Msg.CantPublishMessage, innerException,
-                                     message.Body.GetType().FullName, message.Body.ToString());
+                                         message.Body.GetType().FullName, message.Body.ToString());
       }
     }
 

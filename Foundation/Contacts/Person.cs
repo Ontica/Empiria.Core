@@ -28,7 +28,6 @@ namespace Empiria.Contacts {
     private string lastName = String.Empty;
     private string lastName2 = String.Empty;
     private DateTime bornDate = ExecutionServer.DateMinValue;
-    private Gender gender = Gender.Male;
 
     #endregion Fields
 
@@ -60,12 +59,6 @@ namespace Empiria.Contacts {
 
     #region Public properties
 
-    [DataField("BornDate", Default = "ExecutionServer.DateMinValue")]
-    public DateTime BornDate {
-      get { return bornDate; }
-      set { bornDate = value; }
-    }
-
     public string FamilyFullName {
       get {
         return EmpiriaString.TrimAll(this.LastName + " " + this.LastName2 + ", " + this.FirstName);
@@ -85,12 +78,6 @@ namespace Empiria.Contacts {
         }
         return EmpiriaString.TrimAll(this.FirstName + " " + this.LastName + " " + this.LastName2);
       }
-    }
-
-    [DataField("Gender", Default = Gender.Unknown)]
-    public Gender Gender {
-      get { return gender; }
-      set { gender = value; }
     }
 
     [DataField("LastName")]

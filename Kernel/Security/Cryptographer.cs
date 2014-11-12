@@ -142,6 +142,19 @@ namespace Empiria.Security {
       }
     }
 
+    static public string GetMD5HashCode(string source) {
+      MD5 md5 = MD5.Create();
+      byte[] inputBytes = Encoding.ASCII.GetBytes(source);
+      byte[] hash = md5.ComputeHash(inputBytes);
+
+
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < hash.Length; i++) {
+        sb.Append(hash[i].ToString("X2"));
+      }
+      return sb.ToString().ToLower();
+    }
+
     #endregion Public methods
 
     #region Private methods

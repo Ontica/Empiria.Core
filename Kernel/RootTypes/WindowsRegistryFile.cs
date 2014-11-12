@@ -35,7 +35,8 @@ namespace Empiria {
       string tempTypeName = typeName;
 
       if (!typeName.StartsWith("Empiria")) {
-        throw new ConfigurationDataException(ConfigurationDataException.Msg.InvalidTypeName, parameterName, typeName);
+        throw new ConfigurationDataException(ConfigurationDataException.Msg.InvalidTypeName, 
+                                             parameterName, typeName);
       }
       if (parameterName.ToUpperInvariant().StartsWith(dbConnectionString)) {   //Enforce DB key decryption
         parameterName = "§" + parameterName;
@@ -44,23 +45,25 @@ namespace Empiria {
       }
       tempTypeName = tempTypeName.Substring(tempTypeName.IndexOf('.') + 1);
       while (true) {
-        if ((retrivedValue == null) && (tempTypeName != null)) {
-          retrivedValue = TryReadRegistryValue(empiriaKey, tempTypeName, parameterName);
-          if (retrivedValue == null) {   //Don´t search superkey if keyValue founded
-            if (tempTypeName.IndexOf('.') != -1) {
-              tempTypeName = tempTypeName.Substring(0, tempTypeName.LastIndexOf('.'));
-            } else if (tempTypeName != String.Empty) {
-              tempTypeName = String.Empty;
-            } else if (tempTypeName == String.Empty) {
-              tempTypeName = null;      //Key not found in the search tree. Flag the loop exit
-            } // if else if 
-          } // if
-        } else {
+        if ((retrivedValue != null) || (tempTypeName == null)) {
           break;
+        }
+        retrivedValue = TryReadRegistryValue(empiriaKey, tempTypeName, parameterName);
+        if (retrivedValue != null) {  //Don´t search superkey if keyValue founded
+          break;
+        }
+        if (tempTypeName.IndexOf('.') != -1) {
+          tempTypeName = tempTypeName.Substring(0, tempTypeName.LastIndexOf('.'));
+        } else if (tempTypeName != String.Empty) {
+          tempTypeName = String.Empty;
+        } else if (tempTypeName == String.Empty) {
+          tempTypeName = null;      //Key not found in the search tree. Flag the loop exit
         } // if
       } // while
-      Assertion.AssertObject(retrivedValue, new ConfigurationDataException(ConfigurationDataException.Msg.ParameterNotExists,
-                                                                           parameterName, typeName));
+      if (retrivedValue == null) {
+        throw new ConfigurationDataException(ConfigurationDataException.Msg.ParameterNotExists,
+                                             parameterName, typeName);
+      }
       return retrivedValue;
     }
 

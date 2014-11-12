@@ -20,48 +20,19 @@ namespace Empiria.Contacts {
 
     #region Internal methods
 
-    static internal T GetContactAttribute<T>(Contact contact, string attributeName) {
-      return GeneralDataOperations.GetEntityField<T>("EOSContacts", attributeName, "ContactId", contact.Id);
-    }
-
-    static internal int GetContactIdWithUserName(string userName) {
-      return GeneralDataOperations.GetEntityId("EOSContacts", "ContactId", "UserName", userName);
-    }
-
     static internal FixedList<Contact> GetContacts(string keywords, string sort = "") {
-      string filter = keywords.Length != 0 ? 
-                      SearchExpression.ParseAndLikeWithNoiseWords("ContactKeywords", keywords).ToString() :
-                      String.Empty;
-      string sql = "SELECT * FROM EOSContacts";
-      sql += GeneralDataOperations.GetFilterSortSqlString(filter, sort);
+      string filter =  String.Empty;
+      if (keywords.Length != 0) {
+        filter = SearchExpression.ParseAndLikeWithNoiseWords("ContactKeywords", keywords).ToString();
+      }
+
+      string sql = "SELECT * FROM Contacts" + GeneralDataOperations.GetFilterSortSqlString(filter, sort);
 
       return DataReader.GetList<Contact>(DataOperation.Parse(sql), 
                                         (x) => BaseObject.ParseList<Contact>(x)).ToFixedList();
     }
 
     static internal int WriteContact(Contact o) {
-      throw new NotImplementedException();
-    }
-
-    static internal int WriteContactAttribute(Contact contact, string attributeName, object atributeValue) {
-      string sql = String.Empty;
-
-      if (atributeValue is System.String) {
-        sql = "UPDATE EOSContacts SET " + attributeName + " = '" + (string) atributeValue + "'";
-      } else {
-        sql = "UPDATE EOSContacts SET " + attributeName + " = " + Convert.ToString(atributeValue);
-      }
-      sql += " WHERE ContactId = " + contact.Id.ToString();
-
-      return DataWriter.Execute(DataOperation.Parse(sql));
-    }
-
-    static internal int WriteTempUserSettings(int userId, int organizationId, int externalObjectId) {
-      return DataWriter.Execute(DataOperation.Parse("writeTempUserSettings", 
-                                userId, organizationId, externalObjectId));
-    }
-
-    static internal int WriteUser(EmpiriaUser user) {
       throw new NotImplementedException();
     }
 

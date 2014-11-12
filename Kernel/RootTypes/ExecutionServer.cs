@@ -9,8 +9,9 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Web;
+using System.Threading;
 
+using Empiria.Collections;
 using Empiria.Security;
 
 namespace Empiria {
@@ -23,6 +24,7 @@ namespace Empiria {
     WindowsServiceServer = 3,
     WindowsApplication = 4,
     WebApiServer = 5,
+    UnitTesting = 6,
   }
 
   #endregion Enumerations
@@ -32,39 +34,37 @@ namespace Empiria {
 
     #region Fields
 
-    static private string customerName = null;
-    static private string customerUrl = null;
     static private DateTime dateMaxValue = DateTime.MaxValue;
     static private DateTime dateMinValue = DateTime.MinValue;
+    static private DateTime dateNullValue = DateTime.MinValue;
 
     static private string licenseNumber = null;
     static private string licenseSerialNumber = null;
-    static private string serverName = null;
     static private int serverId = 0;
+    static private string supportUrl = null;
+    //static private bool isDataSourceServer = false;
+
+    static private string customerName = null;
+    static private string customerUrl = null;
     static private int organizationId = 0;
     static private string serviceProvider = null;
-    static private string supportUrl = null;
+    static private string serverName = null;
+
     static private bool isStarted = false;
 
     static private ExecutionServerType executionServerType = ExecutionServerType.WebApplicationServer;
+
+    static private readonly object _locker = new object();
 
     #endregion Fields
 
     #region Public properties
 
-    static public string CustomerName {
+    static public AssortedDictionary ContextItems {
       get {
         AssertIsStarted();
 
-        return customerName;
-      }
-    }
-
-    static public string CustomerUrl {
-      get {
-        AssertIsStarted();
-
-        return customerUrl;
+        return ExecutionServer.CurrentPrincipal.ContextItems;
       }
     }
 
@@ -72,78 +72,31 @@ namespace Empiria {
       get {
         AssertIsStarted();
 
-        if (ExecutionServer.CurrentPrincipal != null) {
-          return ExecutionServer.CurrentPrincipal.Identity as IEmpiriaIdentity;
-        } else {
-          return null;
-        }
+        return (IEmpiriaIdentity) ExecutionServer.CurrentPrincipal.Identity;
       }
     }
 
     static public IEmpiriaPrincipal CurrentPrincipal {
       get {
-        if (HttpContext.Current == null) {
-          return null;
-        }
-        if (ServerType != ExecutionServerType.WebApiServer &&
-            HttpContext.Current.Session == null) {
-          return null;
-        }
-
         AssertIsStarted();
 
-        if (ServerType != ExecutionServerType.WebApiServer) {
-          return HttpContext.Current.Session[EmpiriaPrincipalTag] as IEmpiriaPrincipal;
-        } else {
-          return HttpContext.Current.User as IEmpiriaPrincipal;
+        var principal = Thread.CurrentPrincipal;
+        if (principal is IEmpiriaPrincipal) {
+          return (IEmpiriaPrincipal) principal;
         }
-      }
-      set {
-        AssertIsStarted();
-
-        if (HttpContext.Current != null && ServerType != ExecutionServerType.WebApiServer) {
-          HttpContext.Current.Session.Add(ExecutionServer.EmpiriaPrincipalTag, null);
-        }
-        if (ServerType != ExecutionServerType.WebApiServer) {
-          HttpContext.Current.Session[EmpiriaPrincipalTag] = value;
-        } else {
-          HttpContext.Current.User = value;
-        }
+        throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
       }
     }
 
-    static public IEmpiriaSession CurrentSession {
-      get {
-        AssertIsStarted();
-
-        if (CurrentIdentity != null) {
-          return CurrentIdentity.Session;
-        } else {
-          return null;
-        }
-      }
-    }
-
+    //OOJJOO: To deprecate
     static public string CurrentSessionToken {
       get {
         AssertIsStarted();
 
-        if (CurrentSession != null) {
-          return CurrentSession.Token;
+        if (IsAuthenticated) {
+          return CurrentPrincipal.Session.Token;
         } else {
           return String.Empty;
-        }
-      }
-    }
-
-    static public IEmpiriaUser CurrentUser {
-      get {
-        AssertIsStarted();
-
-        if (CurrentIdentity != null) {
-          return CurrentIdentity.User;
-        } else {
-          return null;
         }
       }
     }
@@ -152,10 +105,10 @@ namespace Empiria {
       get {
         AssertIsStarted();
 
-        if (CurrentUser != null) {
-          return CurrentUser.Id;
+        if (IsAuthenticated) {
+          return CurrentIdentity.User.Id;
         } else {
-          return -5;
+          return -1;
         }
       }
     }
@@ -173,6 +126,32 @@ namespace Empiria {
         AssertIsStarted();
 
         return dateMinValue;
+      }
+    }
+
+    static public DateTime DateNullValue {
+      get {
+        AssertIsStarted();
+
+        return dateNullValue;
+      }
+    }
+
+    static public bool IsAuthenticated {
+      get {
+        var principal = Thread.CurrentPrincipal;
+
+        return (principal != null && principal is IEmpiriaPrincipal);
+      }
+    }
+
+    static public bool IsDataSourceServer {
+      get {
+        AssertIsStarted();
+
+        return ServerType == ExecutionServerType.WebApiServer ||
+               ServerType == ExecutionServerType.WebServicesServer;
+        //return isDataSourceServer;
       }
     }
 
@@ -202,22 +181,6 @@ namespace Empiria {
       }
     }
 
-    static public string Name {
-      get {
-        AssertIsStarted();
-
-        return serverName;
-      }
-    }
-
-    static public int OrganizationId {
-      get {
-        AssertIsStarted();
-
-        return organizationId;
-      }
-    }
-
     static public int ServerId {
       get {
         AssertIsStarted();
@@ -230,14 +193,6 @@ namespace Empiria {
       get { return executionServerType; }
     }
 
-    static public string ServiceProvider {
-      get {
-        AssertIsStarted();
-
-        return serviceProvider;
-      }
-    }
-
     static public string SupportUrl {
       get {
         AssertIsStarted();
@@ -246,27 +201,75 @@ namespace Empiria {
       }
     }
 
-    #endregion Public properties
+    #endregion Public properties optional
 
-    #region Public methods
+    #region Public properties
 
-    static public void AssertSession() {
-      Assertion.Assert(ExecutionServer.CurrentSession != null,
-                "This operation needs an active system session. Please Sign-in with a valid user account.", 1);
-    }
+    static public string CustomerName {
+      get {
+        AssertIsStarted();
 
-    static public bool IsWebServicesServer() {
-      return (ServerType == ExecutionServerType.WebServicesServer ||
-              ServerType == ExecutionServerType.WebApiServer);
-    }
-
-    static public void DisposeSession() {
-      if (HttpContext.Current != null && HttpContext.Current.Session != null) {
-        HttpContext.Current.Session.Remove(ExecutionServer.EmpiriaPrincipalTag);
+        return customerName;
       }
     }
 
+    static public string CustomerUrl {
+      get {
+        AssertIsStarted();
+
+        return customerUrl;
+      }
+    }
+
+    static public int OrganizationId {
+      get {
+        AssertIsStarted();
+
+        return organizationId;
+      }
+    }
+
+    static public string ServerName {
+      get {
+        AssertIsStarted();
+
+        return serverName;
+      }
+    }
+
+    static public string ServiceProvider {
+      get {
+        AssertIsStarted();
+
+        return serviceProvider;
+      }
+    }
+
+    #endregion Public properties optional
+
+    #region Public methods
+
     static public void Start(ExecutionServerType serverType) {
+      if (!IsStarted) {
+        lock (_locker) {
+          if (!IsStarted) {
+            ExecuteStart(serverType);
+          }
+        }
+      }
+    }
+
+    #endregion Public methods
+
+    #region Private members
+
+    static private void AssertIsStarted() {
+      if (!IsStarted) {
+        throw new ExecutionServerException(ExecutionServerException.Msg.NotStarted);
+      }
+    }
+
+    static private void ExecuteStart(ExecutionServerType serverType) {
       if (isStarted) {
         return;
       }
@@ -281,46 +284,19 @@ namespace Empiria {
       try {
         licenseNumber = ConfigurationData.GetString("Empiria", "License.Number");
         licenseSerialNumber = ConfigurationData.GetString("Empiria", "License.SerialNumber");
+        dateMaxValue = ConfigurationData.GetDateTime("Empiria", "DateTime.MaxValue");
+        dateMinValue = ConfigurationData.GetDateTime("Empiria", "DateTime.MinValue");
+        dateNullValue = ConfigurationData.GetDateTime("Empiria", "DateTime.NullValue");
+        serverId = ConfigurationData.GetInteger("Empiria", "Server.Id");
+        supportUrl = ConfigurationData.GetString("Empiria", "Support.Url");
         customerName = ConfigurationData.GetString("Empiria", "Customer.Name");
         customerUrl = ConfigurationData.GetString("Empiria", "Customer.Url");
-        dateMaxValue = ConfigurationData.GetDateTime("Empiria", "DateMaxValue");
-        dateMinValue = ConfigurationData.GetDateTime("Empiria", "DateMinValue");
-        serverId = ConfigurationData.GetInteger("Empiria", "Server.ID");
-        organizationId = ConfigurationData.GetInteger("Empiria", "Organization.ID");
+        organizationId = ConfigurationData.GetInteger("Empiria", "Organization.Id");
         serverName = ConfigurationData.GetString("Empiria", "Server.Name");
-        serviceProvider = ConfigurationData.GetString("Empiria", "Service.Provider");
-        supportUrl = ConfigurationData.GetString("Empiria", "Support.Url");
         isStarted = true;
       } catch (Exception innerException) {
         throw new ExecutionServerException(ExecutionServerException.Msg.CantReadExecutionServerProperty,
                                            innerException);
-      }
-    }
-
-    #endregion Public methods
-
-    #region Private members
-
-    static private void AssertIsStarted() {
-      if (!isStarted) {
-        Start();
-      }
-    }
-
-    static private string EmpiriaPrincipalTag {
-      get {
-        return String.Format("{0}.Empiria.Principal", LicenseName);
-      }
-    }
-
-    static private readonly object _locker = new object();
-    static private void Start() {
-      if (!IsStarted) {
-        lock (_locker) {
-          if (!IsStarted) {
-            Start(ExecutionServerType.WebApplicationServer);
-          }
-        }
       }
     }
 

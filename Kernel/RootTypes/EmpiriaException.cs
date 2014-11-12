@@ -60,6 +60,13 @@ namespace Empiria {
 
     }
 
+    static public Json.JsonRoot ToJsonRoot(Exception exception) {
+      return new Json.JsonRoot() {
+        new Json.JsonItem("source", exception.Source == null ? "N/A" : exception.Source),
+        new Json.JsonItem("message", exception.Message),
+      };
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties

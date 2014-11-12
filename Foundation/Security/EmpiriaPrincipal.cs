@@ -13,6 +13,8 @@
 using System;
 using System.Security.Principal;
 
+using Empiria.Collections;
+
 namespace Empiria.Security {
 
   /// <summary>Represents the security context of the user or access account on whose behalf the Empiria
@@ -22,26 +24,51 @@ namespace Empiria.Security {
 
     #region Fields
 
-    private EmpiriaIdentity identity = null;
-    private string[] rolesArray = null;
+    static private ObjectsCache<string, EmpiriaPrincipal> principalsCache =
+                                        new ObjectsCache<string, EmpiriaPrincipal>(128);
+
+    private string[] rolesArray = new string[0];
     private bool disposed = false;
-    private string executionTypesString = String.Empty;
 
     #endregion Fields
 
     #region Constructors and parsers
 
+    internal EmpiriaPrincipal(EmpiriaIdentity identity, EmpiriaSession session) {
+      Assertion.AssertObject(session, "session");
+      Assertion.AssertObject(identity, "identity");
+      if (!identity.IsAuthenticated) {
+        throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
+      }
+      this.Initialize(identity, ClientApplication.Parse(session.ClientAppId), session);
+    }
+
     /// <summary>Initializes a new instance of the EmpiriaPrincipal class from an authenticated
     /// EmpiriaIdentity. Fails if identity represents a non authenticated EmpiriaIdentity.</summary>
     /// <param name="identity">Represents an authenticated Empiria user.</param>
-    public EmpiriaPrincipal(EmpiriaIdentity identity) {
-      if (identity != null && identity.IsAuthenticated) {
-        this.identity = identity;
-        //userRoles = null; //identity.User.GetRoles();
-        rolesArray = LoadRolesArray(identity.UserId);
-      } else {
+    internal EmpiriaPrincipal(EmpiriaIdentity identity, ClientApplication clientApp,
+                              int contextId = -1) {
+      Assertion.AssertObject(identity, "identity");
+      Assertion.AssertObject(clientApp, "clientApp");
+
+      if (!identity.IsAuthenticated) {
         throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
       }
+      this.Initialize(identity, clientApp, contextId: contextId);
+    }
+
+    static internal EmpiriaPrincipal TryParseWithToken(string sessionToken) {
+      EmpiriaPrincipal principal = null;
+      if (principalsCache.ContainsKey(sessionToken)) {
+        principal = principalsCache[sessionToken];
+        principal.RefreshBeforeReturn();
+      }
+      return principal;
+    }
+
+    private void RefreshBeforeReturn() {
+      this.ContextItems = new AssortedDictionary();
+      this.Session.UpdateEndTime();
     }
 
     ~EmpiriaPrincipal() {
@@ -52,42 +79,58 @@ namespace Empiria.Security {
 
     #region Public properties
 
+    /// <summary>Gets the ClientApplication of the current principal.</summary>
+    public ClientApplication ClientApp {
+      get;
+      private set;
+    }
+
+    public int ContextId {
+      get;
+      private set;
+    }
+
+    public AssortedDictionary ContextItems {
+      get;
+      private set;
+    }
+
     /// <summary>Gets the IIdentity instance of the current principal.</summary>
-    public IIdentity Identity {
-      get { return identity; }
+    public EmpiriaIdentity Identity {
+      get;
+      private set;
+    }
+
+    IIdentity IPrincipal.Identity {
+      get {
+        return this.Identity;
+      }
     }
 
     public string[] RolesArray {
-      get { return rolesArray; }
+      get {
+        return rolesArray;
+      }
+    }
+
+    public EmpiriaSession Session {
+      get;
+      private set;
+    }
+
+    IEmpiriaSession IEmpiriaPrincipal.Session {
+      get {
+        return this.Session;
+      }
     }
 
     #endregion Public properties
 
     #region Public methods
 
-    public bool CanExecute(int typeId, char operationType) {
-      return true;
-    }
-
-    public bool CanExecute(int typeId, char operation, int instanceId) {
-      return true;
-    }
-
-    public SearchExpression ExecutionTypesSearchExp() {
-      if (executionTypesString.Length != 0) {
-        return SearchExpression.ParseInSet("ObjectTypeId", executionTypesString.Split('|'));
-      } else {
-        return SearchExpression.Empty;
-      }
-    }
-
     public void Dispose() {
       Dispose(true);
       GC.SuppressFinalize(this);
-    }
-
-    public bool IsAuditable(int typeId, char operation) {
-      return false;
     }
 
     /// <summary>Determines whether the current principal belongs to the specified role.</summary>
@@ -95,25 +138,18 @@ namespace Empiria.Security {
     /// <returns>true if the current principal is a member of the specified role in the current domain; 
     /// otherwise, false.</returns>
     public bool IsInRole(string role) {
-      if (identity.UserId == -3 || identity.UserId == 14 || identity.UserId == 427 || 
-          identity.UserId == 217 || identity.UserId == 235) {
-        return true;
-      }
-      return false;
+      return true;
     }
 
-    /// <summary>Determines whether the current principal belongs to the specified role.</summary>
-    /// <param name="domain">The domain for which to check role membership.</param>
-    /// <param name="role">The name of the role for which to check membership.</param>
-    /// <returns>true if the current principal is a member of the specified role; otherwise, false.</returns>
-    public bool IsInRole(string domain, string role) {
-      return IsInRole(role);
-    }
-
-    public string RegenerateToken() {
-      EmpiriaIdentity identity = (EmpiriaIdentity) this.Identity;
-      EmpiriaSession session = (EmpiriaSession) identity.Session;
-      return session.RegenerateToken();
+    public object ToOAuth() {
+      return new {
+        access_token = this.Session.Token, token_type = this.Session.TokenType,
+        expires_in = this.Session.ExpiresIn, refresh_token = this.Session.RefreshToken,
+        data = new {
+          uid = this.Identity.UserId, username = this.Identity.Name, 
+          email = this.Identity.User.EMail, fullname = this.Identity.User.FullName,
+        }
+      };
     }
 
     #endregion Public methods
@@ -124,17 +160,38 @@ namespace Empiria.Security {
       try {
         if (!disposed) {
           disposed = true;
+          this.Session.Close();
+          principalsCache.Remove(this.Session.Token);
           if (disposing) {
-            identity.Dispose();
+            //this.InnerObject.Dispose();
           }
         }
       } finally {
-
+        // no-op
       }
     }
 
-    private string[] LoadRolesArray(int participantId) {
-      return null;
+    private void Initialize(EmpiriaIdentity identity, ClientApplication clientApp = null,
+                            EmpiriaSession session = null, int contextId = -1) {
+      this.Identity = identity;
+      if (session != null) {
+        this.ClientApp = ClientApplication.Parse(session.ClientAppId);
+        this.ContextId = (contextId != -1) ? contextId : session.ContextId;
+        this.Session = session;
+      } else {
+        Assertion.AssertObject(clientApp, "clientApp");
+        this.ClientApp = clientApp;
+        this.ContextId = contextId;
+        this.Session = EmpiriaSession.Create(this);
+      }
+      LoadRolesArray(identity.UserId);
+      principalsCache.Add(this.Session.Token, this);
+      this.RefreshBeforeReturn();
+    }
+
+    private void LoadRolesArray(int participantId) {
+      //identity.User.GetRoles();
+      rolesArray = new string[0];
     }
 
     #endregion Private methods

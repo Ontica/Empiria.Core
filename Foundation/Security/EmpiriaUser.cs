@@ -18,17 +18,6 @@ namespace Empiria.Security {
 
   public sealed class EmpiriaUser : BaseObject, IEmpiriaUser {
 
-    #region Fields
-
-    private string userName = String.Empty;
-    private bool isActive = false;
-    private string namedKey = String.Empty;
-    private string uiTheme = String.Empty;
-
-    private bool isAuthenticated = false;
-
-    #endregion Fields
-
     #region Constructors and parsers
 
     private EmpiriaUser() {
@@ -39,9 +28,58 @@ namespace Empiria.Security {
       return BaseObject.ParseId<EmpiriaUser>(id);
     }
 
+    static private EmpiriaUser Parse(DataRow row) {
+      return BaseObject.ParseDataRow<EmpiriaUser>(row);
+    }
+
+    static internal EmpiriaUser Authenticate(EmpiriaSession activeSession) {
+      Assertion.AssertObject(activeSession, "activeSession");
+
+      if (!activeSession.IsStillActive) {
+        throw new SecurityException(SecurityException.Msg.ExpiredSessionToken, activeSession.Token);
+      }
+      EmpiriaUser user = EmpiriaUser.Parse(activeSession.UserId);
+      if (!user.IsActive) {
+        throw new SecurityException(SecurityException.Msg.NotActiveUser, user.UserName);
+      }
+      if (user.PasswordExpired) {
+        throw new SecurityException(SecurityException.Msg.UserPasswordExpired, user.UserName);
+      }
+      user.IsAuthenticated = true;
+      return user;
+    }
+
+    static internal EmpiriaUser Authenticate(string username, string password, string entropy) {
+      EmpiriaUser user = EmpiriaUser.GetUserWithCredentials(username, password, entropy);
+      if (!user.IsActive) {
+        throw new SecurityException(SecurityException.Msg.NotActiveUser, username);
+      }
+      if (user.PasswordExpired) {
+        throw new SecurityException(SecurityException.Msg.UserPasswordExpired, username);
+      }
+      user.IsAuthenticated = true;
+      return user;
+    }
+
+    static internal EmpiriaUser Authenticate(SystemUser systemUser) {
+      EmpiriaUser user = EmpiriaUser.Parse((int) systemUser);
+      if (!user.IsActive) {
+        throw new SecurityException(SecurityException.Msg.NotActiveUser, systemUser.ToString());
+      }
+      if (user.PasswordExpired) {
+        throw new SecurityException(SecurityException.Msg.UserPasswordExpired, systemUser.ToString());
+      }
+      user.IsAuthenticated = true;
+      return user;
+    }
+
     static public EmpiriaUser Current {
       get {
-        return ExecutionServer.CurrentUser as EmpiriaUser;
+        if (ExecutionServer.IsAuthenticated) {
+          return ExecutionServer.CurrentIdentity.User as EmpiriaUser;
+        } else {
+          return null;
+        }
       }
     }
 
@@ -49,215 +87,64 @@ namespace Empiria.Security {
 
     #region Public propertiese
 
-    public Contact Contact {
-      get { return Contact.Parse(base.Id); }
-    }
-
     public bool IsActive {
-      get { return isActive; }
-      set { isActive = value; }
-    }
-
-    public bool IsAdministrator {
-      get {
-        return namedKey == "ADMINISTRATOR";
-      }
+      get;
+      private set;
     }
 
     public bool IsAuthenticated {
-      get { return isAuthenticated; }
+      get;
+      private set;
     }
 
-    public bool IsGuest {
-      get {
-        return namedKey == "GUEST";
-      }
-    }
-
-    public bool IsSystemUser {
-      get { return (base.Id <= 0); }
-    }
-
-    public Organization Organization {
-      get {
-        return Organization.Parse(1);
-      }
-    }
-
-    public UserSettings Settings {
-      get {
-        return new UserSettings(this.Contact);
-      }
-    }
-
-    public string UITheme {
-      get { return uiTheme; }
-      set { uiTheme = value; }
+    public bool PasswordExpired {
+      get;
+      private set;
     }
 
     public string UserName {
-      get { return userName; }
-      set { userName = value; }
+      get;
+      private set;
+    }
+
+    public string FullName {
+      get;
+      private set;
+    }
+
+    public string EMail {
+      get;
+      private set;
     }
 
     #endregion Public properties
 
     #region Public methods
 
-    static internal EmpiriaUser Authenticate(string username, string password, string entropy) {
-      Assertion.AssertObject(username, "username");
-      Assertion.AssertObject(password, "password");
-      Assertion.AssertObject(entropy, "entropy");
-
-      //Remove this two lines
-      username = Cryptographer.Decrypt(username, entropy);
-      password = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, 
-                                       Cryptographer.Decrypt(password, entropy), username);
-      int userId = ContactsData.GetContactIdWithUserName(username);
-      if (userId == 0) {
-        return null;
-      }
-      EmpiriaUser user = EmpiriaUser.Parse(userId);
-
-      if (user.IsSystemUser && !user.IsAdministrator) {
-        return null;
-      }
-      if (!user.IsActive) {
-        return null;
-      }
-      if (Cryptographer.Decrypt(ContactsData.GetContactAttribute<string>(user.Contact, "UserPassword"), username).
-                                Equals(Cryptographer.Decrypt(password, username))) {
-        user.isAuthenticated = true;
-        return user;
-      } else {
-        user.isAuthenticated = false;
-        return null;
-      }
-    }
-
-    static internal EmpiriaUser Authenticate(EmpiriaSession activeSession) {
-      Assertion.AssertObject(activeSession, "activeSession");
-
-      if (!activeSession.IsStillActive) {
-        return null;
-      }
-      if (activeSession.UserId == 0) {
-        return null;
-      }
-      EmpiriaUser user = EmpiriaUser.Parse(activeSession.UserId);
-      if (user.IsSystemUser && !user.IsAdministrator) {
-        return null;
-      }
-      if (!user.IsActive) {
-        return null;
-      }
-      user.isAuthenticated = true;
-      return user;
-    }
-
-    static internal EmpiriaUser Authenticate(FormsAuthenticationTicket remoteTicket) {
-      Assertion.AssertObject(remoteTicket, "remoteTicket");
-
-      int userId = ContactsData.GetContactIdWithUserName(remoteTicket.Name);
-      if (userId == 0) {
-        return null;
-      }
-      return EmpiriaUser.Parse(userId);
-    }
-
-    static internal EmpiriaUser AuthenticateGuest() {
-      int userId = ContactsData.GetContactIdWithUserName("GUEST");
-      if (userId == 0) {
-        return null;
-      }
-      EmpiriaUser user = EmpiriaUser.Parse(userId);
-
-      if (!user.IsActive) {
-        return null;
-      }
-      user.isAuthenticated = true;
-
-      return user;
-    }
-
-    static private string[] GetUsersInRole(string operationTag) {
-      return ConfigurationData.GetString("User.Operation.Tag." + operationTag).Split('|');
-    }
-
-    public bool CanExecute(string operationTag) {
-      string[] users = GetUsersInRole(operationTag);
-
-      for (int i = 0; i < users.Length; i++) {
-        if (users[i].Trim() == this.Id.ToString()) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    public void ChangePassword(string currentPassword, string newPassword, string userID) {
-      Assertion.AssertObject(currentPassword, "currentPassword");
-      Assertion.AssertObject(newPassword, "newPassword");
-      Assertion.AssertObject(userID, "userName");
-
-      if (!isAuthenticated) {
-        SecurityException exception =
-            new SecurityException(SecurityException.Msg.CantChangePasswordOnUnauthenticatedUser, userID);
-        exception.Publish();
-        throw exception;
-      }
-      if (IsSystemUser && !IsAdministrator) {
-        return;
-      }
-      if (!IsActive) {
-        return;
-      }
-      string password = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, newPassword, userID);
-      ContactsData.WriteContactAttribute(this.Contact, "UserPassword", password);
-    }
-
-    protected override void OnLoadObjectData(DataRow row) {
-      this.userName = (string) row["UserName"];
-      this.isActive = (bool) row["IsActiveUser"];
-      this.namedKey = (string) row["Nickname"];
-      this.uiTheme = "default";
-    }
-
-    protected override void OnSave() {
-      ContactsData.WriteUser(this);
-    }
-
-    public void SetPassword(string newPassword, string userID) {
-      Assertion.AssertObject(newPassword, "newPassword");
-      Assertion.AssertObject(userID, "userName");
-
-      if (IsSystemUser) {
-        //Security.Data.SecurityData.AppendAuditTrail(ExecutionServer.CurrentIdentity.Session.Guid,
-        //                                      this.MetaModelType.Id, this.Id, 'U', DateTime.Now, "Attempt to reset manager password");
-      }
-      string password = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, newPassword, userID);
-
-      ContactsData.WriteContactAttribute(this.Contact, "UserPassword", password);
-    }
-
-    public bool VerifyElectronicSign(string eSign) {
-      string userName = Cryptographer.Encrypt(EncryptionMode.EntropyKey,
-                                              ExecutionServer.CurrentUser.UserName,
-                                              ExecutionServer.CurrentSessionToken);
-      string password = Cryptographer.Encrypt(EncryptionMode.EntropyKey, eSign, ExecutionServer.CurrentSessionToken);
-
-      EmpiriaUser user = Authenticate(userName, password, ExecutionServer.CurrentSessionToken);
-
-      if (user == null) {
-        return false;
-      } else if (user.Id != ExecutionServer.CurrentUserId) {
-        return false;
-      } else {
-        return true;
-      }
+    static public void ChangePassword(string apiKey, string username, string password) {
+      SecurityData.ChangePassword(apiKey, username, password);
     }
 
     #endregion Public methods
+
+    #region Private methods
+
+    static private EmpiriaUser GetUserWithCredentials(string username, string password, string entropy) {
+      DataRow row = SecurityData.GetUserWithCredentials(username, password, entropy);
+
+      return EmpiriaUser.Parse(row);
+    }
+
+    protected override void OnLoadObjectData(DataRow row) {
+      this.UserName = (string) row["UserName"];
+      this.IsAuthenticated = false;
+      this.IsActive = ((GeneralObjectStatus) Convert.ToChar((string) row["ContactStatus"]) == GeneralObjectStatus.Active);
+      this.PasswordExpired = false;
+      this.EMail = (string) row["ContactEmail"];
+      this.FullName = (string) row["ContactFullName"];
+    }
+
+    #endregion Private methods
 
   } // class EmpiriaUser
 

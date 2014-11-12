@@ -9,18 +9,13 @@
 *              integrate Empiria.Kernel.dll assembly with this assembly.                                     *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
 
 namespace Empiria.Security {
 
   public interface IEmpiriaUser : IIdentifiable {
 
     #region Members definition
-
-    string UITheme { get; }
-
-    string UserName { get; }
-
-    bool VerifyElectronicSign(string esign);
 
     #endregion Members definition
 

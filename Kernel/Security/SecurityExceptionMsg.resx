@@ -139,7 +139,7 @@
     <value>No cuenta con los permisos necesarios para ejecutar la operación {0} sobre el dominio de aplicación {1}.</value>
   </data>
   <data name="UnauthenticatedIdentity" xml:space="preserve">
-    <value>No puedo construir el objeto EmpiriaPrincipal debido a que el usuario no está autentificado.</value>
+    <value>No puedo construir el objeto EmpiriaPrincipal debido a que no ha sido autentificado ningún usuario.</value>
   </data>
   <data name="WrongAuthentication" xml:space="preserve">
     <value>La autentificación del usuario no se efectuó correctamente, razón por la cual no puedo continuar.</value>
@@ -165,9 +165,6 @@
   <data name="InvalidProtectionMode" xml:space="preserve">
     <value>No puedo manejar el modo de protección '{0}' empleado en esta operación.</value>
   </data>
-  <data name="InvalidClientID" xml:space="preserve">
-    <value>Se recibió un ClientID o ApiKey que no está registrado: {0}. Es posible que se trate de un acceso no autorizado.</value>
-  </data>
   <data name="WrongDIFVersionRequested" xml:space="preserve">
     <value>** SECURITY WARNING ** A wrong Data Integrity Field (DIF) version ({0}) was requested from an external program that must have asked for a valid version of the DIF.\n\nIf that program sent the version took out it from a protected data source, then this concern could be a SERIOUS SECURITY PROBLEM, because the PROTECED DATA could have been modified by an EXTERNAL SOURCE.\n\n Please call immediately to your system administrator and stop using this system.</value>
   </data>
@@ -176,5 +173,32 @@
   </data>
   <data name="IntegrityValidatorAssertFails" xml:space="preserve">
     <value>** A SERIOUS SECURITY PROBLEM WAS DETECTED **\n Some SYSTEM PROTECTED DATA could have been modified by an EXTERNAL SOURCE.\n\n Please call immediately to your system administrator and STOP USING this system. [{0}, {1}]</value>
+  </data>
+  <data name="InvalidClientAppKey" xml:space="preserve">
+    <value>The server received an invalid application key: '{0}'.</value>
+  </data>
+  <data name="NotActiveUser" xml:space="preserve">
+    <value>The user account '{0}' is not active.</value>
+  </data>
+  <data name="UserIDPasswordNotFound" xml:space="preserve">
+    <value>Username or password not found.</value>
+  </data>
+  <data name="UserPasswordExpired" xml:space="preserve">
+    <value>User password has expired for user '{0}'.</value>
+  </data>
+  <data name="AuthenticationHeaderMissed" xml:space="preserve">
+    <value>The server received a request over a protected resource without the Authentication header.</value>
+  </data>
+  <data name="BadAuthenticationHeaderFormat" xml:space="preserve">
+    <value>The web server received a request with a bad-formed authentication header.</value>
+  </data>
+  <data name="ExpiredSessionToken" xml:space="preserve">
+    <value>The session with token '{0}' was expired.</value>
+  </data>
+  <data name="SessionTokenNotFound" xml:space="preserve">
+    <value>There is not a registered system session with token '{0}'.</value>
+  </data>
+  <data name="NotActiveClientAppKey" xml:space="preserve">
+    <value>The application key '{0}' is not active.</value>
   </data>
 </root>

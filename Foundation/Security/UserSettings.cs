@@ -26,8 +26,10 @@ namespace Empiria.Security {
 
     public UserSettings(Contacts.Contact contact) : base(true) {
       this.contact = contact;
-      this.Add("OrganizationId", contact.organizationId);
-      this.Add("Trade.MyCurrentOrder", contact.externalObjectId);
+      throw new NotImplementedException();
+
+      //this.Add("OrganizationId", -1);
+      //this.Add("Trade.MyCurrentOrder", -1);
     }
 
     #endregion Constructors and parsers
@@ -51,15 +53,15 @@ namespace Empiria.Security {
     }
 
     public void SetValue<T>(string key, int value) {
-      base[key] = value;
-      if (key == "OrganizationId") {
-        contact.organizationId = value;
-      } else if (key == "Trade.MyCurrentOrder") {
-        contact.externalObjectId = value;
-      }
-      Empiria.Contacts.ContactsData.WriteTempUserSettings(contact.Id,
-                                                          GetValue<int>("OrganizationId"),
-                                                          GetValue<int>("Trade.MyCurrentOrder"));
+      throw new NotImplementedException();
+
+      //base[key] = value;
+      //if (key == "OrganizationId") {
+      //  contact.organizationId = value;
+      //} else if (key == "Trade.MyCurrentOrder") {
+      //  contact.externalObjectId = value;
+      //}
+
     }
 
     #endregion Public methods

@@ -39,7 +39,7 @@ namespace Empiria.Security {
                           int objectId, string code) {
       this.typeId = typeId;
       this.authorizedById = authorizedById;
-      this.sessionToken = ExecutionServer.CurrentIdentity.Session.Token;
+      this.sessionToken = ExecutionServer.CurrentPrincipal.Session.Token;
       this.objectId = objectId;
       this.code = code;
       Append();
