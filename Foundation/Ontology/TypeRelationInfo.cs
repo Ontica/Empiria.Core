@@ -80,23 +80,17 @@ namespace Empiria.Ontology {
       }
     }
 
-    //static internal T Parse<T>(int typeRelationId) where T : TypeRelationInfo {
-    //  DataRow dataRow = OntologyData.GetTypeRelation(typeRelationId);
-    //  MetaModelType sourceType = MetaModelType.Parse((int) dataRow["SourceTypeId"]);
-    //  var relationTypeFamily = 
-    //                    TypeRelationInfo.ParseRelationTypeFamily((string) dataRow["RelationTypeFamily"]);
-    //  if (relationTypeFamily == RelationTypeFamily.Attribute) {
-    //    return TypeAttributeInfo.Parse(sourceType, dataRow);
-    //  } else {
-    //    return TypeAttributeInfo.Parse(sourceType, dataRow);
-    //  }
-      
-
-    //  TypeRelationInfo instance = TypeRelationInfo.Create(relationTypeFamily, sourceType);
-    //  instance.LoadDataRow(dataRow);
-
-    //  return (T) instance;
-    //}
+    static internal T Parse<T>(string typeRelationName) where T : TypeRelationInfo {
+      DataRow dataRow = OntologyData.GetTypeRelation(typeRelationName);
+      MetaModelType sourceType = MetaModelType.Parse((int) dataRow["SourceTypeId"]);
+      var relationTypeFamily =
+                        TypeRelationInfo.ParseRelationTypeFamily((string) dataRow["RelationTypeFamily"]);
+      if (relationTypeFamily == RelationTypeFamily.Attribute) {
+        return TypeAttributeInfo.Parse(sourceType, dataRow) as T;
+      } else {
+        return TypeAssociationInfo.Parse(sourceType, dataRow) as T;
+      }
+    }
 
     static internal RelationTypeFamily ParseRelationTypeFamily(string familyName) {
       try {
@@ -105,17 +99,6 @@ namespace Empiria.Ontology {
         throw new OntologyException(OntologyException.Msg.UndefinedTypeInfoFamily, familyName);
       }
     }
-
-    //static private TypeRelationInfo Create(RelationTypeFamily relationTypeFamily, MetaModelType sourceType) {
-    //  Type[] parTypes = new Type[] { typeof(MetaModelType) };
-    //  object[] parValues = new object[] { sourceType };
-
-    //  if (relationTypeFamily == RelationTypeFamily.Attribute) {
-    //    return (TypeRelationInfo) ObjectFactory.CreateObject(typeof(TypeAttributeInfo), parTypes, parValues);
-    //  } else {
-    //    return (TypeRelationInfo) ObjectFactory.CreateObject(typeof(TypeAssociationInfo), parTypes, parValues);
-    //  }
-    //}
 
     #endregion Constructors and parsers
 

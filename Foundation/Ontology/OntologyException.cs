@@ -28,9 +28,12 @@ namespace Empiria.Ontology {
       CannotParseObjectWithDataRow,
       CannotParsePropertyForDefaultValue,
       ConvertionToTargetTypeFails,
+      LinkNotFoundForSource,
+      LinkNotFoundForTarget,
       MappingDataColumnNotFound,
       ObjectIdNotFound,
       ObjectNamedKeyNotFound,
+      ObjectWithConditionNotFound,
       RelationMemberNameNotFound,
       TryToParseZeroObjectId,
       TypeAssociationInfoNotFound,
@@ -53,8 +56,8 @@ namespace Empiria.Ontology {
     /// message.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="args">An optional array of items to format into the exception message.</param>
-    public OntologyException(Msg message, params object[] args)
-      : base(message.ToString(), GetMessage(message, args)) {
+    public OntologyException(Msg message, params object[] args) :
+                             base(message.ToString(), GetMessage(message, args)) {
       base.Publish();
     }
 
@@ -63,11 +66,10 @@ namespace Empiria.Ontology {
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="innerException">This is the inner exception.</param>
     /// <param name="args">An optional array of items to format into the exception message.</param>
-    public OntologyException(Msg message, Exception innerException, params object[] args)
-      : base(message.ToString(), GetMessage(message, args), innerException) {
+    public OntologyException(Msg message, Exception innerException, params object[] args) :
+                             base(message.ToString(), GetMessage(message, args), innerException) {
       base.Publish();
     }
-
 
     static internal OntologyException GetDataValueMappingException(object instance, DataMapping rule,
                                                                    Exception innerException) {

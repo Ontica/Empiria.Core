@@ -30,13 +30,16 @@ namespace Empiria.Ontology {
 
     #region Constructors and parsers
 
-    protected TypeAssociationInfo(MetaModelType sourceType)
-      : base(sourceType) {
+    protected TypeAssociationInfo(MetaModelType sourceType) : base(sourceType) {
 
     }
 
     static public TypeAssociationInfo Parse(int typeRelationId) {
       return TypeRelationInfo.Parse<TypeAssociationInfo>(typeRelationId);
+    }
+
+    static public TypeAssociationInfo Parse(string typeRelationName) {
+      return TypeRelationInfo.Parse<TypeAssociationInfo>(typeRelationName);
     }
 
     static internal TypeAssociationInfo Parse(MetaModelType sourceType, DataRow dataRow) {
@@ -47,7 +50,8 @@ namespace Empiria.Ontology {
       return associationInfo;
     }
 
-    static private readonly TypeAssociationInfo _empty = TypeRelationInfo.Parse<TypeAssociationInfo>(-1);
+    static private readonly TypeAssociationInfo _empty = 
+                            TypeRelationInfo.Parse<TypeAssociationInfo>(ObjectTypeInfo.EmptyInstanceId);
     static public TypeAssociationInfo Empty {
       get {
         return _empty;
@@ -75,7 +79,48 @@ namespace Empiria.Ontology {
 
     #region Public methods
 
-    internal T GetLink<T>(BaseObject source, T defaultValue = null) where T : BaseObject {
+    public FixedList<T> GetInverseLinks<T>(BaseObject target) where T : BaseObject {
+      throw new NotImplementedException();
+    }
+
+    public FixedList<T> GetInverseLinks<T>(BaseObject target, Predicate<T> predicate) where T : BaseObject {
+      throw new NotImplementedException();
+    }
+
+    public FixedList<T> GetInverseLinks<T>(BaseObject target, TimePeriod period) where T : BaseObject {
+      throw new NotImplementedException();
+    }
+
+    public FixedList<T> GetInverseLinks<T>(BaseObject target, Comparison<T> sort) where T : BaseObject {
+      DataTable table = OntologyData.GetInverseObjectLinksTable(this, target);
+
+      List<T> list = BaseObject.ParseList<T>(table);
+
+      return list.ToFixedList();
+    }
+
+    public FixedList<T> GetInverseLinks<T>(BaseObject target, 
+                                           Predicate<T> predicate, Comparison<T> sort) where T : BaseObject {
+      throw new NotImplementedException();
+    }
+
+    public FixedList<T> GetInverseLinks<T>(BaseObject target, 
+                                           TimePeriod period, Comparison<T> sort) where T : BaseObject {
+      throw new NotImplementedException();
+    }
+
+    internal T GetInverseLink<T>(BaseObject target) where T : BaseObject {
+      DataRow row = OntologyData.GetObjectLinkDataRow(this, target);
+
+      if (row != null) {
+        return BaseObject.ParseDataRow<T>(row);
+      } else {
+        throw new OntologyException(OntologyException.Msg.LinkNotFoundForTarget, target.Id, 
+                                    target.GetEmpiriaType().Name, this.Id, this.Name);
+      }
+    }
+
+    internal T GetInverseLink<T>(BaseObject source, T defaultValue) where T : BaseObject {
       DataRow row = OntologyData.GetObjectLinkDataRow(this, source);
 
       if (row != null) {
@@ -85,7 +130,18 @@ namespace Empiria.Ontology {
       }
     }
 
-    internal T GetLink<T>(ObjectTypeInfo source, T defaultValue = null) where T : BaseObject {
+    internal T GetLink<T>(BaseObject source) where T : BaseObject {
+      DataRow row = OntologyData.GetObjectLinkDataRow(this, source);
+
+      if (row != null) {
+        return BaseObject.ParseDataRow<T>(row);
+      } else {
+        throw new OntologyException(OntologyException.Msg.LinkNotFoundForSource, source.Id,
+                                    source.GetEmpiriaType().Name, this.Id, this.Name);
+      }
+    }
+
+    internal T GetLink<T>(BaseObject source, T defaultValue) where T : BaseObject {
       DataRow row = OntologyData.GetObjectLinkDataRow(this, source);
 
       if (row != null) {
@@ -99,15 +155,6 @@ namespace Empiria.Ontology {
     internal FixedList<T> GetLinks<T>(BaseObject source) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
       
-      List<T> list = BaseObject.ParseList<T>(table);
-
-      return list.ToFixedList();
-    }
-
-    // ObjectType 1..* Object relation
-    internal FixedList<T> GetLinks<T>(ObjectTypeInfo source) where T : BaseObject {
-      DataTable table = OntologyData.GetObjectLinksTable(this, source);
-
       List<T> list = BaseObject.ParseList<T>(table);
 
       return list.ToFixedList();
@@ -137,16 +184,6 @@ namespace Empiria.Ontology {
       return list.ToFixedList();
     }
 
-    internal FixedList<TypeAssociationInfo> GetAssociationLinks(BaseObject source) {
-      DataTable table = OntologyData.GetObjectLinksTable(this, source);
-
-      var list = new List<TypeAssociationInfo>(table.Rows.Count);
-      foreach (DataRow dataRow in table.Rows) {
-        list.Add(TypeAssociationInfo.Parse(this.SourceType, dataRow));
-      }
-      return list.ToFixedList();
-    }
-
     protected override object ImplementsConvert(object value) {
       if (value == null) {
         return null;
@@ -154,7 +191,8 @@ namespace Empiria.Ontology {
       if (value.GetType().Equals(typeof(string)) && String.IsNullOrWhiteSpace((string) value)) {
         return null;
       }
-      return ObjectFactory.InvokeParseMethod(this.TargetType.UnderlyingSystemType, System.Convert.ToInt32(value));
+      return ObjectFactory.InvokeParseMethod(this.TargetType.UnderlyingSystemType,
+                                             System.Convert.ToInt32(value));
     }
 
     protected override void LoadDataRow(DataRow row) {

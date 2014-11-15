@@ -35,8 +35,12 @@ namespace Empiria.Ontology {
                                                   objectTypeInfo.NamedIdFieldName, objectKey);
     }
 
+    internal static DataRow GetBaseObjectDataRow(ObjectTypeInfo objectTypeInfo, IFilter condition) {
+      return GeneralDataOperations.GetEntity(objectTypeInfo.DataSource, condition);
+    }
+
     static internal DataRow GetBaseObjectTypeInfoDataRowWithType(Type type) {
-      var operation = DataOperation.Parse("qryEOSGetBaseObjectTypeInfoWithTypeName", type.FullName);
+      var operation = DataOperation.Parse("getBaseObjectTypeInfoWithTypeName", type.FullName);
 
       var row = DataReader.GetDataRow(operation);
       if (row != null) {
@@ -47,20 +51,13 @@ namespace Empiria.Ontology {
     }
 
     static internal DataTable GetDerivedTypes(int baseTypeId) {
-      return GeneralDataOperations.GetEntitiesByField("EOSTypes", "BaseTypeId", baseTypeId);
+      return GeneralDataOperations.GetEntitiesByField("Types", "BaseTypeId", baseTypeId);
     }
 
-    static internal DataTable GetGeneralObjectsDataTable(ObjectTypeInfo objectTypeInfo) {
-      var operation = DataOperation.Parse("qryEOSGeneralObjects", objectTypeInfo.Id);
+    static internal DataTable GetSimpleObjectsDataTable(ObjectTypeInfo objectTypeInfo) {
+      var operation = DataOperation.Parse("qrySimpleObjects", objectTypeInfo.Id);
 
       return DataReader.GetDataTable(operation);
-    }
-
-    static internal FixedList<KeyValuePair> GetKeyValueListItems(GeneralList list) {
-      var operation = DataOperation.Parse("qryEOSKeyValueList", list.UniqueCode);
-
-      return DataReader.GetList<KeyValuePair>(operation, 
-                        (x) => BaseObject.ParseList<KeyValuePair>(x)).ToFixedList();
     }
 
     static internal int GetNextObjectId(ObjectTypeInfo objectTypeInfo) {
@@ -74,17 +71,6 @@ namespace Empiria.Ontology {
       return DataWriter.CreateId(typeRelationInfo.DataSource);
     }
 
-    static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IStorable source) {
-      string filter = GetTableIdFieldEqualsTo(typeRelation.DataSource, typeRelation.TypeRelationIdFieldName,
-                                              typeRelation.Id);
-      filter += " AND ";
-      filter += GetTableIdFieldEqualsTo(typeRelation.DataSource, typeRelation.SourceIdFieldName, source.Id);
-
-      return GeneralDataOperations.GetEntitiesJoined(typeRelation.TargetType.DataSource, typeRelation.DataSource,
-                                                     typeRelation.TargetType.IdFieldName, typeRelation.TargetIdFieldName,
-                                                     filter);
-    }
-
     static internal DataRow GetObjectLinkDataRow(TypeRelationInfo typeRelation, IStorable source) {
       DataTable table = GetObjectLinksTable(typeRelation, source);
 
@@ -94,32 +80,85 @@ namespace Empiria.Ontology {
       return null;
     }
 
+    static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IStorable source) {
+      string sql = "SELECT [{TARGET.TYPE.TABLE}].* FROM [{TARGET.TYPE.TABLE}] INNER JOIN [{LINKS.TABLE}] " +
+                   "ON [{TARGET.TYPE.TABLE}].[{TargetTableIdField}] = [{LINKS.TABLE}].[{TargetIdField}] " +
+                   "WHERE [{LINKS.TABLE}].[{TypeRelationIdField}] = {TypeRelationId} AND " +
+                   "[{LINKS.TABLE}].[{SourceIdField}] = {SourceId} AND " +
+                   "[{LINKS.TABLE}].LinkStatus = 'A' " +
+                   "ORDER BY [{LINKS.TABLE}].LinkIndex";
+
+      sql = sql.Replace("{LINKS.TABLE}", typeRelation.DataSource);
+      sql = sql.Replace("{TARGET.TYPE.TABLE}", typeRelation.TargetType.DataSource);
+      sql = sql.Replace("{TargetTableIdField}", typeRelation.TargetType.IdFieldName);
+      sql = sql.Replace("{TargetIdField}", typeRelation.TargetIdFieldName);
+      sql = sql.Replace("{TypeRelationIdField}", typeRelation.TypeRelationIdFieldName);
+      sql = sql.Replace("{TypeRelationId}", typeRelation.Id.ToString());
+      sql = sql.Replace("{SourceIdField}", typeRelation.SourceIdFieldName);
+      sql = sql.Replace("{SourceId}", source.Id.ToString());
+
+      return DataReader.GetDataTable(DataOperation.Parse(sql));
+    }
+    
     static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IStorable source,
                                                   TimePeriod period) {
-      string filter = GetTableIdFieldEqualsTo(typeRelation.DataSource, typeRelation.TypeRelationIdFieldName,
-                                              typeRelation.Id);
-      filter += " AND ";
-      filter += GetTableIdFieldEqualsTo(typeRelation.DataSource, typeRelation.SourceIdFieldName, source.Id);
+      string sql = "SELECT [{TARGET.TYPE.TABLE}].* FROM [{TARGET.TYPE.TABLE}] INNER JOIN [{LINKS.TABLE}] " +
+                   "ON [{TARGET.TYPE.TABLE}].[{TargetTableIdField}] = [{LINKS.TABLE}].[{TargetIdField}] " +
+                   "WHERE [{LINKS.TABLE}].[{TypeRelationIdField}] = {TypeRelationId} AND " +
+                   "[{LINKS.TABLE}].[{SourceIdField}] = {SourceId} AND " +
+                   "([{LINKS.TABLE}].StartDate <= '{TimePeriodStart}' AND " +
+                    "[{LINKS.TABLE}].EndDate >= '{TimePeriodEnd}') AND " +
+                   "[{LINKS.TABLE}].LinkStatus = 'A' " +
+                   "ORDER BY [{LINKS.TABLE}].LinkIndex";
 
-      return GeneralDataOperations.GetEntitiesJoined(typeRelation.TargetType.DataSource, typeRelation.DataSource,
-                                                     typeRelation.TargetType.IdFieldName, typeRelation.TargetIdFieldName,
-                                                     filter);
+      sql = sql.Replace("{LINKS.TABLE}", typeRelation.DataSource);
+      sql = sql.Replace("{TARGET.TYPE.TABLE}", typeRelation.TargetType.DataSource);
+      sql = sql.Replace("{TargetTableIdField}", typeRelation.TargetType.IdFieldName);
+      sql = sql.Replace("{TargetIdField}", typeRelation.TargetIdFieldName);
+      sql = sql.Replace("{TypeRelationIdField}", typeRelation.TypeRelationIdFieldName);
+      sql = sql.Replace("{TypeRelationId}", typeRelation.Id.ToString());
+      sql = sql.Replace("{SourceIdField}", typeRelation.SourceIdFieldName);
+      sql = sql.Replace("{SourceId}", source.Id.ToString());
+      sql = sql.Replace("{TimePeriodStart}", period.StartTime.ToString("yyyy-MM-dd"));
+      sql = sql.Replace("{TimePeriodEnd}", period.EndTime.ToString("yyyy-MM-dd"));
+
+      return DataReader.GetDataTable(DataOperation.Parse(sql));
+    }
+
+    static internal DataTable GetInverseObjectLinksTable(TypeRelationInfo typeRelation, IStorable target) {
+      string sql = "SELECT [{SOURCE.TYPE.TABLE}].* FROM [{SOURCE.TYPE.TABLE}] INNER JOIN [{LINKS.TABLE}] " +
+             "ON [{SOURCE.TYPE.TABLE}].[{SourceTableIdField}] = [{LINKS.TABLE}].[{SourceIdField}] " +
+             "WHERE [{LINKS.TABLE}].[{TypeRelationIdField}] = {TypeRelationId} AND " +
+             "[{LINKS.TABLE}].[{TargetIdField}] = {TargetId} AND " +
+             "[{LINKS.TABLE}].LinkStatus = 'A' " +
+             "ORDER BY [{LINKS.TABLE}].LinkIndex";
+
+      sql = sql.Replace("{LINKS.TABLE}", typeRelation.DataSource);
+      sql = sql.Replace("{SOURCE.TYPE.TABLE}", typeRelation.SourceType.DataSource);
+      sql = sql.Replace("{SourceTableIdField}", typeRelation.SourceType.IdFieldName);
+      sql = sql.Replace("{SourceIdField}", typeRelation.SourceIdFieldName);
+      sql = sql.Replace("{TypeRelationIdField}", typeRelation.TypeRelationIdFieldName);
+      sql = sql.Replace("{TypeRelationId}", typeRelation.Id.ToString());
+      sql = sql.Replace("{TargetIdField}", typeRelation.TargetIdFieldName);
+      sql = sql.Replace("{TargetId}", target.Id.ToString());
+
+      return DataReader.GetDataTable(DataOperation.Parse(sql));
     }
 
     static internal DataRow GetRule(int ruleId) {
-      string sql = "SELECT * FROM vwEOSRules WHERE (RuleId = " + ruleId.ToString() + ")";
+      string sql = "SELECT * FROM vwRules WHERE (RuleId = " + ruleId.ToString() + ")";
 
       return DataReader.GetDataRow(DataOperation.Parse(sql));
     }
 
     static internal DataTable GetRulesLibrary(int rulesLibraryId) {
-      string sql = "SELECT * FROM vwEOSRules WHERE (RulesLibraryId = " + rulesLibraryId.ToString() + ")";
+      string sql = "SELECT * FROM vwRules WHERE (RulesLibraryId = " + rulesLibraryId.ToString() + ")";
 
       return DataReader.GetDataTable(DataOperation.Parse(sql));
     }
 
     static internal DataTable GetRuleItems(int ruleId, string ruleItemType) {
-      string sql = "SELECT * FROM EOSRuleStructure " +
+      string sql = "SELECT * FROM RuleStructure " +
                    "WHERE (RuleId = " + ruleId.ToString() + " AND RuleItemType = '" + ruleItemType + "') " +
                    "ORDER BY RuleItemIndex";
 
@@ -127,7 +166,7 @@ namespace Empiria.Ontology {
     }
 
     static internal DataRow GetTypeDataRow(int typeId) {
-      DataRow row = GeneralDataOperations.GetEntityById("EOSTypes", "TypeId", typeId);
+      DataRow row = GeneralDataOperations.GetEntityById("Types", "TypeId", typeId);
       if (row != null) {
         return row;
       } else {
@@ -136,7 +175,7 @@ namespace Empiria.Ontology {
     }
 
     static internal DataRow GetTypeDataRow(string typeName) {
-      DataRow row = GeneralDataOperations.GetEntityByKey("EOSTypes", "TypeName", typeName);
+      DataRow row = GeneralDataOperations.GetEntityByKey("Types", "TypeName", typeName);
       if (row != null) {
         return row;
       } else {
@@ -145,29 +184,33 @@ namespace Empiria.Ontology {
     }
 
     static internal DataRow GetTypeMethodDataRow(int typeMethodId) {
-      return GeneralDataOperations.GetEntityById("EOSTypeMethods", "TypeMethodId", typeMethodId);
+      return GeneralDataOperations.GetEntityById("TypeMethods", "TypeMethodId", typeMethodId);
     }
 
     static internal DataTable GetTypeMethods(int typeId) {
-      return GeneralDataOperations.GetEntitiesByField("EOSTypeMethods", "SourceTypeId", typeId);
+      return GeneralDataOperations.GetEntitiesByField("TypeMethods", "SourceTypeId", typeId);
     }
 
     static internal DataTable GetTypeMethodParameters(int typeMethodId) {
-      return GeneralDataOperations.GetEntitiesByField("EOSTypeMethodsParameters", "TypeMethodId", typeMethodId);
+      return GeneralDataOperations.GetEntitiesByField("TypeMethodsParameters", "TypeMethodId", typeMethodId);
     }
 
     static internal DataRow GetTypeRelation(int typeRelationId) {
-      return GeneralDataOperations.GetEntityById("EOSTypeRelations", "TypeRelationId", typeRelationId);
+      return GeneralDataOperations.GetEntityById("TypeRelations", "TypeRelationId", typeRelationId);
+    }
+
+    internal static DataRow GetTypeRelation(string typeRelationName) {
+      return GeneralDataOperations.GetEntityByKey("TypeRelations", "RelationName", typeRelationName);
     }
 
     static internal DataTable GetTypeRelations(string typeName) {
-      return DataReader.GetDataTable(DataOperation.Parse("qryEOSTypeRelations", typeName));
+      return DataReader.GetDataTable(DataOperation.Parse("qryTypeRelations", typeName));
     }
 
     static internal DataRow TryGetSystemTypeDataRow(string systemTypeName) {
       string filter = String.Format("([TypeName] = '{0}' OR ClassName LIKE '%{0}')", systemTypeName);
       
-      DataTable table = GeneralDataOperations.GetEntities("EOSTypes", filter);
+      DataTable table = GeneralDataOperations.GetEntities("Types", filter);
 
       if (table.Rows.Count == 0) {
         return null;
@@ -194,7 +237,7 @@ namespace Empiria.Ontology {
     }
 
     static internal void WriteLink(TypeAssociationInfo assocationInfo, IStorable source, IStorable target) {
-      DataOperation operation = DataOperation.Parse("writeEOSObjectLink", GetNextRelationId(assocationInfo),
+      DataOperation operation = DataOperation.Parse("writeObjectLink", GetNextRelationId(assocationInfo),
                                                     assocationInfo.Id, source.Id, target.Id, 0, String.Empty, String.Empty,
                                                     ExecutionServer.CurrentUserId, "A", DateTime.Today,
                                                     ExecutionServer.DateMaxValue);

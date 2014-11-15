@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 
 using Empiria.Collections;
+using Empiria.Data;
 using Empiria.Ontology.Modeler;
 using Empiria.Reflection;
 
@@ -180,7 +181,7 @@ namespace Empiria.Ontology {
 
       int derivedTypeId = (int) dataRow[this.TypeIdFieldName];
       if (derivedTypeId != this.Id) {   // If types are distinct then change basetype to derived
-        new Tuple<ObjectTypeInfo, DataRow>(ObjectTypeInfo.Parse(derivedTypeId), dataRow);
+        return new Tuple<ObjectTypeInfo, DataRow>(ObjectTypeInfo.Parse(derivedTypeId), dataRow);
       }
       return new Tuple<ObjectTypeInfo, DataRow>(this, dataRow);
     }
@@ -266,6 +267,22 @@ namespace Empiria.Ontology {
           typeIterator = (ObjectTypeInfo) typeIterator.BaseType;
         }
       }
+    }
+
+    internal Tuple<ObjectTypeInfo, DataRow> TryGetObjectTypeAndDataRow(IFilter condition) {
+      DataRow dataRow = OntologyData.GetBaseObjectDataRow(this, condition);
+      if (dataRow == null) {
+        return null;
+      }
+      if (this.TypeIdFieldName.Length == 0) {
+        return new Tuple<ObjectTypeInfo, DataRow>(this, dataRow);
+      }
+
+      int derivedTypeId = (int) dataRow[this.TypeIdFieldName];
+      if (derivedTypeId != this.Id) {   // If types are distinct then change basetype to derived
+        return new Tuple<ObjectTypeInfo, DataRow>(ObjectTypeInfo.Parse(derivedTypeId), dataRow);
+      }
+      return new Tuple<ObjectTypeInfo, DataRow>(this, dataRow);
     }
 
     #endregion Public methods

@@ -21,7 +21,6 @@ using Empiria.Reflection;
 namespace Empiria.Ontology {
 
   public enum MetaModelTypeFamily {
-    EnumerationType,
     FundamentalType,
     InterfaceType,
     MetaModelType,
@@ -65,8 +64,6 @@ namespace Empiria.Ontology {
     private bool isAbstract = false;
     private bool isSealed = false;
     private bool isHistorizable = false;
-    private int postedById = 0;
-    private DateTime postingTime = DateTime.Now;
     private GeneralObjectStatus status = GeneralObjectStatus.Active;
 
     private Type underlyingSystemType = null;
@@ -121,18 +118,6 @@ namespace Empiria.Ontology {
 
       return (T) MetaModelType.Parse(dataRow);
     }
-
-    //  Type powertypeType = ObjectTypeInfo.TryGetPowertypeType(type);
-    //  ObjectTypeInfo objectTypeInfo = null;
-    //  if (powertypeType != null) {
-    //    int typeId = (int) OntologyData.GetBaseObjectTypeInfoDataRowWithType(type)["TypeId"];
-    //    objectTypeInfo = (ObjectTypeInfo) ObjectFactory.InvokeParseMethod(powertypeType, typeId);
-    //  } else {
-    //    objectTypeInfo = (ObjectTypeInfo)
-    //      ObjectTypeInfo.Parse(OntologyData.GetBaseObjectTypeInfoDataRowWithType(type));
-    //  }
-    //  return objectTypeInfo;
-    //}
 
     static internal T Parse<T>(int typeId) where T : MetaModelType {
       return (T) MetaModelType.Parse(typeId);
@@ -258,16 +243,6 @@ namespace Empiria.Ontology {
     internal string NamedIdFieldName {
       get { return namedIdFieldName; }
       set { namedIdFieldName = EmpiriaString.TrimAll(value); }
-    }
-
-    protected int PostedById {
-      get { return postedById; }
-      set { postedById = value; }
-    }
-
-    protected DateTime PostingTime {
-      get { return postingTime; }
-      set { postingTime = value; }
     }
 
     protected GeneralObjectStatus Status {
@@ -399,17 +374,14 @@ namespace Empiria.Ontology {
           powerType.typeFamily = MetaModelTypeFamily.PartitionedType;
           return powerType;
 
-        case MetaModelTypeFamily.StaticType:
-          return ObjectFactory.CreateObject<StaticTypeInfo>();
-
-        case MetaModelTypeFamily.EnumerationType:
-          return ObjectFactory.CreateObject<EnumerationTypeInfo>();
-
         case MetaModelTypeFamily.ValueType:
           return ObjectFactory.CreateObject<ValueTypeInfo>();
 
         case MetaModelTypeFamily.RuleType:
           return ObjectFactory.CreateObject<RuleTypeInfo>();
+
+        case MetaModelTypeFamily.StaticType:
+          return ObjectFactory.CreateObject<StaticTypeInfo>();
 
         default:
           throw Assertion.AssertNoReachThisCode();
@@ -463,8 +435,6 @@ namespace Empiria.Ontology {
       this.isAbstract = (bool) dataRow["IsAbstract"];
       this.isSealed = (bool) dataRow["IsSealed"];
       this.isHistorizable = (bool) dataRow["IsHistorizable"];
-      this.postedById = (int) dataRow["PostedById"];
-      this.postingTime = (DateTime) dataRow["PostingTime"];
       this.status = (GeneralObjectStatus) char.Parse((string) dataRow["TypeStatus"]);
     }
 

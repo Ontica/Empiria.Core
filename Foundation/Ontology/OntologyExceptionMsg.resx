@@ -183,4 +183,13 @@
   <data name="UnderlyingTypeNotFound" xml:space="preserve">
     <value>There is none Empiria Type defined matching the underlying system type '{0}'.</value>
   </data>
+  <data name="LinkNotFoundForSource" xml:space="preserve">
+    <value>No existe una relación (link) del tipo {3} (id = {2})) del objeto con id {0} del tipo {1}.</value>
+  </data>
+  <data name="LinkNotFoundForTarget" xml:space="preserve">
+    <value>No existe una relación (link) inversa del tipo {3} (id = {2})) del objeto con id {0} del tipo {1}.</value>
+  </data>
+  <data name="ObjectWithConditionNotFound" xml:space="preserve">
+    <value>There is not any object of type '{0}' that match the condition '{1}'.</value>
+  </data>
 </root>
