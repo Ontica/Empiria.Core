@@ -15,8 +15,8 @@ using System.Runtime.InteropServices;
 *************************************************************************************************************/
 [assembly: AssemblyTitle("Empiria.Data")]
 [assembly: AssemblyDescription("Empiria Universal Database Access Library")]
-[assembly: AssemblyVersion("6.0.2310.0")]
-[assembly: AssemblyFileVersion("6.0.2310")]
+[assembly: AssemblyVersion("6.0.0328.0")]
+[assembly: AssemblyFileVersion("6.0.0328")]
 [assembly: AssemblyCompany("Ontica")]
 [assembly: AssemblyProduct("Empiria Foundation Framework 2014")]
 [assembly: AssemblyCopyright("(c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.")]
@@ -38,4 +38,3 @@ using System.Runtime.InteropServices;
 //[assembly: EnvironmentPermission(SecurityAction.RequestRefuse, Unrestricted = true)]
 //[assembly: FileDialogPermission(SecurityAction.RequestRefuse, Unrestricted = true)]
 //[assembly: FileIOPermission(SecurityAction.RequestRefuse, Unrestricted = true)]
-

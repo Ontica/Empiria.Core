@@ -21,7 +21,7 @@ namespace Empiria {
     UnmatchedObjectB = 'B',
   }
 
-  public class Merge<T> where T : IStorable {
+  public class Merge<T> where T : IIdentifiable {
 
     private string mergeKey = String.Empty;
     private T objectA = default(T);

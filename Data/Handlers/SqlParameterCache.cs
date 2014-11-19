@@ -90,7 +90,7 @@ namespace Empiria.Data.Handlers {
       SqlParameter[] discoveredParameters = null;
 
       using (SqlConnection connection = new SqlConnection(connectionString)) {
-        SqlCommand command = new SqlCommand("qryDBSqlQueryParameters", connection);
+        SqlCommand command = new SqlCommand("qryDbQueryParameters", connection);
 
         command.CommandType = CommandType.StoredProcedure;
         command.Parameters.Add("@QueryName", SqlDbType.VarChar, 64);
@@ -105,7 +105,7 @@ namespace Empiria.Data.Handlers {
           if (discoveredParameters == null) {
             discoveredParameters = new SqlParameter[(int) reader["ParameterCount"]];
           }
-          parameter = new SqlParameter((string) reader["Name"], (SqlDbType) reader["ParameterSqlType"]);
+          parameter = new SqlParameter((string) reader["Name"], (SqlDbType) reader["ParameterDbType"]);
           parameter.Direction = (ParameterDirection) reader["ParameterDirection"];
           if (!(reader["ParameterDefaultValue"] != System.DBNull.Value)) {
             parameter.Value = reader["ParameterDefaultValue"];

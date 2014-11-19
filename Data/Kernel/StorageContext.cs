@@ -57,33 +57,29 @@ namespace Empiria {
 
     internal static StorageContext ActiveStorageContext {
       get {
-        return ExecutionServer.CurrentSession.GetObject<StorageContext>(storageContextKey);
+        return ExecutionServer.ContextItems.GetItem<StorageContext>(storageContextKey);
       }
     }
 
     internal static bool IsStorageContextDefined {
       get {
-        return (ExecutionServer.CurrentSession != null &&
-                ExecutionServer.CurrentSession.HasObject(storageContextKey));
+        return ExecutionServer.IsAuthenticated &&
+               ExecutionServer.ContextItems.ContainsKey(storageContextKey);
       }
     }
 
     static public StorageContext Open() {
-      ExecutionServer.AssertSession();
-
-      if (!ExecutionServer.CurrentSession.HasObject(storageContextKey)) {
-        ExecutionServer.CurrentSession.SetObject(storageContextKey, new StorageContext());
+      if (!ExecutionServer.ContextItems.ContainsKey(storageContextKey)) {
+        ExecutionServer.ContextItems.SetItem(storageContextKey, new StorageContext());
       }
-      return ExecutionServer.CurrentSession.GetObject<StorageContext>(storageContextKey);
+      return ExecutionServer.ContextItems.GetItem<StorageContext>(storageContextKey);
     }
 
     static public StorageContext Open(string contextName) {
-      ExecutionServer.AssertSession();
-
       if (!IsStorageContextDefined) {
-        ExecutionServer.CurrentSession.SetObject(storageContextKey, new StorageContext(contextName));
+        ExecutionServer.ContextItems.SetItem(storageContextKey, new StorageContext(contextName));
       }
-      return ExecutionServer.CurrentSession.GetObject<StorageContext>(storageContextKey);
+      return ExecutionServer.ContextItems.GetItem<StorageContext>(storageContextKey);
     }
 
     ~StorageContext() {
@@ -95,15 +91,21 @@ namespace Empiria {
     #region Public properties
 
     public Guid Guid {
-      get { return guid; }
+      get {
+        return guid;
+      }
     }
 
     public string Name {
-      get { return name; }
+      get {
+        return name;
+      }
     }
 
     public DateTime Timestamp {
-      get { return timestamp; }
+      get {
+        return timestamp;
+      }
     }
 
     #endregion Public properties
@@ -120,12 +122,6 @@ namespace Empiria {
       dataOperations.Add(operationList);
 
       return operationList.Count;
-    }
-
-    public void Assert(IStorable instance, StorageVersion version) {
-      //if (instance.Version != version) {
-      //  Assertion.AssertFail("Instance with id " + instance.Id + " has an inconsistent data version.");
-      //}
     }
 
     public int Update() {

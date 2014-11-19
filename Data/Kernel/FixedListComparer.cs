@@ -18,7 +18,7 @@ namespace Empiria {
   public delegate bool Predicate2<in T>(T obj1, T obj2);
 
   /// <summary>Performs comparison of two FixedList objects.</summary>
-  public class FixedListComparer<T> where T : IStorable {
+  public class FixedListComparer<T> where T : IIdentifiable {
 
     #region Fields
 

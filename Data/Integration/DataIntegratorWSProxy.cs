@@ -39,7 +39,7 @@ namespace Empiria.Data.Integration {
 
     static internal void SynchronizeServerCaches(string cachedObjectName) {
       try {
-        if (ExecutionServer.IsWebServicesServer()) {
+        if (ExecutionServer.IsDataSourceServer) {
           using (WebApplicationWSProxy proxy = new WebApplicationWSProxy(CurrentServer)) {
             proxy.UpdateCache(cachedObjectName);
           }

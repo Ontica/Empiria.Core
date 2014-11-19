@@ -84,7 +84,7 @@ namespace Empiria.Data.Handlers {
       MySqlParameter[] discoveredParameters = null;
 
       using (MySqlConnection connection = new MySqlConnection(connectionString)) {
-        MySqlCommand command = new MySqlCommand("qryDBMySqlQueryParameters", connection);
+        MySqlCommand command = new MySqlCommand("qryDbQueryParameters", connection);
 
         command.CommandType = CommandType.StoredProcedure;
         command.Parameters.Add("@QueryName", MySqlDbType.VarChar, 64);
@@ -99,7 +99,7 @@ namespace Empiria.Data.Handlers {
           if (discoveredParameters == null) {
             discoveredParameters = new MySqlParameter[(int) reader["ParameterCount"]];
           }
-          parameter = new MySqlParameter((string) reader["Name"], (MySqlDbType) reader["ParameterMySqlType"]);
+          parameter = new MySqlParameter((string) reader["Name"], (MySqlDbType) reader["ParameterDbType"]);
           parameter.Direction = (ParameterDirection) reader["ParameterDirection"];
           if (!(reader["ParameterDefaultValue"] != System.DBNull.Value)) {
             parameter.Value = reader["ParameterDefaultValue"];

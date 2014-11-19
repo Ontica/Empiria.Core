@@ -156,7 +156,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql">
       <HintPath>..\..\..\empiria.assemblies\Npgsql.dll</HintPath>
@@ -189,17 +189,20 @@
     <Compile Include="Empiria.Data.AssemblyInfo.cs" />
     <Compile Include="Handlers\PostgreSqlParameterCache.cs" />
     <Compile Include="Handlers\PostgreSqlMethods.cs" />
-    <Compile Include="Integration\WebApplicationWSProxy.cs">
+    <Compile Include="Integration\DataIntegrationEngine.cs" />
+    <Compile Include="Integration\DataIntegrationRules.cs" />
+    <Compile Include="Integration\DataIntegratorRule.cs" />
+    <Compile Include="Integration\DataIntegratorWSProxy.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Integration\DataPublisher.cs" />
-    <Compile Include="Integration\DataIntegrationRules.cs" />
-    <Compile Include="Integration\DataIntegratorWSProxy.cs">
+    <Compile Include="Integration\WebApplicationWSProxy.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Kernel\IExtensible.cs" />
     <Compile Include="Kernel\Merger.cs" />
     <Compile Include="Kernel\FixedListComparer.cs" />
+    <Compile Include="Kernel\lFilter.cs" />
     <Compile Include="Kernel\StorageVersion.cs" />
     <Compile Include="Modeler\DbBaseQuery.cs">
       <SubType>Code</SubType>
@@ -243,10 +246,8 @@
     </Compile>
     <Compile Include="Handlers\MySqlParameterCache.cs" />
     <Compile Include="Handlers\MySqlMethods.cs" />
-    <Compile Include="Integration\DataIntegratorRule.cs" />
-    <Compile Include="Integration\DataIntegrationEngine.cs" />
     <Compile Include="Kernel\IStorable.cs" />
-    <Compile Include="RootTypes\JsonConverter.cs" />
+    <Compile Include="RootTypes\SqlFilter.cs" />
     <Compile Include="RootTypes\GeneralDataOperations.cs" />
     <Compile Include="RootTypes\DataCache.cs">
       <SubType>Code</SubType>
@@ -272,7 +273,6 @@
     <Compile Include="RootTypes\EmpiriaDataException.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RootTypes\JsonObject.cs" />
     <Compile Include="RootTypes\ObjectIdFactory.cs">
       <SubType>Code</SubType>
     </Compile>

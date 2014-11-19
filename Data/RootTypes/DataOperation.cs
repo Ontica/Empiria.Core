@@ -115,21 +115,6 @@ namespace Empiria.Data {
       }
     }
 
-    static public void DumpPerformanceTable() {
-      string temp = "Análisis de desempeño para el servidor " + ExecutionServer.Name + Environment.NewLine + Environment.NewLine;
-
-      string[] keys = new string[PerformanceTable.Count];
-      PerformanceTable.Keys.CopyTo(keys, 0);
-      int counter = 0;
-      for (int i = 0; i < keys.Length; i++) {
-        temp += i.ToString("000") + " " + keys[i] + " = " + PerformanceTable[keys[i]] + Environment.NewLine;
-        counter += PerformanceTable[keys[i]];
-      }
-      temp += Environment.NewLine + "Total de accesos = " + counter.ToString("N0");
-
-      Empiria.Messaging.Publisher.Publish(new Messaging.Message(temp));
-    }
-
     #endregion Public properties
 
     #region Internal properties

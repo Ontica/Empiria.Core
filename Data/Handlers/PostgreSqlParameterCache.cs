@@ -89,7 +89,7 @@ namespace Empiria.Data.Handlers {
       Npgsql.NpgsqlParameter[] discoveredParameters = null;
 
       using (Npgsql.NpgsqlConnection connection = new Npgsql.NpgsqlConnection(connectionString)) {
-        Npgsql.NpgsqlCommand command = new Npgsql.NpgsqlCommand("qryDBPostgreSqlQueryParameters", connection);
+        Npgsql.NpgsqlCommand command = new Npgsql.NpgsqlCommand("qryDbQueryParameters", connection);
 
         command.CommandType = CommandType.StoredProcedure;
         command.Parameters.Add("@QueryName", NpgsqlTypes.NpgsqlDbType.Varchar, 64);

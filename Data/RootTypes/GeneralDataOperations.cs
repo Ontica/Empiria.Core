@@ -209,6 +209,12 @@ namespace Empiria.Data {
       return DataReader.GetDataTable(operation);
     }
 
+    static public DataRow GetEntity(string sourceName, IFilter condition) {
+      var operation = DataOperation.Parse("@qryEntitiesFiltered", sourceName, condition.Value);
+
+      return DataReader.GetDataRow(operation);
+    }
+
     static public DataRow GetEntityById(string sourceName, string idFieldName, int entityId) {
       DataOperation operation = DataOperation.Parse("@getEntityByField", sourceName, idFieldName, entityId);
 

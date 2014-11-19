@@ -63,6 +63,30 @@ namespace Empiria.Data {
       return result;
     }
 
+    //static public T ExecuteScalar<T>(DataOperation operation) {
+    //  Assertion.AssertObject(operation, "operation");
+
+    //  if (StorageContext.IsStorageContextDefined) {
+    //    return (T) StorageContext.ActiveStorageContext.Add(operation);
+    //  }
+
+    //  if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
+    //    return (T) ExecuteExternal(operation);
+    //  }
+
+    //  T result = DataWriter.ExecuteScalarInternal<T>(operation);
+
+    //  DataWriter.DoPostExecutionTask(operation);
+
+    //  DataPublisher.Publish(operation);
+
+    //  return result;
+    //}
+
+    //private static T ExecuteScalarInternal<T>(DataOperation operation) {
+    //  throw new NotImplementedException();
+    //}
+
     static public int Execute(DataOperationList operationList) {
       Assertion.AssertObject(operationList, "operationList");
 
@@ -121,7 +145,7 @@ namespace Empiria.Data {
     #region Internal methods
 
     static internal int CreateInternalId(string sourceName) {
-      if (ExecutionServer.IsWebServicesServer()) {
+      if (ExecutionServer.IsDataSourceServer) {
         return ObjectIdFactory.Instance.GetNextId(sourceName, 0);
       } else {
         using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(DataIntegratorWSProxy.CurrentServer)) {

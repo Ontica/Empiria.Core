@@ -55,6 +55,12 @@ namespace Empiria {
       }
     }
 
+    static public FixedList<T> Empty {
+      get {
+        return new FixedList<T>();
+      }
+    }
+
     #endregion Constructors and parsers
 
     #region Public methods

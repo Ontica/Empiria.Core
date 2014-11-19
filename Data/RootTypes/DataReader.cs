@@ -77,6 +77,10 @@ namespace Empiria.Data {
     static public IDataReader GetDataReader(DataOperation operation) {
       Assertion.AssertObject(operation, "operation");
 
+      if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
+        throw new NotImplementedException();
+      }
+
       switch (operation.DataSource.Technology) {
         case DataTechnology.SqlServer:
           return SqlMethods.GetDataReader(operation);
@@ -180,7 +184,7 @@ namespace Empiria.Data {
     }
 
     static public dynamic GetDynamicObject(DataRow row, string fieldName) {
-      return JsonConverter.ToObject((string) row[fieldName]);
+      return Json.JsonConverter.ToObject((string) row[fieldName]);
     }
 
     static public object GetFieldValue(DataOperation operation, string fieldName) {

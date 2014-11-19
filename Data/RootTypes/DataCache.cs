@@ -144,7 +144,7 @@ namespace Empiria.Data {
       lock (SystemCache) {
         removedObject = SystemCache.Remove(keyPrefix + key);
 
-        if (ExecutionServer.IsWebServicesServer()) {
+        if (ExecutionServer.IsDataSourceServer) {
           DataIntegratorWSProxy.SynchronizeServerCaches(key);
         }
       }

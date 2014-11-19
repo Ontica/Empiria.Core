@@ -84,7 +84,7 @@ namespace Empiria.Data.Handlers {
       OleDbParameter[] discoveredParameters = null;
 
       using (OleDbConnection connection = new OleDbConnection(connectionString)) {
-        OleDbCommand command = new OleDbCommand("qryDBOleDbQueryParameters", connection);
+        OleDbCommand command = new OleDbCommand("qryDbQueryParameters", connection);
 
         command.CommandType = CommandType.StoredProcedure;
         command.Parameters.Add("pQueryName", OleDbType.VarChar, 128);
@@ -97,12 +97,12 @@ namespace Empiria.Data.Handlers {
         int i = 0;
         while (reader.Read()) {
           if (discoveredParameters == null) {
-            discoveredParameters = new OleDbParameter[reader.GetInt32(7)];
+            discoveredParameters = new OleDbParameter[(int) reader["ParameterCount"]];
           }
-          parameter = new OleDbParameter(reader.GetString(0), (OleDbType) reader.GetInt32(1));
-          parameter.Direction = (ParameterDirection) reader.GetInt32(2);
-          if (!reader.IsDBNull(6)) {
-            parameter.Value = reader[6];
+          parameter = new OleDbParameter((string) reader["Name"], (OleDbType) reader["ParameterDbType"]);
+          parameter.Direction = (ParameterDirection) reader["ParameterDirection"];
+          if (!(reader["ParameterDefaultValue"] != System.DBNull.Value)) {
+            parameter.Value = reader["ParameterDefaultValue"];
           }
           discoveredParameters[i] = parameter;
           i++;
