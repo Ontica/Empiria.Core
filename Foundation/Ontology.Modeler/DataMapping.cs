@@ -15,6 +15,7 @@ using System.Linq;
 using System.Reflection;
 
 using Empiria.Data;
+using Empiria.Json;
 using Empiria.Reflection;
 
 namespace Empiria.Ontology.Modeler {
@@ -38,6 +39,7 @@ namespace Empiria.Ontology.Modeler {
 
     }
 
+    //Returns a data mapping for a type's memberInfo (field or property)
     internal static DataMapping Parse(Type type, MemberInfo memberInfo) {
       DataMapping dataMapping = null;
       MemberInfo declaredMemberInfo = null;
@@ -59,7 +61,7 @@ namespace Empiria.Ontology.Modeler {
       } else {
         Assertion.AssertNoReachThisCode();
       }
-      dataMapping.LoadMemberRules();
+      dataMapping.SetRules();
 
       return dataMapping;
     }
@@ -125,7 +127,7 @@ namespace Empiria.Ontology.Modeler {
       private set;
     }
 
-    internal string JsonSourceFieldName {
+    internal string JsonInnerFieldName {
       get;
       private set;
     }
@@ -169,9 +171,9 @@ namespace Empiria.Ontology.Modeler {
       
       str = String.Format("Mapped type member: {0}\n", this.MemberInfo.Name);
       str += String.Format("Mapped data field: {0}\n", this.DataFieldName);
-      if (this.JsonFieldName.Length != 0) {
-        str += String.Format("Mapped Json source field: {0}\n", this.JsonSourceFieldName);
-        str += String.Format("Mapped Json item: {0}\n", this.JsonFieldName);
+      if (this.JsonInnerFieldName.Length != 0) {
+        str += String.Format("Mapped Json source field: {0}\n", this.JsonFieldName);
+        str += String.Format("Mapped Json item: {0}\n", this.JsonInnerFieldName);
       }
       return str;
     }
@@ -210,25 +212,31 @@ namespace Empiria.Ontology.Modeler {
       this.ImplementsSetValue(instance, this.DefaultValue);
     }
 
+    /// <summary>Set instance member value from a Json string according to this DataMapping rule.
+    ///  Only for use when MapToJsonItem is true.</summary>
+    internal void SetJsonValue(object instance, string jsonStringValue,
+                               Dictionary<string, JsonObject> jsonObjectsCache) {
+      //Assert(this.MapToJsonItem, "Method for use only when this.MapToJsonItem is true.");
+      if (jsonStringValue.Length == 0) {
+        return;   // If not value, do nothing?
+      }
+      JsonObject jsonObject = GetJsonObject(jsonObjectsCache, jsonStringValue);
+
+      if (this.JsonInnerFieldName.Length != 0) {
+        object memberValue = this.ExtractJsonInnerFieldValue(jsonObject);
+        memberValue = this.TransformDataStoredValueBeforeAssignToMember(memberValue);
+        this.ImplementsSetValue(instance, memberValue);
+      } else {
+        this.ImplementsSetValue(instance, jsonObject);
+      }
+    }
+
     /// <summary>Set instance member value according to this DataMapping rule.
     /// Only for use when MapToJsonItem is false.</summary>
     internal void SetValue(object instance, object value) {
-      //Assertion.Assert(this.MapToJsonItem == false, "Method for use only when this.MapToJsonItem is false.");
-      object invokeValue = this.TransformDataStoredValueBeforeAssignToMember(value);
-      this.ImplementsSetValue(instance, invokeValue);
-    }
-
-    /// <summary>Set instance member value from a Json string according to this DataMapping rule.
-    ///  Only for use when MapToJsonItem is true.</summary>
-    internal void SetValue(object instance, string jsonString, 
-                           Dictionary<string, JsonObject> jsonObjectsCache) {
-      //Assertion.Assert(this.MapToJsonItem, "Method for use only when this.MapToJsonItem is true.");
-      if (jsonString.Length == 0) {
-        return;   // If not value, do nothing?
-      }
-      object invokeValue = this.ExtractJsonFieldValue(jsonString, jsonObjectsCache);
-      invokeValue = this.TransformDataStoredValueBeforeAssignToMember(invokeValue);
-      this.ImplementsSetValue(instance, invokeValue);
+      //Assert(this.MapToJsonItem == false, "Method for use only when this.MapToJsonItem is false.");
+      object memberValue = this.TransformDataStoredValueBeforeAssignToMember(value);
+      this.ImplementsSetValue(instance, memberValue);
     }
 
     #endregion Public methods
@@ -250,10 +258,9 @@ namespace Empiria.Ontology.Modeler {
       }
     }
 
-
     MethodInfo _jsonGetItemMethodWDefault = null;
     /// <summary>Returns method Empiria.Data.JsonObject.Get<T>(string itemPath, T defaultValue)</summary>
-    private MethodInfo JsonGetItemMethodWDefault {
+    private MethodInfo JsonGetItemMethodWithDefault {
       get {
         if (_jsonGetItemMethodWDefault == null) {
           MethodInfo method = typeof(JsonObject).GetMethods(BindingFlags.Instance | BindingFlags.Public)
@@ -270,20 +277,26 @@ namespace Empiria.Ontology.Modeler {
 
     /// <summary>Gets a Json item from a jsonString using a JsonObject's cache to avoid
     /// unnecessary parsing.</summary>
-    private object ExtractJsonFieldValue(string jsonString, 
-                                         Dictionary<string, JsonObject> jsonObjectsCache) {
-      var jsonObject = jsonObjectsCache[this.DataFieldName];
-      if (jsonObject == null) {
-        jsonObject = JsonObject.Parse(jsonString);
-        jsonObjectsCache[this.DataFieldName] = jsonObject;
-      }
+    private object ExtractJsonInnerFieldValue(JsonObject jsonObject) {
       if (this.DataFieldAttribute.IsOptional) {
-        var parameters = new object[] { this.JsonFieldName, this.DefaultValue };
-        return this.JsonGetItemMethodWDefault.Invoke(jsonObject, parameters);
+        var parameters = new object[] { this.JsonInnerFieldName, this.DefaultValue };
+        return this.JsonGetItemMethodWithDefault.Invoke(jsonObject, parameters);
       } else {
-        var parameter = new object[] { this.JsonFieldName };
+        var parameter = new object[] { this.JsonInnerFieldName };
         return this.JsonGetItemMethod.Invoke(jsonObject, parameter);
       }
+    }
+
+    /// <summary>Gets a JsonObject from a cache. If the object is null then this method
+    /// initalizes it using the jsonString value.</summary>
+    private JsonObject GetJsonObject(Dictionary<string, JsonObject> jsonObjectsCache,
+                                     string jsonStringValue) {
+      var jsonObject = jsonObjectsCache[this.DataFieldName];
+      if (jsonObject == null) {
+        jsonObject = JsonObject.Parse(jsonStringValue);
+        jsonObjectsCache[this.DataFieldName] = jsonObject;
+      }
+      return jsonObject;
     }
 
     private object GetDataFieldDefaultValue() {
@@ -343,12 +356,14 @@ namespace Empiria.Ontology.Modeler {
       }
     }
 
-    private void LoadMemberRules() {
+    private void SetRules() {
+      // Initialize fields with default vlaues;
       this.DataColumnIndex = -1;
       this.DataFieldName = String.Empty;
-      this.JsonSourceFieldName = String.Empty;
       this.JsonFieldName = String.Empty;
+      this.JsonInnerFieldName = String.Empty;
 
+      // Set rules
       this.ApplyOnInitialization = (this.MemberInfo is PropertyInfo);
       this.DataFieldAttribute = this.MemberInfo.GetCustomAttribute<DataFieldAttribute>();
       this.MapToLazyInstance = (this.MemberType.IsGenericType && 
@@ -356,15 +371,23 @@ namespace Empiria.Ontology.Modeler {
       this.MapToParsableObject = ObjectFactory.HasParseWithIdMethod(this.MemberType);
       this.MapToEmptyObject = ObjectFactory.HasEmptyInstance(this.MemberType);
       this.MapToEnumeration = this.MemberType.IsEnum;
-      this.MapToChar = this.MemberType == typeof(char);
+      this.MapToChar = (this.MemberType == typeof(char));
 
       this.DefaultValue = this.GetDataFieldDefaultValue();
 
-      if (this.DataFieldAttribute.Name.Contains('.')) {
+      if (this.MemberType == typeof(JsonObject) || this.DataFieldAttribute.Name.Contains('.')) {
         string dataFieldAttrName = this.DataFieldAttribute.Name;
 
-        this.JsonSourceFieldName = dataFieldAttrName.Substring(0, dataFieldAttrName.IndexOf('.'));
-        this.JsonFieldName = dataFieldAttrName.Substring(dataFieldAttrName.IndexOf('.') + 1);
+        int indexOfPeriod = dataFieldAttrName.IndexOf('.');
+        if (indexOfPeriod != -1) {
+          // [DataField("ContactExtData.Address")] <- returns a a string or Address object
+          this.JsonFieldName = dataFieldAttrName.Substring(0, dataFieldAttrName.IndexOf('.'));
+          this.JsonInnerFieldName = dataFieldAttrName.Substring(dataFieldAttrName.IndexOf('.') + 1);
+        } else {
+          // [DataField("ContactExtData")] <- returns a JsonObject, JsonInnerFieldName is empty.
+          this.JsonFieldName = dataFieldAttrName;
+          this.JsonInnerFieldName = String.Empty;
+        }
         this.MapToJsonItem = true;
       }
     }
@@ -373,9 +396,9 @@ namespace Empiria.Ontology.Modeler {
       if (this.MapToParsableObject || this.MapToLazyInstance) {
         int objectId = (int) value;
         if (objectId == -1 && this.MapToEmptyObject) {
-          return ParseEmptyObjectDelegate();   ///ObjectFactory.EmptyInstance(this.MemberType);
+          return this.GetEmptyInstanceDelegate();   ///ObjectFactory.EmptyInstance(this.MemberType);
         } else {
-          return ParseMemberTypeDelegate(objectId);  //ParseMemberTypeDelegate.DynamicInvoke(objectId);          
+          return this.GetParseInstanceDelegate(objectId);  //ParseMemberTypeDelegate.DynamicInvoke(objectId);
         }
       } else if (this.MapToEnumeration) {
         if (((string) value).Length == 1) {
@@ -390,39 +413,29 @@ namespace Empiria.Ontology.Modeler {
       }
     }
 
-    MethodInfo _parseMemberTypeMethod = null;
-    private MethodInfo ParseMemberTypeMethod {
+    private delegate object EmptyMethodDelegate();
+    EmptyMethodDelegate _emptyMethodDelegate = null;
+    private EmptyMethodDelegate GetEmptyInstanceDelegate {
       get {
-        if (_parseMemberTypeMethod == null) {
-          _parseMemberTypeMethod = ObjectFactory.GetParseMethod(this.MemberType);
+        if (_emptyMethodDelegate == null) {
+          _emptyMethodDelegate = 
+              (EmptyMethodDelegate) Delegate.CreateDelegate(typeof(EmptyMethodDelegate),
+                                    ObjectFactory.GetEmptyInstanceProperty(this.MemberType).GetGetMethod());
         }
-        return _parseMemberTypeMethod;
+        return _emptyMethodDelegate;
       }
     }
 
     private delegate object ParseMethodDelegate(int id);
-
     ParseMethodDelegate _parseMethodDelegate = null;
-    private ParseMethodDelegate ParseMemberTypeDelegate {
-      get{
+    private ParseMethodDelegate GetParseInstanceDelegate {
+      get {
         if (_parseMethodDelegate == null) {
-          _parseMethodDelegate = (ParseMethodDelegate) Delegate.CreateDelegate(typeof(ParseMethodDelegate),
-                                                                               ObjectFactory.GetParseMethod(this.MemberType));
+          _parseMethodDelegate = 
+              (ParseMethodDelegate) Delegate.CreateDelegate(typeof(ParseMethodDelegate),
+                                                            ObjectFactory.GetParseMethod(this.MemberType));
         }
         return _parseMethodDelegate;
-      }
-    }
-
-    private delegate object EmptyMethodDelegate();
-
-    EmptyMethodDelegate _emptyMethodDelegate = null;
-    private EmptyMethodDelegate ParseEmptyObjectDelegate {
-      get {
-        if (_emptyMethodDelegate == null) {
-          _emptyMethodDelegate = (EmptyMethodDelegate) Delegate.CreateDelegate(typeof(EmptyMethodDelegate),
-                                                                               ObjectFactory.GetEmptyInstanceProperty(this.MemberType).GetGetMethod());
-        }
-        return _emptyMethodDelegate;
       }
     }
 

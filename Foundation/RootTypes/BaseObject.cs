@@ -13,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
-using Empiria.Data;
 using Empiria.Ontology;
 using Empiria.Reflection;
 
@@ -172,6 +171,17 @@ namespace Empiria {
       return objectTypeInfo.GetUnknownInstance<T>().Clone<T>();
     }
 
+    protected static T TryParse<T>(IFilter condition) where T : BaseObject {
+      var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
+
+      Tuple<ObjectTypeInfo, DataRow> objectData = objectTypeInfo.TryGetObjectTypeAndDataRow(condition);
+
+      if (objectData == null) {
+        return null;
+      }
+      return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties
@@ -243,6 +253,12 @@ namespace Empiria {
       return (this.objectTypeInfo.GetHashCode() ^ this.Id);
     }
 
+    protected T GetLink<T>(string linkName) where T : BaseObject {
+      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
+
+      return association.GetLink<T>(this);
+    }
+
     protected FixedList<T> GetLinks<T>(string linkName) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
@@ -278,16 +294,6 @@ namespace Empiria {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetLinks<T>(this, predicate);
-    }
-
-    protected FixedList<TypeAssociationInfo> GetTypeAssociationLinks(string linkName) {
-      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
-
-      return association.GetAssociationLinks(this);
-    }
-
-    protected void Link(TypeAssociationInfo assocationInfo, IStorable value) {
-      OntologyData.WriteLink(assocationInfo, this, value);
     }
 
     protected void LoadAttributesBag(DataRow row) {
@@ -391,6 +397,10 @@ namespace Empiria {
       this.objectTypeInfo = newType;
       cache.Insert(this);
     }
+
+    //protected void Link(TypeAssociationInfo assocationInfo, IStorable value) {
+    //  OntologyData.WriteLink(assocationInfo, this, value);
+    //}
 
   } // class BaseObject
 

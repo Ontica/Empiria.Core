@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Linq;
 
 using Empiria.Data;
+using Empiria.Json;
 using Empiria.Reflection;
 
 namespace Empiria.Ontology.Modeler {
@@ -83,7 +84,7 @@ namespace Empiria.Ontology.Modeler {
         for (int i = 0; i < dataMappingsArray.Length; i++) {
           rule = dataMappingsArray[i];
           if (rule.MapToJsonItem) {
-            rule.SetValue(instance, (string) dataRow[rule.DataColumnIndex], jsonObjectsCache);
+            rule.SetJsonValue(instance, (string) dataRow[rule.DataColumnIndex], jsonObjectsCache);
           } else {
             rule.SetValue(instance, dataRow[rule.DataColumnIndex]);
           }
@@ -96,6 +97,19 @@ namespace Empiria.Ontology.Modeler {
     #endregion Public methods
 
     #region Private methods
+
+    private void AssertFieldNameIsInJsonCacheKeys(string jsonBaseFieldName) {
+      if (jsonFieldsNames == null) {
+        jsonFieldsNames = new List<string>(1);
+      }
+      if (!jsonFieldsNames.Contains(jsonBaseFieldName)) {
+        lock (jsonFieldsNames) {
+          if (!jsonFieldsNames.Contains(jsonBaseFieldName)) {
+            jsonFieldsNames.Add(jsonBaseFieldName);
+          }
+        }
+      }
+    }
 
     private Dictionary<string, JsonObject> CreateJsonObjectsCache() {
       if (jsonFieldsNames == null) {
@@ -132,7 +146,7 @@ namespace Empiria.Ontology.Modeler {
           dataMappingsList.Add(dataMapping);
 
           if (dataMapping.MapToJsonItem) {
-            this.TryToAddFieldNameToJsonCacheKeys(dataMapping.JsonSourceFieldName);
+            this.AssertFieldNameIsInJsonCacheKeys(dataMapping.JsonFieldName);
           }
         }  // for
         return dataMappingsList.ToArray();
@@ -152,32 +166,23 @@ namespace Empiria.Ontology.Modeler {
       foreach(DataMapping mapping in dataMappingsArray) {
         int columnIndex = dataColumns.IndexOf(mapping.DataFieldAttributeName);
         if (columnIndex != -1) {
-          mapping.MapDataColumn(dataColumns[columnIndex]);        
-        } else if (mapping.MapToJsonItem) {        
-          columnIndex = dataColumns.IndexOf(mapping.JsonSourceFieldName);
+          mapping.MapDataColumn(dataColumns[columnIndex]);
+        } else if (mapping.MapToJsonItem) {
+          columnIndex = dataColumns.IndexOf(mapping.JsonFieldName);
           if (columnIndex != -1) {
             mapping.MapDataColumn(dataColumns[columnIndex]);
           } else {
             throw new OntologyException(OntologyException.Msg.MappingDataColumnNotFound,
-                                        mappedType.Name, mapping.MemberInfo.Name, mapping.JsonSourceFieldName);
+                                        mappedType.Name, mapping.MemberInfo.Name,
+                                        mapping.JsonFieldName);
           }  // inner if
         } else {
           throw new OntologyException(OntologyException.Msg.MappingDataColumnNotFound,
-                                      mappedType.Name, mapping.MemberInfo.Name, mapping.DataFieldAttributeName);
+                                      mappedType.Name, mapping.MemberInfo.Name,
+                                      mapping.DataFieldAttributeName);
         }  // main if
       } // foreach
       this.dataColumnsAreMapped = true;
-    }
-
-    private void TryToAddFieldNameToJsonCacheKeys(string jsonBaseFieldName) {
-      if (jsonFieldsNames == null) {
-        jsonFieldsNames = new List<string>(1);
-      }
-      lock (jsonFieldsNames) {
-        if (!jsonFieldsNames.Contains(jsonBaseFieldName)) {
-          jsonFieldsNames.Add(jsonBaseFieldName);
-        }
-      }
     }
 
     #endregion Private methods
