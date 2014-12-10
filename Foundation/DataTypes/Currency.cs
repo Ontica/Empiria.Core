@@ -16,7 +16,7 @@ namespace Empiria.DataTypes {
 
     #region Fields
 
-    static readonly int defaultCurrencyId = ConfigurationData.GetInteger("Default.Currency.ID");
+    static readonly int defaultCurrencyId = ConfigurationData.GetInteger("Default.Currency.Id");
 
     #endregion Fields
 

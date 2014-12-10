@@ -148,10 +148,10 @@ namespace Empiria.DataTypes {
     }
 
     private void LoadColumnsStructure() {
-      DataRow tableColumnNames = GeneralDataOperations.GetEntityByKeyFiltered("EOSRangesTables", "RangesTableName",
+      DataRow tableColumnNames = GeneralDataOperations.GetEntityByKeyFiltered("RangesTables", "RangesTableName",
                                                                               this.tableName, "RangeType = 'N'");
 
-      DataRow tableColumnTypes = GeneralDataOperations.GetEntityByKeyFiltered("EOSRangesTables", "RangesTableName",
+      DataRow tableColumnTypes = GeneralDataOperations.GetEntityByKeyFiltered("RangesTables", "RangesTableName",
                                                                  this.tableName, "RangeType = 'T'");
 
       if (((string) tableColumnNames["UpperBound"]).Length != 0) {
@@ -172,7 +172,7 @@ namespace Empiria.DataTypes {
     }
 
     private void LoadColumnsValues(DateTime valuesDate) {
-      valuesDataTable = DataReader.GetDataTable(DataOperation.Parse("qryEOSRangeTableValues", this.tableName, valuesDate));
+      valuesDataTable = DataReader.GetDataTable(DataOperation.Parse("qryRangesTableValues", this.tableName, valuesDate));
     }
 
     #endregion Private methods

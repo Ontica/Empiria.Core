@@ -41,7 +41,7 @@ namespace Empiria.DataTypes {
       return new Money(currency, amount);
     }
 
-    static public Money Parse(Empiria.Data.JsonObject json) {
+    static public Money Parse(Empiria.Json.JsonObject json) {
       return Money.Parse(json.Get<Currency>("CurrencyId", Currency.Default),
                          json.Get<Decimal>("Value", 0m));
     }
@@ -153,6 +153,6 @@ namespace Empiria.DataTypes {
 
     #endregion Public methods
 
-  } // class Money
+  } // struct Money
 
 } // namespace Empiria.DataTypes

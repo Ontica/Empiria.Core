@@ -122,14 +122,11 @@ namespace Empiria.DataTypes {
     }
 
     public override string ToString() {
-      //decimal integralPart = Math.Truncate(this.amount);
-      //decimal decimalPart = this.amount - integralPart;
-
       return amount.ToString("N2") + " " + unit.Symbol;
     }
 
     #endregion Public methods
 
-  } // class Quantity
+  } // struct Quantity
 
 } // namespace Empiria.Quantity

@@ -24,7 +24,7 @@ namespace Empiria.DataTypes {
       this.TermUnit = Unit.Empty;
     }
 
-    static public Interest Parse(Empiria.Data.JsonObject json) {
+    static public Interest Parse(Empiria.Json.JsonObject json) {
       var interest = new Interest();
 
       /// OOJJOO. Try to send all data read/write methods to isolated types ???      
@@ -82,7 +82,7 @@ namespace Empiria.DataTypes {
     #region Methods
     
     public string ToJson() {
-      return Empiria.Data.JsonConverter.ToJson(this);
+      return Empiria.Json.JsonConverter.ToJson(this);
     }
 
     #endregion Methods

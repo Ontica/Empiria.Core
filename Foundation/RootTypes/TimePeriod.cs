@@ -16,16 +16,16 @@ namespace Empiria {
 
     #region Fields
 
-    private DateTime fromDate;
-    private DateTime toDate;
+    private DateTime _startTime;
+    private DateTime _endTime;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    public TimePeriod(DateTime fromDate, DateTime toDate) {
-      this.fromDate = fromDate;
-      this.toDate = toDate;
+    public TimePeriod(DateTime startTime, DateTime endTime) {
+      _startTime = startTime;
+      _endTime = endTime;
     }
 
     static public TimePeriod Default {
@@ -38,12 +38,12 @@ namespace Empiria {
 
     #region Public properties
 
-    public DateTime FromDate {
-      get { return fromDate; }
+    public DateTime StartTime {
+      get { return _startTime; }
     }
 
-    public DateTime ToDate {
-      get { return toDate; }
+    public DateTime EndTime {
+      get { return _endTime; }
     }
 
     #endregion Public properties
@@ -51,7 +51,7 @@ namespace Empiria {
     #region Operators overloading
 
     static public bool operator ==(TimePeriod periodA, TimePeriod periodB) {
-      return ((periodA.FromDate == periodB.FromDate) && (periodA.ToDate == periodB.ToDate));
+      return ((periodA.StartTime == periodB.StartTime) && (periodA.EndTime == periodB.EndTime));
     }
 
     static public bool operator !=(TimePeriod periodA, TimePeriod periodB) {
@@ -63,12 +63,12 @@ namespace Empiria {
     #region Public methods
 
     public bool IsInRange(DateTime date) {
-      if (this.toDate.TimeOfDay.Hours == 0) {
-        if (this.fromDate <= date && date < this.toDate.AddSeconds(86400)) {
+      if (_endTime.TimeOfDay.Hours == 0) {
+        if (_startTime <= date && date < _endTime.AddSeconds(86400)) {
           return true;
         }
       }
-      return (this.fromDate <= date && date <= this.toDate);
+      return (_startTime <= date && date <= _endTime);
     }
 
     public override bool Equals(object o) {
@@ -77,7 +77,7 @@ namespace Empiria {
       }
       TimePeriod temp = (TimePeriod) o;
 
-      return ((this.FromDate == temp.FromDate) && (this.ToDate == temp.ToDate));
+      return ((this.StartTime == temp.StartTime) && (this.EndTime == temp.EndTime));
     }
 
     public override int GetHashCode() {
@@ -85,7 +85,7 @@ namespace Empiria {
     }
 
     public override string ToString() {
-      return fromDate.ToString("yyyymmdd") + "." + toDate.ToString("yyyymmdd");
+      return _startTime.ToString("yyyymmdd") + "." + _endTime.ToString("yyyymmdd");
     }
 
     #endregion Public methods

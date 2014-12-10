@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 
 using Empiria.Data;
+using Empiria.Json;
 
 namespace Empiria.Ontology {
 

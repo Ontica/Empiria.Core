@@ -56,8 +56,10 @@ namespace Empiria.DataTypes {
 
     #region Properties
 
+    [DataField(GeneralObject.ExtensionDataFieldName  + ".Abbr", IsOptional = true)]
     public string Symbol {
-      get { return base.Description; }
+      get;
+      private set;
     }
 
     #endregion Properties

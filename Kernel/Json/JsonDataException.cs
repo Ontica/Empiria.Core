@@ -29,7 +29,7 @@ namespace Empiria.Json {
 
     #region Constructors and parsers
 
-    /// <summary>Initializes a new instance of JsonDataException class with a specified error 
+    /// <summary>Initializes a new instance of JsonDataException class with a specified error
     /// message.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
@@ -48,7 +48,7 @@ namespace Empiria.Json {
     /// <param name="exception">This is the inner exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
     public JsonDataException(Msg message, Exception exception,
-                             params object[] args) : 
+                             params object[] args) :
                              base(message.ToString(), GetMessage(message, args), exception) {
       try {
         base.Publish();

@@ -8,6 +8,10 @@
 *  Summary   : Represents a list type that holds BaseObject instances.                                       *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
+
+using Empiria.Data;
+using Empiria.Json;
 using Empiria.Ontology;
 
 namespace Empiria {
@@ -45,21 +49,15 @@ namespace Empiria {
 
     #region Public methods
 
-    public FixedList<T> GetItems<T>() where T : BaseObject {
-      return base.GetLinks<T>("GeneralList_Objects");
+    public FixedList<T> GetItems<T>() {
+      return base.ExtendedDataField.GetList<T>("ListItems").ToFixedList();
     }
 
-    public FixedList<TypeAssociationInfo> GetTypeRelationItems() {
-      FixedList<TypeAssociationInfo> list = 
-                            base.GetTypeAssociationLinks("GeneralList_TypeRelations");
+    public FixedList<T> GetItems<T>(Comparison<T> sort) {
+      var list = base.ExtendedDataField.GetList<T>("ListItems");
+      list.Sort(sort);
 
-      list.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
-
-      return list;
-    }
-
-    public FixedList<KeyValuePair> GetKeyValueList() {
-      return KeyValuePair.GetList(this.UniqueCode);
+      return list.ToFixedList();
     }
 
     #endregion Public methods

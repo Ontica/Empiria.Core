@@ -24,7 +24,7 @@ namespace Empiria {
     #region Fields
 
     /// <summary>Use this field name in derived types to access extended fields items.</summary>
-    protected const string ExtensionDataFieldName = "GeneralObjectExtData";
+    protected const string ExtensionDataFieldName = "ObjectExtData";
 
     #endregion Fields
 
@@ -37,7 +37,7 @@ namespace Empiria {
     static protected FixedList<T> ParseList<T>() where T : BaseObject {
       ObjectTypeInfo objectTypeInfo = ObjectTypeInfo.Parse<T>();
 
-      DataTable table = OntologyData.GetGeneralObjectsDataTable(objectTypeInfo);
+      DataTable table = OntologyData.GetSimpleObjectsDataTable(objectTypeInfo);
       List<T> list = new List<T>(table.Rows.Count);
       for (int i = 0; i < table.Rows.Count; i++) {
         list.Add(BaseObject.ParseDataRow<T>(table.Rows[i]));
@@ -49,79 +49,31 @@ namespace Empiria {
 
     #region Public properties
 
-    [DataField("GeneralObjectDescription")]
-    protected string Description {
-      get;
-      set;
-    }
-
-    [DataField("EndDate")]
-    protected DateTime EndDate {
-      get;
-      set;
-    }
-
-    [DataField(GeneralObject.ExtensionDataFieldName)]
-    protected string ExtendedDataField {
-      get;
-      set;
-    }
-
-    [DataField("GeneralObjectValue")]
-    protected string ValueField {
-      get;
-      set;
-    }
-
-    [DataField("GeneralObjectIndex", Default = -1)]
-    protected int Index {
-      get;
-      set;
-    }
-
-    [DataField("GeneralObjectKeywords")]
-    protected string Keywords {
-      get;
-      set;
-    }
-
-    [DataField("GeneralObjectName")]
-    public string Name {
-      get;
-      protected set;
-    }
-
-    [DataField("GeneralObjectNamedKey")]
+    [DataField("ObjectKey")]
     protected string NamedKey {
       get;
       set;
     }
 
-    [DataField("PostedById")]
-    protected Contact PostedBy {
+    [DataField("ObjectName")]
+    public string Name {
+      get;
+      protected set;
+    }
+
+    [DataField(GeneralObject.ExtensionDataFieldName)]
+    protected Json.JsonObject ExtendedDataField {
       get;
       set;
     }
 
-    [DataField("GeneralObjectReferenceId", Default = -1)]
-    protected int ReferenceId {
+    [DataField("ObjectKeywords")]
+    protected string Keywords {
       get;
       set;
     }
 
-    [DataField("ReplacedById")]
-    protected int ReplacedById {
-      get;
-      private set;
-    }
-
-    [DataField("StartDate", Default = "DateTime.Today")]
-    protected DateTime StartDate {
-      get;
-      private set;
-    }
-
-    [DataField("GeneralObjectStatus", Default = GeneralObjectStatus.Active)]
+    [DataField("ObjectStatus", Default = GeneralObjectStatus.Active)]
     public GeneralObjectStatus Status {
       get;
       protected set;

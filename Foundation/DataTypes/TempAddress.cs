@@ -45,27 +45,6 @@ namespace Empiria.Contacts {
       }
     }
 
-    static public TempAddress Parse(DataRow row) {
-      if (row == null) {
-        return TempAddress.Empty;
-      }
-      TempAddress o = new TempAddress();
-
-      o.street = (string) row["AddressStreet"];
-      o.extNumber = (string) row["AddressExtNumber"];
-      o.intNumber = (string) row["AddressIntNumber"];
-      o.borough = (string) row["AddressBorough"];
-      o.zipCode = (string) row["AddressZipCode"];
-      o.municipality = (string) row["AddressMunicipality"];
-      o.state = (string) row["AddressState"];
-      o.country = (string) row["AddressCountry"];
-      o.address1 = (string) row["Address1"];
-      o.address2 = (string) row["Address2"];
-      o.address3 = (string) row["Address3"];
-
-      return o;
-    }
-
     #endregion Constructors and parsers
 
     #region Public properties
