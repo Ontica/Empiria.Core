@@ -1,13 +1,13 @@
-﻿/* Empiria Foundation Framework 2014 *************************************************************************
+﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Security Framework                *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.dll                       *
 *  Type      : EmpiriaUser                                      Pattern  : Ontology Relation Type            *
-*  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents a human user.                                                                      *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 using System.Web.Security;

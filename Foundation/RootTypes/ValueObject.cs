@@ -1,15 +1,15 @@
-﻿/* Empiria Foundation Framework 2014 *************************************************************************
+﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
 *  Namespace : Empiria                                          Assembly : Empiria.dll                       *
 *  Type      : ValueObject                                      Pattern  : Abstract Class                    *
-*  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Wrapper for value type instances that can be C# value types or user defined immutable types.  *
 *              For user defined immutable types, T should implement Equality operators, GetHashCode() and    *
 *              ToString() methods in order to complaint with the value types design pattern.                 *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria {

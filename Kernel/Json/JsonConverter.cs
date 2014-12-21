@@ -1,13 +1,13 @@
-﻿/* Empiria Foundation Framework 2014 *************************************************************************
+﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria.Json                                     Assembly : Empiria.Kernel.dll                *
 *  Type      : JsonConverter                                    Pattern  : Static Class                      *
-*  Version   : 6.0        Date: 23/Oct/2014                     License  : Please read license.txt file      *
+*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Empiria JSON serialization library. JSON operations are based on Json.NET.                    *
 *                                                                                                            *
-********************************* Copyright (c) 2013-2014. Ontica LLC, La Vía Óntica SC and contributors.  **/
+********************************* Copyright (c) 2013-2015. Ontica LLC, La Vía Óntica SC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Dynamic;

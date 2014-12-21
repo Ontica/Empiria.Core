@@ -1,12 +1,12 @@
-﻿/* Empiria Foundation Framework 2014 *************************************************************************
+﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
 *  Assembly  : Empiria.Data.dll                                 Pattern  : Assembly Attributes File          *
-*  Version   : 6.0        Date: 23/Oct/2014                     License  : GNU AGPLv3  (See license.txt)     *
+*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Empiria Universal Database Access Library.                                                    *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -15,11 +15,11 @@ using System.Runtime.InteropServices;
 *************************************************************************************************************/
 [assembly: AssemblyTitle("Empiria.Data")]
 [assembly: AssemblyDescription("Empiria Universal Database Access Library")]
-[assembly: AssemblyVersion("6.0.0328.0")]
-[assembly: AssemblyFileVersion("6.0.0328")]
+[assembly: AssemblyVersion("6.0.0104.0")]
+[assembly: AssemblyFileVersion("6.0.0104")]
 [assembly: AssemblyCompany("Ontica")]
-[assembly: AssemblyProduct("Empiria Foundation Framework 2014")]
-[assembly: AssemblyCopyright("(c) 2002-2014. La Vía Óntica SC, Ontica LLC and contributors.")]
+[assembly: AssemblyProduct("Empiria Foundation Framework 2015")]
+[assembly: AssemblyCopyright("(c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.")]
 [assembly: AssemblyTrademark("Empiria and Ontica are either registered trademarks of La Vía Óntica SC or Ontica LLC.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCulture("")]
