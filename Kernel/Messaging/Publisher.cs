@@ -1,6 +1,6 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Messaging Core Services           *
+*  Solution  : Empiria Foundation Framework                     System   : Messaging Services                *
 *  Namespace : Empiria.Messaging                                Assembly : Empiria.Kernel.dll                *
 *  Type      : Publisher                                        Pattern  : Static Class                      *
 *  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
@@ -19,8 +19,7 @@ namespace Empiria.Messaging {
 
     #region Fields
 
-    static private Type queueFactoryType = null;
-    static private IQueueFactory queueFactory = null;
+    static private QueueFactory queueFactory = null;
 
     #endregion Fields
 
@@ -28,21 +27,21 @@ namespace Empiria.Messaging {
 
     static public void Publish(string text) {
       if (text == null || text.Length == 0) {
-        throw new MessagingCoreException(MessagingCoreException.Msg.CantPublishNullMessage);
+        throw new MessagingException(MessagingException.Msg.CantPublishNullMessage);
       }
       Message message = new Message(text);
       try {
         Queue queue = GetMessageQueue(message);
         queue.Send(message);
       } catch (Exception innerException) {
-        throw new MessagingCoreException(MessagingCoreException.Msg.CantPublishMessage, innerException,
-                                         message.Body.GetType().FullName, message.Body.ToString());
+        throw new MessagingException(MessagingException.Msg.CantPublishMessage, innerException,
+                                     message.Body.GetType().FullName, message.Body.ToString());
       }
     }
 
     static public void Publish(Exception exception) {
       if (exception == null) {
-        throw new MessagingCoreException(MessagingCoreException.Msg.CantPublishNullMessage);
+        throw new MessagingException(MessagingException.Msg.CantPublishNullMessage);
       }
       Message message = null;
       try {
@@ -50,43 +49,30 @@ namespace Empiria.Messaging {
         Queue queue = GetMessageQueue(message);
         queue.Send(message);
       } catch (Exception innerException) {
-        throw new MessagingCoreException(MessagingCoreException.Msg.CantPublishMessage, innerException,
+        throw new MessagingException(MessagingException.Msg.CantPublishMessage, innerException,
                                      message.Body.GetType().FullName, message.Body.ToString());
       }
     }
 
     static public void Publish(Message message) {
       if (message == null || message.Body == null) {
-        throw new MessagingCoreException(MessagingCoreException.Msg.CantPublishNullMessage);
+        throw new MessagingException(MessagingException.Msg.CantPublishNullMessage);
       }
       try {
         Queue queue = GetMessageQueue(message);
         queue.Send(message);
       } catch (Exception innerException) {
-        throw new MessagingCoreException(MessagingCoreException.Msg.CantPublishMessage, innerException,
-                                         message.Body.GetType().FullName, message.Body.ToString());
+        throw new MessagingException(MessagingException.Msg.CantPublishMessage, innerException,
+                                     message.Body.GetType().FullName, message.Body.ToString());
       }
     }
 
     static internal void Start() {
       try {
-        queueFactoryType = ObjectFactory.GetType("Empiria.Messaging",
-                                                 "Empiria.Messaging.Queues.QueueFactory");
+        queueFactory = new QueueFactory();
       } catch (Exception innerException) {
-        throw new MessagingCoreException(MessagingCoreException.Msg.CantCreateQueueFactoryType, innerException);
-      }
-      try {
-        queueFactory = (IQueueFactory) ObjectFactory.CreateObject(queueFactoryType);
-      } catch (Exception innerException) {
-        throw new MessagingCoreException(MessagingCoreException.Msg.CantCreateQueueFactory, innerException,
-                                     queueFactoryType.FullName);
-      }
-      try {
-        queueFactory.GetDefaultQueue();
-      } catch (Exception innerException) {
-        queueFactoryType = null;
-        queueFactory = null;
-        throw new MessagingCoreException(MessagingCoreException.Msg.CantCreateDefaultQueue, innerException);
+        throw new MessagingException(MessagingException.Msg.CantCreateQueueFactory, innerException,
+                                     typeof(QueueFactory).FullName);
       }
     }
 

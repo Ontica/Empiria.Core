@@ -112,13 +112,40 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CantCreateDefaultQueue" xml:space="preserve">
+    <value>No pude crear la cola de mensajes predeterminada, misma que es indispensable para ejecutar el sistema Empiria. Puede ser que los parámetros de los componentes de mensajería estén mal configurados, o que el servicio que emplea la cola de mensajes no esté disponible o que el sistema no tenga permisos de acceso a dicho servicio.\n\n
+Favor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuración del servidor o de la aplicación.</value>
+  </data>
+  <data name="CantCreateQueueFactory" xml:space="preserve">
+    <value>No pude invocar la fábrica de objetos {0}, la cual se encarga de crear las colas de mensajes utilizadas por los servicios de mensajería Empiria. Puede ser que el componente Empiria.Messaging.dll no exista, o no esté instalado adecuadamente o que su versión sea incorrecta.\n
+Favor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuración del servidor o de la aplicación.</value>
+  </data>
+  <data name="CantCreateQueueFactoryType" xml:space="preserve">
+    <value>No pude cargar el componente que administra los servicios de mensajería Empiria. Es posible que el archivo Empiria.Messaging.dll no exista, o no esté instalado adecuadamente o que tenga una versión incorrecta.\n
+Favor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuración del servidor o de la aplicación.</value>
+  </data>
+  <data name="CantPublishMessage" xml:space="preserve">
+    <value>No pude publicar el siguiente mensaje perteneciente al tipo {0}:\n\n{1}\n\nFavor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuración del servidor.</value>
+  </data>
+  <data name="CantPublishNullMessage" xml:space="preserve">
+    <value>No pude publicar un objeto nulo mediante los servicios de mensajería Empiria:\n\nFavor de notificar sobre este error al administrador del sistema ya que se trata de un problema de programación.</value>
+  </data>
+  <data name="CantRetriveMessage" xml:space="preserve">
+    <value>No pude recuperar el mensaje de la cola de mensajes '{0}'.</value>
+  </data>
+  <data name="CantSendMessage" xml:space="preserve">
+    <value>No pude enviar el mensaje a la cola de mensajes '{0}'.</value>
+  </data>
   <data name="CantSendMessageToWindowsEventLog" xml:space="preserve">
     <value>No puedo enviar el mensaje al log de eventos de Windows.</value>
+  </data>
+  <data name="CantStartQueue" xml:space="preserve">
+    <value>No pude inicializar la cola de mensajes '{0}'.</value>
   </data>
   <data name="EventLogNameNotFound" xml:space="preserve">
     <value>No pude leer del archivo de configuración del sistema el nombre del log de eventos. \n\nFavor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuración del servidor.</value>
@@ -128,5 +155,8 @@
   </data>
   <data name="InvalidWindowsEventLog" xml:space="preserve">
     <value>El nombre del log de eventos {0} especificado en el archivo de configuración no es correcto, o bien, el log de eventos {0} no ha sido configurado correctamente.\n\nFavor de notificar sobre este error al administrador del sistema ya que se trata de un problema de configuración del servidor.</value>
+  </data>
+  <data name="QueueNotStarted" xml:space="preserve">
+    <value>La cola de mensajes '{0}' no ha sido inicializada. Para ejecutar esta operación es preciso que primero se inicialice dicha cola mediante la invocación del método Start().</value>
   </data>
 </root>

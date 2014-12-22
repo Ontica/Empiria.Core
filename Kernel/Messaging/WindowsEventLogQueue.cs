@@ -1,7 +1,7 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Messaging Services                *
-*  Namespace : Empiria.Messaging.Queues                         Assembly : Empiria.Messaging.dll             *
+*  Namespace : Empiria.Messaging                                Assembly : Empiria.Kernel.dll                *
 *  Type      : WindowsEventLogQueue                             Pattern  : Messaging Queue Class             *
 *  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
@@ -11,7 +11,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Empiria.Messaging.Queues {
+namespace Empiria.Messaging {
 
   /// <summary>Class used for publish information in the Windows Event Log.</summary>
   //[EventLogPermissionAttribute(SecurityAction.Demand)]
@@ -86,23 +86,6 @@ namespace Empiria.Messaging.Queues {
     private EventLogEntryType GetWindowsEventLogEntryType(Message message) {
       object messageBody = message.Body;
 
-      //if (messageBodyType is Empiria.WarningException) {
-      //  return EventLogEntryType.Warning;
-      //} else if (messageBodyType is Empiria.EmpiriaException) {
-      //  return EventLogEntryType.Error;
-      //} else if (messageBodyType is Empiria.Messaging.IDocument) {
-      //  return EventLogEntryType.Information;
-      //} else if (messageBodyType is Empiria.Messaging.ICommand) {
-      //  return EventLogEntryType.Information;
-      //} else if (messageBodyType is Empiria.Security.IAuditTrail) {
-      //  if (((Empiria.Security.IAuditTrail) messageBodyType).IsSuccess) {
-      //    return EventLogEntryType.SuccessAudit;
-      //  } else {
-      //    return EventLogEntryType.FailureAudit;
-      //  }
-      //} else {
-      //  return EventLogEntryType.Information;
-      //}
       if (messageBody is EmpiriaException) {
         return EventLogEntryType.Error;
       } else {
@@ -136,4 +119,4 @@ namespace Empiria.Messaging.Queues {
 
   } // class WindowsEventLogQueue
 
-} // namespace Empiria.Messaging.Queues
+} // namespace Empiria.Messaging

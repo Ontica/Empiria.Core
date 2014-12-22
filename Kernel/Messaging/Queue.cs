@@ -1,6 +1,6 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Messaging Core Services           *
+*  Solution  : Empiria Foundation Framework                     System   : Messaging Services                *
 *  Namespace : Empiria.Messaging                                Assembly : Empiria.Kernel.dll                *
 *  Type      : Queue                                            Pattern  : Abstract Class                    *
 *  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
@@ -58,24 +58,24 @@ namespace Empiria.Messaging {
 
     public Message Retrive() {
       if (!IsStarted) {
-        throw new MessagingCoreException(MessagingCoreException.Msg.QueueNotStarted, this.FullName);
+        throw new MessagingException(MessagingException.Msg.QueueNotStarted, this.FullName);
       }
       try {
         return ImplementsRetrive();
       } catch (Exception innerException) {
-        throw new MessagingCoreException(MessagingCoreException.Msg.CantRetriveMessage, innerException,
+        throw new MessagingException(MessagingException.Msg.CantRetriveMessage, innerException,
                                      this.FullName);
       }
     }
 
     public void Send(Message message) {
       if (!IsStarted) {
-        throw new MessagingCoreException(MessagingCoreException.Msg.QueueNotStarted, this.FullName);
+        throw new MessagingException(MessagingException.Msg.QueueNotStarted, this.FullName);
       }
       try {
         ImplementsSend(message);
       } catch (Exception innerException) {
-        throw new MessagingCoreException(MessagingCoreException.Msg.CantSendMessage, innerException,
+        throw new MessagingException(MessagingException.Msg.CantSendMessage, innerException,
                                      this.FullName);
       }
     }
@@ -86,7 +86,7 @@ namespace Empiria.Messaging {
         isStarted = true;
       } catch (Exception innerException) {
         isStarted = false;
-        throw new MessagingCoreException(MessagingCoreException.Msg.CantStartQueue, innerException,
+        throw new MessagingException(MessagingException.Msg.CantStartQueue, innerException,
                                      this.FullName);
       }
     }

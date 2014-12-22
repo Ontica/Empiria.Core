@@ -165,7 +165,6 @@
     </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.Security" />
-    <Reference Include="System.Web" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +179,10 @@
     <Compile Include="Json\JsonItem.cs" />
     <Compile Include="Json\JsonObject.cs" />
     <Compile Include="Json\JsonRoot.cs" />
+    <Compile Include="Messaging\FileBasedQueue.cs" />
+    <Compile Include="Messaging\MessagingException.cs" />
+    <Compile Include="Messaging\QueueFactory.cs" />
+    <Compile Include="Messaging\WindowsEventLogQueue.cs" />
     <Compile Include="RootTypes\EmpiriaMath.cs" />
     <Compile Include="RootTypes\EmpiriaString.cs" />
     <Compile Include="DataTypes\Keyword.cs" />
@@ -190,13 +193,9 @@
     <Compile Include="Collections\ListException.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Messaging\IQueueFactory.cs" />
     <Compile Include="Messaging\Message.cs" />
     <Compile Include="Messaging\Queue.cs" />
     <Compile Include="Messaging\Publisher.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Messaging\MessagingCoreException.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Reflection\MethodInvoker.cs" />
@@ -274,6 +273,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Messaging\MessagingExceptionMsg.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="RootTypes\KernelExceptionMsg.resx" />
     <EmbeddedResource Include="Security\SecurityExceptionMsg.resx" />
   </ItemGroup>

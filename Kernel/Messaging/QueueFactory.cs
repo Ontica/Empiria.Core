@@ -1,18 +1,19 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Messaging Services                *
-*  Namespace : Empiria.Messaging.Queues                         Assembly : Empiria.Messaging.dll             *
+*  Namespace : Empiria.Messaging                                Assembly : Empiria.Kernel.dll                *
 *  Type      : QueueFactory                                     Pattern  : Factory Class                     *
 *  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Class used for create messaging queues based on message type and content rules.               *
+*  Summary   : Factory used for create messaging queues based on message type and content rules.             *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
 
-namespace Empiria.Messaging.Queues {
+namespace Empiria.Messaging {
 
-  /// <summary>Class used for create messaging queues based on message type and content rules.</summary>
-  internal sealed class QueueFactory : IQueueFactory {
+  /// <summary>Factory used for create messaging queues based on message type and content rules.</summary>
+  internal sealed class QueueFactory {
 
     #region Fields
 
@@ -56,7 +57,6 @@ namespace Empiria.Messaging.Queues {
     }
 
     public Queue GetQueue(Message message) {
-      // Retrive queue else return default queue
       return GetDefaultQueue();
     }
 
@@ -64,4 +64,4 @@ namespace Empiria.Messaging.Queues {
 
   } // class QueueFactory
 
-} // namespace Empiria.Messaging.Queues
+} // namespace Empiria.Messaging
