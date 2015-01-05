@@ -171,6 +171,12 @@ namespace Empiria {
       return objectTypeInfo.GetUnknownInstance<T>().Clone<T>();
     }
 
+    protected static T TryParse<T>(string condition) where T : BaseObject {
+      var sqlFilter = Empiria.Data.SqlFilter.Parse(condition);
+
+      return TryParse<T>(sqlFilter);
+    }
+
     protected static T TryParse<T>(IFilter condition) where T : BaseObject {
       var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
@@ -312,7 +318,12 @@ namespace Empiria {
 
     }
 
-    /// <summary>Raised when Save() method is called and after objectId was created.</summary>
+    /// <summary>Raised before Save() method is called and before objectId is created.</summary>
+    protected virtual void OnBeforeSave() {
+
+    }
+
+    /// <summary>Raised when Save() method is called and after objectId is created.</summary>
     protected virtual void OnSave() {
       throw new NotImplementedException();
     }
@@ -325,6 +336,7 @@ namespace Empiria {
       if (this.objectId == 0) {
         this.objectId = OntologyData.GetNextObjectId(this.GetEmpiriaType());
       }
+      this.OnBeforeSave();
       this.OnSave();
       this.isNewFlag = false;
       cache.Insert(this);

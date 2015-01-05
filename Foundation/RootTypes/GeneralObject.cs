@@ -61,7 +61,7 @@ namespace Empiria {
       protected set;
     }
 
-    [DataField(GeneralObject.ExtensionDataFieldName)]
+    [DataField(GeneralObject.ExtensionDataFieldName, IsOptional=true)]
     protected Json.JsonObject ExtendedDataField {
       get;
       set;

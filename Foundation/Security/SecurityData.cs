@@ -44,17 +44,20 @@ namespace Empiria.Security {
       return dataRow;
     }
 
+    internal static string[] GetUsersInRole(string role) {
+      return ConfigurationData.GetString("User.Operation.Tag." + role).Split('|');
+    }
+
     static internal DataRow GetUserWithCredentials(string username, string password, string entropy) {
       var dataRow = DataReader.GetDataRow(DataOperation.Parse("getContactWithUserName", username));
 
-      //No user found
       if (dataRow == null) {
         throw new SecurityException(SecurityException.Msg.UserIDPasswordNotFound);
       }
 
       string p = Cryptographer.Decrypt((string) dataRow["UserPassword"], username);
       if (!String.IsNullOrWhiteSpace(entropy)) {
-        //Password rule w/entropy = MD5(MD5(secret) + entropy, else password rule = MD5(secret)
+        //Password rule w/entropy = MD5(MD5(secret) + entropy), else password rule = MD5(secret)
         p = Cryptographer.GetMD5HashCode(p + entropy);
       }
 

@@ -277,7 +277,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="RootTypes\KernelExceptionMsg.resx" />
-    <EmbeddedResource Include="Security\SecurityExceptionMsg.resx" />
+    <EmbeddedResource Include="Security\SecurityExceptionMsg.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

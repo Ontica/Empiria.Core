@@ -26,9 +26,8 @@ namespace Empiria.Security {
     }
 
     static internal ClientApplication ParseActive(string clientAppKey) {
-      var filter = Data.SqlFilter.Parse("ObjectKey = '" + clientAppKey + "'");
-     
-      ClientApplication application = BaseObject.TryParse<ClientApplication>(filter);
+      ClientApplication application = 
+                BaseObject.TryParse<ClientApplication>("ObjectKey = '" + clientAppKey + "'");
 
       if (application == null) {
         throw new SecurityException(SecurityException.Msg.InvalidClientAppKey, clientAppKey);

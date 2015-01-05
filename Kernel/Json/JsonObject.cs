@@ -202,6 +202,9 @@ namespace Empiria.Json {
     /// <summary>Returns this Json object as a Json string.</summary>
     /// <param name="indented">If true, returns the Json string in indented format.</param>
     public string ToString(bool indented) {
+      if (this.dictionary.Count == 0) {
+        return String.Empty;
+      }
       if (indented) {
         return JsonConverter.ToJsonIndented(this.dictionary);
       } else {

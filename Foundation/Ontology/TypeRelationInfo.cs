@@ -56,8 +56,6 @@ namespace Empiria.Ontology {
     private string targetIdFieldName = String.Empty;
     private string typeRelationIdFieldName = String.Empty;
     private bool isInherited = false;
-    private int postedById = 0;
-    private DateTime postingDate = DateTime.Today;
     private GeneralObjectStatus status = GeneralObjectStatus.Active;
 
     #endregion Fields
@@ -120,10 +118,6 @@ namespace Empiria.Ontology {
       get { return defaultValue; }
     }
 
-    public DateTime PostingDate {
-      get { return postingDate; }
-    }
-
     public int Id {
       get { return id; }
     }
@@ -158,11 +152,6 @@ namespace Empiria.Ontology {
 
     public string Name {
       get { return name; }
-    }
-
-    internal int PostedById {
-      get { return postedById; }
-      set { postedById = value; }
     }
 
     public EncryptionMode ProtectionMode {
@@ -225,23 +214,22 @@ namespace Empiria.Ontology {
       this.name = (string) row["RelationName"];
       this.displayName = (string) row["DisplayName"];
       this.documentation = (string) row["Documentation"];
-      this.keywords = (string) row["TypeRelationKeywords"];
-      this.isSealed = (bool) row["IsSealed"];
-      this.isRuleBased = (bool) row["IsRuleBased"];
-      this.isReadOnly = (bool) row["IsReadOnly"];
-      this.isHistorizable = (bool) row["IsHistorizable"];
-      this.isKeyword = (bool) row["IsKeyword"];
-      this.protectionMode = (EncryptionMode) row["ProtectionMode"];
+      this.keywords = (string) row["TypeRelationKeywords"];    
       this.dataSource = (string) row["TypeRelationDataSource"];
       this.sourceIdFieldName = (string) row["SourceIdFieldName"];
       this.targetIdFieldName = (string) row["TargetIdFieldName"];
       this.typeRelationIdFieldName = (string) row["TypeRelationIdFieldName"];
-      this.postedById = (int) row["PostedById"];
-      this.postingDate = (DateTime) row["PostingDate"];
       this.status = (GeneralObjectStatus) char.Parse((string) row["TypeRelationStatus"]);
       isInherited = (sourceType.Id != (int) row["SourceTypeId"]);
 
-      defaultValue = this.Convert(row["DefaultValue"]);
+      //defaultValue = this.Convert(row["DefaultValue"]);
+
+      //this.isSealed = (bool) row["IsSealed"];
+      //this.isRuleBased = (bool) row["IsRuleBased"];
+      //this.isReadOnly = (bool) row["IsReadOnly"];
+      //this.isHistorizable = (bool) row["IsHistorizable"];
+      //this.isKeyword = (bool) row["IsKeyword"];
+      //this.protectionMode = (EncryptionMode) row["ProtectionMode"];
     }
 
     #endregion Private methods

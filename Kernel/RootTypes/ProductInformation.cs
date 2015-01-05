@@ -40,7 +40,7 @@ namespace Empiria {
 
     static public string Copyright {
       get {
-        return "Copyright © 1999-" + DateTime.Today.Year + ". La Vía Óntica SC, Ontica LLC y colaboradores.";
+        return "Copyright © 2009-" + DateTime.Today.Year + ". La Vía Óntica SC, Ontica LLC y colaboradores.";
       }
     }
 

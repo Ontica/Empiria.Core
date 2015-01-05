@@ -42,6 +42,12 @@ namespace Empiria {
       return new LazyInstance<T>(id);
     }
 
+    static public LazyInstance<T> Parse(T instance) {
+      Assertion.AssertObject(instance, "instance");
+
+      return new LazyInstance<T>(instance);
+    }
+
     static private readonly LazyInstance<T> _empty = LazyInstance<T>.Parse(ObjectTypeInfo.EmptyInstanceId);
     static public LazyInstance<T> Empty {
       get {
@@ -70,14 +76,6 @@ namespace Empiria {
           isCreated = true;
         }
         return instance;
-      }
-      set {
-        if (value == null) {
-          Assertion.AssertFail("LazyInstance value cannot be set to null.");
-        }
-        instanceId = value.Id;
-        instance = value;
-        isCreated = true;
       }
     }
 

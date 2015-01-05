@@ -138,7 +138,14 @@ namespace Empiria.Security {
     /// <returns>true if the current principal is a member of the specified role in the current domain; 
     /// otherwise, false.</returns>
     public bool IsInRole(string role) {
-      return true;
+      string[] users = SecurityData.GetUsersInRole(role);
+
+      for (int i = 0; i < users.Length; i++) {
+        if (users[i].Trim() == this.Identity.UserId.ToString()) {
+          return true;
+        }
+      }
+      return false;
     }
 
     public object ToOAuth() {

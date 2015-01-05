@@ -422,7 +422,7 @@ namespace Empiria.Ontology {
       this.displayPluralName = (string) dataRow["DisplayPluralName"];
       this.femaleGenre = (bool) dataRow["FemaleGenre"];
       this.documentation = (string) dataRow["Documentation"];
-      this.extensionData = (string) dataRow["TypeExtensionData"];
+      this.extensionData = (string) dataRow["TypeExtData"];
       this.keywords = (string) dataRow["TypeKeywords"];
       this.solutionName = (string) dataRow["SolutionName"];
       this.systemName = (string) dataRow["SystemName"];
