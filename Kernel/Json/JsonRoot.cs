@@ -8,11 +8,19 @@ namespace Empiria.Json {
 
     #region Fields
 
-    private Dictionary<string, object> items = new Dictionary<string, object>();
+    private IDictionary<string, object> items = new Dictionary<string, object>();
 
     #endregion Fields
 
     #region Constructors and parsers
+
+    public JsonRoot() {
+      // no-op
+    }
+
+    internal JsonRoot(IDictionary<string, object> items) {
+      this.items = items;
+    }
 
     static public JsonRoot Empty {
       get {
@@ -24,6 +32,10 @@ namespace Empiria.Json {
 
     #region Public methods
 
+    public T GetItem<T>(string key) {
+      return (T) items[key];
+    }
+
     public void Add(JsonItem item) {
       items.Add(item.Key, item.Value);
     }
@@ -32,7 +44,7 @@ namespace Empiria.Json {
       return items.GetEnumerator();
     }
 
-    public Dictionary<string, object> ToDictionary() {
+    public IDictionary<string, object> ToDictionary() {
       return items;
     }
 

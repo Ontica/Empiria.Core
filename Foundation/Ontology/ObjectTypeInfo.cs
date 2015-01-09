@@ -129,7 +129,7 @@ namespace Empiria.Ontology {
     #region Public methods
 
     /// <summary>Creates a new instance of type T invoking its default or powertype constructor.</summary>
-    internal T CreateObject<T>() where T : BaseObject  {
+    protected internal T CreateObject<T>() where T : BaseObject {
       this.AssertTypeInstancesConstructorIsAssigned();
       if (this.IsPowertype) {
         //Partitioned type instances are created using a delegate to 'constructor(ObjectTypeInfo t)'

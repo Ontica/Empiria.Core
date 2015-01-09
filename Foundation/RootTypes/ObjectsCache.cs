@@ -144,7 +144,16 @@ namespace Empiria {
     }
 
     internal void Remove(BaseObject item) {
-      throw new NotImplementedException();
+      string typeInfoName = item.GetEmpiriaType().Name;
+
+      while (true) {
+        if (typeInfoName.LastIndexOf('.') > 0) {
+          this.ExecuteRemove(typeInfoName, item);
+          typeInfoName = typeInfoName.Substring(0, typeInfoName.LastIndexOf('.'));
+        } else {
+          break;
+        }
+      }
     }
 
     bool ICollection<BaseObject>.Remove(BaseObject item) {
@@ -192,6 +201,14 @@ namespace Empiria {
       lock (objects) {
         namedObjects[key] = item;
         this.ExecuteInsert(itemTypeName, item);
+      } // lock
+    }
+
+    private void ExecuteRemove(string itemTypeName, BaseObject item) {
+      string objectKey = item.Id.ToString() + "." + itemTypeName;
+      lock (objects) {
+        objects.Remove(objectKey);
+        //lastAccess[objectKey] = DateTime.Now.Ticks;
       } // lock
     }
 

@@ -60,21 +60,24 @@ namespace Empiria {
     #region Operators overloading
 
     static public bool operator ==(ValueObject<T> object1, ValueObject<T> object2) {
-      return (object1.Value.ToString() == object2.Value.ToString());
+      return (object1.Equals(object2));
     }
 
     static public bool operator !=(ValueObject<T> object1, ValueObject<T> object2) {
-      return (object1.Value.ToString() != object2.Value.ToString());
+      return (!object1.Equals(object2));
     }
 
     public override bool Equals(object obj) {
       if ((obj == null) || (obj.GetType() != this.GetType())) {
         return false;
       }
-      return this == ((ValueObject<T>) obj);
+      return this.Equals((ValueObject<T>) obj);
     }
 
     public bool Equals(ValueObject<T> obj) {
+      if (obj == null) {
+        return false;
+      }
       return (this.GetType() == obj.GetType()) && 
              (this.Value.ToString() == obj.Value.ToString());
     }

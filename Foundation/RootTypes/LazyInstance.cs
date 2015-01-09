@@ -48,10 +48,9 @@ namespace Empiria {
       return new LazyInstance<T>(instance);
     }
 
-    static private readonly LazyInstance<T> _empty = LazyInstance<T>.Parse(ObjectTypeInfo.EmptyInstanceId);
     static public LazyInstance<T> Empty {
       get {
-        return _empty;
+        return LazyInstance<T>.Parse(ObjectTypeInfo.EmptyInstanceId);
       }
     }
 
@@ -67,7 +66,7 @@ namespace Empiria {
 
     public T Value {
       get {
-        if (!isCreated) {      
+        if (!isCreated) {
           if (this.IsEmptyInstance) {
             instance = ObjectTypeInfo.Parse(typeof(T)).GetEmptyInstance<T>();
           } else {

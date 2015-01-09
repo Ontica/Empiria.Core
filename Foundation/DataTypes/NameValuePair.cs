@@ -10,12 +10,21 @@
 ********************************* Copyright (c) 2009-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
+using Empiria.Json;
+
+namespace Empiria {
+
+  public interface IJsonParseable {
+
+  }
+
+}
 namespace Empiria.DataTypes {
 
   /// <summary>String Name-Value pair value object.</summary>
-  public struct NameValuePair {
+  public struct NameValuePair : IJsonParseable {
 
-   #region Fields
+    #region Fields
 
     private string name;
     private string value;
@@ -34,6 +43,13 @@ namespace Empiria.DataTypes {
       Assertion.AssertObject(value, "value");
 
       return new NameValuePair(name, value);
+    }
+
+    static public NameValuePair Parse(JsonRoot jsonData) {
+      Assertion.AssertObject(jsonData, "jsonData");
+
+      return new NameValuePair(jsonData.GetItem<string>("Name"), 
+                               jsonData.GetItem<string>("Value"));
     }
 
     #endregion Constructors and parsers

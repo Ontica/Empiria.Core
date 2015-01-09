@@ -402,7 +402,7 @@ namespace Empiria {
       Assertion.AssertObject(newType, "newType");
       Assertion.Assert(!this.GetEmpiriaType().Equals(newType),
                        "newType should be distinct to the current one.");
-      Assertion.Assert(!this.GetEmpiriaType().UnderlyingSystemType.Equals(newType.UnderlyingSystemType),
+      Assertion.Assert(this.GetEmpiriaType().UnderlyingSystemType.Equals(newType.UnderlyingSystemType),
                        "newType underlying system type should be the same to the current one's.");
 
       cache.Remove(this);

@@ -126,9 +126,18 @@ namespace Empiria.Ontology.Modeler {
     /// <summary>Gets an array with all type properties and fields that have defined
     ///a DataField attribute, ordered by DataField attribute's name.</summary>
     static private MemberInfo[] GetDataboundPropertiesAndFields(Type type) {
-      return type.GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                 .Where(x => Attribute.IsDefined(x, typeof(DataFieldAttribute)))
-                 .OrderBy((x) => x.GetCustomAttribute<DataFieldAttribute>().Name).ToArray();
+      Type searchType = type;
+
+      List<MemberInfo> list = new List<MemberInfo>();
+      while (!searchType.Equals(typeof(object))) {
+        var members = searchType.GetMembers(BindingFlags.DeclaredOnly | BindingFlags.Instance |
+                                            BindingFlags.Public | BindingFlags.NonPublic)
+                                .Where(x => Attribute.IsDefined(x, typeof(DataFieldAttribute)))
+                                .OrderBy((x) => x.GetCustomAttribute<DataFieldAttribute>().Name).ToArray();
+        list.AddRange(members);
+        searchType = searchType.BaseType;
+      }
+      return list.ToArray();
     }
 
     /// <summary>Gets an array of DataMapping objects, derived from those type members

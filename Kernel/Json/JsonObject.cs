@@ -124,6 +124,10 @@ namespace Empiria.Json {
       } else if (ObjectFactory.IsValueObject(typeof(T))) {
         return objectsList.ConvertAll<T>((x) =>
                                          ObjectFactory.InvokeParseMethod<T>(System.Convert.ToString(x)));
+      } else if (ObjectFactory.HasJsonParser(typeof(T))) {
+        return objectsList.ConvertAll<T>(
+                  (x) => ObjectFactory.InvokeParseJsonMethod<T>( new JsonRoot((IDictionary<string, Object>) x) )
+               );
       } else {
         return objectsList.ConvertAll<T>((x) => JsonObject.Convert<T>(x));
       }

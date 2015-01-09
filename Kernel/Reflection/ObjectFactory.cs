@@ -104,6 +104,10 @@ namespace Empiria.Reflection {
       return (type.GetInterface("Empiria.IValueObject`1") != null);
     }
 
+    static public bool HasJsonParser(Type type) {
+      return (type.GetInterface("Empiria.IJsonParseable") != null);
+    }
+
     static public T InvokeParseMethod<T>(int objectId) {
       return (T) ObjectFactory.InvokeParseMethod(typeof(T), objectId);
     }
@@ -120,7 +124,7 @@ namespace Empiria.Reflection {
         return method.Invoke(null, new object[] { objectId });
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
-                                      type.FullName + "[ Id = " + objectId + " ]");
+                                      type.FullName);
       } catch (Exception e) {
         throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
                                       type.FullName + "[ Id = " + objectId + " ]");
@@ -135,10 +139,27 @@ namespace Empiria.Reflection {
         return method.Invoke(null, new object[] { value });
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
-                                      type.FullName + "[ Value = " + value + " ]");
+                                      type.FullName);
       } catch (Exception e) {
         throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
                                       type.FullName + "[ Value = " + value + " ]");
+      }
+    }
+
+    static internal T InvokeParseJsonMethod<T>(Json.JsonRoot jsonObject) {
+      Type type = typeof(T);
+      try {
+        MethodInfo method = type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public,
+                                           null, CallingConventions.Any, new Type[] { typeof(Json.JsonRoot) }, null);
+        Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(JsonRoot) method.", 
+                                                     type.FullName));
+        return (T) method.Invoke(null, new object[] { jsonObject });
+      } catch (TargetException e) {
+        throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
+                                      type.FullName);
+      } catch (Exception e) {
+        throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
+                                      type.FullName + "JsonObject =  " + jsonObject.ToString());
       }
     }
 
