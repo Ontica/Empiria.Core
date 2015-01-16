@@ -37,7 +37,7 @@ namespace Empiria {
     internal DataOperationList ChangesList {
       get {
         throw new NotImplementedException();
-        //return storableObject.ImplementsStorageUpdate(operation, DateTime.Now); 
+        //return storableObject.ImplementsStorageUpdate(operation, DateTime.Now);
       }
     }
 

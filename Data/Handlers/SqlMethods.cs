@@ -203,7 +203,7 @@ namespace Empiria.Data.Handlers {
           return null;
         }
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.Name, 
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.Name,
                                        operation.ParametersToString());
       } finally {
         command.Parameters.Clear();
@@ -227,7 +227,7 @@ namespace Empiria.Data.Handlers {
         dataAdapter.Fill(dataTable);
         dataAdapter.Dispose();
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.Name, 
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.Name,
                                        operation.ParametersToString());
       } finally {
         command.Parameters.Clear();
@@ -301,7 +301,7 @@ namespace Empiria.Data.Handlers {
         return command.ExecuteScalar();
       } catch (Exception exception) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetScalar, exception, operation.SourceName);
-      } finally {        
+      } finally {
         command.Parameters.Clear();
         connection.Dispose();
       }

@@ -15,12 +15,12 @@ using System;
 namespace Empiria {
 
   /// <summary>Interface that represents an Empiria Framework value object. Could be used with value
-  /// types (C# struct) or with immutable reference types. Value objects are well described in 
+  /// types (C# struct) or with immutable reference types. Value objects are well described in
   /// Domain-Driven Design.</summary>
   public interface IValueObject<T> {
 
     T Value {
-      get; 
+      get;
     }
 
   } // interface IValueObject<T>

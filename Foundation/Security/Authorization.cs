@@ -35,7 +35,7 @@ namespace Empiria.Security {
       // Required by Empiria Framework.
     }
 
-    private Authorization(int typeId, int authorizedById, 
+    private Authorization(int typeId, int authorizedById,
                           int objectId, string code) {
       this.typeId = typeId;
       this.authorizedById = authorizedById;

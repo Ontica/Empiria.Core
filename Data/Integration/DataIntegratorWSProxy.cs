@@ -45,7 +45,7 @@ namespace Empiria.Data.Integration {
           }
         }
       } catch (Exception innerException) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.DataIntegrationWSProxyException, 
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.DataIntegrationWSProxyException,
                                        innerException, "SynchronizeServerCaches", "This");
       }
     }

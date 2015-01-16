@@ -19,7 +19,7 @@ using Empiria.Reflection;
 namespace Empiria {
 
   /// <summary>
-  /// BaseObject is the root type of the object type hierarchy in Empiria Framework. 
+  /// BaseObject is the root type of the object type hierarchy in Empiria Framework.
   /// All object types that uses the framework must be descendants of this abstract type.
   /// </summary>
   public abstract class BaseObject : IStorable {
@@ -37,7 +37,7 @@ namespace Empiria {
 
     #region Constructors and parsers
 
-    protected BaseObject() {      
+    protected BaseObject() {
       objectTypeInfo = ObjectTypeInfo.Parse(this.GetType());
       if (objectTypeInfo.IsDataBound) {
         // Should call InitializeObject only when is not called through BaseObject.ParseEmpiriaObject.
@@ -72,7 +72,7 @@ namespace Empiria {
         return item;    // Only use dataRow when item is not in cache
       }
       ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
-        
+
       return BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow);
     }
 
@@ -108,7 +108,7 @@ namespace Empiria {
       return BaseObject.ParseIdInternal<T>(objectTypeInfo, id, false);
     }
 
-    static internal T ParseIdInternal<T>(ObjectTypeInfo typeInfo, 
+    static internal T ParseIdInternal<T>(ObjectTypeInfo typeInfo,
                                          int id, bool parseFull) where T : BaseObject {
       if (id == 0) {
         throw new OntologyException(OntologyException.Msg.TryToParseZeroObjectId, typeInfo.Name);
@@ -312,7 +312,7 @@ namespace Empiria {
 
     }
 
-    /// <summary>Raised after initialization and after databinding if their type is 
+    /// <summary>Raised after initialization and after databinding if their type is
     /// marked as IsDatabounded.</summary>
     protected virtual void OnLoadObjectData(DataRow row) {
 

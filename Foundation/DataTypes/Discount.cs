@@ -84,7 +84,7 @@ namespace Empiria.DataTypes {
     #region Operators overloading
 
     static public Discount operator +(Discount discountA, Discount discountB) {
-      return Discount.Parse(discountA.DiscountType, 
+      return Discount.Parse(discountA.DiscountType,
                             discountA.Amount + discountB.Amount);
     }
 

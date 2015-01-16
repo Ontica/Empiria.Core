@@ -23,7 +23,7 @@ namespace Empiria.Ontology {
       if (objectTypeInfo.DataSource.StartsWith("qry") || objectTypeInfo.DataSource.StartsWith("get")) {
         return DataReader.GetDataRow(DataOperation.Parse(objectTypeInfo.DataSource, objectId));
       }
-      return GeneralDataOperations.GetEntityById(objectTypeInfo.DataSource, 
+      return GeneralDataOperations.GetEntityById(objectTypeInfo.DataSource,
                                                  objectTypeInfo.IdFieldName, objectId);
     }
 
@@ -31,7 +31,7 @@ namespace Empiria.Ontology {
       if (objectTypeInfo.DataSource.StartsWith("qry") || objectTypeInfo.DataSource.StartsWith("get")) {
         return DataReader.GetDataRow(DataOperation.Parse(objectTypeInfo.DataSource, objectKey));
       }
-      return GeneralDataOperations.GetEntityByKey(objectTypeInfo.DataSource, 
+      return GeneralDataOperations.GetEntityByKey(objectTypeInfo.DataSource,
                                                   objectTypeInfo.NamedIdFieldName, objectKey);
     }
 
@@ -99,7 +99,7 @@ namespace Empiria.Ontology {
 
       return DataReader.GetDataTable(DataOperation.Parse(sql));
     }
-    
+
     static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IStorable source,
                                                   TimePeriod period) {
       string sql = "SELECT [{TARGET.TYPE.TABLE}].* FROM [{TARGET.TYPE.TABLE}] INNER JOIN [{LINKS.TABLE}] " +
@@ -209,7 +209,7 @@ namespace Empiria.Ontology {
 
     static internal DataRow TryGetSystemTypeDataRow(string systemTypeName) {
       string filter = String.Format("([TypeName] = '{0}' OR ClassName LIKE '%{0}')", systemTypeName);
-      
+
       DataTable table = GeneralDataOperations.GetEntities("Types", filter);
 
       if (table.Rows.Count == 0) {

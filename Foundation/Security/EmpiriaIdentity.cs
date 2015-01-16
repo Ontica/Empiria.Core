@@ -25,8 +25,7 @@ namespace Empiria.Security {
     UnitTester = -4,
   }
 
-  public sealed class EmpiriaIdentity : IEmpiriaIdentity {    
-
+  public sealed class EmpiriaIdentity : IEmpiriaIdentity {
     #region Constructors and parsers
 
     private EmpiriaIdentity(EmpiriaUser user) {

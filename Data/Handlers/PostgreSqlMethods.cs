@@ -166,7 +166,7 @@ namespace Empiria.Data.Handlers {
         connection.Open();
         dataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataReader, 
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataReader,
                                        exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
@@ -196,7 +196,7 @@ namespace Empiria.Data.Handlers {
           return null;
         }
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, 
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable,
                                        exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
@@ -219,10 +219,10 @@ namespace Empiria.Data.Handlers {
         NpgsqlDataAdapter dataAdapter = new NpgsqlDataAdapter(command);
         dataAdapter.Fill(dataTable);
         dataAdapter.Dispose();
-        
+
         return dataTable;
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, 
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable,
                                        exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();
@@ -296,7 +296,7 @@ namespace Empiria.Data.Handlers {
         connection.Open();
         return command.ExecuteScalar();
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetScalar, 
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetScalar,
                                        exception, operation.SourceName);
       } finally {
         command.Parameters.Clear();

@@ -38,7 +38,7 @@ namespace Empiria.Collections {
         return items.Count;
       }
     }
-    
+
     #endregion Properties
 
     #region Public methods

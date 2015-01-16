@@ -18,7 +18,7 @@ namespace Empiria {
 
     #region Fields
 
-    static private readonly int cacheSize = 
+    static private readonly int cacheSize =
                                 ConfigurationData.GetInteger("Empiria.Ontology", "ObjectCache.Size");
 
     private Dictionary<string,BaseObject> objects = null;
@@ -219,7 +219,7 @@ namespace Empiria {
       lock (objects) {
         List<long> sortedList = new List<long>(lastAccess.Values);
 
-        int toDeleteItems = lastAccess.Count / 4;   // Remove 25 percent of old accessed objects 
+        int toDeleteItems = lastAccess.Count / 4;   // Remove 25 percent of old accessed objects
         long trimValueUpperBound = sortedList[toDeleteItems];
 
         string[] keys = new string[lastAccess.Keys.Count];

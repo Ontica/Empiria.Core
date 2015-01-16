@@ -135,7 +135,7 @@ namespace Empiria.Security {
 
     /// <summary>Determines whether the current principal belongs to the specified role.</summary>
     /// <param name="role">The name of the role for which to check membership.</param>
-    /// <returns>true if the current principal is a member of the specified role in the current domain; 
+    /// <returns>true if the current principal is a member of the specified role in the current domain;
     /// otherwise, false.</returns>
     public bool IsInRole(string role) {
       string[] users = SecurityData.GetUsersInRole(role);
@@ -153,7 +153,7 @@ namespace Empiria.Security {
         access_token = this.Session.Token, token_type = this.Session.TokenType,
         expires_in = this.Session.ExpiresIn, refresh_token = this.Session.RefreshToken,
         data = new {
-          uid = this.Identity.UserId, username = this.Identity.Name, 
+          uid = this.Identity.UserId, username = this.Identity.Name,
           email = this.Identity.User.EMail, fullname = this.Identity.User.FullName,
         }
       };

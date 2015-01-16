@@ -48,7 +48,7 @@ namespace Empiria.DataTypes {
     static public NameValuePair Parse(JsonRoot jsonData) {
       Assertion.AssertObject(jsonData, "jsonData");
 
-      return new NameValuePair(jsonData.GetItem<string>("Name"), 
+      return new NameValuePair(jsonData.GetItem<string>("Name"),
                                jsonData.GetItem<string>("Value"));
     }
 

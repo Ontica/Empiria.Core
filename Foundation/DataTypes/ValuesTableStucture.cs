@@ -27,7 +27,7 @@ namespace Empiria.DataTypes {
 
     #region Fields
 
-    static private readonly string[] tableFields = new string[] { "RangeDisplayName", "LowerBound", "UpperBound", 
+    static private readonly string[] tableFields = new string[] { "RangeDisplayName", "LowerBound", "UpperBound",
                                                                    "Column0", "Column1", "Column2", "Column3",
                                                                    "Column4", "Column5" };
 

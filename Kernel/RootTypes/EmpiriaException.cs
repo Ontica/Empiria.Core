@@ -36,7 +36,7 @@ namespace Empiria {
 
     #region Constructors and parsers
 
-    /// <summary>Initializes a new instance of EmpiriaException class with a specified error 
+    /// <summary>Initializes a new instance of EmpiriaException class with a specified error
     /// message.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
     public EmpiriaException(string exceptionTag, string message)
@@ -120,7 +120,7 @@ namespace Empiria {
 
     #region Public methods
 
-    /// <summary>Publish this exception.</summary>    
+    /// <summary>Publish this exception.</summary>
     public void Publish() {
       if (ExecutionServer.IsStarted) {
         Empiria.Messaging.Message message = new Empiria.Messaging.Message(this);

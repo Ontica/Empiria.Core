@@ -52,7 +52,7 @@ namespace Empiria.Security {
 
     #region Constructors and parsers
 
-    /// <summary>Initializes a new instance of SecurityException class with a specified error 
+    /// <summary>Initializes a new instance of SecurityException class with a specified error
     /// message.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>

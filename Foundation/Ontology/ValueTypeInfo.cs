@@ -37,7 +37,7 @@ namespace Empiria.Ontology {
 
     #region Public methods
 
-    /// <summary>Returns a fixed list of value instances that are defined as part of the 
+    /// <summary>Returns a fixed list of value instances that are defined as part of the
     /// ValueTypeInfo configuration.</summary>
     /// <typeparam name="T">The type of the ValueObject instances.</typeparam>
     /// <typeparam name="U">The type of the stored instances.</typeparam>

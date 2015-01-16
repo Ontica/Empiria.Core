@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Empiria.Data.Modeler {
 
   public class DbStoredProcedure : DbBaseQuery {
-      
+
     #region Constructors and parsers
 
     private DbStoredProcedure(string databaseName): base(databaseName) {

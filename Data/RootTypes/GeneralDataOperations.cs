@@ -169,7 +169,7 @@ namespace Empiria.Data {
       return DataReader.GetDataTable(operation);
     }
 
- 
+
     static public DataTable GetEntitiesByField(string sourceName, string searchFieldName, int fieldValue) {
       DataOperation operation = DataOperation.Parse("@qryEntitiesFiltered", sourceName,
                                                     searchFieldName + " = " + fieldValue.ToString());
@@ -187,15 +187,15 @@ namespace Empiria.Data {
                                               string filterExpression = "", string sortExpression = "") {
       DataOperation operation = null;
 
-      if (String.IsNullOrWhiteSpace(filterExpression) && 
+      if (String.IsNullOrWhiteSpace(filterExpression) &&
           String.IsNullOrWhiteSpace(sortExpression)) {
         operation = DataOperation.Parse("@qryEntitiesJoined", sourceName, joinedSourceName,
                                         sourceJoinField, joinedTargetField);
-      } else if (!String.IsNullOrWhiteSpace(filterExpression) && 
+      } else if (!String.IsNullOrWhiteSpace(filterExpression) &&
                  String.IsNullOrWhiteSpace(sortExpression)) {
         operation = DataOperation.Parse("@qryEntitiesJoinedFiltered", sourceName, joinedSourceName,
-                                        sourceJoinField, joinedTargetField, filterExpression); 
-      } else if (String.IsNullOrWhiteSpace(filterExpression) && 
+                                        sourceJoinField, joinedTargetField, filterExpression);
+      } else if (String.IsNullOrWhiteSpace(filterExpression) &&
                  !String.IsNullOrWhiteSpace(sortExpression)) {
         operation = DataOperation.Parse("@qryEntitiesJoinedSorted", sourceName, joinedSourceName,
                                         sourceJoinField, joinedTargetField, sortExpression);
@@ -205,7 +205,7 @@ namespace Empiria.Data {
                                         sourceJoinField, joinedTargetField, filterExpression, sortExpression);
       } else {
         Assertion.AssertNoReachThisCode();
-      }      
+      }
       return DataReader.GetDataTable(operation);
     }
 
@@ -271,7 +271,7 @@ namespace Empiria.Data {
       }
     }
 
-    static public DataOperation SelectEntityUniqueFieldValues(string sourceName, 
+    static public DataOperation SelectEntityUniqueFieldValues(string sourceName,
                                                               string returnFieldName) {
       return DataOperation.Parse("@qryEntityUniqueFieldValues", sourceName, returnFieldName);
     }

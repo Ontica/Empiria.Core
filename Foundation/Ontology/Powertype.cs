@@ -14,7 +14,7 @@ using System;
 
 namespace Empiria.Ontology {
 
-  /// <summary>A powertype is a an object type whose instances are subtypes of another object type, named 
+  /// <summary>A powertype is a an object type whose instances are subtypes of another object type, named
   /// the partitioned type. Powertypes enable dynamic specialization. All descendents of this type must
   /// be decorated with the PowerType attribute.</summary>
   public abstract class Powertype : ObjectTypeInfo {

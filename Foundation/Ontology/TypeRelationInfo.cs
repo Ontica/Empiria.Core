@@ -214,7 +214,7 @@ namespace Empiria.Ontology {
       this.name = (string) row["RelationName"];
       this.displayName = (string) row["DisplayName"];
       this.documentation = (string) row["Documentation"];
-      this.keywords = (string) row["TypeRelationKeywords"];    
+      this.keywords = (string) row["TypeRelationKeywords"];
       this.dataSource = (string) row["TypeRelationDataSource"];
       this.sourceIdFieldName = (string) row["SourceIdFieldName"];
       this.targetIdFieldName = (string) row["TargetIdFieldName"];

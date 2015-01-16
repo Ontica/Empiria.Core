@@ -710,7 +710,7 @@ namespace Empiria {
     }
 
     static public string RemovePunctuation(string source) {
-      char[] punctuations = new char[] {'.', ',', ';', ':', '"', '\'', '/', '\\', '>', '<', '=', '-', '_', 
+      char[] punctuations = new char[] {'.', ',', ';', ':', '"', '\'', '/', '\\', '>', '<', '=', '-', '_',
                                         '?', '*', '$', '&', '+', '(', ')', '{', '}', '[', ']', '^', '¬',
                                         '°', '%', '#', '¿', '!', '¡', '`', '~', '|'};
 
@@ -921,7 +921,7 @@ namespace Empiria {
       string result = String.Empty;
       foreach(string nounPart in nounParts) {
         if (result.Length != 0) {
-          result += ' '; 
+          result += ' ';
         }
         if (IsPrepositionOrConjuntion(nounPart)) {
           result += nounPart;  // Prepositions and conjuntions are not capitalized.
@@ -1006,7 +1006,7 @@ namespace Empiria {
     }
 
     static private bool IsPrepositionOrConjuntion(string token) {
-      string[] noiseTokens = new String[] { " ", "y", "o", "a", "e", "ó", "la", "el", "los", "las", "lo", 
+      string[] noiseTokens = new String[] { " ", "y", "o", "a", "e", "ó", "la", "el", "los", "las", "lo",
                                             "que", "con", "de", "del" };
 
       token = token.ToLowerInvariant();

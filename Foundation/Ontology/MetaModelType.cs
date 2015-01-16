@@ -139,7 +139,7 @@ namespace Empiria.Ontology {
       DataRow dataRow = OntologyData.TryGetSystemTypeDataRow(systemTypeName);
       if (dataRow != null) {
         empiriaType = MetaModelType.Parse(dataRow);
-      } 
+      }
       if (empiriaType != null) {
         return empiriaType.UnderlyingSystemType;
       } else {

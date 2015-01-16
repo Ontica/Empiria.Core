@@ -12,7 +12,7 @@ using System;
 
 namespace Empiria.Ontology {
 
-  /// <summary>Specifies the partitioned type for a Powertype type. This attribute should be 
+  /// <summary>Specifies the partitioned type for a Powertype type. This attribute should be
   /// another type (partitioned type).</summary>
   [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
   public class PowertypeAttribute : Attribute {

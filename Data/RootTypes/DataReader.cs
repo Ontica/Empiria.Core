@@ -217,7 +217,7 @@ namespace Empiria.Data {
       Assertion.AssertObject(parser, "parser");
 
       DataTable dataTable = DataReader.GetDataTable(operation);
-      
+
       return parser.Invoke(dataTable);
     }
 
@@ -264,7 +264,7 @@ namespace Empiria.Data {
       dataOperation.ExecutionTimeout = 200;
       DataWriter.ExecuteInternal(dataOperation);
 
-      string message = "Se ejecutó satisfactoriamente el procedimiento de optimización " + 
+      string message = "Se ejecutó satisfactoriamente el procedimiento de optimización " +
                         "de índices para todas las bases de datos del sistema.";
 
       Empiria.Messaging.Publisher.Publish(new Empiria.Messaging.Message(Empiria.Messaging.MessageType.EventMessage, message));

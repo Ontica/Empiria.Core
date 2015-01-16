@@ -35,7 +35,7 @@ namespace Empiria {
       string tempTypeName = typeName;
 
       if (!typeName.StartsWith("Empiria")) {
-        throw new ConfigurationDataException(ConfigurationDataException.Msg.InvalidTypeName, 
+        throw new ConfigurationDataException(ConfigurationDataException.Msg.InvalidTypeName,
                                              parameterName, typeName);
       }
       if (parameterName.ToUpperInvariant().StartsWith(dbConnectionString)) {   //Enforce DB key decryption

@@ -22,14 +22,14 @@ namespace Empiria.Reflection {
     static public object CreateObject(Type type) {
       return CreateObject(type, new Type[] { }, new object[] { });
     }
-    
+
     static public T CreateObject<T>() {
       return (T) CreateObject(typeof(T), new Type[] { }, new object[] { });
     }
 
     static public object CreateObject(Type type, Type[] parametersTypes, object[] parameters) {
       try {
-        var constructor = type.GetConstructor(BindingFlags.Instance | BindingFlags.Public | 
+        var constructor = type.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
                                               BindingFlags.NonPublic, null, CallingConventions.HasThis,
                                               parametersTypes, null);
         return constructor.Invoke(parameters);
@@ -85,7 +85,7 @@ namespace Empiria.Reflection {
     static public bool HasParseWithIdMethod(Type type) {
       return (ObjectFactory.GetParseMethod(type) != null);
     }
-    
+
     static public bool IsConvertible(Type sourceType, Type targetType) {
       try {
         var instanceOfSourceType = Activator.CreateInstance(sourceType);
@@ -95,7 +95,7 @@ namespace Empiria.Reflection {
         return false;
       }
     }
-     
+
     static public bool IsStorable(Type type) {
       return (type.GetInterface("Empiria.IStorable") != null);
     }
@@ -151,7 +151,7 @@ namespace Empiria.Reflection {
       try {
         MethodInfo method = type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public,
                                            null, CallingConventions.Any, new Type[] { typeof(Json.JsonRoot) }, null);
-        Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(JsonRoot) method.", 
+        Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(JsonRoot) method.",
                                                      type.FullName));
         return (T) method.Invoke(null, new object[] { jsonObject });
       } catch (TargetException e) {
@@ -181,7 +181,7 @@ namespace Empiria.Reflection {
       return Expression.Lambda(body, param).Compile();
     }
 
-    static private Delegate GetPropertyGetDelegate(Type type, PropertyInfo property) {      
+    static private Delegate GetPropertyGetDelegate(Type type, PropertyInfo property) {
       var body = Expression.Call(property.GetMethod);
 
       return Expression.Lambda(body).Compile();

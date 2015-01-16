@@ -33,10 +33,10 @@ namespace Empiria.Security {
 
     #region Constructors and parsers
 
-    private AuditTrail(AuditTrailType auditTrailType, string eventTag, string operation, 
+    private AuditTrail(AuditTrailType auditTrailType, string eventTag, string operation,
                        int instanceId, ResultFlag result, JsonRoot data) {
       Initialize();
-      
+
       this.AuditTrailType = auditTrailType;
       if (ExecutionServer.IsAuthenticated) {
         this.SessionId = ExecutionServer.CurrentPrincipal.Session.Id;
@@ -137,11 +137,11 @@ namespace Empiria.Security {
 
     private void Save() {
       if (this.Id <= 0) {
-        this.Id = Empiria.Data.DataWriter.CreateId("AuditTrails");      
+        this.Id = Empiria.Data.DataWriter.CreateId("AuditTrails");
       }
       SecurityData.WriteAuditTrail(this);
     }
-    
+
     #endregion Methods
 
   } // class AuditTrail

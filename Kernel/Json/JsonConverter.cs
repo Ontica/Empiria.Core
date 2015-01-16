@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 /// ToDo List:    OOJJOO
 /// Object slicing (include/exclude a list of properties)
 /// Include private and public properties for serialize
-/// Represent object references of IIdentifiable instances only by their Id 
+/// Represent object references of IIdentifiable instances only by their Id
 /// excluding all (almost all) other fields.
 /// Serialize DataOperation in order to support audit logs and (queue) db integration tasks
 /// Create a new JSON string based on other JSON string removing or appending new fields
@@ -42,8 +42,8 @@ namespace Empiria.Json {
     /// <summary>Adds a delegate which will be invoked to convert instances of a giving type to JSON.</summary>
     /// <param name="type">The type of objects that will be associated with the JSON convertion method.</param>
     /// <param name="converter">The method delegate that performs the object to JSON convertion.</param>
-    /// <param name="useInDerivedTypes">Flag that indicates if the convertion rule will be applied also to 
-    /// any derived instances of the giving type if there are not more specific rules for them.</param> 
+    /// <param name="useInDerivedTypes">Flag that indicates if the convertion rule will be applied also to
+    /// any derived instances of the giving type if there are not more specific rules for them.</param>
     static public void AddConverter(Type type, Func<object, string> converter,
                                     bool useInDerivedTypes = true) {
       string formatType = BuildDictionaryKey(type);
@@ -61,10 +61,10 @@ namespace Empiria.Json {
     }
 
     /// <summary>
-    /// Merges the items included in the JSON string into a loaded object, 
+    /// Merges the items included in the JSON string into a loaded object,
     /// retaining the object property values that are not contained in the JSON string.
     /// </summary>
-    /// <typeparam name="T">The object type of the returned instance. 
+    /// <typeparam name="T">The object type of the returned instance.
     /// Implicit use for anonymous objects.</typeparam>
     /// <param name="json">The JSON string to merge into the object instance.</param>
     /// <param name="instance">The object instance of type T. Can be an anonymous object.</param>
@@ -96,7 +96,7 @@ namespace Empiria.Json {
 
     /// <summary>Converts an object into a JSON string.</summary>
     /// <param name="json">The object to convert.</param>
-    /// <returns>The JSON string with properties and values equals to the supplied 
+    /// <returns>The JSON string with properties and values equals to the supplied
     /// object public properties.</returns>
     static public string ToJson(object o) {
       string typeFullName = BuildDictionaryKey(o.GetType());
@@ -114,7 +114,7 @@ namespace Empiria.Json {
 
     /// <summary>Converts an object into a indented JSON string.</summary>
     /// <param name="o">The object to convert.</param>
-    /// <returns>The indented JSON string with properties and values equals to the supplied 
+    /// <returns>The indented JSON string with properties and values equals to the supplied
     /// object public properties.</returns>
     static public string ToJsonIndented(object o) {
       string typeFullName = BuildDictionaryKey(o.GetType());
@@ -151,8 +151,8 @@ namespace Empiria.Json {
     }
 
     /// <summary>Converts a JSON string into an object instance of type T</summary>
-    /// <typeparam name="T">The object type of the returned instance. 
-    /// Use implicit for anonymous objects.</typeparam> 
+    /// <typeparam name="T">The object type of the returned instance.
+    /// Use implicit for anonymous objects.</typeparam>
     /// <param name="jsonString">The JSON string to convert.</param>
     /// <param name="instance">The object instance of type T. Can be an anonymous object.</param>
     /// <returns>The object instance of type T with the properties obtained from the JSON structure.</returns>

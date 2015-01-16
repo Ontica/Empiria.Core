@@ -37,8 +37,8 @@ namespace Empiria {
       set;
     }
 
-    /// <summary>Indicates if the data field is optional and therefore the Default value should be 
-    /// used in the abscence of data. IsOptional default value is true. Attempting to read an empty 
+    /// <summary>Indicates if the data field is optional and therefore the Default value should be
+    /// used in the abscence of data. IsOptional default value is true. Attempting to read an empty
     /// data field marked with IsOptional = false throws an exception.
     public bool IsOptional {
       get;

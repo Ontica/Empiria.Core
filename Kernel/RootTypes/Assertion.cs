@@ -35,8 +35,8 @@ namespace Empiria {
     /// <param name="assertion">The assertion to check.</param>
     /// <param name="failsMessage">Used to indicate the description of the exception
     /// if the assertion fails.</param>
-    /// <param name="skipFrames">Used to indicate the number of frames skipped to change 
-    /// the method source of the assertion.</param> 
+    /// <param name="skipFrames">Used to indicate the number of frames skipped to change
+    /// the method source of the assertion.</param>
     static public void Assert(bool assertion, string failsMessage, int skipFrames) {
       if (!assertion) {
         throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
@@ -50,7 +50,7 @@ namespace Empiria {
     /// if the assertion fails.</param>
     static public void Assert(bool assertion, Exception onFailsException) {
       if (!assertion) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, onFailsException, 
+        throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, onFailsException,
                                           GetSourceMethodName(), onFailsException.Message);
       }
     }
@@ -96,7 +96,7 @@ namespace Empiria {
         if (messageOrInstanceName.Contains(" ")) {
           msg = messageOrInstanceName;
         } else {
-          msg = String.Format("Unexpected null or empty value for string variable '{0}'.", 
+          msg = String.Format("Unexpected null or empty value for string variable '{0}'.",
                               messageOrInstanceName);
         }
         throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,

@@ -222,7 +222,7 @@ namespace Empiria.Data.Handlers {
         dataAdapter.Dispose();
         return new DataView(dataTable, filter, sort, DataViewRowState.CurrentRows);
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataView, exception, 
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataView, exception,
                                        operation.SourceName, filter, sort);
       } finally {
         command.Parameters.Clear();

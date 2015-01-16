@@ -11,7 +11,7 @@
 using System;
 
 namespace Empiria {
-  
+
   public struct StorageVersion {
 
     #region Fields
@@ -74,7 +74,7 @@ namespace Empiria {
     #region Operators overloading
 
     static public bool operator ==(StorageVersion versionA, StorageVersion versionB) {
-      return (versionA.onCreateTimestamp == versionB.onCreateTimestamp && 
+      return (versionA.onCreateTimestamp == versionB.onCreateTimestamp &&
               versionA.lastUpdateTimestamp == versionB.lastUpdateTimestamp);
     }
 

@@ -27,7 +27,7 @@ namespace Empiria.DataTypes {
     static public Interest Parse(Empiria.Json.JsonObject json) {
       var interest = new Interest();
 
-      /// OOJJOO. Try to send all data read/write methods to isolated types ???      
+      /// OOJJOO. Try to send all data read/write methods to isolated types ???
       // interest = DataReader.GetInterestData(json);
 
       interest.TermPeriods = json.Get<Int32>("TermPeriods", interest.TermPeriods);
@@ -63,24 +63,24 @@ namespace Empiria.DataTypes {
     }
 
     public InterestRateType RateType {
-      get; 
+      get;
       set;
     }
 
     public int TermPeriods {
-      get; 
+      get;
       set;
     }
 
     public Unit TermUnit {
-      get; 
+      get;
       set;
     }
 
     #endregion Properties
 
     #region Methods
-    
+
     public string ToJson() {
       return Empiria.Json.JsonConverter.ToJson(this);
     }

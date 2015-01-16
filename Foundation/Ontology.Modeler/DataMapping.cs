@@ -65,7 +65,7 @@ namespace Empiria.Ontology.Modeler {
 
       return dataMapping;
     }
-  
+
     #endregion Constructors and parsers
 
     #region Public properties
@@ -168,7 +168,7 @@ namespace Empiria.Ontology.Modeler {
 
     internal string GetExecutionData() {
       string str = String.Empty;
-      
+
       str = String.Format("Mapped type member: {0}\n", this.MemberInfo.Name);
       str += String.Format("Mapped data field: {0}\n", this.DataFieldName);
       if (this.JsonInnerFieldName.Length != 0) {
@@ -332,7 +332,7 @@ namespace Empiria.Ontology.Modeler {
 
         return MethodInvoker.GetStaticPropertyValueMethodDelegate(propertyInfo);
       } catch (Exception e) {
-        throw new OntologyException(OntologyException.Msg.CannotParsePropertyForDefaultValue, e,  
+        throw new OntologyException(OntologyException.Msg.CannotParsePropertyForDefaultValue, e,
                                     this.MemberInfo.DeclaringType, this.MemberInfo.Name,
                                     defaultValueCode, this.GetExecutionData());
       }
@@ -366,7 +366,7 @@ namespace Empiria.Ontology.Modeler {
       // Set rules
       this.ApplyOnInitialization = (this.MemberInfo is PropertyInfo);
       this.DataFieldAttribute = this.MemberInfo.GetCustomAttribute<DataFieldAttribute>();
-      this.MapToLazyInstance = (this.MemberType.IsGenericType && 
+      this.MapToLazyInstance = (this.MemberType.IsGenericType &&
                                 this.MemberType.GetGenericTypeDefinition() == typeof(LazyInstance<>));
       this.MapToParsableObject = ObjectFactory.HasParseWithIdMethod(this.MemberType);
       this.MapToEmptyObject = ObjectFactory.HasEmptyInstance(this.MemberType);
@@ -418,7 +418,7 @@ namespace Empiria.Ontology.Modeler {
     private EmptyMethodDelegate GetEmptyInstanceDelegate {
       get {
         if (_emptyMethodDelegate == null) {
-          _emptyMethodDelegate = 
+          _emptyMethodDelegate =
               (EmptyMethodDelegate) Delegate.CreateDelegate(typeof(EmptyMethodDelegate),
                                     ObjectFactory.GetEmptyInstanceProperty(this.MemberType).GetGetMethod());
         }
@@ -431,7 +431,7 @@ namespace Empiria.Ontology.Modeler {
     private ParseMethodDelegate GetParseInstanceDelegate {
       get {
         if (_parseMethodDelegate == null) {
-          _parseMethodDelegate = 
+          _parseMethodDelegate =
               (ParseMethodDelegate) Delegate.CreateDelegate(typeof(ParseMethodDelegate),
                                                             ObjectFactory.GetParseMethod(this.MemberType));
         }

@@ -40,6 +40,21 @@ namespace Empiria.Json {
       items.Add(item.Key, item.Value);
     }
 
+    public void AddIfValue(JsonItem item) {
+      if (item.Value == null) {
+        return;
+      }
+      if (item.Value is String &&
+          String.IsNullOrWhiteSpace((string) item.Value)) {
+        return;
+      }
+      if (item.Value is DateTime &&
+          (((DateTime) item.Value) == ExecutionServer.DateMaxValue || ((DateTime) item.Value) == ExecutionServer.DateMinValue)) {
+        return;
+      }
+      items.Add(item.Key, item.Value);
+    }
+
     IEnumerator IEnumerable.GetEnumerator() {
       return items.GetEnumerator();
     }

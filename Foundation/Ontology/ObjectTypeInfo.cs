@@ -135,7 +135,7 @@ namespace Empiria.Ontology {
         //Partitioned type instances are created using a delegate to 'constructor(ObjectTypeInfo t)'
         return (T) powertypeConstructorDelegate(this);
       } else {
-        // No partitioned type instances are created using a delegate to 
+        // No partitioned type instances are created using a delegate to
         // the the parameterless default 'constructor()'
         return (T) defaultTypeConstructorDelegate();
       }
@@ -225,7 +225,7 @@ namespace Empiria.Ontology {
       return _subclassesArray;
     }
 
-    /// <summary>Returns a comma separated string with this ObjectType.Id and all 
+    /// <summary>Returns a comma separated string with this ObjectType.Id and all
     /// their subclasses Id's (e.g. "93, 192, 677")
     /// </summary>
     public string GetSubclassesFilter() {
@@ -317,7 +317,7 @@ namespace Empiria.Ontology {
     }
 
     private DefaultConstructorDelegate GetDefaultConstructorDelegate() {
-      ConstructorInfo constructor = this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance | 
+      ConstructorInfo constructor = this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance |
                                                                              BindingFlags.Public |
                                           BindingFlags.NonPublic,
                                           null, CallingConventions.HasThis,
@@ -331,7 +331,7 @@ namespace Empiria.Ontology {
       codeGenerator.Emit(OpCodes.Newobj, constructor);
       codeGenerator.Emit(OpCodes.Ret);
 
-      return (DefaultConstructorDelegate) dynMethod.CreateDelegate(typeof(DefaultConstructorDelegate)); 
+      return (DefaultConstructorDelegate) dynMethod.CreateDelegate(typeof(DefaultConstructorDelegate));
     }
 
     private PowertypeConstructorDelegate GetPowertypeConstructorDelegate() {

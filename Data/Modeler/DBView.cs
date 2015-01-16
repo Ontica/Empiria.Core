@@ -8,8 +8,7 @@ namespace Empiria.Data.Modeler {
 
     #region Fields
 
-    DbDataSource dbDataSource;   
-
+    DbDataSource dbDataSource;
     #endregion Fields
 
     #region Constructors and parsers

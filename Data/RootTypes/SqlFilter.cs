@@ -22,7 +22,7 @@ namespace Empiria.Data {
 
     static public SqlFilter Parse(string criteria) {
       Assertion.AssertObject(criteria, "criteria");
-      
+
       return new SqlFilter(criteria);
     }
 

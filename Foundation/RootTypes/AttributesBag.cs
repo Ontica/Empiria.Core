@@ -45,7 +45,7 @@ namespace Empiria {
     }
 
     #endregion Constructors and parsers
-   
+
     #region Public methods
 
     public DateTime GetDateTime(string attributeName) {

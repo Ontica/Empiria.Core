@@ -73,7 +73,7 @@ namespace Empiria.Collections {
 
     #region Public methods
 
-    /// <summary>Gets the number of elements contained in the collection that 
+    /// <summary>Gets the number of elements contained in the collection that
     /// matchs a spececific condition.</summary>
     public int CountAll(Predicate<T> match) {
       List<T> list = items.FindAll(match);

@@ -78,7 +78,7 @@ namespace Empiria {
       if (obj == null) {
         return false;
       }
-      return (this.GetType() == obj.GetType()) && 
+      return (this.GetType() == obj.GetType()) &&
              (this.Value.ToString() == obj.Value.ToString());
     }
 

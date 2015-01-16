@@ -13,7 +13,7 @@ using System.Reflection;
 
 namespace Empiria {
 
-  /// <summary>The exception that is thrown when a code assertion fails. This exeptions always are 
+  /// <summary>The exception that is thrown when a code assertion fails. This exeptions always are
   /// replicated to the EventLog.</summary>
   [Serializable]
   public sealed class AssertionFailsException : EmpiriaException {
@@ -27,11 +27,11 @@ namespace Empiria {
 
     #region Constructors and parsers
 
-    /// <summary>Initializes a new instance of AssertionFailsException class with a specified error 
+    /// <summary>Initializes a new instance of AssertionFailsException class with a specified error
     /// message.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
-    internal AssertionFailsException(Msg message, params object[] args) : 
+    internal AssertionFailsException(Msg message, params object[] args) :
                                      base(message.ToString(), GetMessage(message, args)) {
       try {
         base.Publish();
@@ -45,7 +45,7 @@ namespace Empiria {
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="innerException">This is the inner exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
-    internal AssertionFailsException(Msg message, Exception innerException, params object[] args) : 
+    internal AssertionFailsException(Msg message, Exception innerException, params object[] args) :
                                      base(message.ToString(), GetMessage(message, args), innerException) {
       try {
         base.Publish();

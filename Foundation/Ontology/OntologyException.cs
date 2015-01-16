@@ -52,7 +52,7 @@ namespace Empiria.Ontology {
 
     #region Constructors and parsers
 
-    /// <summary>Initializes a new instance of OntologyException class with a specified error 
+    /// <summary>Initializes a new instance of OntologyException class with a specified error
     /// message.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="args">An optional array of items to format into the exception message.</param>
@@ -73,7 +73,7 @@ namespace Empiria.Ontology {
 
     static internal OntologyException GetDataValueMappingException(object instance, DataMapping rule,
                                                                    Exception innerException) {
-      throw new OntologyException(OntologyException.Msg.CannotMapDataValue, innerException, 
+      throw new OntologyException(OntologyException.Msg.CannotMapDataValue, innerException,
                                   OntologyException.GetExecutionData(instance, rule));
     }
 

@@ -28,7 +28,7 @@ namespace Empiria.Contacts {
 
       string sql = "SELECT * FROM Contacts" + GeneralDataOperations.GetFilterSortSqlString(filter, sort);
 
-      return DataReader.GetList<Contact>(DataOperation.Parse(sql), 
+      return DataReader.GetList<Contact>(DataOperation.Parse(sql),
                                         (x) => BaseObject.ParseList<Contact>(x)).ToFixedList();
     }
 

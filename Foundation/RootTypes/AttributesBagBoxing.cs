@@ -9,7 +9,7 @@ using Empiria.Reflection;
 
 namespace Empiria {
 
-  /// <summary>Simple attributes bag that use an object array (boxing/unboxing). 
+  /// <summary>Simple attributes bag that use an object array (boxing/unboxing).
   /// See AttributesBag.</summary>
   public class AttributesBagBoxing {
 
@@ -33,7 +33,7 @@ namespace Empiria {
     #region Public properties
 
     #endregion Public properties
-   
+
     #region Public methods
 
     public DateTime GetDateTime(string attributeName) {

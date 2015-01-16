@@ -45,8 +45,7 @@ namespace Empiria.Data.Modeler {
     public string DataBaseName {
       get;
       private set;
-    } 
-
+    }
     public DbBaseTable.DbTableType TableType {
       get;
       private set;

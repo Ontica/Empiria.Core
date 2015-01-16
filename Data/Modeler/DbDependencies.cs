@@ -11,7 +11,7 @@ namespace Empiria.Data.Modeler {
     private DbDependencies(string databaseName, string tableName) {
       this.TableName = tableName;
       this.DatabaseName = databaseName;
-      this.DependentObject = string.Empty;   
+      this.DependentObject = string.Empty;
       this.Description = string.Empty;
     }
 
@@ -38,7 +38,7 @@ namespace Empiria.Data.Modeler {
       get;
       internal set;
     }
-        
+
     public string Description {
       get;
       internal set;
