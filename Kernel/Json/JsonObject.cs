@@ -9,13 +9,14 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2013-2015. Ontica LLC, La Vía Óntica SC and contributors.  **/
 using System;
-
+using System.Collections;
 using System.Collections.Generic;
+
 using Empiria.Reflection;
 
 namespace Empiria.Json {
 
-  public class JsonObject {
+  public class JsonObject : IEnumerable {
 
     #region Fields
 
@@ -25,16 +26,14 @@ namespace Empiria.Json {
 
     #region Constructors and parsers
 
-    private JsonObject() {
-      this.dictionary = new Dictionary<string, object>(0);
-      this.IsEmptyInstance = true;
+    public JsonObject() {
+      this.dictionary = new Dictionary<string, object>();
     }
 
-    private JsonObject(IDictionary<string, object> dictionary) {
-      Assertion.AssertObject(dictionary, "dictionary");
+    internal JsonObject(IDictionary<string, object> items) {
+      Assertion.AssertObject(items, "items");
 
-      this.dictionary = dictionary;
-      this.IsEmptyInstance = false;
+      this.dictionary = items;
     }
 
     static public JsonObject Parse(string jsonString) {
@@ -46,7 +45,7 @@ namespace Empiria.Json {
       return new JsonObject(dictionary);
     }
 
-    static private readonly JsonObject _empty = new JsonObject();
+    static private readonly JsonObject _empty = new JsonObject() { IsEmptyInstance = true };
     static public JsonObject Empty {
       get {
         return _empty;
@@ -60,7 +59,31 @@ namespace Empiria.Json {
 
     #endregion Constructors and parsers
 
-    #region Public members
+    #region Public methods for change structure
+
+    public void Add(JsonItem item) {
+      dictionary.Add(item.Key, item.Value);
+    }
+
+    public void AddIfValue(JsonItem item) {
+      if (item.Value == null) {
+        return;
+      }
+      if (item.Value is String &&
+          String.IsNullOrWhiteSpace((string) item.Value)) {
+        return;
+      }
+      if (item.Value is DateTime &&
+          (((DateTime) item.Value) == ExecutionServer.DateMaxValue || 
+          ((DateTime) item.Value) == ExecutionServer.DateMinValue)) {
+        return;
+      }
+      dictionary.Add(item.Key, item.Value);
+    }
+
+    #endregion Public methods for change structure
+
+    #region Public methods to get data
 
     /// <summary>Searches for an item inside the JsonObject.</summary>
     /// <param name="itemPath">The item path to search</param>
@@ -69,11 +92,7 @@ namespace Empiria.Json {
     public T Get<T>(string itemPath) {
       Assertion.AssertObject(itemPath, "itemPath");
 
-      if (ObjectFactory.IsStorable(typeof(T))) {
-        return this.FindInt32AndParseAsObjectId<T>(itemPath, true, default(T));
-      } else {
-        return this.Find<T>(itemPath, true, default(T));
-      }
+      return this.Find<T>(itemPath, true, default(T));
     }
 
     /// <summary>Extracts a new JsonObject from this instance given an itemPath.</summary>
@@ -84,11 +103,11 @@ namespace Empiria.Json {
     public T Get<T>(string itemPath, T defaultValue) {
       Assertion.AssertObject(itemPath, "itemPath");
 
-      if (ObjectFactory.IsStorable(typeof(T))) {
-        return this.FindInt32AndParseAsObjectId<T>(itemPath, false, defaultValue);
-      } else {
-        return this.Find<T>(itemPath, false, defaultValue);
-      }
+      return this.Find<T>(itemPath, false, defaultValue);
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() {
+      return dictionary.GetEnumerator();
     }
 
     /// <summary>Searches for a list of objects inside the JsonObject.</summary>
@@ -126,10 +145,15 @@ namespace Empiria.Json {
                                          ObjectFactory.InvokeParseMethod<T>(System.Convert.ToString(x)));
       } else if (ObjectFactory.HasJsonParser(typeof(T))) {
         return objectsList.ConvertAll<T>(
-                  (x) => ObjectFactory.InvokeParseJsonMethod<T>( new JsonRoot((IDictionary<string, Object>) x) )
+                  (x) => ObjectFactory.InvokeParseJsonMethod<T>( new JsonObject((IDictionary<string, Object>) x) )
                );
       } else {
-        return objectsList.ConvertAll<T>((x) => JsonObject.Convert<T>(x));
+        try {
+          return objectsList.ConvertAll<T>((x) => JsonObject.Convert<T>(x));
+        } catch (Exception e) {
+          throw new JsonDataException(JsonDataException.Msg.JsonListTypeConvertionFails, e,
+                                      listPath, typeof(T).ToString());
+        }
       }
     }
 
@@ -220,46 +244,44 @@ namespace Empiria.Json {
       return this.dictionary;
     }
 
-    #endregion Public members
+    #endregion Public methods to get data
 
     #region Private members
 
     static private T Convert<T>(object value) {
-      Assertion.AssertObject(value, "value");
+      Type typeOfValue = value.GetType();
 
-      if (typeof(T) == typeof(object)) {
+      if (typeof(T) == value.GetType()) {
         return (T) value;
-      } else if (typeof(T) == value.GetType()) {
+      } else if (typeof(T) == typeof(object)) {
         return (T) value;
-      }
-      return (T) System.Convert.ChangeType(value, typeof(T));
+      } else if (ObjectFactory.IsStorable(typeof(T))) {
+        if (EmpiriaString.IsInteger(value.ToString())) {
+          return ObjectFactory.InvokeParseMethod<T>(System.Convert.ToInt32(value));
+        } else {
+          return ObjectFactory.InvokeParseMethod<T>((string) value);
+        }
+      } else if (typeof(T).IsEnum) {
+        return ObjectFactory.ParseEnumValue<T>(value);
+      } else
+        return (T) System.Convert.ChangeType(value, typeof(T));
     }
 
     private T Find<T>(string itemPath, bool required, T defaultValue) {
-      Assertion.AssertObject(itemPath, "itemPath");
-
       object value = this.TryGetDictionaryValue(itemPath, required);
       if (value == null && required) {
-        // An exception should be thrown from the this.GetDictionaryValue call above.
+        // An exception should be thrown from the this.TryGetDictionaryValue call above.
         Assertion.AssertNoReachThisCode();
       }
       if (value == null) {
         return defaultValue;
-      } else {
+      }
+      try {
         return JsonObject.Convert<T>(value);
-      }
-    }
-
-    private T FindInt32AndParseAsObjectId<T>(string itemPath, bool required, T defaultValue) {
-      int objectId = this.Find<Int32>(itemPath, required, 0);
-      if (objectId == 0 && required) {
-        // An exception should be thrown from the this.Find<int32> call above.
-        Assertion.AssertNoReachThisCode();
-      }
-      if (objectId != 0) {
-        return Empiria.Reflection.ObjectFactory.InvokeParseMethod<T>(objectId);
-      } else {
-        return defaultValue;
+      } catch (Exception e) {
+        throw new JsonDataException(JsonDataException.Msg.JsonValueTypeConvertionFails, e,
+                                    itemPath, value.ToString(), value.GetType().ToString(), 
+                                    typeof(T).ToString());
       }
     }
 

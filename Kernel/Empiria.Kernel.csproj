@@ -178,7 +178,6 @@
     <Compile Include="Json\JsonDataException.cs" />
     <Compile Include="Json\JsonItem.cs" />
     <Compile Include="Json\JsonObject.cs" />
-    <Compile Include="Json\JsonRoot.cs" />
     <Compile Include="Messaging\FileBasedQueue.cs" />
     <Compile Include="Messaging\MessagingException.cs" />
     <Compile Include="Messaging\QueueFactory.cs" />

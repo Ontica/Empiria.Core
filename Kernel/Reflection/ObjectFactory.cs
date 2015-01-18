@@ -105,7 +105,7 @@ namespace Empiria.Reflection {
     }
 
     static public bool HasJsonParser(Type type) {
-      return (type.GetInterface("Empiria.IJsonParseable") != null);
+      return (ObjectFactory.GetParseJsonMethod(type) != null);
     }
 
     static public T InvokeParseMethod<T>(int objectId) {
@@ -116,11 +116,15 @@ namespace Empiria.Reflection {
       return (T) ObjectFactory.InvokeParseMethod(typeof(T), value);
     }
 
+    static public T ParseEnumValue<T>(object value) {
+      return (T) Enum.Parse(typeof(T), (string) value);
+    }
+
     static public object InvokeParseMethod(Type type, int objectId) {
       try {
         MethodInfo method = ObjectFactory.GetParseMethod(type);
         Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(int) method.",
-                                                      type.FullName));
+                                                     type.FullName));
         return method.Invoke(null, new object[] { objectId });
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
@@ -146,12 +150,11 @@ namespace Empiria.Reflection {
       }
     }
 
-    static internal T InvokeParseJsonMethod<T>(Json.JsonRoot jsonObject) {
+    static internal T InvokeParseJsonMethod<T>(Json.JsonObject jsonObject) {
       Type type = typeof(T);
       try {
-        MethodInfo method = type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public,
-                                           null, CallingConventions.Any, new Type[] { typeof(Json.JsonRoot) }, null);
-        Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(JsonRoot) method.",
+        MethodInfo method = GetParseJsonMethod(type);
+        Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(JsonObject) method.",
                                                      type.FullName));
         return (T) method.Invoke(null, new object[] { jsonObject });
       } catch (TargetException e) {
@@ -190,6 +193,12 @@ namespace Empiria.Reflection {
     static public MethodInfo GetParseMethod(Type type) {
       return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public,
                             null, CallingConventions.Any, new Type[] { typeof(int) }, null);
+    }
+
+    static private MethodInfo GetParseJsonMethod(Type type) {
+      return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static | 
+                            BindingFlags.Public | BindingFlags.NonPublic,
+                            null, CallingConventions.Any, new Type[] { typeof(Json.JsonObject) }, null);
     }
 
     static private MethodInfo GetParseStringMethod(Type type) {

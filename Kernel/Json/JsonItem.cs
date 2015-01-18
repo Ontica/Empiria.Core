@@ -15,6 +15,11 @@ namespace Empiria.Json {
       this.Value = value;
     }
 
+    public JsonItem(string key, bool value) {
+      this.Key = key;
+      this.Value = value;
+    }
+
     public JsonItem(string key, DateTime value) {
       this.Key = key;
       this.Value = value;

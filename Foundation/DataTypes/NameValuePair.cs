@@ -12,17 +12,10 @@ using System;
 
 using Empiria.Json;
 
-namespace Empiria {
-
-  public interface IJsonParseable {
-
-  }
-
-}
 namespace Empiria.DataTypes {
 
   /// <summary>String Name-Value pair value object.</summary>
-  public struct NameValuePair : IJsonParseable {
+  public struct NameValuePair {
 
     #region Fields
 
@@ -45,11 +38,10 @@ namespace Empiria.DataTypes {
       return new NameValuePair(name, value);
     }
 
-    static public NameValuePair Parse(JsonRoot jsonData) {
-      Assertion.AssertObject(jsonData, "jsonData");
+    static public NameValuePair Parse(JsonObject json) {
+      Assertion.AssertObject(json, "json");
 
-      return new NameValuePair(jsonData.GetItem<string>("Name"),
-                               jsonData.GetItem<string>("Value"));
+      return new NameValuePair(json.Get<string>("Name"), json.Get<string>("Value"));
     }
 
     #endregion Constructors and parsers

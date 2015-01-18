@@ -15,6 +15,8 @@ using System.Reflection;
 using System.Resources;
 using System.Runtime.Serialization;
 
+using Empiria.Json;
+
 namespace Empiria {
 
   /// <summary>Abstract class for run-time exceptions in Empiria Framework.</summary>
@@ -60,10 +62,10 @@ namespace Empiria {
 
     }
 
-    static public Json.JsonRoot ToJsonRoot(Exception exception) {
-      return new Json.JsonRoot() {
-        new Json.JsonItem("source", exception.Source == null ? "N/A" : exception.Source),
-        new Json.JsonItem("message", exception.Message),
+    static public JsonObject ToJson(Exception exception) {
+      return new JsonObject() {
+        new JsonItem("source", exception.Source == null ? "N/A" : exception.Source),
+        new JsonItem("message", exception.Message),
       };
     }
 

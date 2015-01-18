@@ -21,8 +21,10 @@ namespace Empiria.Json {
     public enum Msg {
       JsonConverterForTypeAlreadyExists,
       JsonConverterForTypeNotFound,
+      JsonListTypeConvertionFails,
       JsonPathItemNotFound,
       JsonSlicePathNotFound,
+      JsonValueTypeConvertionFails,
     }
 
     static private string resourceBaseName = "Empiria.RootTypes.KernelExceptionMsg";

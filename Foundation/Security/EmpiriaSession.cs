@@ -25,7 +25,7 @@ namespace Empiria.Security {
       Initialize();
     }
 
-    private EmpiriaSession(EmpiriaPrincipal principal, JsonRoot contextData = null) {
+    private EmpiriaSession(EmpiriaPrincipal principal, JsonObject contextData = null) {
       Initialize();
       this.ServerId = ExecutionServer.ServerId;
       this.ClientAppId = principal.ClientApp.Id;
@@ -38,7 +38,7 @@ namespace Empiria.Security {
       this.Create();
     }
 
-    internal static EmpiriaSession Create(EmpiriaPrincipal principal, JsonRoot contextData = null) {
+    internal static EmpiriaSession Create(EmpiriaPrincipal principal, JsonObject contextData = null) {
       Assertion.AssertObject(principal, "principal");
 
       return new EmpiriaSession(principal, contextData);
@@ -117,7 +117,7 @@ namespace Empiria.Security {
       private set;
     }
 
-    public JsonRoot ExtendedData {
+    public JsonObject ExtendedData {
       get;
       private set;
     }
@@ -172,7 +172,7 @@ namespace Empiria.Security {
       this.ClientAppId = -1;
       this.UserId = 0;
       this.ExpiresIn = 3600;
-      this.ExtendedData = JsonRoot.Empty;
+      this.ExtendedData = JsonObject.Empty;
       this.StartTime = DateTime.Now;
       this.EndTime = ExecutionServer.DateMaxValue;
     }

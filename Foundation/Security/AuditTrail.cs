@@ -34,7 +34,7 @@ namespace Empiria.Security {
     #region Constructors and parsers
 
     private AuditTrail(AuditTrailType auditTrailType, string eventTag, string operation,
-                       int instanceId, ResultFlag result, JsonRoot data) {
+                       int instanceId, ResultFlag result, JsonObject data) {
       Initialize();
 
       this.AuditTrailType = auditTrailType;
@@ -51,24 +51,24 @@ namespace Empiria.Security {
     }
 
     static public AuditTrail Write(AuditTrailType auditTrailType, string eventTag, string operation,
-                                   ResultFlag result, JsonRoot data, int instanceId = -1) {
+                                   ResultFlag result, JsonObject data, int instanceId = -1) {
       return new AuditTrail(auditTrailType, eventTag, operation, instanceId, result, data);
     }
 
     static public AuditTrail Write(Exception exception, string eventTag, string operation,
                                    int instanceId = -1) {
       return new AuditTrail(AuditTrailType.Exception, eventTag, operation, instanceId,
-                            ResultFlag.Fail, EmpiriaException.ToJsonRoot(exception));
+                            ResultFlag.Fail, EmpiriaException.ToJson(exception));
     }
 
     static public AuditTrail WriteException(string eventTag, string operation,
-                                            JsonRoot data, int instanceId = -1) {
+                                            JsonObject data, int instanceId = -1) {
       return new AuditTrail(AuditTrailType.Exception, eventTag, operation, instanceId,
                             ResultFlag.Fail, data);
     }
 
     static public AuditTrail WriteOperation(string eventTag, string operation,
-                                            JsonRoot data, int instanceId = -1) {
+                                            JsonObject data, int instanceId = -1) {
       return new AuditTrail(AuditTrailType.Operation, eventTag, operation, instanceId,
                             ResultFlag.Ok, data);
     }
@@ -78,7 +78,7 @@ namespace Empiria.Security {
       this.Event = String.Empty;
       this.Operation = String.Empty;
       this.InstanceId = -1;
-      this.Data = JsonRoot.Empty;
+      this.Data = JsonObject.Empty;
       this.Timestamp = DateTime.Now;
     }
 
@@ -121,7 +121,7 @@ namespace Empiria.Security {
       private set;
     }
 
-    public JsonRoot Data {
+    public JsonObject Data {
       get;
       private set;
     }
