@@ -12,6 +12,7 @@
 using System;
 using System.Data;
 
+using Empiria.DataTypes;
 using Empiria.Json;
 
 namespace Empiria.Contacts {
@@ -111,7 +112,7 @@ namespace Empiria.Contacts {
       return base.GetLinks<T>(roleName);
     }
 
-    public FixedList<T> GetContactsInRole<T>(string roleName, TimePeriod period) where T : Contact {
+    public FixedList<T> GetContactsInRole<T>(string roleName, TimeFrame period) where T : Contact {
       return base.GetLinks<T>(roleName, period);
     }
 

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
+using Empiria.DataTypes;
 using Empiria.Reflection;
 
 namespace Empiria.Ontology {
@@ -87,7 +88,7 @@ namespace Empiria.Ontology {
       throw new NotImplementedException();
     }
 
-    public FixedList<T> GetInverseLinks<T>(BaseObject target, TimePeriod period) where T : BaseObject {
+    public FixedList<T> GetInverseLinks<T>(BaseObject target, TimeFrame period) where T : BaseObject {
       throw new NotImplementedException();
     }
 
@@ -105,7 +106,7 @@ namespace Empiria.Ontology {
     }
 
     public FixedList<T> GetInverseLinks<T>(BaseObject target,
-                                           TimePeriod period, Comparison<T> sort) where T : BaseObject {
+                                           TimeFrame period, Comparison<T> sort) where T : BaseObject {
       throw new NotImplementedException();
     }
 
@@ -161,7 +162,7 @@ namespace Empiria.Ontology {
     }
 
     // Object 1..* Object relation (in time period)
-    internal FixedList<T> GetLinks<T>(BaseObject source, TimePeriod period) where T : BaseObject {
+    internal FixedList<T> GetLinks<T>(BaseObject source, TimeFrame period) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source, period);
 
       List<T> list = BaseObject.ParseList<T>(table);

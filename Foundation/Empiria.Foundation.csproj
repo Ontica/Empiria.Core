@@ -217,7 +217,7 @@
     <Compile Include="RootTypes\IValueObject.cs" />
     <Compile Include="RootTypes\ZZKeyValuePair.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />
-    <Compile Include="RootTypes\TimePeriod.cs" />
+    <Compile Include="DataTypes\TimeFrame.cs" />
     <Compile Include="RootTypes\ZZDynamicState.cs" />
     <Compile Include="RootTypes\ZZTypeList.cs" />
     <Compile Include="RootTypes\GeneralList.cs" />

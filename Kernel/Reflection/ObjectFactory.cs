@@ -196,7 +196,7 @@ namespace Empiria.Reflection {
     }
 
     static private MethodInfo GetParseJsonMethod(Type type) {
-      return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static | 
+      return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static |
                             BindingFlags.Public | BindingFlags.NonPublic,
                             null, CallingConventions.Any, new Type[] { typeof(Json.JsonObject) }, null);
     }

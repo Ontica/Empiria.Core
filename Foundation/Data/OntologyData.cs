@@ -12,6 +12,7 @@ using System;
 using System.Data;
 
 using Empiria.Data;
+using Empiria.DataTypes;
 
 namespace Empiria.Ontology {
 
@@ -101,7 +102,7 @@ namespace Empiria.Ontology {
     }
 
     static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IStorable source,
-                                                  TimePeriod period) {
+                                                  TimeFrame period) {
       string sql = "SELECT [{TARGET.TYPE.TABLE}].* FROM [{TARGET.TYPE.TABLE}] INNER JOIN [{LINKS.TABLE}] " +
                    "ON [{TARGET.TYPE.TABLE}].[{TargetTableIdField}] = [{LINKS.TABLE}].[{TargetIdField}] " +
                    "WHERE [{LINKS.TABLE}].[{TypeRelationIdField}] = {TypeRelationId} AND " +

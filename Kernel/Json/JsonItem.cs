@@ -15,6 +15,11 @@ namespace Empiria.Json {
       this.Value = value;
     }
 
+    public JsonItem(string key, decimal value) {
+      this.Key = key;
+      this.Value = value;
+    }
+
     public JsonItem(string key, bool value) {
       this.Key = key;
       this.Value = value;
@@ -23,6 +28,11 @@ namespace Empiria.Json {
     public JsonItem(string key, DateTime value) {
       this.Key = key;
       this.Value = value;
+    }
+
+    public JsonItem(string key, JsonObject nestedItem) {
+      this.Key = key;
+      this.Value = nestedItem;
     }
 
     public JsonItem(string key, Exception e) {

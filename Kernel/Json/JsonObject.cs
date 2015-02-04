@@ -65,6 +65,10 @@ namespace Empiria.Json {
       dictionary.Add(item.Key, item.Value);
     }
 
+    public void Add(string key, JsonObject item) {
+      dictionary.Add(key, item.ToDictionary());
+    }
+
     public void AddIfValue(JsonItem item) {
       if (item.Value == null) {
         return;
@@ -74,7 +78,7 @@ namespace Empiria.Json {
         return;
       }
       if (item.Value is DateTime &&
-          (((DateTime) item.Value) == ExecutionServer.DateMaxValue || 
+          (((DateTime) item.Value) == ExecutionServer.DateMaxValue ||
           ((DateTime) item.Value) == ExecutionServer.DateMinValue)) {
         return;
       }
@@ -280,7 +284,7 @@ namespace Empiria.Json {
         return JsonObject.Convert<T>(value);
       } catch (Exception e) {
         throw new JsonDataException(JsonDataException.Msg.JsonValueTypeConvertionFails, e,
-                                    itemPath, value.ToString(), value.GetType().ToString(), 
+                                    itemPath, value.ToString(), value.GetType().ToString(),
                                     typeof(T).ToString());
       }
     }

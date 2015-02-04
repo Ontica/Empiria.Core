@@ -1,18 +1,18 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Data Types Library                *
-*  Namespace : Empiria                                          Assembly : Empiria.dll                       *
-*  Type      : TimePeriod                                       Pattern  : Value Type                        *
+*  Namespace : Empiria.DataTypes                                Assembly : Empiria.dll                       *
+*  Type      : TimeFrame                                        Pattern  : Value Type                        *
 *  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Value type that handles datetime period operations.                                           *
+*  Summary   : Value type that handles timeframe operations.                                                 *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
-namespace Empiria {
+namespace Empiria.DataTypes {
 
-  public struct TimePeriod {
+  public struct TimeFrame {
 
     #region Fields
 
@@ -23,14 +23,16 @@ namespace Empiria {
 
     #region Constructors and parsers
 
-    public TimePeriod(DateTime startTime, DateTime endTime) {
+    public TimeFrame(DateTime startTime, DateTime endTime) {
+      Assertion.Assert(startTime <= endTime, "startTime should be before or equal to endTime.");
+
       _startTime = startTime;
       _endTime = endTime;
     }
 
-    static public TimePeriod Default {
+    static public TimeFrame Default {
       get {
-        return new TimePeriod(ExecutionServer.DateMinValue, ExecutionServer.DateMaxValue);
+        return new TimeFrame(ExecutionServer.DateMinValue, ExecutionServer.DateMaxValue);
       }
     }
 
@@ -50,11 +52,11 @@ namespace Empiria {
 
     #region Operators overloading
 
-    static public bool operator ==(TimePeriod periodA, TimePeriod periodB) {
+    static public bool operator ==(TimeFrame periodA, TimeFrame periodB) {
       return ((periodA.StartTime == periodB.StartTime) && (periodA.EndTime == periodB.EndTime));
     }
 
-    static public bool operator !=(TimePeriod periodA, TimePeriod periodB) {
+    static public bool operator !=(TimeFrame periodA, TimeFrame periodB) {
       return !(periodA == periodB);
     }
 
@@ -72,10 +74,10 @@ namespace Empiria {
     }
 
     public override bool Equals(object o) {
-      if (!(o is TimePeriod)) {
+      if (!(o is TimeFrame)) {
         return false;
       }
-      TimePeriod temp = (TimePeriod) o;
+      TimeFrame temp = (TimeFrame) o;
 
       return ((this.StartTime == temp.StartTime) && (this.EndTime == temp.EndTime));
     }
@@ -90,6 +92,6 @@ namespace Empiria {
 
     #endregion Public methods
 
-  } // class TimePeriod
+  } // class TimeFrame
 
-} // namespace Empiria
+} // namespace Empiria.DataTypes

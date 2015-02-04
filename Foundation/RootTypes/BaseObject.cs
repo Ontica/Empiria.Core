@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
+using Empiria.DataTypes;
 using Empiria.Ontology;
 using Empiria.Reflection;
 
@@ -280,13 +281,13 @@ namespace Empiria {
       return list;
     }
 
-    protected FixedList<T> GetLinks<T>(string linkName, TimePeriod period) where T : BaseObject {
+    protected FixedList<T> GetLinks<T>(string linkName, TimeFrame period) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetLinks<T>(this, period);
     }
 
-    protected FixedList<T> GetLinks<T>(string linkName, TimePeriod period,
+    protected FixedList<T> GetLinks<T>(string linkName, TimeFrame period,
                                        Comparison<T> sort) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
       FixedList<T> list = association.GetLinks<T>(this, period);

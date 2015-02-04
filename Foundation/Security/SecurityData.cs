@@ -17,18 +17,28 @@ namespace Empiria.Security {
 
   static internal class SecurityData {
 
-    static internal void ChangePassword(string apiKey, string username, string password) {
+    static internal void ChangePassword(string username, string password) {
       var dataRow = DataReader.GetDataRow(DataOperation.Parse("getContactWithUserName", username));
       if (dataRow == null) {
         throw new SecurityException(SecurityException.Msg.UserIDPasswordNotFound);
       }
 
-      string p = Cryptographer.Encrypt(EncryptionMode.EntropyKey,
-                                       Cryptographer.GetMD5HashCode(password), username);
+      // if (Land) {
+        password = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, password, username);
+        password = Cryptographer.Decrypt(password, username);
+
+        password = Cryptographer.Encrypt(EncryptionMode.EntropyKey, password, username);
+      //} else {
+
+         //password"= Cryptographer.Encrypt(EncryptionMode.EntropyKey,
+         //                                 Cryptographer.GetMD5HashCode(password), username);
+
+
+      //}
 
       string sql = "UPDATE Contacts SET UserPassword = '{0}' WHERE UserName = '{1}'";
 
-      DataWriter.Execute(DataOperation.Parse(String.Format(sql, p, username)));
+      DataWriter.Execute(DataOperation.Parse(String.Format(sql, password, username)));
     }
 
     static internal int GetNextSessionId() {

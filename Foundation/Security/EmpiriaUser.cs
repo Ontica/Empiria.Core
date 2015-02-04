@@ -122,7 +122,7 @@ namespace Empiria.Security {
     #region Public methods
 
     static public void ChangePassword(string apiKey, string username, string password) {
-      SecurityData.ChangePassword(apiKey, username, password);
+      SecurityData.ChangePassword(username, password);
     }
 
     #endregion Public methods
