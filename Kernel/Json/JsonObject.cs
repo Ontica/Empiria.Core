@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria.Json                                     Assembly : Empiria.Kernel.dll                *
 *  Type      : JsonObject                                       Pattern  : Standard Class                    *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Allows data reading and parsing of JSON strings.                                              *
 *                                                                                                            *
-********************************* Copyright (c) 2013-2015. Ontica LLC, La Vía Óntica SC and contributors.  **/
+********************************* Copyright (c) 2013-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -43,6 +43,15 @@ namespace Empiria.Json {
       var dictionary = JsonConverter.ToDictionary(jsonString);
 
       return new JsonObject(dictionary);
+    }
+
+    static public JsonObject Parse(object instance) {
+      if (instance == null) {
+        return JsonObject.Empty;
+      }
+      var jsonString = JsonConverter.ToJson(instance);
+
+      return JsonObject.Parse(jsonString);
     }
 
     static private readonly JsonObject _empty = new JsonObject() { IsEmptyInstance = true };

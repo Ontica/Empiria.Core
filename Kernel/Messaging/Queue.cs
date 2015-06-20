@@ -3,16 +3,18 @@
 *  Solution  : Empiria Foundation Framework                     System   : Messaging Services                *
 *  Namespace : Empiria.Messaging                                Assembly : Empiria.Kernel.dll                *
 *  Type      : Queue                                            Pattern  : Abstract Class                    *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Abstract class that represents a messaging queue object.                                      *
-*                                                                                                            *
+*  Summary   : Abstract class that represents a messaging queue object. All messaging queue types must be    *
+*              derived from this type.                                                                       *
+*																																																						 *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Messaging {
 
-  /// <summary>Abstract class that represents a messaging queue object.</summary>
+  /// <summary>Abstract class that represents a messaging queue object. All messaging queue types must be
+  /// derived from this type.</summary>
   public abstract class Queue {
 
     #region Abstract members
@@ -95,4 +97,4 @@ namespace Empiria.Messaging {
 
   } // abstract class Queue
 
-} // Empiria.Messaging
+} // namespace Empiria.Messaging

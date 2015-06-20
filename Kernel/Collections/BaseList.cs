@@ -2,8 +2,8 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria.Collections                              Assembly : Empiria.Kernel.dll                *
-*  Type      : EmpiriaList                                      Pattern  : Empiria List Class                *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Type      : EmpiriaList                                      Pattern  : List                              *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents a generic named sortable list of items of specific reference type.                 *
 *                                                                                                            *
@@ -17,7 +17,7 @@ using System.Data;
 namespace Empiria.Collections {
 
   /// <summary>Represents a generic named sortable list of items of specific reference type.</summary>
-  public class EmpiriaList<T> : IList<T> {
+  public class BaseList<T> : IList<T>, ICollection {
 
     #region Fields
 
@@ -29,29 +29,29 @@ namespace Empiria.Collections {
 
     #region Constructors and parsers
 
-    public EmpiriaList() : this(false) {
+    public BaseList() : this(false) {
       //no-op
     }
 
-    public EmpiriaList(bool synchronized) : this(16, synchronized) {
+    public BaseList(bool synchronized) : this(16, synchronized) {
       // no-op
     }
 
-    public EmpiriaList(int capacity): this(capacity, false) {
+    public BaseList(int capacity): this(capacity, false) {
       // no-op
     }
 
-    public EmpiriaList(List<T> list) : this(list, false) {
+    public BaseList(List<T> list) : this(list, false) {
       // no-op
     }
 
-    public EmpiriaList(int capacity, bool synchronized) {
+    public BaseList(int capacity, bool synchronized) {
       this.isSynchronized = synchronized;
       items = new List<T>(capacity);
     }
 
 
-    public EmpiriaList(List<T> items, bool synchronized) {
+    public BaseList(List<T> items, bool synchronized) {
       this.isSynchronized = synchronized;
       this.items = items;
     }
@@ -354,6 +354,16 @@ namespace Empiria.Collections {
       this.Clear();
     }
 
+    public void CopyTo(Array array, int index) {
+      throw new NotImplementedException();
+    }
+
+    public object SyncRoot {
+      get {
+        throw new NotImplementedException();
+      }
+    }
+
     void ICollection<T>.Add(T value) {
       items.Add(value);
     }
@@ -396,6 +406,6 @@ namespace Empiria.Collections {
 
     //#endregion Inner class Enumerator
 
-  } //class EmpiriaList
+  } //class BaseList
 
 } //namespace Empiria.Collections

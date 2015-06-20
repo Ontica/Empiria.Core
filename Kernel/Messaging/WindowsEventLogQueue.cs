@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Messaging Services                *
 *  Namespace : Empiria.Messaging                                Assembly : Empiria.Kernel.dll                *
 *  Type      : WindowsEventLogQueue                             Pattern  : Messaging Queue Class             *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Class used for publish information in the Windows Event Log.                                  *
 *                                                                                                            *
@@ -13,13 +13,13 @@ using System.Diagnostics;
 
 namespace Empiria.Messaging {
 
-  /// <summary>Class used for publish information in the Windows Event Log.</summary>
+  /// <summary>Queue used for publish information using the Windows Event Log.</summary>
   //[EventLogPermissionAttribute(SecurityAction.Demand)]
   internal sealed class WindowsEventLogQueue : Queue {
 
     #region Fields
 
-    private const string DefaultEventLogSource = "Empiria.Foundation";
+    private readonly string DefaultEventLogSource = ExecutionServer.LicenseName;
 
     #endregion Fields
 
@@ -38,13 +38,13 @@ namespace Empiria.Messaging {
       try {
         using (EventLog logEntry = new EventLog(base.Name)) {
           logEntry.Source = DefaultEventLogSource;
-          string msg = "Se inicializó la cola de mensajes de Windows a las " + DateTime.Now.ToLongTimeString() +
-                       " para el servidor Empiria del tipo '" + Empiria.ExecutionServer.ServerType.ToString() +
-                       "' bajo el proceso con identificador PID = ";
+          string msg = "Windows event log message queue initialized at " + DateTime.Now.ToLongTimeString() +
+                       " for {0} server under the process PID = ";
+          msg = String.Format(msg, ExecutionServer.LicenseName);
           if (System.Diagnostics.Process.GetCurrentProcess() != null) {
             msg += System.Diagnostics.Process.GetCurrentProcess().Id.ToString() + ".";
           } else {
-            msg += "[Id de Proceso desconocido].";
+            msg += "[Unknown process identificator].";
           }
           logEntry.WriteEntry(msg, EventLogEntryType.SuccessAudit);
         }
@@ -96,7 +96,7 @@ namespace Empiria.Messaging {
     private string GetNextSource(string currentSource) {
       if (currentSource.LastIndexOf('.') != -1) {
         return currentSource.Substring(0, currentSource.LastIndexOf('.') - 1);
-      } else if (currentSource == "Empiria") {
+      } else if (currentSource == "Empiria" || currentSource == ExecutionServer.LicenseName) {
         return DefaultEventLogSource;
       } else {
         return String.Empty;

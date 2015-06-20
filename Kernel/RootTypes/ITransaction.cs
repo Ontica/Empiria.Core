@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Storage Services                  *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *  Type      : ITransaction                                     Pattern  : Separated Interface               *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Interface that represents a transactional operation.                                          *
 *                                                                                                            *

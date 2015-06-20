@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Types Library                *
 *  Namespace : Empiria.DataTypes                                Assembly : Empiria.Kernel.dll                *
 *  Type      : Keyword                                          Pattern  : Standard Struct                   *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Sealed structure that represents a keyword.                                                   *
 *                                                                                                            *

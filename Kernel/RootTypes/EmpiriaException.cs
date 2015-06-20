@@ -1,26 +1,27 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
-*                                                                                                            *
+*																																																						 *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
-*  Type      : EmpiriaException                                 Pattern  : Empiria Base Exception Class      *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
-*                                                                                                            *
-*  Summary   : Class for run-time exceptions in Empiria Framework. All exception classes needs be            *
-*              derivated of this class.                                                                      *
-*                                                                                                            *
+*  Type      : EmpiriaException                                 Pattern  : Base Exception Class              *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*																																																						 *
+*  Summary   : Base class for handling run-time exceptions in Empiria Backend Framework.                     *
+*              All Empiria exception types needs be derivated from this class.                               *
+*																																																						 *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Resources;
 using System.Runtime.Serialization;
+using System.Text;
 
 using Empiria.Json;
 
 namespace Empiria {
 
-  /// <summary>Abstract class for run-time exceptions in Empiria Framework.</summary>
-  /// <remarks>Specialized exceptions must be managed through derived classes of this class.</remarks>
+  /// <summary>Base class for handling run-time exceptions in Empiria Backend Framework.</summary>
+  /// <remarks>All Empiria exception types needs be derivated from this class.</remarks>
   [Serializable]
   public abstract class EmpiriaException : Exception {
 
@@ -28,9 +29,7 @@ namespace Empiria {
 
     private string exceptionTag = String.Empty;
     private DateTime timestamp = DateTime.Now;
-    private string licenseName = String.Empty;
-    private string serialNumber = String.Empty;
-    private string userSessionToken = String.Empty;
+    private Guid userSessionGuid = Guid.Empty;
     private string processId = String.Empty;
     private bool initialized = false;
 
@@ -41,8 +40,7 @@ namespace Empiria {
     /// <summary>Initializes a new instance of EmpiriaException class with a specified error
     /// message.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
-    public EmpiriaException(string exceptionTag, string message)
-      : base(message) {
+    public EmpiriaException(string exceptionTag, string message) : base(message) {
       this.exceptionTag = exceptionTag;
       this.timestamp = DateTime.Now;
     }
@@ -51,14 +49,13 @@ namespace Empiria {
     ///  message and a reference to the inner exception that is the cause of this exception.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="innerException">The inner exception that throws this exception.</param>
-    public EmpiriaException(string exceptionTag, string message, Exception innerException)
-      : base(message, innerException) {
+    public EmpiriaException(string exceptionTag, string message, Exception innerException) :
+                            base(message, innerException) {
       this.exceptionTag = exceptionTag;
       this.timestamp = DateTime.Now;
     }
 
-    public EmpiriaException(SerializationInfo info, StreamingContext context)
-      : base(info, context) {
+    public EmpiriaException(SerializationInfo info, StreamingContext context) : base(info, context) {
 
     }
 
@@ -75,73 +72,65 @@ namespace Empiria {
 
     /// <summary>Unique identificator tag or name for the exception.</summary>
     public string ExceptionTag {
-      get { return exceptionTag; }
+      get {
+        return exceptionTag;
+      }
     }
 
-    /// <summary>LicenseName of Empiria product where the exception was occurred.</summary>
-    public string LicenseName {
+    /// <summary>Session Guid where the exception was occured.</summary>
+    public Guid SessionGuid {
       get {
         if (!initialized) {
           InitializeEnvironmentInformation();
         }
-        return licenseName;
+        return userSessionGuid;
       }
     }
 
-    /// <summary>Serial number of the server license where the exception was ocurred.</summary>
-    public string SerialNumber {
-      get {
-        if (!initialized) {
-          InitializeEnvironmentInformation();
-        }
-        return serialNumber;
-      }
-    }
-
-    /// <summary>Session token where the exception was ocurred.</summary>
-    public string SessionGuid {
-      get {
-        if (!initialized) {
-          InitializeEnvironmentInformation();
-        }
-        return userSessionToken;
-      }
-    }
-
-    /// <summary>Returns the .NET CLR Working Process ID that host the Empiria Application.</summary>
+    /// <summary>Returns the .NET CLR Working Process ID that host the application.</summary>
     public string ProcessId {
-      get { return processId; }
+      get {
+        return processId;
+      }
     }
 
     /// <summary>Date and time when the exception was created.</summary>
     public DateTime Timestamp {
-      get { return timestamp; }
+      get {
+        return timestamp;
+      }
     }
 
     #endregion Public properties
 
     #region Public methods
 
-    /// <summary>Publish this exception.</summary>
-    public void Publish() {
-      if (ExecutionServer.IsStarted) {
-        Empiria.Messaging.Message message = new Empiria.Messaging.Message(this);
-        Empiria.Messaging.Publisher.Publish(message);
-      }
+    static public string GetHtmlString(Exception exception) {
+      return EmpiriaException.GetHTMLString(exception);
     }
 
-    public string ToString(bool xhtml) {
-      if (xhtml) {
-        string temp = EmpiriaString.ExceptionString(this);
-        temp = temp.Replace(Environment.NewLine, "<br />");
-        return temp;
-      } else {
-        return ToString();
-      }
+    static public string GetTextString(Exception exception) {
+      string temp = EmpiriaException.GetHTMLString(exception);
+
+      temp = temp.Replace("<u>", String.Empty);
+      temp = temp.Replace("</u>", String.Empty);
+      temp = temp.Replace("<b>", String.Empty);
+      temp = temp.Replace("</b>", String.Empty);
+
+      return temp;
+    }
+
+    /// <summary>Publish this exception.</summary>
+    public void Publish() {
+      Empiria.Messaging.Publisher.Publish(this);
+    }
+
+    public string ToHtmlString() {
+      return EmpiriaException.GetHTMLString(this);
     }
 
     public override string ToString() {
-      return EmpiriaString.ExceptionString(this);
+      return EmpiriaException.GetTextString(this);
     }
 
     #endregion Public methods
@@ -156,10 +145,12 @@ namespace Empiria {
       try {
         temp = resMgr.GetString(messageTag);
         temp = temp.Replace(@"\n", System.Environment.NewLine);
+      } catch (Exception e) {
+        Empiria.Messaging.Publisher.Publish(e.Message);
       } finally {
         if (String.IsNullOrEmpty(temp)) {
           temp = messageTag;
-        } else if (args.Length != 0) {
+        } else if (args != null && args.Length != 0) {
           try {
             temp = String.Format(temp, args);
           } catch { // format exception
@@ -173,6 +164,40 @@ namespace Empiria {
     #endregion Protected methods
 
     #region Private methods
+
+    /// <summary>Creates and returns a string representation of the current exception.</summary>
+    static private string GetHTMLString(Exception exception) {
+      StringBuilder stringBuilder = new StringBuilder();
+      Exception tempException = null;
+      int exceptionCount = 1;
+
+      tempException = exception;
+      while (tempException != null) {
+        stringBuilder.AppendFormat("{0}{0}", (exceptionCount != 1) ? Environment.NewLine : String.Empty);
+        stringBuilder.AppendFormat("<b>{1}) <u>{2}</u></b>{0}{0}", Environment.NewLine, exceptionCount.ToString(),
+                                                exceptionCount == 1 ? "Exception Information" : "Inner Exception Information");
+        stringBuilder.AppendFormat("ExceptionType: {0}", tempException.GetType().FullName);
+
+        PropertyInfo[] exceptionProperties = tempException.GetType().GetProperties();
+        foreach (PropertyInfo property in exceptionProperties) {
+          if (property.Name != "InnerException" && property.Name != "StackTrace" && property.Name != "Data") {
+            object propertyValue = property.GetValue(tempException, null);
+            if (propertyValue != null) {
+              stringBuilder.AppendFormat("{0}{1}: {2}", Environment.NewLine, property.Name, propertyValue);
+            }
+          }
+        } // foreach
+        if (tempException.StackTrace != null) {
+          stringBuilder.AppendFormat("{0}{0}{1}) <u>Stack Trace Information</u>{0}{0}", Environment.NewLine,
+                               exceptionCount.ToString() + ".1");
+          stringBuilder.AppendFormat("{0}", tempException.StackTrace);
+        }
+        tempException = tempException.InnerException;
+        exceptionCount++;
+      } // while
+
+      return stringBuilder.ToString();
+    }
 
     static private string GetSourceMethodName(int skipFrames) {
       MethodBase sourceMethod = new StackFrame(skipFrames).GetMethod();
@@ -189,47 +214,26 @@ namespace Empiria {
       return methodName;
     }
 
-    /// <summary>Initialization function that gathers environment information safely.</summary>
+    /// <summary>Initialization function that gathers environment information.</summary>
     private void InitializeEnvironmentInformation() {
-      const string unavailableTag = "Unavailable";
+      const string unknownExceptionTag = "Unknown Exception";
+      const string unknownProcessId = "Unknown Process Id";
 
       if (initialized) {
         return;
       }
       if (String.IsNullOrEmpty(this.exceptionTag)) {
-        this.exceptionTag = unavailableTag;
+        this.exceptionTag = unknownExceptionTag;
       }
       try {
         base.Source = GetSourceMethodName(4);
       } catch {
-        base.Source = unavailableTag;
-      }
-      try {
-        licenseName = ExecutionServer.LicenseName;
-      } catch {
-        licenseName = unavailableTag;
-      }
-      try {
-        serialNumber = ExecutionServer.LicenseSerialNumber;
-      } catch {
-        serialNumber = unavailableTag;
-      }
-      try {
-        userSessionToken = ExecutionServer.CurrentSessionToken;
-      } catch {
-        userSessionToken = String.Empty;
+        base.Source = unknownExceptionTag;
       }
       try {
         processId = System.Diagnostics.Process.GetCurrentProcess().Id.ToString();
       } catch {
-        processId = "[Id de proceso desconocido]";
-      }
-      try {
-        base.HelpLink = ExecutionServer.SupportUrl + "?id=" +
-                        this.GetType().FullName + "." + exceptionTag;
-      } catch {
-        base.HelpLink = "http://empiria.ontica.org/support/exceptions.aspx?id=" +
-                        this.GetType().FullName + "." + exceptionTag;
+        processId = unknownProcessId;
       }
       initialized = true;
     }

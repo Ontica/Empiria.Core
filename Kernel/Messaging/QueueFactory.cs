@@ -1,19 +1,19 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
-*                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Messaging Services                *
+*																																																						 *
+*  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria.Messaging                                Assembly : Empiria.Kernel.dll                *
-*  Type      : QueueFactory                                     Pattern  : Factory Class                     *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
-*                                                                                                            *
+*  Type      : QueueFactory                                     Pattern  : Factory                           *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*																																																						 *
 *  Summary   : Factory used for create messaging queues based on message type and content rules.             *
-*                                                                                                            *
+*																																																						 *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Messaging {
 
   /// <summary>Factory used for create messaging queues based on message type and content rules.</summary>
-  internal sealed class QueueFactory {
+  internal sealed class QueueFactory : IQueueFactory {
 
     #region Fields
 
@@ -46,8 +46,8 @@ namespace Empiria.Messaging {
       string defaultQueueName = ConfigurationData.GetString("DefaultQueue.Name");
 
       switch (defaultQueueTypeName) {
-        case "FileBasedQueue":
-          return new FileBasedQueue(defaultQueueName);
+      //  case "FileBasedQueue":
+      //    return new FileBasedQueue(defaultQueueName);
         case "WindowsEventLogQueue":
           return new WindowsEventLogQueue(defaultQueueName);
         default:

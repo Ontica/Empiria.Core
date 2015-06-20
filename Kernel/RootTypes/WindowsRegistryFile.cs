@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *  Type      : WindowsRegistryFile                              Pattern  : Static Class                      *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Writes and reads data elements using the Microsoft Windows OS Registry File.                  *
 *                                                                                                            *
@@ -16,13 +16,12 @@ using Microsoft.Win32;
 namespace Empiria {
 
   /// <summary>Writes and reads data elements using the Microsoft Windows OS Registry File.</summary>
-  [RegistryPermissionAttribute(SecurityAction.Demand, Read = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Ontica",
-                                                      Write = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Ontica")]
+  [RegistryPermissionAttribute(SecurityAction.Demand, Read = "HKEY_LOCAL_MACHINE\\SOFTWARE",
+                                                      Write = "HKEY_LOCAL_MACHINE\\SOFTWARE")]
   static internal class WindowsRegistryFile {
 
     #region Fields
 
-    private const string empiriaKey = @"SOFTWARE\Ontica\Empiria@";
     private const string dbConnectionString = "DATASOURCE.";
     private const string impersonationTokenString = "IMPERSONATIONTOKEN.";
 
@@ -34,7 +33,7 @@ namespace Empiria {
       string retrivedValue = null;
       string tempTypeName = typeName;
 
-      if (!typeName.StartsWith("Empiria")) {
+      if (!(typeName.StartsWith("Empiria") || typeName.StartsWith(ExecutionServer.LicenseName))) {
         throw new ConfigurationDataException(ConfigurationDataException.Msg.InvalidTypeName,
                                              parameterName, typeName);
       }
@@ -48,7 +47,7 @@ namespace Empiria {
         if ((retrivedValue != null) || (tempTypeName == null)) {
           break;
         }
-        retrivedValue = TryReadRegistryValue(empiriaKey, tempTypeName, parameterName);
+        retrivedValue = TryReadRegistryValue(tempTypeName, parameterName);
         if (retrivedValue != null) {  //Don´t search superkey if keyValue founded
           break;
         }
@@ -68,7 +67,7 @@ namespace Empiria {
     }
 
     static internal void WriteValue(string typeName, string parameterName, string value) {
-      WriteRegistryValue(empiriaKey, typeName.Substring(typeName.IndexOf('.') + 1), parameterName, value);
+      WriteRegistryValue(typeName.Substring(typeName.IndexOf('.') + 1), parameterName, value);
     }
 
     #endregion Internal methods
@@ -81,19 +80,27 @@ namespace Empiria {
       Registry.LocalMachine.Close();
     }
 
+    static private string GetRegistryBaseKey() {
+      if (ExecutionServer.IsSpecialLicense) {
+        return @"SOFTWARE\" + ExecutionServer.LicenseName;
+      } else {
+        return @"SOFTWARE\Ontica\Empiria@" + ExecutionServer.LicenseName;
+      }
+    }
+
     static private bool Is32BitsClient {
       get {
         return (IntPtr.Size == 4);
       }
     }
 
-    static private string TryReadRegistryValue(string valueKey, string typeName, string parameterName) {
-      string absoluteKey = String.Concat(valueKey, ExecutionServer.LicenseName, "\\", typeName);
+    static private string TryReadRegistryValue(string typeName, string parameterName) {
+      string absoluteKey = String.Concat(GetRegistryBaseKey(), "\\", typeName);
 
       RegistryKey registryKey = null;
       try {
         if (WindowsRegistryFile.Is32BitsClient) {
-          // In order to avoid reading on  HKLM\Software\Wow6432Node
+          // In order to avoid reading on HKLM\Software\Wow6432Node
           var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
           registryKey = baseKey.OpenSubKey(absoluteKey);
         } else {
@@ -118,10 +125,10 @@ namespace Empiria {
       }
     }
 
-    static private void WriteRegistryValue(string valueKey, string typeName, string name, string settingValue) {
+    static private void WriteRegistryValue(string typeName, string name, string settingValue) {
       string absoluteKey = null;
 
-      absoluteKey = String.Concat(valueKey, ExecutionServer.LicenseName, "\\", typeName);
+      absoluteKey = String.Concat(GetRegistryBaseKey(), "\\", typeName);
       if (name.ToUpperInvariant().StartsWith(dbConnectionString)) {   //Enforce database key encryption
         name = "§" + name;
       }

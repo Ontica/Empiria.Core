@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Security Framework                *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.Kernel.dll                *
 *  Type      : IEmpiriaIdentity                                 Pattern  : Separated Interface               *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : This interface contains the fields of EmpiriaIdentity and provides a separated interface for  *
 *              integrate Empiria.Kernel.dll assembly with this assembly.                                     *

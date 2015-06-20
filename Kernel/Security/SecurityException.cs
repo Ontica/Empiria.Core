@@ -2,8 +2,8 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Security Framework                *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.Kernel.dll                *
-*  Type      : SecurityException                                Pattern  : Empiria Exception Class           *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Type      : SecurityException                                Pattern  : Exception Class                   *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : The exception that is thrown when a system security check fails.                              *
 *                                                                                                            *
@@ -36,12 +36,12 @@ namespace Empiria.Security {
       InvalidProtectionMode,
       InvalidRequestPath,
       InvalidSingleSignOnToken,
+      InvalidUserCredentials,
       NotActiveUser,
       NotActiveClientAppKey,
       RequireExecuteMethod,
       SessionTokenNotFound,
       UnauthenticatedIdentity,
-      UserIDPasswordNotFound,
       UserPasswordExpired,
       WrongAuthentication,
       WrongDIFVersionRequested,

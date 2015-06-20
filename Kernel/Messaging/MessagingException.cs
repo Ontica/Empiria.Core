@@ -1,9 +1,9 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Messaging Services                *
-*  Namespace : Empiria.Messaging                                Assembly : Empiria.Messaging.dll             *
-*  Type      : MessagingException                               Pattern  : Empiria Exception Class           *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Namespace : Empiria.Messaging                                Assembly : Empiria.Kernel.dll                *
+*  Type      : MessagingException                               Pattern  : Exception Class                   *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : The exception that is thrown when a problem occurs in messaging services system.              *
 *                                                                                                            *

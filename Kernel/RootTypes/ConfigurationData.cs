@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *  Type      : ConfigurationData                                Pattern  : Static Class                      *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Gets or sets the configuration parameters of an Empiria Framework type or types in customer   *
 *              systems.                                                                                      *
@@ -114,7 +114,8 @@ namespace Empiria {
 
       for (int i = 1; i < stack.FrameCount; i++) {
         callerFullName = stack.GetFrame(i).GetMethod().DeclaringType.FullName;
-        if (!callerFullName.StartsWith("Empiria.ConfigurationData") && callerFullName.StartsWith("Empiria")) {
+        if (!callerFullName.StartsWith("Empiria.ConfigurationData") &&
+            (callerFullName.StartsWith("Empiria") || callerFullName.StartsWith(ExecutionServer.LicenseName))) {
           return callerFullName;
         } else {
           stackString += callerFullName + "\n";

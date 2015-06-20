@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria.Reflection                               Assembly : Empiria.Kernel.dll                *
 *  Type      : ObjectFactory                                    Pattern  : Static Class                      *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : This class provides services for a empiria type instance creation.                            *
 *                                                                                                            *
@@ -102,6 +102,20 @@ namespace Empiria.Reflection {
 
     static public bool IsValueObject(Type type) {
       return (type.GetInterface("Empiria.IValueObject`1") != null);
+    }
+
+    static public T GetEmptyInstance<T>() {
+      return (T) ObjectFactory.InvokeParseMethod(typeof(T), -1);
+    }
+
+    static public Type GetType(string typeName) {
+      Type type = Type.GetType(typeName);
+      if (type == null) {
+        string assemblyName = typeName.Substring(0, typeName.LastIndexOf("."));
+        Assembly assembly = Assembly.Load(assemblyName);
+        type = assembly.GetType(typeName, true, true);
+      }
+      return type;
     }
 
     static public bool HasJsonParser(Type type) {

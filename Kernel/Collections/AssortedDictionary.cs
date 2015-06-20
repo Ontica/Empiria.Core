@@ -1,9 +1,9 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
-*  Namespace : Empiria.Collections                              Assembly : Empiria.dll                       *
+*  Namespace : Empiria.Collections                              Assembly : Empiria.Kernel.dll                *
 *  Type      : AssortedDictionary                               Pattern  : HashList Class                    *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents an assorted objects dictionary retrived by a string key.                           *
 *                                                                                                            *

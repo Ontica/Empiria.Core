@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
-*  Type      : IIdentifiable                                    Pattern  : Loose coupling interface          *
+*  Type      : IIdentifiable                                    Pattern  : Separated interface               *
 *  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Interface that represents an identifiable object throw an integer Id.                         *
@@ -10,17 +10,19 @@
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
-namespace Empiria {
+namespace Empiria.Messaging {
 
-  /// <summary>Interface that represents an identifiable object throw an integer Id.</summary>
-  public interface IIdentifiable {
+  /// <summary>Separated interface that represents a messaging queue factory.</summary>
+  public interface IQueueFactory {
 
     #region Members definition
 
-    int Id { get; }
+    Queue GetDefaultQueue();
+
+    Queue GetQueue(Message message);
 
     #endregion Members definition
 
-  } // interface IIdentifiable
+  } // interface IQueueFactory
 
-} // namespace Empiria
+} // namespace Empiria.Messaging

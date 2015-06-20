@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
-*  Type      : AssertionFailsException                          Pattern  : Exception Class                   *
+*  Type      : PlainTextException                               Pattern  : Exception Class                   *
 *  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : The exception that is thrown when a code assertion fails.                                     *
+*  Summary   : Abstract exception that allows set the exception's message in plain text.                     *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -13,57 +13,44 @@ using System.Reflection;
 
 namespace Empiria {
 
-  /// <summary>The exception that is thrown when a code assertion fails. This exeptions always are
-  /// replicated to the EventLog.</summary>
+  /// <summary>Abstract exception that permits put the exception's message in plain text.</summary>
   [Serializable]
-  internal sealed class AssertionFailsException : EmpiriaException {
-
-    internal enum Msg {
-      AssertFails,
-      AssertNoReachThisCode,
-    }
-
-    static private string resourceBaseName = "Empiria.RootTypes.KernelExceptionMsg";
+  public abstract class PlainTextException : EmpiriaException {
 
     #region Constructors and parsers
 
-    /// <summary>Initializes a new instance of AssertionFailsException class with a specified error
+    /// <summary>Initializes a new instance of PlainTextException class with a specified error
     /// message.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
-    internal AssertionFailsException(Msg message, params object[] args) :
-                                     base(message.ToString(), GetMessage(message, args)) {
-      try {
-        base.Publish();
-      } finally {
-        // no-op
-      }
+    protected PlainTextException(string messageCode, string message, params object[] args)
+      : base(messageCode, GetMessage(message, args)) {
     }
 
-    /// <summary>Initializes a new instance of AssertionFailsException class with a specified error
+    /// <summary>Initializes a new instance of PlainTextException class with a specified error
     ///  message and a reference to the inner exception that is the cause of this exception.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
-    /// <param name="innerException">This is the inner exception.</param>
+    /// <param name="exception">This is the inner exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
-    internal AssertionFailsException(Msg message, Exception innerException, params object[] args) :
-                                     base(message.ToString(), GetMessage(message, args), innerException) {
-      try {
-        base.Publish();
-      } finally {
-        // no-op
-      }
+    protected PlainTextException(string messageCode, string message, Exception exception,
+                            params object[] args)
+      : base(messageCode, GetMessage(message, args), exception) {
     }
 
     #endregion Constructors and parsers
 
     #region Private methods
 
-    static private string GetMessage(Msg message, params object[] args) {
-      return GetResourceMessage(message.ToString(), resourceBaseName, Assembly.GetExecutingAssembly(), args);
+    static private string GetMessage(string message, params object[] args) {
+      if (args != null && args.Length != 0) {
+        return String.Format(message, args);
+      } else {
+        return message;
+      }
     }
 
     #endregion Private methods
 
-  } // class AssertionFailsException
+  } // class PlainTextException
 
 } // namespace Empiria

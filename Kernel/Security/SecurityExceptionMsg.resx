@@ -179,7 +179,7 @@
   <data name="NotActiveUser" xml:space="preserve">
     <value>The user account '{0}' is not active.</value>
   </data>
-  <data name="UserIDPasswordNotFound" xml:space="preserve">
+  <data name="InvalidUserCredentials" xml:space="preserve">
     <value>Username or password not found.</value>
   </data>
   <data name="UserPasswordExpired" xml:space="preserve">

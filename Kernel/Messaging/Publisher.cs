@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Messaging Services                *
 *  Namespace : Empiria.Messaging                                Assembly : Empiria.Kernel.dll                *
 *  Type      : Publisher                                        Pattern  : Static Class                      *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Class used to publish or serialize objects to specific message queue.                         *
 *                                                                                                            *
@@ -19,7 +19,7 @@ namespace Empiria.Messaging {
 
     #region Fields
 
-    static private QueueFactory queueFactory = null;
+    static private IQueueFactory queueFactory = null;
 
     #endregion Fields
 
@@ -45,7 +45,7 @@ namespace Empiria.Messaging {
       }
       Message message = null;
       try {
-        message = new Message(EmpiriaString.ExceptionString(exception));
+        message = new Message(EmpiriaException.GetTextString(exception));
         Queue queue = GetMessageQueue(message);
         queue.Send(message);
       } catch (Exception innerException) {
@@ -64,6 +64,20 @@ namespace Empiria.Messaging {
       } catch (Exception innerException) {
         throw new MessagingException(MessagingException.Msg.CantPublishMessage, innerException,
                                      message.Body.GetType().FullName, message.Body.ToString());
+      }
+    }
+
+    static public void Publish(object instance) {
+      if (instance == null) {
+        throw new MessagingException(MessagingException.Msg.CantPublishNullMessage);
+      }
+      try {
+        var message = new Message(instance);
+        Queue queue = GetMessageQueue(message);
+        queue.Send(message);
+      } catch (Exception innerException) {
+        throw new MessagingException(MessagingException.Msg.CantPublishMessage, innerException,
+                                     instance.GetType().FullName, Json.JsonObject.Parse(instance));
       }
     }
 

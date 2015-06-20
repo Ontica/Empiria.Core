@@ -169,26 +169,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\AssortedDictionary.cs" />
+    <Compile Include="Collections\BaseList.cs" />
     <Compile Include="Collections\DoubleKeyList.cs" />
     <Compile Include="Collections\EmpiriaCollection.cs" />
     <Compile Include="Collections\EmpiriaHashList.cs" />
     <Compile Include="Collections\ObjectsCache.cs" />
     <Compile Include="DataTypes\Calendar.cs" />
+    <Compile Include="Json\DataRowConverter.cs" />
+    <Compile Include="Json\DataViewConverter.cs" />
     <Compile Include="Json\JsonConverter.cs" />
     <Compile Include="Json\JsonDataException.cs" />
     <Compile Include="Json\JsonItem.cs" />
     <Compile Include="Json\JsonObject.cs" />
     <Compile Include="Messaging\FileBasedQueue.cs" />
+    <Compile Include="Messaging\IQueueFactory.cs" />
     <Compile Include="Messaging\MessagingException.cs" />
     <Compile Include="Messaging\QueueFactory.cs" />
     <Compile Include="Messaging\WindowsEventLogQueue.cs" />
     <Compile Include="RootTypes\EmpiriaMath.cs" />
+    <Compile Include="RootTypes\EmpiriaString.Customization.cs" />
+    <Compile Include="RootTypes\EmpiriaString.Money.cs" />
+    <Compile Include="RootTypes\EmpiriaString.Distance.cs" />
     <Compile Include="RootTypes\EmpiriaString.cs" />
     <Compile Include="DataTypes\Keyword.cs" />
     <Compile Include="Empiria.Kernel.AssemblyInfo.cs" />
-    <Compile Include="Collections\EmpiriaList.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Collections\ListException.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -212,8 +216,10 @@
     <Compile Include="RootTypes\AssertionFailsException.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="RootTypes\ExecutionServer.Customization.cs" />
     <Compile Include="RootTypes\ExecutionServer.cs" />
     <Compile Include="RootTypes\IUnitOfWork.cs" />
+    <Compile Include="RootTypes\PlainTextException.cs" />
     <Compile Include="RootTypes\ProductInformation.cs">
       <SubType>Code</SubType>
     </Compile>

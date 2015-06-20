@@ -3,7 +3,7 @@
 *  Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *  Type      : ProductInformation                               Pattern  : Static class                      *
-*  Version   : 6.0   Date: 04/Jan/2015                          License  : Please read license.txt file      *
+*  Version   : 6.5   Date: 25/Jun/2015                          License  : Please read license.txt file      *
 *																																																						 *
 *  Summary   : Static class that holds Empiria product information.                                          *
 *																																																						 *

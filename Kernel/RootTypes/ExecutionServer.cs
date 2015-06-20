@@ -1,9 +1,9 @@
-﻿/* Empiria® Foundation Framework 2015 ************************************************************************
+﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria® Foundation Framework                    System   : Foundation Framework Library      *
+*  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *  Type      : ExecutionServer                                  Pattern  : Static Class                      *
-*  Version   : 6.0   Date: 04/Jan/2015                          License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Static class that returns Empiria current execution server information.                       *
 *                                                                                                            *
@@ -30,7 +30,7 @@ namespace Empiria {
   #endregion Enumerations
 
   /// <summary>Static class that returns Empiria current execution server information.</summary>
-  static public class ExecutionServer {
+  static public partial class ExecutionServer {
 
     #region Fields
 
@@ -42,14 +42,6 @@ namespace Empiria {
     static private string licenseSerialNumber = null;
     static private int serverId = 0;
     static private string supportUrl = null;
-    //static private bool isDataSourceServer = false;
-
-    static private string customerName = null;
-    static private string customerUrl = null;
-    static private int organizationId = 0;
-    static private string serviceProvider = null;
-    static private string serverName = null;
-
     static private bool isStarted = false;
 
     static private ExecutionServerType executionServerType = ExecutionServerType.WebApplicationServer;
@@ -81,23 +73,10 @@ namespace Empiria {
         AssertIsStarted();
 
         var principal = Thread.CurrentPrincipal;
-        if (principal is IEmpiriaPrincipal) {
+        if (principal != null && principal is IEmpiriaPrincipal) {
           return (IEmpiriaPrincipal) principal;
         }
         throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
-      }
-    }
-
-    //OOJJOO: To deprecate
-    static public string CurrentSessionToken {
-      get {
-        AssertIsStarted();
-
-        if (IsAuthenticated) {
-          return CurrentPrincipal.Session.Token;
-        } else {
-          return String.Empty;
-        }
       }
     }
 
@@ -145,24 +124,14 @@ namespace Empiria {
       }
     }
 
-    static public bool IsDataSourceServer {
+    static public bool IsPassThroughServer {
       get {
-        AssertIsStarted();
-
-        return ServerType == ExecutionServerType.WebApiServer ||
-               ServerType == ExecutionServerType.WebServicesServer;
-        //return isDataSourceServer;
+        return false;
       }
     }
 
     static public bool IsStarted {
       get { return isStarted; }
-    }
-
-    static public string LicenseName {
-      get {
-        return "Tlaxcala";
-      }
     }
 
     static public string LicenseNumber {
@@ -201,51 +170,7 @@ namespace Empiria {
       }
     }
 
-    #endregion Public properties optional
-
-    #region Public properties
-
-    static public string CustomerName {
-      get {
-        AssertIsStarted();
-
-        return customerName;
-      }
-    }
-
-    static public string CustomerUrl {
-      get {
-        AssertIsStarted();
-
-        return customerUrl;
-      }
-    }
-
-    static public int OrganizationId {
-      get {
-        AssertIsStarted();
-
-        return organizationId;
-      }
-    }
-
-    static public string ServerName {
-      get {
-        AssertIsStarted();
-
-        return serverName;
-      }
-    }
-
-    static public string ServiceProvider {
-      get {
-        AssertIsStarted();
-
-        return serviceProvider;
-      }
-    }
-
-    #endregion Public properties optional
+    #endregion Public properties
 
     #region Public methods
 
@@ -287,12 +212,12 @@ namespace Empiria {
         dateMaxValue = ConfigurationData.GetDateTime("Empiria", "DateTime.MaxValue");
         dateMinValue = ConfigurationData.GetDateTime("Empiria", "DateTime.MinValue");
         dateNullValue = ConfigurationData.GetDateTime("Empiria", "DateTime.NullValue");
+
         serverId = ConfigurationData.GetInteger("Empiria", "Server.Id");
         supportUrl = ConfigurationData.GetString("Empiria", "Support.Url");
-        customerName = ConfigurationData.GetString("Empiria", "Customer.Name");
-        customerUrl = ConfigurationData.GetString("Empiria", "Customer.Url");
-        organizationId = ConfigurationData.GetInteger("Empiria", "Organization.Id");
-        serverName = ConfigurationData.GetString("Empiria", "Server.Name");
+
+        ExecutionServer.SetCustomFields();
+
         isStarted = true;
       } catch (Exception innerException) {
         throw new ExecutionServerException(ExecutionServerException.Msg.CantReadExecutionServerProperty,

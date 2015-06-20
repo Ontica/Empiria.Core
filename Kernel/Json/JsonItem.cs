@@ -1,4 +1,13 @@
-﻿
+﻿/* Empiria Foundation Framework 2015 *************************************************************************
+*                                                                                                            *
+*  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
+*  Namespace : Empiria.Json                                     Assembly : Empiria.Kernel.dll                *
+*  Type      : JsonItem                                         Pattern  : Information Holder                *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*                                                                                                            *
+*  Summary   : Represents a json item.                                                                       *
+*                                                                                                            *
+********************************* Copyright (c) 2013-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Json {
@@ -37,7 +46,12 @@ namespace Empiria.Json {
 
     public JsonItem(string key, Exception e) {
       this.Key = key;
-      this.Value = e.Message;
+      this.Value = e;
+    }
+
+    public JsonItem(string key, object nestedObject) {
+      this.Key = key;
+      this.Value = nestedObject;
     }
 
     public string Key {
