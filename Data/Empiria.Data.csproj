@@ -243,6 +243,7 @@
     <Compile Include="Handlers\MySqlParameterCache.cs" />
     <Compile Include="Handlers\MySqlMethods.cs" />
     <Compile Include="Kernel\IStorable.cs" />
+    <Compile Include="RootTypes\DataQuery.cs" />
     <Compile Include="RootTypes\SqlFilter.cs" />
     <Compile Include="RootTypes\GeneralDataOperations.cs" />
     <Compile Include="RootTypes\DataCache.cs">

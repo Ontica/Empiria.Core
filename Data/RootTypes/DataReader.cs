@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
 *  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
 *  Type      : DataReader                                       Pattern  : Static Class                      *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Static class with methods that performs data reading operations.                              *
 *                                                                                                            *
@@ -14,6 +14,7 @@ using System.Data;
 
 using Empiria.Data.Handlers;
 using Empiria.Data.Integration;
+using Empiria.Json;
 using Empiria.Security;
 
 namespace Empiria.Data {
@@ -184,7 +185,7 @@ namespace Empiria.Data {
     }
 
     static public dynamic GetDynamicObject(DataRow row, string fieldName) {
-      return Json.JsonConverter.ToObject((string) row[fieldName]);
+      return JsonConverter.ToObject((string) row[fieldName]);
     }
 
     static public object GetFieldValue(DataOperation operation, string fieldName) {
@@ -265,9 +266,10 @@ namespace Empiria.Data {
       DataWriter.ExecuteInternal(dataOperation);
 
       string message = "Se ejecutó satisfactoriamente el procedimiento de optimización " +
-                        "de índices para todas las bases de datos del sistema.";
+                       "de índices para todas las bases de datos del sistema.";
 
-      Empiria.Messaging.Publisher.Publish(new Empiria.Messaging.Message(Empiria.Messaging.MessageType.EventMessage, message));
+      Empiria.Messaging.Publisher.Publish(
+                  new Empiria.Messaging.Message(Empiria.Messaging.MessageType.EventMessage, message));
     }
 
     #endregion Public methods

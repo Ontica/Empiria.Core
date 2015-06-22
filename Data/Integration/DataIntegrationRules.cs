@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Integration Services         *
 *  Namespace : Empiria.Data.Integration                         Assembly : Empiria.Data.dll                  *
 *  Type      : DataIntegrationRules                             Pattern  : Static Class With Instances Cache *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Provides read and write data operations allocated on external servers throw web services.     *
 *                                                                                                            *

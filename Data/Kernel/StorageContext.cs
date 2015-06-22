@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Storage Services                  *
 *  Namespace : Empiria                                          Assembly : Empiria.Data.dll                  *
 *  Type      : StorageContext                                   Pattern  : Context Class                     *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents a context for object storage system transactional operations.                      *
 *                                                                                                            *

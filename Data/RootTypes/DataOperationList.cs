@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
 *  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
 *  Type      : DataOperationList                                Pattern  : List Class                        *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents a synchronized and serializable list of Operation type objects.                    *
 *                                                                                                            *
@@ -12,7 +12,7 @@ using Empiria.Collections;
 
 namespace Empiria.Data {
 
-  public sealed class DataOperationList : EmpiriaList<DataOperation> {
+  public sealed class DataOperationList : BaseList<DataOperation> {
 
     #region Constructors and parsers
 

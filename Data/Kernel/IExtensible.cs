@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
 *  Namespace : Empiria                                          Assembly : Empiria.Data.dll                  *
 *  Type      : IExtensible<T>                                   Pattern  : Loose coupling interface          *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Interface that represents an object with an extensible set of data attributes.                *
 *                                                                                                            *

@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
 *  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
 *  Type      : DataOperation                                    Pattern  : Standard Class                    *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Type that represents a database read or write operation with or without parameters.           *
 *                                                                                                            *
@@ -60,12 +60,16 @@ namespace Empiria.Data {
     }
 
     static public DataOperation Parse(string sourceName, params object[] parameters) {
-      return new DataOperation(DataSource.Parse(sourceName), sourceName, parameters);
+      if (parameters != null && parameters.Length == 1 && parameters[0] is Array) {
+        return new DataOperation(DataSource.Parse(sourceName), sourceName, (object[]) parameters[0]);
+      } else {
+        return new DataOperation(DataSource.Parse(sourceName), sourceName, parameters);
+      }
     }
 
     static internal DataOperation Parse(DataSource dataSource, string sourceName,
                                         params object[] parameters) {
-      Empiria.Assertion.AssertObject(dataSource, "dataSource");
+      Assertion.AssertObject(dataSource, "dataSource");
 
       return new DataOperation(dataSource, sourceName, parameters);
     }

@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Storage Services                  *
 *  Namespace : Empiria                                          Assembly : Empiria.Data.dll                  *
 *  Type      : FixedList                                        Pattern  : Empiria List Class                *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents a list of objects that cannot be added, removed or changed.                        *
 *                                                                                                            *
@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Collections;
-using Empiria.Data;
 
 namespace Empiria {
 
@@ -27,7 +26,7 @@ namespace Empiria {
   }
 
   /// <summary>Represents a list of objects that cannot be added, removed or changed.</summary>
-  public class FixedList<T> : EmpiriaList<T> {
+  public class FixedList<T> : BaseList<T> {
 
     #region Constructors and parsers
 

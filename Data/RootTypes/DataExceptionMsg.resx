@@ -210,10 +210,4 @@ debido a que el sistema operativo necesitaba los recursos de memoria que estaba 
   <data name="DataIntegrationWSProxyException" xml:space="preserve">
     <value>Ocurrió un problema al intentar ejecutar la operación de integración de datos '{0}' a través de un proxy al servidor de servicios web '{1}'.</value>
   </data>
-  <data name="JsonSlicePathNotFound" xml:space="preserve">
-    <value>Json slicing operation failed because there's not a Json item in the path '{}'. </value>
-  </data>
-  <data name="JsonPathItemNotFound" xml:space="preserve">
-    <value>The Json object doesn't has the item '{1}' over the path '{0}'.</value>
-  </data>
 </root>

@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Storage Services                  *
 *  Namespace : Empiria                                          Assembly : Empiria.Data.dll                  *
 *  Type      : StorageVersion                                   Pattern  : Value Type                        *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Value type that represents IStorable object's version data.                                   *
 *                                                                                                            *

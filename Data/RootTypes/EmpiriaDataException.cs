@@ -2,8 +2,8 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
 *  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
-*  Type      : EmpiriaDataException                             Pattern  : Empiria Exception Class           *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Type      : EmpiriaDataException                             Pattern  : Exception Class                   *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : The exception that is thrown when a data access operation fails.                              *
 *                                                                                                            *
@@ -44,8 +44,6 @@ namespace Empiria.Data {
       DuplicateObjectIdFactory,
       InvalidCacheItemRemovedReason,
       InvalidDatabaseTechnology,
-      JsonPathItemNotFound,
-      JsonSlicePathNotFound,
       ObjectIdOutOfValidBounds,
       ObjectIdRuleNotSet,
       ObjectRemovedFromDataCache,

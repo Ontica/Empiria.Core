@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Storage Services                  *
 *  Namespace : Empiria                                          Assembly : Empiria.Data.dll                  *
 *  Type      : StorageChangeItemList                            Pattern  : Empiria List Class                *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents an ordered list of StorageChangeItemList instances.                                *
 *                                                                                                            *
@@ -13,7 +13,7 @@ using Empiria.Collections;
 
 namespace Empiria {
 
-  internal class StorageChangeItemList : EmpiriaList<StorageChangeItem> {
+  internal class StorageChangeItemList : BaseList<StorageChangeItem> {
 
     #region Fields
 

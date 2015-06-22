@@ -3,7 +3,7 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Integration Services         *
 *  Namespace : Empiria.Data.Integration                         Assembly : Empiria.Data.dll                  *
 *  Type      : WebApplicationWSProxy                            Pattern  : Web Service Proxy Class           *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Proxy type that allows communication to the user web application.                             *
 *                                                                                                            *
