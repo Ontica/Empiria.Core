@@ -1,9 +1,9 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Data Types Library                *
-*  Namespace : Empiria.DataTypes                                Assembly : Empiria.dll                       *
+*  Namespace : Empiria.DataTypes                                Assembly : Empiria.Foundation.dll            *
 *  Type      : Quantity                                         Pattern  : Value Type                        *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Value type that handles quantity data, a pair unit-amount data type.                          *
 *                                                                                                            *

@@ -1,11 +1,11 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Security Framework                *
-*  Namespace : Empiria.Security.Data                            Assembly : Empiria.dll                       *
-*  Type      : AttributeReader                                  Pattern  : Data Services Static Class        *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Solution  : Empiria Foundation Framework                     System   : Contacts Management               *
+*  Namespace : Empiria.Security                                 Assembly : Empiria.Foundation.dll            *
+*  Type      : SecurityData                                     Pattern  : Data Services Static Class        *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Provides data read methods for security information.                                          *
+*  Summary   : Provides data read and write methods for the security namespace types.                        *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -20,7 +20,7 @@ namespace Empiria.Security {
     static internal void ChangePassword(string username, string password) {
       var dataRow = DataReader.GetDataRow(DataOperation.Parse("getContactWithUserName", username));
       if (dataRow == null) {
-        throw new SecurityException(SecurityException.Msg.UserIDPasswordNotFound);
+        throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
       }
 
       // if (Land) {
@@ -39,6 +39,23 @@ namespace Empiria.Security {
       string sql = "UPDATE Contacts SET UserPassword = '{0}' WHERE UserName = '{1}'";
 
       DataWriter.Execute(DataOperation.Parse(String.Format(sql, password, username)));
+    }
+
+    static internal void ChangePassword(string apiKey, string username, string password) {
+      if (apiKey != ConfigurationData.GetString("ChangePasswordKey")) {
+        throw new SecurityException(SecurityException.Msg.InvalidClientAppKey, apiKey);
+      }
+      var dataRow = DataReader.GetDataRow(DataOperation.Parse("getContactWithUserName", username));
+      if (dataRow == null) {
+        throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
+      }
+
+      string p = Cryptographer.Encrypt(EncryptionMode.EntropyKey,
+                                       Cryptographer.GetMD5HashCode(password), username);
+
+      string sql = "UPDATE Contacts SET UserPassword = '{0}' WHERE UserName = '{1}'";
+
+      DataWriter.Execute(DataOperation.Parse(String.Format(sql, p, username)));
     }
 
     static internal int GetNextSessionId() {
@@ -61,8 +78,9 @@ namespace Empiria.Security {
     static internal DataRow GetUserWithCredentials(string username, string password, string entropy) {
       var dataRow = DataReader.GetDataRow(DataOperation.Parse("getContactWithUserName", username));
 
+      //No user/password found
       if (dataRow == null) {
-        throw new SecurityException(SecurityException.Msg.UserIDPasswordNotFound);
+        throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
       }
 
       string p = Cryptographer.Decrypt((string) dataRow["UserPassword"], username);
@@ -73,19 +91,21 @@ namespace Empiria.Security {
 
       //Invalid password
       if (p != password) {
-        throw new SecurityException(SecurityException.Msg.UserIDPasswordNotFound);
+        throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
       }
       dataRow.Table.Columns.Remove("UserPassword");
 
       return dataRow;
     }
 
-    static internal int WriteAuditTrail(AuditTrail o) {
-      var operation = DataOperation.Parse("apdAuditTrail", o.Id, (char) o.AuditTrailType,
-                                          o.SessionId, o.Event, o.Operation, (char) o.Result,
-                                          o.InstanceId, o.Data.ToString(), o.Timestamp);
-      return DataWriter.Execute(operation);
+    static internal long WriteAuditTrail(AuditTrail o) {
+      var op = DataOperation.Parse("apdAuditTrail", o.Request.Guid, (char) o.AuditTrailType,
+                                   o.Timestamp, o.SessionId, o.Event, o.Operation,
+                                   o.OperationData.ToString(), o.Request.AppliedToId, o.ResponseCode,
+                                   o.ResponseItems, o.ResponseTime, o.ResponseData.ToString());
+      return DataWriter.Execute(op);
     }
+
 
     static internal int WriteAuthorization(Authorization o) {
       var operation = DataOperation.Parse("writeAuthorization", o.Guid, o.TypeId, o.ReasonId,
@@ -97,11 +117,11 @@ namespace Empiria.Security {
     static internal int WriteSession(EmpiriaSession o) {
       Assertion.Assert(o.Id != 0, "Session.Id was not assigned.");
 
-      var operation = DataOperation.Parse("writeUserSession", o.Id, o.Token, o.ServerId,
-                                          o.ClientAppId, o.UserId, o.ExpiresIn,
-                                          o.RefreshToken, o.ExtendedData.ToString(),
-                                          o.StartTime, o.EndTime);
-      return DataWriter.Execute(operation);
+      var op = DataOperation.Parse("writeUserSession", o.Id, o.Token, o.ServerId,
+                                    o.ClientAppId, o.UserId, o.ExpiresIn,
+                                    o.RefreshToken, o.ExtendedData.ToString(),
+                                    o.StartTime, o.EndTime);
+      return DataWriter.Execute(op);
     }
 
   } // class SecurityData

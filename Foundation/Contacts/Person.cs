@@ -1,9 +1,9 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Contacts Management               *
-*  Namespace : Empiria.Contacts                                 Assembly : Empiria.dll                       *
+*  Namespace : Empiria.Contacts                                 Assembly : Empiria.Foundation.dll            *
 *  Type      : Person                                           Pattern  : Ontology Object Type              *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Information specific to a person.                                                             *
 *                                                                                                            *

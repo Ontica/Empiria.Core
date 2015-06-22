@@ -1,9 +1,9 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
-*  Namespace : Empiria                                          Assembly : Empiria.dll                       *
+*  Namespace : Empiria                                          Assembly : Empiria.Foundation.dll            *
 *  Type      : BaseObject                                       Pattern  : Layer Supertype                   *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : BaseObject is the root type of the object type hierarchy in Empiria Framework.                *
 *              All object types that uses the framework must be descendants of this abstract type.           *
@@ -315,7 +315,7 @@ namespace Empiria {
 
     /// <summary>Raised after initialization and after databinding if their type is
     /// marked as IsDatabounded.</summary>
-    protected virtual void OnLoadObjectData(DataRow row) {
+    internal protected virtual void OnLoadObjectData(DataRow row) {
 
     }
 

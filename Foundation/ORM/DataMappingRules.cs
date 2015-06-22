@@ -1,9 +1,9 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
-*  Namespace : Empiria.Ontology.Modeler                         Assembly : Empiria.dll                       *
+*  Solution  : Empiria Foundation Framework                     System   : Object-relational mapping         *
+*  Namespace : Empiria.ORM                                      Assembly : Empiria.Foundation.dll            *
 *  Type      : DataMappingRules                                 Pattern  : Standard class                    *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Holds data mapping rules for a giving type using DataFieldAttribute decorators,               *
 *              and performs those type instances data loading.                                               *
@@ -19,7 +19,7 @@ using Empiria.Data;
 using Empiria.Json;
 using Empiria.Reflection;
 
-namespace Empiria.Ontology.Modeler {
+namespace Empiria.ORM {
 
   /// <summary>Holds data mapping rules for a giving type using DataField type attributes decorators,
   /// and performs those type instances data loading.</summary>
@@ -65,7 +65,7 @@ namespace Empiria.Ontology.Modeler {
           }
         }
       } catch (Exception e) {
-        throw OntologyException.GetInitializeObjectException(instance, rule, e);
+        throw DataMappingException.GetInitializeObjectException(instance, rule, e);
       }
     }
 
@@ -90,26 +90,13 @@ namespace Empiria.Ontology.Modeler {
           }
         }
       } catch (Exception e) {
-        throw OntologyException.GetDataValueMappingException(instance, rule, e);
+        throw DataMappingException.GetDataValueMappingException(instance, rule, e);
       }
     }
 
     #endregion Public methods
 
     #region Private methods
-
-    private void AssertFieldNameIsInJsonCacheKeys(string jsonBaseFieldName) {
-      if (jsonFieldsNames == null) {
-        jsonFieldsNames = new List<string>(1);
-      }
-      if (!jsonFieldsNames.Contains(jsonBaseFieldName)) {
-        lock (jsonFieldsNames) {
-          if (!jsonFieldsNames.Contains(jsonBaseFieldName)) {
-            jsonFieldsNames.Add(jsonBaseFieldName);
-          }
-        }
-      }
-    }
 
     private Dictionary<string, JsonObject> CreateJsonObjectsCache() {
       if (jsonFieldsNames == null) {
@@ -155,13 +142,13 @@ namespace Empiria.Ontology.Modeler {
           dataMappingsList.Add(dataMapping);
 
           if (dataMapping.MapToJsonItem) {
-            this.AssertFieldNameIsInJsonCacheKeys(dataMapping.JsonFieldName);
+            this.TryToAddFieldNameToJsonCacheKeys(dataMapping.JsonFieldName);
           }
         }  // for
         return dataMappingsList.ToArray();
       } catch (Exception e) {
-        throw new OntologyException(OntologyException.Msg.TypeMemberMappingFails, e,
-                                    mappedType.FullName, memberInfo.Name);
+        throw new DataMappingException(DataMappingException.Msg.TypeMemberMappingFails, e,
+                                       mappedType.FullName, memberInfo.Name);
       }
     }
 
@@ -181,21 +168,34 @@ namespace Empiria.Ontology.Modeler {
           if (columnIndex != -1) {
             mapping.MapDataColumn(dataColumns[columnIndex]);
           } else {
-            throw new OntologyException(OntologyException.Msg.MappingDataColumnNotFound,
-                                        mappedType.Name, mapping.MemberInfo.Name,
-                                        mapping.JsonFieldName);
+            throw new DataMappingException(DataMappingException.Msg.MappingDataColumnNotFound,
+                                           mappedType.Name, mapping.MemberInfo.Name,
+                                           mapping.JsonFieldName);
           }  // inner if
         } else {
-          throw new OntologyException(OntologyException.Msg.MappingDataColumnNotFound,
-                                      mappedType.Name, mapping.MemberInfo.Name,
-                                      mapping.DataFieldAttributeName);
+          throw new DataMappingException(DataMappingException.Msg.MappingDataColumnNotFound,
+                                         mappedType.Name, mapping.MemberInfo.Name,
+                                         mapping.DataFieldAttributeName);
         }  // main if
       } // foreach
       this.dataColumnsAreMapped = true;
+    }
+
+    private void TryToAddFieldNameToJsonCacheKeys(string jsonBaseFieldName) {
+      if (jsonFieldsNames == null) {
+        jsonFieldsNames = new List<string>(1);
+      }
+      if (!jsonFieldsNames.Contains(jsonBaseFieldName)) {
+        lock (jsonFieldsNames) {
+          if (!jsonFieldsNames.Contains(jsonBaseFieldName)) {
+            jsonFieldsNames.Add(jsonBaseFieldName);
+          }
+        }
+      }
     }
 
     #endregion Private methods
 
   } // class DataMappingRules
 
-} // namespace Empiria.Ontology.Modeler
+} // namespace Empiria.ORM

@@ -200,18 +200,27 @@
     <Compile Include="DataTypes\TempAddress.cs" />
     <Compile Include="Contacts\Organization.cs" />
     <Compile Include="DataTypes\InterestRateType.cs" />
-    <Compile Include="Ontology.Modeler\DataFieldMapping.cs" />
-    <Compile Include="Ontology.Modeler\DataPropertyMapping.cs" />
-    <Compile Include="Ontology.Modeler\DataMapping.cs" />
+    <Compile Include="Empiria.Foundation.AssemblyInfo.cs" />
+    <Compile Include="ORM\DataFieldMapping.cs" />
+    <Compile Include="ORM\DataMapping.cs" />
+    <Compile Include="ORM\DataMappingException.cs" />
+    <Compile Include="ORM\DataMappingRules.cs" />
+    <Compile Include="ORM\DataPropertyMapping.cs" />
     <Compile Include="RootTypes\AttributesBag.cs" />
-    <Compile Include="Ontology.Modeler\DataMappingRules.cs" />
     <Compile Include="RootTypes\AttributesBagBoxing.cs" />
     <Compile Include="Ontology\PartitionedTypeAttribute.cs" />
     <Compile Include="Ontology\PowertypeAttribute.cs" />
     <Compile Include="Ontology\Powertype.cs" />
     <Compile Include="DataTypes\NameValuePair.cs" />
+    <Compile Include="RootTypes\BaseObjectFactory.cs" />
+    <Compile Include="RootTypes\DataModelAttribute.cs" />
+    <Compile Include="RootTypes\MetaModel.cs" />
     <Compile Include="RootTypes\ObjectsCache.cs" />
     <Compile Include="RootTypes\LazyInstance.cs" />
+    <Compile Include="RootTypes\ObjectStatus.cs" />
+    <Compile Include="RootTypes\ResourceNotFoundException.cs" />
+    <Compile Include="RootTypes\UnauthorizedException.cs" />
+    <Compile Include="RootTypes\ValidationException.cs" />
     <Compile Include="RootTypes\ValueObject.cs" />
     <Compile Include="RootTypes\DataFieldAttribute.cs" />
     <Compile Include="RootTypes\IValueObject.cs" />
@@ -256,10 +265,10 @@
     <Compile Include="Security\AuthorizationType.cs" />
     <Compile Include="Security\ClientApplication.cs" />
     <Compile Include="Security\ImpersonationContext.cs" />
+    <Compile Include="Security\IRequest.cs" />
     <Compile Include="Security\UserSettings.cs" />
     <Compile Include="Security\WebServer.cs" />
     <Compile Include="Security\EmpiriaUser.cs" />
-    <Compile Include="Empiria.AssemblyInfo.cs" />
     <Compile Include="RootTypes\SearchExpression.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -311,6 +320,7 @@
     <EmbeddedResource Include="Ontology\OntologyExceptionMsg.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="ORM\DataMappingExceptionMsg.resx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

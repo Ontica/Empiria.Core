@@ -1,9 +1,9 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
-*  Namespace : Empiria.Ontology.Modeler                         Assembly : Empiria.dll                       *
+*  Solution  : Empiria Foundation Framework                     System   : Object-relational mapping         *
+*  Namespace : Empiria.ORM                                      Assembly : Empiria.Foundation.dll            *
 *  Type      : DataMapping                                      Pattern  : Standard class                    *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Mapping rule between a type property or field and a data source element.                      *
 *                                                                                                            *
@@ -17,8 +17,9 @@ using System.Reflection;
 using Empiria.Data;
 using Empiria.Json;
 using Empiria.Reflection;
+using Empiria.Ontology;
 
-namespace Empiria.Ontology.Modeler {
+namespace Empiria.ORM {
 
   /// <summary>Mapping rule between a type property or field and a data source element.</summary>
   internal abstract class DataMapping {
@@ -332,9 +333,9 @@ namespace Empiria.Ontology.Modeler {
 
         return MethodInvoker.GetStaticPropertyValueMethodDelegate(propertyInfo);
       } catch (Exception e) {
-        throw new OntologyException(OntologyException.Msg.CannotParsePropertyForDefaultValue, e,
-                                    this.MemberInfo.DeclaringType, this.MemberInfo.Name,
-                                    defaultValueCode, this.GetExecutionData());
+        throw new DataMappingException(DataMappingException.Msg.CannotParsePropertyForDefaultValue, e,
+                                       this.MemberInfo.DeclaringType, this.MemberInfo.Name,
+                                       defaultValueCode, this.GetExecutionData());
       }
     }
 
@@ -352,7 +353,8 @@ namespace Empiria.Ontology.Modeler {
       } else if (type == typeof(decimal)) {
         return decimal.Zero;
       } else {
-        throw new OntologyException(OntologyException.Msg.CannotGetDefaultValueforType, type.FullName);
+        throw new DataMappingException(DataMappingException.Msg.CannotGetDefaultValueforType,
+                                       type.FullName);
       }
     }
 
@@ -443,4 +445,4 @@ namespace Empiria.Ontology.Modeler {
 
   } // class DataMapping
 
-} // namespace Empiria.Ontology.Modeler
+} // namespace Empiria.ORM

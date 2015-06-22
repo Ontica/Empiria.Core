@@ -1,9 +1,9 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Security Framework                *
-*  Namespace : Empiria.Security                                 Assembly : Empiria.dll                       *
+*  Namespace : Empiria.Security                                 Assembly : Empiria.Foundation.dll            *
 *  Type      : EmpiriaPrincipal                                 Pattern  : Standard Class                    *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents the security context of the user or access account on whose behalf the Empiria     *
 *              framework code is running, including that user's identity (EmpiriaIdentity) and any domain    *
@@ -37,6 +37,7 @@ namespace Empiria.Security {
     internal EmpiriaPrincipal(EmpiriaIdentity identity, EmpiriaSession session) {
       Assertion.AssertObject(session, "session");
       Assertion.AssertObject(identity, "identity");
+
       if (!identity.IsAuthenticated) {
         throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
       }
@@ -146,17 +147,6 @@ namespace Empiria.Security {
         }
       }
       return false;
-    }
-
-    public object ToOAuth() {
-      return new {
-        access_token = this.Session.Token, token_type = this.Session.TokenType,
-        expires_in = this.Session.ExpiresIn, refresh_token = this.Session.RefreshToken,
-        data = new {
-          uid = this.Identity.UserId, username = this.Identity.Name,
-          email = this.Identity.User.EMail, fullname = this.Identity.User.FullName,
-        }
-      };
     }
 
     #endregion Public methods

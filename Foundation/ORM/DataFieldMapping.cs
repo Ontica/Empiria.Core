@@ -1,9 +1,9 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
-*  Namespace : Empiria.Ontology.Modeler                         Assembly : Empiria.dll                       *
+*  Solution  : Empiria Foundation Framework                     System   : Object-relational mapping         *
+*  Namespace : Empiria.ORM                                      Assembly : Empiria.Foundation.dll            *
 *  Type      : DataFieldMapping                                 Pattern  : Standard class                    *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Mapping rule between a type field and a data source element.                                  *
 *                                                                                                            *
@@ -13,7 +13,7 @@ using System.Reflection;
 
 using Empiria.Reflection;
 
-namespace Empiria.Ontology.Modeler {
+namespace Empiria.ORM {
 
   /// <summary>Mapping rule between a type field and a data source element.</summary>
   internal class DataFieldMapping : DataMapping {
@@ -62,4 +62,4 @@ namespace Empiria.Ontology.Modeler {
 
   } // class DataFieldMapping
 
-} // namespace Empiria.Ontology.Modeler
+} // namespace Empiria.ORM

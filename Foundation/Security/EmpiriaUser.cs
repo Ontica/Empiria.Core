@@ -1,18 +1,15 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Security Framework                *
-*  Namespace : Empiria.Security                                 Assembly : Empiria.dll                       *
+*  Namespace : Empiria.Security                                 Assembly : Empiria.Foundation.dll            *
 *  Type      : EmpiriaUser                                      Pattern  : Ontology Relation Type            *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Represents a human user.                                                                      *
+*  Summary   : Represents a system's user.                                                                   *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
-using System.Web.Security;
-
-using Empiria.Contacts;
 
 namespace Empiria.Security {
 
@@ -32,6 +29,28 @@ namespace Empiria.Security {
       return BaseObject.ParseDataRow<EmpiriaUser>(row);
     }
 
+    static public EmpiriaUser Current {
+      get {
+        if (ExecutionServer.IsAuthenticated) {
+          return ExecutionServer.CurrentIdentity.User as EmpiriaUser;
+        } else {
+          return null;
+        }
+      }
+    }
+
+    static internal EmpiriaUser Authenticate(string username, string password, string entropy) {
+      EmpiriaUser user = EmpiriaUser.GetUserWithCredentials(username, password, entropy);
+      if (!user.IsActive) {
+        throw new SecurityException(SecurityException.Msg.NotActiveUser, username);
+      }
+      if (user.PasswordExpired) {
+        throw new SecurityException(SecurityException.Msg.UserPasswordExpired, username);
+      }
+      user.IsAuthenticated = true;
+      return user;
+    }
+
     static internal EmpiriaUser Authenticate(EmpiriaSession activeSession) {
       Assertion.AssertObject(activeSession, "activeSession");
 
@@ -49,19 +68,7 @@ namespace Empiria.Security {
       return user;
     }
 
-    static internal EmpiriaUser Authenticate(string username, string password, string entropy) {
-      EmpiriaUser user = EmpiriaUser.GetUserWithCredentials(username, password, entropy);
-      if (!user.IsActive) {
-        throw new SecurityException(SecurityException.Msg.NotActiveUser, username);
-      }
-      if (user.PasswordExpired) {
-        throw new SecurityException(SecurityException.Msg.UserPasswordExpired, username);
-      }
-      user.IsAuthenticated = true;
-      return user;
-    }
-
-    static internal EmpiriaUser Authenticate(SystemUser systemUser) {
+    static internal EmpiriaUser Authenticate(AnonymousUser systemUser) {
       EmpiriaUser user = EmpiriaUser.Parse((int) systemUser);
       if (!user.IsActive) {
         throw new SecurityException(SecurityException.Msg.NotActiveUser, systemUser.ToString());
@@ -71,16 +78,6 @@ namespace Empiria.Security {
       }
       user.IsAuthenticated = true;
       return user;
-    }
-
-    static public EmpiriaUser Current {
-      get {
-        if (ExecutionServer.IsAuthenticated) {
-          return ExecutionServer.CurrentIdentity.User as EmpiriaUser;
-        } else {
-          return null;
-        }
-      }
     }
 
     #endregion Constructors and parsers
@@ -122,7 +119,7 @@ namespace Empiria.Security {
     #region Public methods
 
     static public void ChangePassword(string apiKey, string username, string password) {
-      SecurityData.ChangePassword(username, password);
+      SecurityData.ChangePassword(apiKey, username, password);
     }
 
     #endregion Public methods
@@ -135,10 +132,10 @@ namespace Empiria.Security {
       return EmpiriaUser.Parse(row);
     }
 
-    protected override void OnLoadObjectData(DataRow row) {
+    internal protected override void OnLoadObjectData(DataRow row) {
       this.UserName = (string) row["UserName"];
       this.IsAuthenticated = false;
-      this.IsActive = ((GeneralObjectStatus) Convert.ToChar((string) row["ContactStatus"]) == GeneralObjectStatus.Active);
+      this.IsActive = ((ObjectStatus) Convert.ToChar((string) row["ContactStatus"]) == ObjectStatus.Active);
       this.PasswordExpired = false;
       this.EMail = (string) row["ContactEmail"];
       this.FullName = (string) row["ContactFullName"];

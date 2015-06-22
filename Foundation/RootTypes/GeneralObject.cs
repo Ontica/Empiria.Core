@@ -1,9 +1,9 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
-*  Namespace : Empiria                                          Assembly : Empiria.dll                       *
+*  Namespace : Empiria                                          Assembly : Empiria.Foundation.dll            *
 *  Type      : GeneralObject                                    Pattern  : Storage Item                      *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Abstract type that holds basic object instances which are stored in a general common table.   *
 *                                                                                                            *

@@ -1,9 +1,9 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Contacts Management               *
-*  Namespace : Empiria.Contacts                                 Assembly : Empiria.dll                       *
+*  Namespace : Empiria.Contacts                                 Assembly : Empiria.Foundation.dll            *
 *  Type      : Contact                                          Pattern  : Empiria Semiabstract Object Type  *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents either a person, an organization or a group that has a meaningful name and can be  *
 *              contacted in some way and can play one or more roles.                                         *

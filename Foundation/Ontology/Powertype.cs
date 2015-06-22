@@ -1,9 +1,9 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
-*  Namespace : Empiria.Ontology                                 Assembly : Empiria.dll                       *
+*  Namespace : Empiria.Ontology                                 Assembly : Empiria.Foundation.dll            *
 *  Type      : Powertype                                        Pattern  : Power type                        *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : A powertype is a an object type whose instances are subtypes of another object type, named    *
 *              the partitioned type. Powertypes enable dynamic specialization. All descendents of this type  *
@@ -51,6 +51,17 @@ namespace Empiria.Ontology {
     }
 
     #endregion Public properties
+
+    #region Public methods
+
+    /// <summary>Returns true if this powertype instance is subtype of T.</summary>
+    public bool IsSubtypeOf<T>() where T : class {
+      Type type = this.UnderlyingSystemType;
+
+      return typeof(T) == type;
+    }
+
+    #endregion Public methods
 
   } // class Powertype
 

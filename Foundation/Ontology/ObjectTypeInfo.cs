@@ -1,9 +1,9 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
-*  Namespace : Empiria.Ontology                                 Assembly : Empiria.dll                       *
+*  Namespace : Empiria.Ontology                                 Assembly : Empiria.Foundation.dll            *
 *  Type      : ObjectTypeInfo                                   Pattern  : Type metadata class               *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents an object type definition.                                                         *
 *                                                                                                            *
@@ -17,7 +17,7 @@ using System.Reflection.Emit;
 
 using Empiria.Collections;
 using Empiria.Data;
-using Empiria.Ontology.Modeler;
+using Empiria.ORM;
 using Empiria.Reflection;
 
 namespace Empiria.Ontology {

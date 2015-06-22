@@ -1,9 +1,9 @@
 ﻿/* Empiria Foundation Framework 2015 *************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Security Framework                *
-*  Namespace : Empiria.Security                                 Assembly : Empiria.dll                       *
+*  Namespace : Empiria.Security                                 Assembly : Empiria.Foundation.dll            *
 *  Type      : EmpiriaIdentity                                  Pattern  : Standard Class                    *
-*  Version   : 6.0        Date: 04/Jan/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Sealed class that represents a Empiria System identity.                                       *
 *                                                                                                            *
@@ -19,13 +19,13 @@ namespace Empiria.Security {
     Realm = 3,
   }
 
-  public enum SystemUser {
-    Administrator = -3,
+  public enum AnonymousUser {
     Guest = -5,
-    UnitTester = -4,
+    Tester = -4,
   }
 
   public sealed class EmpiriaIdentity : IEmpiriaIdentity {
+
     #region Constructors and parsers
 
     private EmpiriaIdentity(EmpiriaUser user) {
@@ -50,7 +50,7 @@ namespace Empiria.Security {
     }
 
     static public EmpiriaPrincipal Authenticate(string clientAppKey,
-                                                SystemUser systemUser, int contextId = -1) {
+                                                AnonymousUser systemUser, int contextId = -1) {
       Assertion.AssertObject(clientAppKey, "clientAppKey");
 
       var clientApplication = ClientApplication.ParseActive(clientAppKey);
@@ -77,6 +77,7 @@ namespace Empiria.Security {
 
       var identity = new EmpiriaIdentity(user);
       identity.SetAuthenticationType(AuthenticationMode.Basic);
+
       return new EmpiriaPrincipal(identity, clientApplication, contextId);
     }
 
