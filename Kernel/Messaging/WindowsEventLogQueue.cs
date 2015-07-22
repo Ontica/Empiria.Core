@@ -19,14 +19,14 @@ namespace Empiria.Messaging {
 
     #region Fields
 
-    private readonly string DefaultEventLogSource = ExecutionServer.LicenseName;
+    private readonly string DefaultEventLogSource = ExecutionServer.IsSpecialLicense ?
+                                                    ExecutionServer.LicenseName : "Empiria";
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    internal WindowsEventLogQueue(string queueName)
-      : base(queueName) {
+    internal WindowsEventLogQueue(string queueName) : base(queueName) {
 
     }
 

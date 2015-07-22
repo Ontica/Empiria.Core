@@ -18,6 +18,12 @@ namespace Empiria.Data {
 
     #region Public properties
 
+    public static string AllRecordsFilter {
+      get {
+        return "(1 = 1)";
+      }
+    }
+
     static public string NoRecordsFilter {
       get {
         return "(1 = 0)";
@@ -91,6 +97,23 @@ namespace Empiria.Data {
         sql += "'" + value + "'";
       }
       return fieldName + " IN (" + sql + ")";
+    }
+
+    static public string BuildSqlNotInSetClause(string fieldName, string[] values) {
+      if (values == null || values.Length == 0) {
+        return String.Empty;
+      }
+      if (values.Length == 1) {
+        return fieldName + " <> '" + values[0] + "'";
+      }
+      string sql = String.Empty;
+      foreach (string value in values) {
+        if (sql.Length != 0) {
+          sql += ",";
+        }
+        sql += "'" + value + "'";
+      }
+      return fieldName + " NOT IN (" + sql + ")";
     }
 
     static public string BuildSqlOrFilter(string firstFilter, string secondFilter, params string[] otherFilters) {

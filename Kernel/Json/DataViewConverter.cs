@@ -40,7 +40,7 @@ namespace Empiria.Json {
     }
 
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
-      serializer.Serialize(writer, ((DataView) value).Table);
+      serializer.Serialize(writer, ((DataView) value).ToTable());
     }
 
   }  // class DataViewConverter

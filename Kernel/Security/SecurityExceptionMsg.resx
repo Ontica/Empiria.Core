@@ -185,12 +185,6 @@
   <data name="UserPasswordExpired" xml:space="preserve">
     <value>User password has expired for user '{0}'.</value>
   </data>
-  <data name="AuthenticationHeaderMissed" xml:space="preserve">
-    <value>The server received a request over a protected resource without the Authentication header.</value>
-  </data>
-  <data name="BadAuthenticationHeaderFormat" xml:space="preserve">
-    <value>The web server received a request with a bad-formed authentication header.</value>
-  </data>
   <data name="ExpiredSessionToken" xml:space="preserve">
     <value>The session with token '{0}' was expired.</value>
   </data>
@@ -199,5 +193,11 @@
   </data>
   <data name="NotActiveClientAppKey" xml:space="preserve">
     <value>The application key '{0}' is not active.</value>
+  </data>
+  <data name="ClientApplicationClaimNotFound" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="PrincipalClaimNotFound" xml:space="preserve">
+    <value>{0}</value>
   </data>
 </root>

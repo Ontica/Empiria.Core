@@ -43,11 +43,11 @@ namespace Empiria {
       }
     }
 
-   #endregion Public custom properties
+    #endregion Public custom properties
 
-   #region Public custom additional properties
+    #region Public custom additional properties
 
-   static public string CustomerName {
+    static public string CustomerName {
       get {
         AssertIsStarted();
 
@@ -105,7 +105,7 @@ namespace Empiria {
         AssertIsStarted();
 
         return ServerType == ExecutionServerType.WebApiServer ||
-               ServerType == ExecutionServerType.WebServicesServer;
+                ServerType == ExecutionServerType.WebServicesServer;
       }
     }
 

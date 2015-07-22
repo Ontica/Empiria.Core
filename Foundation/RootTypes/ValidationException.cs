@@ -23,8 +23,8 @@ namespace Empiria {
     /// message.</summary>
     /// <param name="messageCode">Used to indicate the description of the exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
-    public ValidationException(string messageCode, string message, params object[] args)
-      : base(messageCode, message, args) {
+    public ValidationException(string messageCode, string message, params object[] args) :
+                               base(messageCode, message, args) {
     }
 
     /// <summary>Initializes a new instance of ValidationException class with a specified error
@@ -33,8 +33,7 @@ namespace Empiria {
     /// <param name="exception">This is the inner exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
     public ValidationException(string messageCode, string message, Exception exception,
-                                 params object[] args)
-      : base(messageCode, message, exception, args) {
+                               params object[] args) : base(messageCode, message, exception, args) {
     }
 
     #endregion Constructors and parsers

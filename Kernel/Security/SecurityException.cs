@@ -18,13 +18,12 @@ namespace Empiria.Security {
   public sealed class SecurityException : EmpiriaException {
 
     public enum Msg {
-      AuthenticationHeaderMissed,
-      BadAuthenticationHeaderFormat,
       CantChangePasswordOnUnauthenticatedUser,
       CantCloseSession,
       CantDecryptString,
       CantEncryptString,
       CantVerifyPasswordOnUnauthenticatedUser,
+      ClientApplicationClaimNotFound,
       EncryptedObjectWasAltered,
       ExpiredSessionToken,
       GuestUserNotFound,
@@ -39,6 +38,7 @@ namespace Empiria.Security {
       InvalidUserCredentials,
       NotActiveUser,
       NotActiveClientAppKey,
+      PrincipalClaimNotFound,
       RequireExecuteMethod,
       SessionTokenNotFound,
       UnauthenticatedIdentity,

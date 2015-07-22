@@ -11,6 +11,9 @@
 using System;
 using System.Data;
 
+using Empiria.Contacts;
+using Empiria.Json;
+
 namespace Empiria.Security {
 
   public class ClientApplication : BaseObject {
@@ -38,15 +41,35 @@ namespace Empiria.Security {
       return application;
     }
 
+    static public ClientApplication Current {
+      get {
+        if (EmpiriaPrincipal.Current != null) {
+          return EmpiriaPrincipal.Current.ClientApp;
+        } else {
+          return null;
+        }
+      }
+    }
+
     internal protected override void OnLoadObjectData(DataRow row) {
       this.Key = (string) row["ObjectKey"];
       this.Description = (string) row["ObjectName"];
       this.Status = (ObjectStatus) Convert.ToChar((string) row["ObjectStatus"]);
+
+      var json = JsonObject.Parse((string) row["ObjectExtData"]);
+      this.AssignedTo = Contact.Parse(json.Get<Int32>("AssignedToId", -1));
+
+      this.Claims = new SecurityClaimList(this);
     }
 
     #endregion Constructors and parsers
 
     #region Properties
+
+    public Contact AssignedTo {
+      get;
+      private set;
+    }
 
     [DataField("ObjectKey")]
     public string Key {
@@ -66,7 +89,36 @@ namespace Empiria.Security {
       private set;
     }
 
+    public SecurityClaimList Claims {
+      get;
+      private set;
+    }
+
     #endregion Properties
+
+    #region Methods
+
+    public void AssertClaim(SecurityClaimType claimType, string claimValue,
+                            string assertionFailMsg = null) {
+      Assertion.AssertObject(claimValue, "claimValue");
+
+      if (this.Claims.Contains(claimType, claimValue)) {
+        return;
+      }
+
+      if (String.IsNullOrWhiteSpace(assertionFailMsg)) {
+        assertionFailMsg = this.BuildAssertionClaimFailMsg(claimType, claimValue);
+      }
+      throw new SecurityException(SecurityException.Msg.ClientApplicationClaimNotFound, assertionFailMsg);
+    }
+
+    private string BuildAssertionClaimFailMsg(SecurityClaimType claimType, string claimValue) {
+      return String.Format("Client application '{0}' doesn't have a security claim " +
+                           "with value '{1}' of type '{2}'.",
+                           this.Description, claimValue, claimType.Key);
+    }
+
+    #endregion Methods
 
   }  // class ClientApplication
 

@@ -43,6 +43,7 @@ namespace Empiria {
     static private int serverId = 0;
     static private string supportUrl = null;
     static private bool isStarted = false;
+    static private bool isDevelopmentServer = false;
 
     static private ExecutionServerType executionServerType = ExecutionServerType.WebApplicationServer;
 
@@ -121,6 +122,14 @@ namespace Empiria {
         var principal = Thread.CurrentPrincipal;
 
         return (principal != null && principal is IEmpiriaPrincipal);
+      }
+    }
+
+    static public bool IsDevelopmentServer {
+      get {
+        AssertIsStarted();
+
+        return isDevelopmentServer;
       }
     }
 
@@ -215,6 +224,8 @@ namespace Empiria {
 
         serverId = ConfigurationData.GetInteger("Empiria", "Server.Id");
         supportUrl = ConfigurationData.GetString("Empiria", "Support.Url");
+
+        isDevelopmentServer = ConfigurationData.GetBoolean("Empiria", "IsDevelopmentServer");
 
         ExecutionServer.SetCustomFields();
 

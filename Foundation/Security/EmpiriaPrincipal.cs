@@ -58,6 +58,12 @@ namespace Empiria.Security {
       this.Initialize(identity, clientApp, contextId: contextId);
     }
 
+    static public EmpiriaPrincipal Current {
+      get {
+        return ExecutionServer.CurrentPrincipal as EmpiriaPrincipal;
+      }
+    }
+
     static internal EmpiriaPrincipal TryParseWithToken(string sessionToken) {
       EmpiriaPrincipal principal = null;
       if (principalsCache.ContainsKey(sessionToken)) {
@@ -125,9 +131,27 @@ namespace Empiria.Security {
       }
     }
 
+    public SecurityClaimList Claims {
+      get;
+      private set;
+    }
+
     #endregion Public properties
 
     #region Public methods
+
+    public void AssertClaim(SecurityClaimType claimType, string claimValue, string assertionFailMsg = null) {
+      Assertion.AssertObject(claimValue, "claimValue");
+
+      if (this.Claims.Contains(claimType, claimValue)) {
+        return;
+      }
+
+      if (String.IsNullOrWhiteSpace(assertionFailMsg)) {
+        assertionFailMsg = this.BuildAssertionClaimFailMsg(claimType, claimValue);
+      }
+      throw new SecurityException(SecurityException.Msg.PrincipalClaimNotFound, assertionFailMsg);
+    }
 
     public void Dispose() {
       Dispose(true);
@@ -152,6 +176,11 @@ namespace Empiria.Security {
     #endregion Public methods
 
     #region Private methods
+
+    private string BuildAssertionClaimFailMsg(SecurityClaimType claimType, string claimValue) {
+      return String.Format("Principal '{0}' doesn't have a security claim with value '{1}' of type '{2}'.",
+                            this.Identity.User.UserName, claimValue, claimType.Key);
+    }
 
     private void Dispose(bool disposing) {
       try {
@@ -184,6 +213,8 @@ namespace Empiria.Security {
       LoadRolesArray(identity.UserId);
       principalsCache.Add(this.Session.Token, this);
       this.RefreshBeforeReturn();
+
+      this.Claims = new SecurityClaimList(this.Identity.User);
     }
 
     private void LoadRolesArray(int participantId) {

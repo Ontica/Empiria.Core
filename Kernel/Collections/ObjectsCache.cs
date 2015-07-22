@@ -102,8 +102,30 @@ namespace Empiria.Collections {
       return items.ContainsKey(key);
     }
 
+    public ItemsType TryGetItem(KeyType key) {
+      if (this.ContainsKey(key)) {
+        return items[key];
+      } else {
+        return null;
+      }
+    }
+
     public bool ContainsValue(ItemsType value) {
       return items.ContainsValue(value);
+    }
+
+    public void Insert(KeyType key, ItemsType item) {
+      if (!items.ContainsKey(key)) {
+        lock (locker) {
+          if (!items.ContainsKey(key)) {
+            items.Add(key, item);
+          }
+        }
+      } else {
+        lock (locker) {
+          items[key] = item;
+        }
+      }
     }
 
     public ItemsType Remove(KeyType key) {

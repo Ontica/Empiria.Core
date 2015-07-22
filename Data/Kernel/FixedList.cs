@@ -23,7 +23,7 @@ namespace Empiria {
       return new FixedList<T>(list);
     }
 
-  }
+  }  // class ListExtensionMethods
 
   /// <summary>Represents a list of objects that cannot be added, removed or changed.</summary>
   public class FixedList<T> : BaseList<T> {

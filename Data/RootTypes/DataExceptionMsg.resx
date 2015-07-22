@@ -117,25 +117,25 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CannotGetDataReader" xml:space="preserve">
-    <value>No pude recuperar la información de '{0}' mediante el objeto de acceso a datos DataReader.</value>
+    <value>There was a problem loading the DataReader for data source '{0}'.</value>
   </data>
   <data name="CannotGetDataTable" xml:space="preserve">
-    <value>No pude recuperar la información de '{0}' mediante el objeto de acceso a datos DataTable.</value>
+    <value>There was a problem loading the DataTable for data source '{0}'.</value>
   </data>
   <data name="CannotExecuteActionQuery" xml:space="preserve">
-    <value>No pude ejecutar la consulta de acción '{0}'. Parámetros de la operación: ({1})</value>
+    <value>There was a problem executing '{0}'. Data operation parameters were: ({1})</value>
   </data>
   <data name="CannotGetObjectId" xml:space="preserve">
     <value>No pude recuperar el identificador del objeto (objectId) regresado por '{0}' de la base de datos.</value>
   </data>
   <data name="CannotGetScalar" xml:space="preserve">
-    <value>No pude recuperar el dato regresado por '{0}' de la base de datos.</value>
+    <value>There was a problem reading the value returned by '{0}'.</value>
   </data>
   <data name="CannotGetDataView" xml:space="preserve">
-    <value>No pude recuperar la información de '{0}' mediante el objeto de acceso a datos DataView.</value>
+    <value>There was a problem loading the DataView for data source '{0}'.</value>
   </data>
   <data name="CannotGetFieldValue" xml:space="preserve">
-    <value>No pude recuperar el valor del campo '{1}' del objeto de datos {0}.</value>
+    <value>There was a problem retriving the field value '{1}' of the data source '{0}'.</value>
   </data>
   <data name="CacheRestoreRemovedObjectCallbackFails" xml:space="preserve">
     <value>Falló la llamada de regreso (callback) del procedimiento asíncrono que actualiza el caché de datos.</value>
@@ -171,7 +171,7 @@
     <value>El id {0} obtenido para el nuevo objeto está fuera de los límites establecidos por las reglas definidas para el dominio de ejecución.</value>
   </data>
   <data name="DataSourceNotDefined" xml:space="preserve">
-    <value>La fuente de datos {0} no ha sido definida en la tabla DBDataSources.</value>
+    <value>There is not data source with name '{0}' defined inside DBDataSources table.</value>
   </data>
   <data name="CannotRegisterObjectIdFactory" xml:space="preserve">
     <value>No pude registrar la fábrica de identificadores de objetos a través de los servicios de remoting empleando el canal proporcionado: {0}.</value>
@@ -181,10 +181,10 @@
 debido a que el sistema operativo necesitaba los recursos de memoria que estaba utilizando (mecanismo scavenging).</value>
   </data>
   <data name="WrongQueryParametersNumber" xml:space="preserve">
-    <value>Se intentó ejecutar la consulta '{0}', pero los parámetros que se proporcionaron no coinciden en número con los registrados en la tabla DBQueryParameters.</value>
+    <value>The parameters received are not the same of those defined for data source '{0}' inside table DBQueryParameters.</value>
   </data>
   <data name="ObjectIdRuleNotSet" xml:space="preserve">
-    <value>La regla para la creación de identificadores de objetos (ids) del tipo {0}, no se encuentra en el archivo de configuración.</value>
+    <value>There is not ID creation rule defined for types with name '{0}', inside the data configuration file.</value>
   </data>
   <data name="DuplicateObjectIdFactory" xml:space="preserve">
     <value>Por cuestiones de integridad de la información, sólo puede registrarse una única fábrica de identificadores de objetos (Empiria.Data.ObjectIdFactory) en cada equipo. En este caso, otro proceso del sistema operativo registró previamente dicha fábrica de objetos. Por favor, consulte con el personal de soporte técnico de su organización.</value>

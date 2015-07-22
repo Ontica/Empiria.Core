@@ -134,7 +134,13 @@ namespace Empiria.Data {
     }
 
     static public DataTable GetDataTable(DataOperation operation) {
-      return GetDataTable(operation, operation.Name);
+      return DataReader.GetDataTable(operation, operation.Name);
+    }
+
+    static public DataTable GetDataTable(DataOperation operation, DataQuery query) {
+      var dataTable = DataReader.GetDataTable(operation, operation.Name);
+
+      return query.ApplyTo(dataTable);
     }
 
     static public DataTable GetDataTable(DataOperation operation, string dataTableName) {
@@ -153,11 +159,11 @@ namespace Empiria.Data {
     }
 
     static public DataView GetDataView(DataOperation operation) {
-      return GetDataView(operation, String.Empty, String.Empty);
+      return DataReader.GetDataView(operation, String.Empty, String.Empty);
     }
 
     static public DataView GetDataView(DataOperation operation, string filter) {
-      return GetDataView(operation, filter, String.Empty);
+      return DataReader.GetDataView(operation, filter, String.Empty);
     }
 
     static public DataView GetDataView(DataOperation operation, string filter, string sort) {

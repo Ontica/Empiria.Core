@@ -214,6 +214,7 @@
     <Compile Include="DataTypes\NameValuePair.cs" />
     <Compile Include="RootTypes\BaseObjectFactory.cs" />
     <Compile Include="RootTypes\DataModelAttribute.cs" />
+    <Compile Include="RootTypes\IDataModel.cs" />
     <Compile Include="RootTypes\MetaModel.cs" />
     <Compile Include="RootTypes\ObjectsCache.cs" />
     <Compile Include="RootTypes\LazyInstance.cs" />
@@ -266,6 +267,9 @@
     <Compile Include="Security\ClientApplication.cs" />
     <Compile Include="Security\ImpersonationContext.cs" />
     <Compile Include="Security\IRequest.cs" />
+    <Compile Include="Security\SecurityClaim.cs" />
+    <Compile Include="Security\SecurityClaimList.cs" />
+    <Compile Include="Security\SecurityClaimType.cs" />
     <Compile Include="Security\UserSettings.cs" />
     <Compile Include="Security\WebServer.cs" />
     <Compile Include="Security\EmpiriaUser.cs" />

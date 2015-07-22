@@ -21,7 +21,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Ontica")]
 [assembly: AssemblyProduct("Empiria Foundation Framework 2015")]
 [assembly: AssemblyCopyright("(c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.")]
-[assembly: AssemblyTrademark("Empiria and Ontica are either registered trademarks of La Vía Óntica SC or Ontica LLC.")]
+[assembly: AssemblyTrademark("Empiria and Ontica are either trademarks of La Vía Óntica SC or Ontica LLC.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

@@ -42,18 +42,8 @@ namespace Empiria.Messaging {
     }
 
     private Queue CreateDefaultQueue() {
-      string defaultQueueTypeName = ConfigurationData.GetString("DefaultQueue.TypeName");
-      string defaultQueueName = ConfigurationData.GetString("DefaultQueue.Name");
-
-      switch (defaultQueueTypeName) {
-      //  case "FileBasedQueue":
-      //    return new FileBasedQueue(defaultQueueName);
-        case "WindowsEventLogQueue":
-          return new WindowsEventLogQueue(defaultQueueName);
-        default:
-          throw new MessagingException(MessagingException.Msg.InvalidDefaultQueueTypeName,
-                                       defaultQueueTypeName);
-      }
+      return new WindowsEventLogQueue(ExecutionServer.IsSpecialLicense ? ExecutionServer.LicenseName
+                                                                       : "Empiria");
     }
 
     public Queue GetQueue(Message message) {

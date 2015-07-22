@@ -58,7 +58,8 @@ namespace Empiria.Json {
             (columnValue == null || columnValue == DBNull.Value)) {
           continue;
         }
-        writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(column.ColumnName) : column.ColumnName);
+        writer.WritePropertyName((resolver != null) ?
+                                  resolver.GetResolvedPropertyName(column.ColumnName) : column.ColumnName);
         serializer.Serialize(writer, columnValue);
       }
       writer.WriteEndObject();

@@ -33,7 +33,7 @@ namespace Empiria {
     /// <param name="exception">This is the inner exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
     protected PlainTextException(string messageCode, string message, Exception exception,
-                            params object[] args)
+                                 params object[] args)
       : base(messageCode, GetMessage(message, args), exception) {
     }
 

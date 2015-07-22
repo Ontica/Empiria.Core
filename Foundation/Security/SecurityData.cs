@@ -9,6 +9,7 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Data;
@@ -60,6 +61,17 @@ namespace Empiria.Security {
 
     static internal int GetNextSessionId() {
       return DataWriter.CreateId("UserSessions");
+    }
+
+    static internal List<SecurityClaim> GetSecurityClaims(string resourceType, IIdentifiable resource) {
+      Assertion.AssertObject(resourceType, "resourceType");
+      Assertion.AssertObject(resource, "resource");
+
+      var dataTable = DataReader.GetDataTable(DataOperation.Parse("qryResourceSecurityClaims",
+                                                                  resourceType, resource.Id));
+
+      return BaseObjectFactory.Parse<SecurityClaim>(dataTable);
+      //return SecurityClaim.ParseList<SecurityClaim>(dataTable);
     }
 
     static internal DataRow GetSessionData(string sessionToken) {

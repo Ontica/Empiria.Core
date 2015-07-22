@@ -16,7 +16,7 @@ namespace Empiria {
   /// <summary>The exception that is thrown when a code assertion fails. This exeptions always are
   /// replicated to the EventLog.</summary>
   [Serializable]
-  internal sealed class AssertionFailsException : EmpiriaException {
+  public sealed class AssertionFailsException : EmpiriaException {
 
     internal enum Msg {
       AssertFails,
