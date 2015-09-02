@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 /// ToDo List:    OOJJOO
 /// Object slicing (include/exclude a list of properties)
@@ -132,7 +133,9 @@ namespace Empiria.Json {
     /// <param name="json">The JSON string to convert.</param>
     /// <returns>A .Net ExpandoObject with properties similar to the JSON string structure.</returns>
     static public dynamic ToObject(string jsonString) {
-      return JsonConvert.DeserializeObject<ExpandoObject>(jsonString);
+      var converter = new ExpandoObjectConverter();
+
+      return JsonConvert.DeserializeObject<ExpandoObject>(jsonString, converter);
     }
 
     ///// <summary>Converts a JSON string into a dynamic ExpandoObject.</summary>

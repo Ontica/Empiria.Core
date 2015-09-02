@@ -158,7 +158,7 @@ namespace Empiria.Json {
                                          ObjectFactory.InvokeParseMethod<T>(System.Convert.ToString(x)));
       } else if (ObjectFactory.HasJsonParser(typeof(T))) {
         return objectsList.ConvertAll<T>(
-                  (x) => ObjectFactory.InvokeParseJsonMethod<T>( new JsonObject((IDictionary<string, Object>) x) )
+                  (x) => ObjectFactory.InvokeParseJsonMethod<T>(new JsonObject((IDictionary<string, Object>) x))
                );
       } else {
         try {
@@ -235,14 +235,14 @@ namespace Empiria.Json {
       }
     }
 
-    ///<summary>Returns this Json object as an unindented Json string. Overrides Object.ToString().</summary>
+    /// <summary>Returns this Json object as a Json string.</summary>
     public override string ToString() {
       return this.ToString(false);
     }
 
     /// <summary>Returns this Json object as a Json string.</summary>
-    /// <param name="indented">If true, returns the Json string in indented format.</param>
-    public string ToString(bool indented) {
+    /// <param name="indented">If true, returns the Json string in indented format. Default false.</param>
+    public string ToString(bool indented = false) {
       if (this.dictionary.Count == 0) {
         return String.Empty;
       }
@@ -253,8 +253,20 @@ namespace Empiria.Json {
       }
     }
 
+
+    public dynamic ToObject() {
+      return this.ToDictionary();
+    }
+
     public IDictionary<string, object> ToDictionary() {
-      return this.dictionary;
+      var copy = new Dictionary<string, object>(this.dictionary);
+
+      foreach (var item in this.dictionary) {
+        if (item.Value is JsonObject) {
+          copy[item.Key] = ((JsonObject) item.Value).ToDictionary();
+        }
+      }
+      return copy;
     }
 
     #endregion Public methods to get data
