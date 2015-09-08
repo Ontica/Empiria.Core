@@ -117,61 +117,61 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="InvalidHttpMethod" xml:space="preserve">
-    <value>Se intentó autentificar a un usuario mediante un método distinto a POST lo cual no está autorizado:\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al área de sistemas de su empresa o a Óntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=InvalidAuthenticationClient</value>
+    <value>User authentication attempt failed: Only POST Http method is allowed.</value>
   </data>
   <data name="InvalidRequestPath" xml:space="preserve">
-    <value>Se intentó acceder al sistema desde una página o sitio distinto al autorizado.</value>
+    <value>Attempt to access the system from an unauthorized web site or IP address.</value>
   </data>
   <data name="CantEncryptString" xml:space="preserve">
-    <value>No pude efectuar el cifrado de la cadena de texto.</value>
+    <value>There was a problem trying to encrypt the string value.</value>
   </data>
   <data name="CantDecryptString" xml:space="preserve">
-    <value>No pude descifrar la cadena de texto.</value>
+    <value>There was a problem trying to decrypt the string value.</value>
   </data>
   <data name="EncryptedObjectWasAltered" xml:space="preserve">
-    <value>El objeto cifrado ha sido alterado intencionalmente por un programa desconocido o por una persona.\n\nMUY IMPORTANTE: Este error típicamente representa un problema de seguridad muy grave.\nPor favor reporte el problema inmediatamente al área de sistemas de su empresa o a Óntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=cryptedObjectWasAltered</value>
+    <value>The encrypted object has been modified intentionally by an unknown program or by a person.\n\nIMPORTANT: This issue can represent a serious security concern.\nPlease report this problem to your technical support area.</value>
   </data>
   <data name="InvalidAuthenticationClient" xml:space="preserve">
-    <value>Se intentó autentificar a un usuario desde una aplicación o sitio web no autorizado:\n{0}\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al área de sistemas de su empresa o a Óntica en\nhttp://empiria.ontica.org/security/securityattack.asp?id=InvalidAuthenticationClient</value>
+    <value>Attempt to access the system from an unauthorized application, web site or IP address.</value>
   </data>
   <data name="RequireExecuteMethod" xml:space="preserve">
-    <value>No cuenta con los permisos necesarios para ejecutar la operación {0} sobre el dominio de aplicación {1}.</value>
+    <value>The user has not execution privileges for operation {0} on the application domain {1}.</value>
   </data>
   <data name="UnauthenticatedIdentity" xml:space="preserve">
-    <value>No puedo construir el objeto EmpiriaPrincipal debido a que no ha sido autentificado ningún usuario.</value>
+    <value>The current user is not authenticated.</value>
   </data>
   <data name="WrongAuthentication" xml:space="preserve">
-    <value>La autentificación del usuario no se efectuó correctamente, razón por la cual no puedo continuar.</value>
+    <value>User authentication failed.</value>
   </data>
   <data name="CantCloseSession" xml:space="preserve">
-    <value>No pude cerrar adecuadamente la sesión de trabajo con identificador {0}.</value>
+    <value>There was a problem trying to close the user's session with ID {0}.</value>
   </data>
   <data name="CantChangePasswordOnUnauthenticatedUser" xml:space="preserve">
-    <value>Se intentó modificar el password del usuario con identificador {0}, pero el mismo no estaba autentificado en ese momento:\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al área de sistemas de su empresa o a Óntica en \nhttp://empiria.ontica.org/security/securityattack.asp?id=CantChangePasswordOnUnauthenticatedUser</value>
+    <value>An attempt to modify a user's pasword using another user account was made. This operation can be executed only over the same user that is authenticated.\n\nIMPORTANT: This issue can represent a serious security concern.\nPlease report this problem to your technical support area.</value>
   </data>
   <data name="CantVerifyPasswordOnUnauthenticatedUser" xml:space="preserve">
-    <value>Se intentó verificar la validez del password de acceso del usuario con identificador {0}, pero el mismo no estaba autentificado en ese momento:\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad sumamente grave.\nPor favor reporte el problema inmediatamente al área de sistemas de su empresa o a Óntica en \nhttp://empiria.ontica.org/security/securityattack.asp?id=CantVerifyPasswordOnUnauthenticatedUser</value>
+    <value>An attempt to verify a user's password using another user account was made. This operation can be executed only over the same user that is authenticated.\n\nIMPORTANT:This issue can represent a serious security concern.\nPlease report this problem to your technical support area.</value>
   </data>
   <data name="InvalidSingleSignOnToken" xml:space="preserve">
-    <value>Se intentó ejecutar una operación dentro del sistema que no pasó la verificación de la firma electrónica.\n\nMUY IMPORTANTE: Este error típicamente representa un problema de seguridad muy grave.\nPor favor reporte el problema inmediatamente al área de sistemas de su empresa o a Óntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=InvalidSingleSignOnToken</value>
+    <value>An attempt was made to invoke a system operation using an invalid SignOn token .\n\nIMPORTANT: This issue can represent a serious security concern.\nPlease report this problem to your technical support area.</value>
   </data>
   <data name="GuestUserNotFound" xml:space="preserve">
-    <value>El usuario 'Invitado' no ha sido definido en el sistema.</value>
+    <value>Guest user is inactive or is not defined in the system.</value>
   </data>
   <data name="WrongImpersonationToken" xml:space="preserve">
-    <value>Se intentó utilizar un token de autentificación que no ha sido definido en el sistema.\n\nMUY IMPORTANTE: Este error puede representar un problema de seguridad muy grave.\nPor favor reporte el problema inmediatamente al área de sistemas de su empresa o a Óntica en\nhttp://empiria.ontica.org/security/securityattack.aspx?id=InvalidImpersonationToken</value>
+    <value>An attempt was made to access the system with an undefined security impersonation token.\n\nIMPORTANT: This issue can represent a serious security concern.\nPlease report this problem to your technical support area.</value>
   </data>
   <data name="InvalidProtectionMode" xml:space="preserve">
-    <value>No puedo manejar el modo de protección '{0}' empleado en esta operación.</value>
+    <value>Protection mode '{0}' is not defined in the system.</value>
   </data>
   <data name="WrongDIFVersionRequested" xml:space="preserve">
-    <value>** SECURITY WARNING ** A wrong Data Integrity Field (DIF) version ({0}) was requested from an external program that must have asked for a valid version of the DIF.\n\nIf that program sent the version took out it from a protected data source, then this concern could be a SERIOUS SECURITY PROBLEM, because the PROTECED DATA could have been modified by an EXTERNAL SOURCE.\n\n Please call immediately to your system administrator and stop using this system.</value>
+    <value>Version {0} of the Data Integrity Field (DIF) for this type is not defined.\nPlease report this problem to your technical support area.</value>
   </data>
   <data name="InvalidDIFDataItemDataType" xml:space="preserve">
     <value>The protected type '{0}' returns a data item with a value ({1}) that has an invalid or unrecognized type ({2}), in the position {3} using the Data Integrity Field version number {4}. The resource Id was {5}.</value>
   </data>
   <data name="IntegrityValidatorAssertFails" xml:space="preserve">
-    <value>** A SERIOUS SECURITY PROBLEM WAS DETECTED **\n Some SYSTEM PROTECTED DATA could have been modified by an EXTERNAL SOURCE.\n\n Please call immediately to your system administrator and STOP USING this system. [{0}, {1}]</value>
+    <value>A SERIOUS SECURITY PROBLEM WAS DETECTED:\n Some PROTECTED DATA could have been modified by an external source or person.\n\n This issue can represent a serious security concern.\nPlease report this problem to your technical support area. Hint [{0}, {1}]</value>
   </data>
   <data name="InvalidClientAppKey" xml:space="preserve">
     <value>The server received an invalid application key: '{0}'.</value>
@@ -199,5 +199,26 @@
   </data>
   <data name="PrincipalClaimNotFound" xml:space="preserve">
     <value>{0}</value>
+  </data>
+  <data name="CantExecuteOperationOnOtherUser" xml:space="preserve">
+    <value>Operation '{0}' for user '{1}' failed: This operation can be executed only over the same user that is authenticated.</value>
+  </data>
+  <data name="ResourceClaimTypeIsMultiValue" xml:space="preserve">
+    <value>Security claim type '{0}' has multiple value instances, so is not possible to retrieve their values using this method.</value>
+  </data>
+  <data name="ResourceClaimTypeNotFound" xml:space="preserve">
+    <value>Resource with id {1} has not defined any security claim of type '{0}'.</value>
+  </data>
+  <data name="UserWithEMailNotFound" xml:space="preserve">
+    <value>There is not a user registered with UserID = '{0}' and email account {1}.</value>
+  </data>
+  <data name="InvalidActivationToken" xml:space="preserve">
+    <value>User's activation token is invalid: '{0}'.</value>
+  </data>
+  <data name="ResourceClaimNotFound" xml:space="preserve">
+    <value>Resource with id {1} has not defined any security claim of type '{0}' and value '{2}'</value>
+  </data>
+  <data name="InvalidResetPasswordToken" xml:space="preserve">
+    <value>The reset password token is invalid: {0}</value>
   </data>
 </root>

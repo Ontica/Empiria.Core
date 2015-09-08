@@ -117,67 +117,64 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CantReadParameter" xml:space="preserve">
-    <value>No pude leer del archivo de configuración del sistema el parámetro '{0}' empleado por el tipo {1}.</value>
+    <value>There was a problem trying to read the value of '{0}' used by '{1}'.</value>
   </data>
   <data name="CantWriteParameter" xml:space="preserve">
-    <value>No pude guardar el valor del parámetro de configuración {0} pertenciente al tipo {1}.</value>
+    <value>There was a problem trying to write the value of '{0}' used by '{1}'.</value>
   </data>
   <data name="ListIndexOutOfRange" xml:space="preserve">
-    <value>No encontré el elemento con índice '{0}' en la lista de objetos.</value>
+    <value>Index {0} is out of the bounds of the list.</value>
   </data>
   <data name="ListKeyNotFound" xml:space="preserve">
-    <value>No encontré el elemento con clave '{0}' en la lista de objetos.</value>
-  </data>
-  <data name="ListItemTypeNotMatch" xml:space="preserve">
-    <value>El tipo de objeto de la lista no coincide con el tipo base de la lista</value>
+    <value>An item with key '{0}' was not found in the list.</value>
   </data>
   <data name="ConstructorNotDefined" xml:space="preserve">
-    <value>No encontré el constructor invocado para crear objetos del tipo {0}. Esta es una deficiencia en la programación de la clase correspondiente.</value>
+    <value>Type {0} has not defined a default constructor. This can be a programming issue or a metadata definition problem.</value>
   </data>
   <data name="MethodExecutionFails" xml:space="preserve">
-    <value>Ocurrió un problema al intentar ejecutar el método {0} vía mecanismos de reflexión.</value>
+    <value>There was a problem trying to execute method {0} using reflection.</value>
   </data>
   <data name="MethodNotFound" xml:space="preserve">
-    <value>El tipo {0} no tiene definido el método {1}. Esta es una deficiencia de programación o una inconsistencia en la definición de metadatos.</value>
+    <value>Type {0} has not defined the method {1}. This can be a programming issue or a metadata definition problem.</value>
   </data>
   <data name="ObjectPropertyNotFound" xml:space="preserve">
-    <value>No encontré la propiedad con nombre '{0}' dentro de las propiedades del tipo {1}. Esta es una deficiencia de programación o una inconsistencia en la definición de metadatos.</value>
+    <value>Type {1} has not defined a property with name '{0}'. This can be a programming issue or a metadata definition problem.</value>
   </data>
   <data name="ParseMethodNotDefined" xml:space="preserve">
-    <value>No encontré el método estático Parse para crear objetos del tipo {0}. Esta es una deficiencia en la programación de la clase correspondiente.</value>
+    <value>Type {0} has not defined a static Parse(int) method, necessary to create instances of it. This can be a programming issue or a metadata definition problem.</value>
   </data>
   <data name="TypeNotDefined" xml:space="preserve">
-    <value>No encontré el tipo {0} en el ensamblado. Esta es una deficiencia de programación o una inconsistencia en la definición de metadatos.</value>
+    <value>Assembly doesn't have the type '{0}'. It may be a programming or metadata inconsistency.</value>
   </data>
   <data name="AssertFails" xml:space="preserve">
     <value>Assertion fails inside {0}: \n{1}</value>
   </data>
   <data name="ParameterNotExists" xml:space="preserve">
-    <value>No encontré el parámetro '{0}' empleado por el tipo {1} en el archivo de configuración del sistema.</value>
+    <value>There is not defined a system configuration parameter with name '{0}' for type '{1}'.</value>
   </data>
   <data name="ConditionalOptionNotDefined" xml:space="preserve">
-    <value>La ejecución del programa alcanzó un elemento de una alternación (if) que no ha sido definido en el código del programa. Se trata de un error de programación.</value>
+    <value>Program execution reached a SWITCH-CASE condition that is not defined inside the code (value {0}).</value>
   </data>
   <data name="InvalidLicense" xml:space="preserve">
-    <value>La licencia del Framework Empiria no es válida.\n\nIMPORTANTE: Este producto de software, así como su diseño y documentación, están protegidos por las leyes federales e internacionales sobre derechos de autor.\n\nToda violación a los derechos de autor sobre cualquiera de las partes que constituyen esta obra será perseguida hasta sus últimas consecuencias conforme a las leyes aplicables en México y en el extranjero.\n\nSi tiene alguna duda sobre la autenticidad de esta copia del producto puede contactarnos en www.ontica.org.</value>
+    <value>Empiria Framework license is not valid.\n\nWARNING: This computer program is protected by copyright law and international treaties. Unauthorized reproduction or distribution of this program, or any portion of it, may result in server civil and criminal penalties.\n\nIf you are not sure about the authenticity of this program or if you have comments or any questions, please contact us at www.ontica.org.</value>
   </data>
   <data name="CantReadExecutionServerProperty" xml:space="preserve">
-    <value>No pude leer del archivo de configuración del sistema la propiedad requeridas por el tipo Empiria.ExecutionServer.</value>
+    <value>There was a problem reading loading system's configuration data.</value>
   </data>
   <data name="XmlConfigurationFileNotExists" xml:space="preserve">
-    <value>El archivo '{0}', que contiene los parámetros de configuración del sistema Empiria, no existe.</value>
+    <value>Xml file '{0}' with system's configuration data not exists.</value>
   </data>
   <data name="NotImplemented" xml:space="preserve">
-    <value>El método invocado todavía no ha sido implementado en el sistema.</value>
+    <value>Method {0} is not implemented.</value>
   </data>
   <data name="ConstructorExecutionFails" xml:space="preserve">
-    <value>Ocurrió un problema al ejecutar el constructor del tipo '{0}' mediante mecanismos de reflexión. Puede ser que se trate de un problema en la parametrización del componente, en la carga de los atributos de la instancia o que los valores predeterminados de la clase contengan valores inconsistentes.</value>
+    <value>There was a problem executing type's {0} constructor. It may be a code or data initialization issue.</value>
   </data>
   <data name="InvalidTypeName" xml:space="preserve">
-    <value>No puedo leer el valor del parámetro {0} sobre el tipo {1}, debido a que éste no pertenece al espacio de nombres Empiria.</value>
+    <value>Cannot read a configuration parameter for type {1}: Type's namespace was not recognized.</value>
   </data>
   <data name="ValidTypeNotFoundInStackTrace" xml:space="preserve">
-    <value>Se ha intentando invocar el lector de datos de configuración del sistema desde un tipo que no pertenece al espacio de nombres Empiria:\n\nStack:\n{0}</value>
+    <value>There is not a recognizable type name in the stack trace, so it's not possible to read any configuration data.\n\nStack:\n{0}</value>
   </data>
   <data name="AssertNoReachThisCode" xml:space="preserve">
     <value>PROGRAMMING ERROR: The program reached an invalid code flow statement. Probably it has a loop, if or switch that miss an exit condition or there are data with unexpected values. Please report this incident immediately to the system administrator or send us a message to support @ontica.org.</value>

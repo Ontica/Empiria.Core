@@ -21,7 +21,6 @@ namespace Empiria {
 
     public enum Msg {
       CantReadParameter,
-      CantReadExecutionServerProperty,
       CantWriteParameter,
       InvalidTypeName,
       ParameterNotExists,

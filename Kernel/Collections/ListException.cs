@@ -19,7 +19,6 @@ namespace Empiria.Collections {
 
     public enum Msg {
       ListIndexOutOfRange,
-      ListItemTypeNotMatch,
       ListKeyAlreadyExists,
       ListKeyNotFound,
     }

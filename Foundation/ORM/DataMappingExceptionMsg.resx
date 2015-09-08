@@ -117,49 +117,49 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TypeInfoFamilyNotMatch" xml:space="preserve">
-    <value>El tipo '{0}' pertenece a una familia de tipos distinta a '{1}' según lo especifican los metadatos definidos en el sistema.</value>
+    <value>According to defined system's metadata, type '{0}' belongs to a type family other than '{1}'.</value>
   </data>
   <data name="TypeInfoNotFound" xml:space="preserve">
-    <value>Los metadatos del tipo '{0}' no han sido definidos en el sistema.</value>
+    <value>The system has not metadata defined for type {0}.</value>
   </data>
   <data name="TypeAssociationInfoNotFound" xml:space="preserve">
-    <value>Los metadatos de la asociación '{0}' sobre el tipo '{1}' no han sido definidos en el sistema.</value>
+    <value>The system has not metadata defined for association {0} belonging to type {1}.</value>
   </data>
   <data name="UndefinedTypeInfoFamily" xml:space="preserve">
-    <value>El sistema ontológico no tiene definida la familia de tipos '{0}'.</value>
+    <value>The ontology system has not defined the type family '{0}'.</value>
   </data>
   <data name="ObjectIdNotFound" xml:space="preserve">
     <value>An object of type {1} and id = {0} doesn't exist. (Hint: This problem generally is caused by wrong database values.)</value>
   </data>
   <data name="ConvertionToTargetTypeFails" xml:space="preserve">
-    <value>No puede convertir el valor '{0}' al tipo de datos {1}.</value>
+    <value>There was a problem trying to convert value '{0}' to data type {1}.</value>
   </data>
   <data name="TypeMethodInfoNotFound" xml:space="preserve">
-    <value>Los metadatos del método '{0}' no han sido definidos en el sistema.</value>
+    <value>The system has not metadata defined for method {0}.</value>
   </data>
   <data name="TypeNamedIdFieldNameNotDefined" xml:space="preserve">
-    <value>El tipo '{0}' no tiene definido el nombre del campo de donde se debe leer el nombre identificador del objeto '{1}'. </value>
+    <value>Type '{0}' has not defined the data field used to retrieve the named object key. Detected by instance with key: '{1}'. </value>
   </data>
   <data name="ObjectNotFound" xml:space="preserve">
     <value>An object of type {1} that meets condition '{0}' doesn't exist.\n (Hint: This problem generally is caused by wrong database values.)</value>
   </data>
   <data name="RelationMemberNameNotFound" xml:space="preserve">
-    <value>El tipo '{0}' no tiene definida una relación con el nombre '{1}'.</value>
+    <value>The system has not metadata defined for relation {0} belonging to type {1}.</value>
   </data>
   <data name="TryToParseZeroObjectId" xml:space="preserve">
     <value>An attempt was made to parse an object with id equals to zero for type {}. For new objects please use a type constructor instead.</value>
   </data>
   <data name="CannotParseObjectWithDataRow" xml:space="preserve">
-    <value>No pude hacer el parsing del objeto del tipo '{0}' utilizando el dataRow proporcionado.</value>
+    <value>There was a problem trying to parse an object of type '{0}' using the provided DataRow.</value>
   </data>
   <data name="WrongAssociatedObjectFound" xml:space="preserve">
-    <value>El objeto con id {0} del tipo {1} (source) está incorrectamente relacionado con otro objeto usando la relación {2}. Es posible que el tipo de dicho objeto relacionado no sea del tipo que indica el tipo target de la relación, o bien, que no se encuentre en la tabla donde se almacenan los objetos de ese tipo.</value>
+    <value>Instance of type {1} and id {0} is wrong related with other object according to relation {2}. It's possible that this object's type is not the same as the target type defined for the relation, or also, that the object ID is not in the data set defined for that type.</value>
   </data>
   <data name="CannotMapDataValue" xml:space="preserve">
     <value>There was a problem trying to map an instance field or property with the data source:\n{0}</value>
   </data>
   <data name="MappingDataColumnNotFound" xml:space="preserve">
-    <value>The datarow doesn't contains a column with name '{2}', so the data mapping engine can't parse the value of the type member {1} belonging to type {0}.</value>
+    <value>The DataRow doesn't contains a column with name '{2}', so the data mapping engine can't parse the value of the type member {1} belonging to type {0}.</value>
   </data>
   <data name="CannotGetDefaultValueforType" xml:space="preserve">
     <value>There are not a default value defined for objects of type {0}.</value>
@@ -183,9 +183,9 @@
     <value>There is none Empiria Type defined matching the underlying system type '{0}'.</value>
   </data>
   <data name="LinkNotFoundForSource" xml:space="preserve">
-    <value>No existe una relación (link) del tipo {3} (id = {2})) del objeto con id {0} del tipo {1}.</value>
+    <value>There are not a relation (link) of type {3} (id = {2})) for the instance with id {0} of type {1}.</value>
   </data>
   <data name="LinkNotFoundForTarget" xml:space="preserve">
-    <value>No existe una relación (link) inversa del tipo {3} (id = {2})) del objeto con id {0} del tipo {1}.</value>
+    <value>There are not an inverse relation (link) of type {3} (id = {2})) for the instance with id  {0} of type {1}.</value>
   </data>
 </root>

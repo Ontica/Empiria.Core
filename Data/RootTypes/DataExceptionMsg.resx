@@ -126,7 +126,7 @@
     <value>There was a problem executing '{0}'. Data operation parameters were: ({1})</value>
   </data>
   <data name="CannotGetObjectId" xml:space="preserve">
-    <value>No pude recuperar el identificador del objeto (objectId) regresado por '{0}' de la base de datos.</value>
+    <value>There was a problem retrieving the object Id returned by '{0}' from the database.</value>
   </data>
   <data name="CannotGetScalar" xml:space="preserve">
     <value>There was a problem reading the value returned by '{0}'.</value>
@@ -135,79 +135,78 @@
     <value>There was a problem loading the DataView for data source '{0}'.</value>
   </data>
   <data name="CannotGetFieldValue" xml:space="preserve">
-    <value>There was a problem retriving the field value '{1}' of the data source '{0}'.</value>
+    <value>There was a problem retrieving the field value '{1}' of the data source '{0}'.</value>
   </data>
   <data name="CacheRestoreRemovedObjectCallbackFails" xml:space="preserve">
-    <value>Falló la llamada de regreso (callback) del procedimiento asíncrono que actualiza el caché de datos.</value>
+    <value>There was a problem executing the callback of the async method that updates the data cache.</value>
   </data>
   <data name="InvalidCacheItemRemovedReason" xml:space="preserve">
-    <value>La razón '{0}' por la cual se removió el elemento de la caché de datos delsistema no ha sido definida en el método RemovedCallback.</value>
+    <value>Data cache RemovedCallback reason '{0}' was not defined.</value>
   </data>
   <data name="InvalidDatabaseTechnology" xml:space="preserve">
-    <value>No reconozco la tecnología {0}, la cual está asignado al origen del acceso a datos del componente.</value>
+    <value>Invalid database technology {0}.</value>
   </data>
   <data name="CommitFails" xml:space="preserve">
-    <value>Falló la operación Commit de la transacción debido a: {0}</value>
+    <value>Data transaction commit failed: {0}</value>
   </data>
   <data name="RollbackFails" xml:space="preserve">
-    <value>Falló la operación Rollback de la transacción debido a: {0}</value>
+    <value>Data transaction rollback failed: {0}</value>
   </data>
   <data name="TransactionCommited" xml:space="preserve">
-    <value>La operación de 'rollback' no se puede ejecutar debido a que ya se efectuó el 'commit' de la transacción.</value>
+    <value>The transaction's rollback can't be executed because previously a commit operation was invoked.</value>
   </data>
   <data name="TransactionAlreadyCommited" xml:space="preserve">
-    <value>La operación de 'commit' no se puede ejecutar de nuevo. En su lugar genere una nueva transacción con el método GetTrasaction() de una instancia de DataWriteContext.</value>
+    <value>The transaction's commit can't be executed. It was already invoked and so a new data transaction is required.</value>
   </data>
   <data name="DataContextOutOfTransaction" xml:space="preserve">
-    <value>No se ha creado una transacción sobre el contexto.</value>
+    <value>There is not a transaction created for the data context.</value>
   </data>
   <data name="DataContextTooManyItemsForRemove" xml:space="preserve">
-    <value>Se intentó remover del contexto más elementos de los que contiene.</value>
+    <value>Attempting to remove more data context items than what it contains.</value>
   </data>
   <data name="AsynchronousCommitNotCalled" xml:space="preserve">
-    <value>Terminó el tiempo de espera de la llamada asíncrona y nunca se mandó llamar el método Commit() de la transacción.</value>
+    <value>The wait time have finished and the asynchronous transaction's commit method was never invoked.</value>
   </data>
   <data name="ObjectIdOutOfValidBounds" xml:space="preserve">
-    <value>El id {0} obtenido para el nuevo objeto está fuera de los límites establecidos por las reglas definidas para el dominio de ejecución.</value>
+    <value>The generated id {0} for the new instance is outside of the bound established by the data rules.</value>
   </data>
   <data name="DataSourceNotDefined" xml:space="preserve">
-    <value>There is not data source with name '{0}' defined inside DBDataSources table.</value>
+    <value>There is not defined a data source with name '{0}' inside DBDataSources table.</value>
   </data>
   <data name="CannotRegisterObjectIdFactory" xml:space="preserve">
-    <value>No pude registrar la fábrica de identificadores de objetos a través de los servicios de remoting empleando el canal proporcionado: {0}.</value>
+    <value>There was a problem registering the object Id factory using remoting services channel {0}.</value>
   </data>
   <data name="ObjectRemovedFromDataCache" xml:space="preserve">
-    <value>El elemento con identificador {0} fue removido automáticamente del caché de datos de la aplicación por la causa {1},
-debido a que el sistema operativo necesitaba los recursos de memoria que estaba utilizando (mecanismo scavenging).</value>
+    <value>Scavenging message: Item with ID {0} was removed from the system's data cache. Reason: {1}.</value>
   </data>
   <data name="WrongQueryParametersNumber" xml:space="preserve">
     <value>The parameters received are not the same of those defined for data source '{0}' inside table DBQueryParameters.</value>
   </data>
   <data name="ObjectIdRuleNotSet" xml:space="preserve">
-    <value>There is not ID creation rule defined for types with name '{0}', inside the data configuration file.</value>
+    <value>There is not defined an ID creation rule for types with name '{0}'.</value>
   </data>
   <data name="DuplicateObjectIdFactory" xml:space="preserve">
-    <value>Por cuestiones de integridad de la información, sólo puede registrarse una única fábrica de identificadores de objetos (Empiria.Data.ObjectIdFactory) en cada equipo. En este caso, otro proceso del sistema operativo registró previamente dicha fábrica de objetos. Por favor, consulte con el personal de soporte técnico de su organización.</value>
+    <value>WARNING: Empiria.Data.ObjectIdFactory is executing twice. To keep data integrity just one object ID factory can be running for the overall system. In this case, the system detected that another OS process had previously registered an object ID factory.</value>
   </data>
   <data name="CannotParseDataIntegrationServer" xml:space="preserve">
-    <value>No pude construir el objeto Empiria.Security.WebServer con id = {0}. Es posible que no se encuentre instalado en el directorio de la aplicación el archivo de ensamblado Empiria.dll,  o bien, que no se tenga registrado ningún servidor web con ese id en la base de datos de la aplicación.</value>
+    <value>There was a problem loading the Empiria.Security.WebServer instance with id = {0}.</value>
   </data>
   <data name="UndefinedDataPublishRule" xml:space="preserve">
-    <value>Se intentó publicar el objeto de datos con nombre '{0}' pero la regla de publicación no ha sido definida en el archivo de reglas del servidor origen.</value>
+    <value>There was a problem trying to publish the data object '{0}': The data publish rule is not defined in the set of rules of the source server.</value>
   </data>
   <data name="CannotCreateDataTask" xml:space="preserve">
-    <value>No pude guardar la operación en la cola de tareas de integración de datos:\n\nServidor origen: {0}\nServidor destino: {1}\nOperación: {2}\nParámetros: {3}\n\nFavor de avisar inmediatamente de este problema al administrador del sistema.</value>
+    <value>There was a problem trying to save an item into the data integration queue.\n\nSource: {0}\nTarget: {1}\nOperation: {2}\nParameters:{3}\n\nPlease contact your technical support area.</value>
   </data>
   <data name="CannotLoadDataIntegrationRules" xml:space="preserve">
-    <value>No pude cargar desde el archivo las reglas de integración de datos . Por favor avise cuanto antes de este problema al administrador del sistema.</value>
+    <value>There was a problem reading the system's data integration rules.</value>
   </data>
   <data name="CannotDoPostExecutionTask" xml:space="preserve">
-    <value>No pude ejecutar la post acción de la operación de datos '{0}' con los parámetros siguientes: '{1}'. Es probable que exista un problema en las reglas del integrador de datos. Favor de comunicar imediatamente de este problema al administrador del sistema.</value>
+    <value>There was a problem trying to execute the post action of the data operation '{0}', using this parameters set: '{1}'. It can be a data integration configuration issue.</value>
   </data>
   <data name="DuplicateDataIntegrationEngine" xml:space="preserve">
-    <value>Por cuestiones de integridad de la información, sólo puede registrarse una única máquina de integración de datos (Empiria.Data.Integration.DataIntegrationEngine) en cada equipo. En este caso, otro proceso del sistema operativo registró previamente dicha máquina. Por favor, consulte con el personal de soporte técnico de su organización.</value>
+    <value>WARNING: DataIntegrationEngine is executing twice. To keep data integrity just one data integration engine can be running for the overall system. In this case, the system detected that another OS process had previously registered a data integration engine.</value>
   </data>
   <data name="DataIntegrationWSProxyException" xml:space="preserve">
-    <value>Ocurrió un problema al intentar ejecutar la operación de integración de datos '{0}' a través de un proxy al servidor de servicios web '{1}'.</value>
+    <value>There was a problem attempting to execute the data integration operation '{0}' using a proxy to the web services server '{1}'.</value>
   </data>
 </root>
