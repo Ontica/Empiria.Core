@@ -19,7 +19,7 @@ namespace Empiria.Security {
     #region Constructors and parsers
 
     private SecurityClaim() {
-      // Required by Empiria Framework.
+      // Required by Empiria Framework
     }
 
     static public SecurityClaim Parse(int id) {
@@ -30,27 +30,34 @@ namespace Empiria.Security {
       return BaseObjectFactory.Parse<SecurityClaim>(row);
     }
 
+    static internal SecurityClaim Create(SecurityClaimType claimType,
+                                         IIdentifiable resource, string claimValue,
+                                         ObjectStatus status) {
+      var newClaim = new SecurityClaim();
+
+      newClaim.ClaimType = claimType;
+      newClaim.ResourceTypeId = GetResourceTypeId(resource);
+      newClaim.ResourceId = resource.Id;
+      newClaim.Value = claimValue;
+      newClaim.Status = status;
+
+      SecurityData.WriteSecurityClaim(newClaim);
+
+      return newClaim;
+    }
+
     internal protected override void OnLoadObjectData(DataRow row) {
       this.ClaimType = SecurityClaimType.Parse((int) row["ClaimTypeId"]);
-      this.ResourceType = (string) row["ResourceType"];
+      this.ResourceTypeId = (int) row["ResourceTypeId"];
       this.ResourceId = (int) row["ResourceId"];
       this.Value = (string) row["ClaimValue"];
       this.Status = (ObjectStatus) Convert.ToChar((string) row["ClaimStatus"]);
-
-      this.UniqueKey = this.BuildUniqueKey();
     }
 
     static internal string BuildUniqueKey(SecurityClaimType claimType,
-                                          IIdentifiable resource, string claimValue) {
-      string temp = String.Format("{0}~{1}~{2}~{3}", claimType.Key,
-                                  resource.GetType().FullName, resource.Id, claimValue);
-
-      return temp.ToLowerInvariant();
-    }
-
-    private string BuildUniqueKey() {
-      string temp = String.Format("{0}~{1}~{2}~{3}", this.ClaimType.Key,
-                                  this.ResourceType, this.ResourceId, this.Value);
+                                          IIdentifiable resource) {
+      string temp = String.Format("{0}~{1}~{2}", claimType.Key,
+                                  GetResourceTypeId(resource), resource.Id);
 
       return temp.ToLowerInvariant();
     }
@@ -64,19 +71,22 @@ namespace Empiria.Security {
       private set;
     }
 
-    private string ResourceType {
+    internal int ResourceTypeId {
       get;
-      set;
+      private set;
     }
 
-    private int ResourceId {
+    internal int ResourceId {
       get;
-      set;
+      private set;
     }
 
     internal string UniqueKey {
-      get;
-      private set;
+      get {
+        string temp = String.Format("{0}~{1}~{2}", this.ClaimType.Key, this.ResourceTypeId, this.ResourceId);
+
+        return temp.ToLowerInvariant();
+      }
     }
 
     public string Value {
@@ -86,10 +96,21 @@ namespace Empiria.Security {
 
     public ObjectStatus Status {
       get;
-      private set;
+      internal set;
     }
 
     #endregion Properties
+
+    /// Remove this smell
+    static internal int GetResourceTypeId(IIdentifiable resource) {
+      string resourceType = resource.GetType().FullName;
+
+      if (resourceType == "Empiria.Security.EmpiriaUser") {
+        return 2;
+      } else {
+        return 1;
+      }
+    }
 
   } // class SecurityClaim
 

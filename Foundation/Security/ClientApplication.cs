@@ -21,7 +21,7 @@ namespace Empiria.Security {
     #region Constructors and parsers
 
     private ClientApplication() {
-
+      // Required by Empiria Framework
     }
 
     static internal ClientApplication Parse(int id) {

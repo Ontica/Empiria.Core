@@ -38,64 +38,45 @@ namespace Empiria.Security {
       this.Status = (ObjectStatus) Convert.ToChar((string) row["ObjectStatus"]);
     }
 
-    static private SecurityClaimType _electronicSign = null;
+    static public SecurityClaimType ActivationToken {
+      get {
+        return SecurityClaimType.Parse("ActivationToken");
+      }
+    }
+
     static public SecurityClaimType ElectronicSign {
       get {
-        if (_electronicSign == null) {
-          _electronicSign = SecurityClaimType.Parse("ElectronicSign");
-        }
-        return _electronicSign;
+        return SecurityClaimType.Parse("ElectronicSign");
       }
     }
 
-    static private SecurityClaimType _userName = null;
-    static public SecurityClaimType UserName {
+    static public SecurityClaimType ResetPasswordToken {
       get {
-        if (_userName == null) {
-          _userName = SecurityClaimType.Parse("UserName");
-        }
-        return _userName;
+        return SecurityClaimType.Parse("ResetPasswordToken");
       }
     }
 
-
-    static private SecurityClaimType _userPassword = null;
     static public SecurityClaimType UserPassword {
       get {
-        if (_userPassword == null) {
-          _userPassword = SecurityClaimType.Parse("UserPassword");
-        }
-        return _userPassword;
+        return SecurityClaimType.Parse("UserPassword");
       }
     }
 
-    static private SecurityClaimType _userRole = null;
     static public SecurityClaimType UserRole {
       get {
-        if (_userRole == null) {
-          _userRole = SecurityClaimType.Parse("UserRole");
-        }
-        return _userRole;
+        return SecurityClaimType.Parse("UserRole");
       }
     }
 
-    static private SecurityClaimType _webApiController = null;
     static public SecurityClaimType WebApiController {
       get {
-        if (_webApiController == null) {
-          _webApiController = SecurityClaimType.Parse("WebApiController");
-        }
-        return _webApiController;
+        return SecurityClaimType.Parse("WebApiController");
       }
     }
 
-    static private SecurityClaimType _webApiMethod = null;
     static public SecurityClaimType WebApiMethod {
       get {
-        if (_webApiMethod == null) {
-          _webApiMethod = SecurityClaimType.Parse("WebApiMethod");
-        }
-        return _webApiMethod;
+        return SecurityClaimType.Parse("WebApiMethod");
       }
     }
 

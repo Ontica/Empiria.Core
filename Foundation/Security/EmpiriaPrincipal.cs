@@ -214,7 +214,7 @@ namespace Empiria.Security {
       principalsCache.Add(this.Session.Token, this);
       this.RefreshBeforeReturn();
 
-      this.Claims = new SecurityClaimList(this.Identity.User);
+      this.Claims = this.Identity.User.Claims;
     }
 
     private void LoadRolesArray(int participantId) {

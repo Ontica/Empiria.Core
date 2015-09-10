@@ -9,7 +9,8 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Data;
+
+using Empiria.Data;
 
 namespace Empiria.Security {
 
@@ -122,7 +123,7 @@ namespace Empiria.Security {
       if (code.Length == 0) {
         code = GenerateAuthorizationCode();
       }
-      SecurityData.WriteAuthorization(this);
+      this.Write();
     }
 
     private string GenerateAuthorizationCode() {
@@ -131,6 +132,15 @@ namespace Empiria.Security {
       temp = typeId.ToString() + objectId.ToString() + authorizedById.ToString() +
              SessionToken.ToString() + DateTime.Now.Ticks.ToString();
       return Math.Abs(temp.GetHashCode()).ToString("0000000000");
+    }
+
+    private int Write() {
+      var o = this;
+
+      var operation = DataOperation.Parse("writeAuthorization", o.Guid, o.TypeId, o.ReasonId,
+                                          o.ObjectId, o.AuthorizedById, o.SessionToken, o.Code,
+                                          o.Observations, o.Date);
+      return DataWriter.Execute(operation);
     }
 
     #endregion Private methods
