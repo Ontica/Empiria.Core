@@ -200,6 +200,9 @@ namespace Empiria {
 
     public int Id {
       get { return this.objectId; }
+      internal set {
+        this.objectId = value;
+      }
     }
 
     protected bool IsDirty {

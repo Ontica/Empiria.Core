@@ -21,7 +21,7 @@ namespace Empiria {
 
     #region Delegates
 
-    private delegate T DefaultConstructorDelegate(int id);
+    private delegate T DefaultConstructorDelegate();
 
     #endregion Delegates
 
@@ -153,14 +153,12 @@ namespace Empiria {
     private DefaultConstructorDelegate GetDefaultConstructorDelegate(Type type) {
       ConstructorInfo constructor = type.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
                                                         BindingFlags.NonPublic, null, CallingConventions.HasThis,
-                                                        new Type[] { typeof(Int32) }, null);
+                                                        new Type[0], null);
 
-      var dynMethod = new DynamicMethod(type.Name + "Ctor", type, new Type[] { typeof(Int32) },
-                                        constructor.Module, true);
+      var dynMethod = new DynamicMethod(type.Name + "Ctor", type, null, constructor.Module, true);
 
       // Generate the intermediate language.
       ILGenerator codeGenerator = dynMethod.GetILGenerator();
-      codeGenerator.Emit(OpCodes.Ldarg_0);
       codeGenerator.Emit(OpCodes.Newobj, constructor);
       codeGenerator.Emit(OpCodes.Ret);
 
@@ -206,7 +204,11 @@ namespace Empiria {
     }
 
     private T InvokeInstanceConstructor(int id) {
-      return (T) defaultConstructorDelegate(id);
+      T instance = (T) defaultConstructorDelegate();
+
+      instance.Id = id;
+
+      return instance;
     }
 
     #endregion Private methods
