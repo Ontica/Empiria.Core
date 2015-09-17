@@ -309,4 +309,4 @@ namespace Empiria.Data.Handlers {
 
   } // class PostgreSqlMethods
 
-} // namespace Empiria.Data.Handlers 
+} // namespace Empiria.Data.Handlers

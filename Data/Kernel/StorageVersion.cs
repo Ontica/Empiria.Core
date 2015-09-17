@@ -108,4 +108,4 @@ namespace Empiria {
 
   }  // struct StorageVersion
 
-}  // namespace Empiria 
+}  // namespace Empiria

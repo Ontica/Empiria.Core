@@ -278,6 +278,15 @@ namespace Empiria.Data {
                   new Empiria.Messaging.Message(Empiria.Messaging.MessageType.EventMessage, message));
     }
 
+    static public T ReadValue<T>(DataRow row, string columnName, T defaultValue) {
+      if (row[columnName] == null || row[columnName] == DBNull.Value) {
+        return defaultValue;
+      } else {
+        return (T) row[columnName];
+      }
+    }
+
+
     #endregion Public methods
 
     #region Internal methods
