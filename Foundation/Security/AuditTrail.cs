@@ -132,7 +132,7 @@ namespace Empiria.Security {
     #region Methods
 
     private decimal GetResponseTime() {
-      return Convert.ToDecimal(DateTime.UtcNow.Subtract(this.Timestamp).TotalSeconds);
+      return Convert.ToDecimal(DateTime.Now.Subtract(this.Timestamp).TotalSeconds);
     }
 
     protected void SetOperationInfo(string eventTag, string operationName, JsonObject operationData) {
