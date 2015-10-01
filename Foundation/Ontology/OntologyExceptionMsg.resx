@@ -135,7 +135,7 @@
     <value>No puede convertir el valor '{0}' al tipo de datos {1}.</value>
   </data>
   <data name="TypeMethodInfoNotFound" xml:space="preserve">
-    <value>Los metadatos del método '{0}' no han sido definidos en el sistema.</value>
+    <value>There was a problem reading the methods for type '{0}'.</value>
   </data>
   <data name="TypeNamedIdFieldNameNotDefined" xml:space="preserve">
     <value>El tipo '{0}' no tiene definido el nombre del campo de donde se debe leer el nombre identificador del objeto '{1}'. </value>

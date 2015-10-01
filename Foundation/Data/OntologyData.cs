@@ -189,7 +189,11 @@ namespace Empiria.Ontology {
     }
 
     static internal DataTable GetTypeMethods(int typeId) {
-      return GeneralDataOperations.GetEntitiesByField("TypeMethods", "SourceTypeId", typeId);
+      try {
+        return GeneralDataOperations.GetEntitiesByField("TypeMethods", "SourceTypeId", typeId);
+      } catch (Exception e) {
+        throw new OntologyException(OntologyException.Msg.TypeMethodInfoNotFound, typeId, e);
+      }
     }
 
     static internal DataTable GetTypeMethodParameters(int typeMethodId) {

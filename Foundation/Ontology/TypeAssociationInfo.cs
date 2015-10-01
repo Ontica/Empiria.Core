@@ -207,5 +207,3 @@ namespace Empiria.Ontology {
   } // class TypeAssociationInfo
 
 } // namespace Empiria.Ontology
-
-

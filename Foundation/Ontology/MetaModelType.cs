@@ -443,12 +443,17 @@ namespace Empiria.Ontology {
         return;
       }
 
-      DataTable dataTable = OntologyData.GetTypeMethods(this.Id);
+      // There is no Methods table defined in this Empiria version 6.0,
+      // so just return an empty array.Future versions should remove this line
+      // and uncomment the code below.
+      this.methodsArray = new TypeMethodInfo[0];
 
-      this.methodsArray = new TypeMethodInfo[dataTable.Rows.Count];
-      for (int i = 0, j = dataTable.Rows.Count; i < j; i++) {
-        this.methodsArray[i] = TypeMethodInfo.Parse(this, dataTable.Rows[i]);
-      }
+      //DataTable dataTable = OntologyData.GetTypeMethods(this.Id);
+
+      //this.methodsArray = new TypeMethodInfo[dataTable.Rows.Count];
+      //for (int i = 0, j = dataTable.Rows.Count; i < j; i++) {
+      //  this.methodsArray[i] = TypeMethodInfo.Parse(this, dataTable.Rows[i]);
+      //}
     }
 
     static private MetaModelTypeFamily ParseMetaModelTypeFamily(string typeFamilyName) {
