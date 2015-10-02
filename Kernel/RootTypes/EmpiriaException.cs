@@ -172,7 +172,7 @@ namespace Empiria {
       int exceptionCount = 1;
 
       tempException = exception;
-      while (tempException != null) {
+      while (true) {
         stringBuilder.AppendFormat("{0}{0}", (exceptionCount != 1) ? Environment.NewLine : String.Empty);
         stringBuilder.AppendFormat("<b>{1}) <u>{2}</u></b>{0}{0}", Environment.NewLine, exceptionCount.ToString(),
                                                 exceptionCount == 1 ? "Exception Information" : "Inner Exception Information");
@@ -187,15 +187,22 @@ namespace Empiria {
             }
           }
         } // foreach
-        if (tempException.StackTrace != null) {
-          stringBuilder.AppendFormat("{0}{0}{1}) <u>Stack Trace Information</u>{0}{0}", Environment.NewLine,
-                               exceptionCount.ToString() + ".1");
-          stringBuilder.AppendFormat("{0}", tempException.StackTrace);
+        if (tempException.InnerException == null) {
+          break;
+        } else {
+          tempException = tempException.InnerException;
+          exceptionCount++;
         }
-        tempException = tempException.InnerException;
-        exceptionCount++;
-      } // while
+      }  // while
 
+      if (tempException.StackTrace != null) {
+        stringBuilder.AppendFormat("{0}{0}<u>Exception Stack Trace:</u>{0}", Environment.NewLine);
+        stringBuilder.AppendFormat("{0}", tempException.StackTrace);
+      }
+      if (System.Environment.StackTrace != null) {
+        stringBuilder.AppendFormat("{0}{0}<u>Environment Stack Trace:</u>{0}", Environment.NewLine);
+        stringBuilder.AppendFormat("{0}", System.Environment.StackTrace);
+      }
       return stringBuilder.ToString();
     }
 
