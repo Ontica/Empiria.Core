@@ -204,6 +204,7 @@
     <Compile Include="RootTypes\ResourceConflictException.cs" />
     <Compile Include="RootTypes\ResourceNotFoundException.cs" />
     <Compile Include="RootTypes\UnauthorizedException.cs" />
+    <Compile Include="RootTypes\Validate.cs" />
     <Compile Include="RootTypes\ValidationException.cs" />
     <Compile Include="RootTypes\ValueObject.cs" />
     <Compile Include="RootTypes\DataFieldAttribute.cs" />
@@ -307,7 +308,9 @@
     <EmbeddedResource Include="Ontology\OntologyExceptionMsg.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ORM\DataMappingExceptionMsg.resx" />
+    <EmbeddedResource Include="ORM\DataMappingExceptionMsg.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
