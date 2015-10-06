@@ -52,7 +52,7 @@ namespace Empiria.Security {
         if (ExecutionServer.IsAuthenticated) {
           return ExecutionServer.CurrentIdentity.User as EmpiriaUser;
         } else {
-          return null;
+          throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
         }
       }
     }
