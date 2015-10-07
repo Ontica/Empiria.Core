@@ -120,36 +120,21 @@ namespace Empiria {
     }
 
     static public char GetRandomCharacter(string current = "") {
-      const string characters = "ABCDEFGHJKMLNPQRSTUVWXYZ";
+      const string characters = "ACDEFHJKMNPRTWXYZ";
 
-      while (true) {
-        char character = characters[random.Next(characters.Length)];
-        if (!current.Contains(character.ToString())) {
-          return character;
-        }
-      }
+      return GetRandomCharacterHelper(characters, current);
     }
 
     static public char GetRandomDigit(string current = "") {
-      const string digits = "0123456789";
+      const string digits = "234789";
 
-      while (true) {
-        char digit = digits[random.Next(digits.Length)];
-        if (!current.Contains(digit.ToString())) {
-          return digit;
-        }
-      }
+      return GetRandomCharacterHelper(digits, current);
     }
 
     static public char GetRandomDigitOrCharacter(string current = "") {
-      const string digitsAndCharacters = "A0B1C2D3E4F5G6H7J8K9MLNPQRSTUVWXYZ";
+      const string digitsAndCharacters = "AC2D3E4FH7J8K9MLNPRTWXYZ";
 
-      while (true) {
-        char character = digitsAndCharacters[random.Next(digitsAndCharacters.Length)];
-        if (!current.Contains(character.ToString())) {
-          return character;
-        }
-      }
+      return GetRandomCharacterHelper(digitsAndCharacters, current);
     }
 
     static public bool IsMemberOf(int value, int[] array) {
@@ -179,6 +164,24 @@ namespace Empiria {
     }
 
     #endregion Public methods
+
+    #region Private methods
+
+    static private char GetRandomCharacterHelper(string characters, string current) {
+      string attempts = String.Empty;
+      while (true) {
+        char character = characters[random.Next(characters.Length)];
+        if (!current.Contains(character.ToString())) {
+          return character;
+        } else if (attempts.Length >= characters.Length) {
+          return character;
+        } else {
+          attempts += character;
+        }
+      }
+    }
+
+    #endregion Private methods
 
   }  // class EmpiriaMath
 
