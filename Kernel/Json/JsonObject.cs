@@ -274,22 +274,26 @@ namespace Empiria.Json {
     #region Private members
 
     static private T Convert<T>(object value) {
-      Type typeOfValue = value.GetType();
+      var convertToType = typeof(T);
 
-      if (typeof(T) == value.GetType()) {
+      if (convertToType == value.GetType()) {
         return (T) value;
-      } else if (typeof(T) == typeof(object)) {
+      } else if (convertToType == typeof(object)) {
         return (T) value;
-      } else if (ObjectFactory.IsStorable(typeof(T))) {
+      } else if (ObjectFactory.IsStorable(convertToType)) {
         if (EmpiriaString.IsInteger(value.ToString())) {
           return ObjectFactory.InvokeParseMethod<T>(System.Convert.ToInt32(value));
         } else {
           return ObjectFactory.InvokeParseMethod<T>((string) value);
         }
-      } else if (typeof(T).IsEnum) {
+      } else if (convertToType.IsEnum) {
         return ObjectFactory.ParseEnumValue<T>(value);
-      } else
-        return (T) System.Convert.ChangeType(value, typeof(T));
+      } else if (convertToType == typeof(string) && value is IDictionary<string, object>) {
+        object o = JsonObject.Parse((IDictionary<string, object>) value).ToString();
+        return (T) o;
+      } else {
+        return (T) System.Convert.ChangeType(value, convertToType);
+      }
     }
 
     private T Find<T>(string itemPath, bool required, T defaultValue) {

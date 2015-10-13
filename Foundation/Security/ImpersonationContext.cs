@@ -130,7 +130,7 @@ namespace Empiria.Security {
     }
 
     private bool LogonUser() {
-      string[] tokenPartsArray = ConfigurationData.GetString("ImpersonationToken." + this.impersonationToken).Split('|');
+      string[] tokenPartsArray = ConfigurationData.GetString("§ImpersonationToken." + this.impersonationToken).Split('|');
       string userName = tokenPartsArray[0];
       string domain = tokenPartsArray[1];
       string password = tokenPartsArray[2];

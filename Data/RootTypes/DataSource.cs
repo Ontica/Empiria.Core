@@ -131,7 +131,7 @@ namespace Empiria.Data {
     #region Private methods
 
     static private string GetSource(string dataSourceName) {
-      return ConfigurationData.GetString("DataSource." + dataSourceName);
+      return ConfigurationData.GetString("§DataSource." + dataSourceName);
     }
 
     static private DataTechnology GetDataTechnology(string dataSourceName) {

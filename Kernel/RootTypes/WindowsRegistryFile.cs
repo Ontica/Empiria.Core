@@ -20,27 +20,15 @@ namespace Empiria {
                                                       Write = "HKEY_LOCAL_MACHINE\\SOFTWARE")]
   static internal class WindowsRegistryFile {
 
-    #region Fields
-
-    private const string dbConnectionString = "DATASOURCE.";
-    private const string impersonationTokenString = "IMPERSONATIONTOKEN.";
-
-    #endregion Fields
-
     #region Internal methods
 
-    static internal string ReadValue(string typeName, string parameterName) {
+    static internal string GetValue(string typeName, string parameterName) {
       string retrivedValue = null;
       string tempTypeName = typeName;
 
       if (!(typeName.StartsWith("Empiria") || typeName.StartsWith(ExecutionServer.LicenseName))) {
         throw new ConfigurationDataException(ConfigurationDataException.Msg.InvalidTypeName,
                                              parameterName, typeName);
-      }
-      if (parameterName.ToUpperInvariant().StartsWith(dbConnectionString)) {   //Enforce DB key decryption
-        parameterName = "§" + parameterName;
-      } else if (parameterName.ToUpperInvariant().StartsWith(impersonationTokenString)) {   //Enforce impersonation keys decryption
-        parameterName = "§" + parameterName;
       }
       tempTypeName = tempTypeName.Substring(tempTypeName.IndexOf('.') + 1);
       while (true) {
@@ -129,12 +117,6 @@ namespace Empiria {
       string absoluteKey = null;
 
       absoluteKey = String.Concat(GetRegistryBaseKey(), "\\", typeName);
-      if (name.ToUpperInvariant().StartsWith(dbConnectionString)) {   //Enforce database key encryption
-        name = "§" + name;
-      }
-      if (name.ToUpperInvariant().StartsWith(impersonationTokenString)) {   //Enforce impersonation key encryption
-        name = "§" + name;
-      }
       if (name.StartsWith("§")) {
         settingValue = Cryptographer.Encrypt(EncryptionMode.EntropyKey, settingValue, ExecutionServer.LicenseName);
       }

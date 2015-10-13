@@ -5,8 +5,7 @@
 *  Type      : ConfigurationData                                Pattern  : Static Class                      *
 *  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Gets or sets the configuration parameters of an Empiria Framework type or types in customer   *
-*              systems.                                                                                      *
+*  Summary   : Gets configuration values for the application or solution.                                    *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -14,8 +13,7 @@ using System.Diagnostics;
 
 namespace Empiria {
 
-  /// <summary>Gets or sets the configuration parameters of an Empiria Framework type or types
-  /// in customer systems.</summary>
+  /// <summary>Gets configuration values for the application or solution.</summary>
   static public class ConfigurationData {
 
     #region Public methods
@@ -82,27 +80,6 @@ namespace Empiria {
       return ReadValue(typeName, parameterName);
     }
 
-    /// <summary>Stores the boolean value of a configuration parameter for the caller type.</summary>
-    /// <param name="parameterName">Name of the configuration parameter.</param>
-    /// <param name="value">The boolean value of the parameter to store.</param>
-    static public void SetBoolean(string parameterName, bool value) {
-      WriteValue(GetCallerTypeName(), parameterName, value.ToString());
-    }
-
-    /// <summary>Stores the integer value of a configuration parameter for the caller type.</summary>
-    /// <param name="parameterName">Name of the configuration parameter.</param>
-    /// <param name="value">The integer value of the parameter to store.</param>
-    static public void SetInteger(string parameterName, int value) {
-      WriteValue(GetCallerTypeName(), parameterName, value.ToString());
-    }
-
-    /// <summary>Stores the value of a configuration parameter for the caller type.</summary>
-    /// <param name="parameterName">Name of the configuration parameter.</param>
-    /// <param name="value">The value of the parameter to store.</param>
-    static public void SetString(string parameterName, string value) {
-      WriteValue(GetCallerTypeName(), parameterName, value);
-    }
-
     #endregion Public methods
 
     #region Private methods
@@ -124,18 +101,25 @@ namespace Empiria {
       throw new ConfigurationDataException(ConfigurationDataException.Msg.ValidTypeNotFoundInStackTrace, stackString);
     }
 
+    /// <summary>
+    /// </summary>
+
     static private string ReadValue(string typeName, string parameterName) {
       try {
         Assertion.AssertObject(typeName, "typeName");
         Assertion.AssertObject(parameterName, "parameterName");
 
-        string value = null;
-        if (XmlConfigurationFile.Exists()) {
-          value = XmlConfigurationFile.ReadValue(typeName, parameterName);
-        } else {
-          value = WindowsRegistryFile.ReadValue(typeName, parameterName);
+        // Try get the parameter's value form the app or solution configuration file
+        string value = ConfigurationFile.TryGetValue(typeName, parameterName);
+        if (value != null) {
+          return value;
         }
+
+        // If not found then get the value from the Windows Registry
+        value = WindowsRegistryFile.GetValue(typeName, parameterName);
+
         Assertion.AssertObject(value, "ReadValue.Value");
+
         return value;
       } catch (Exception innerException) {
         throw new ConfigurationDataException(ConfigurationDataException.Msg.CantReadParameter,
@@ -150,23 +134,6 @@ namespace Empiria {
         byteArray[i] = byte.Parse(sbytes[i].Trim());
       }
       return byteArray;
-    }
-
-    static private void WriteValue(string typeName, string parameterName, string value) {
-      try {
-        Assertion.AssertObject(typeName, "typeName");
-        Assertion.AssertObject(parameterName, "parameterName");
-        Assertion.AssertObject(value, "value");
-
-        if (XmlConfigurationFile.Exists()) {
-          XmlConfigurationFile.WriteValue(typeName, parameterName, value);
-        } else {
-          WindowsRegistryFile.WriteValue(typeName, parameterName, value);
-        }
-      } catch (Exception innerException) {
-        throw new ConfigurationDataException(ConfigurationDataException.Msg.CantWriteParameter,
-                                             innerException, parameterName, typeName);
-      }
     }
 
     #endregion Private methods

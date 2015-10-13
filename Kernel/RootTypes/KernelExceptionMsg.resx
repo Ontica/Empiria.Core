@@ -203,4 +203,10 @@
   <data name="JsonValueTypeConvertionFails" xml:space="preserve">
     <value>There was a problem trying to convert the value '{1}' of type {2} to type {3} for the Json path '{0}'.</value>
   </data>
+  <data name="SolutionConfigFileNotExists" xml:space="preserve">
+    <value>The solution configuration file '{0}' defined inside the config file was not found.</value>
+  </data>
+  <data name="ApplicationConfigFileNotExists" xml:space="preserve">
+    <value>The application configuration file '{0}' defined inside the config file was not found.</value>
+  </data>
 </root>

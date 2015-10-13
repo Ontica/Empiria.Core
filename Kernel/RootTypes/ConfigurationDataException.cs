@@ -20,10 +20,12 @@ namespace Empiria {
   public sealed class ConfigurationDataException : EmpiriaException {
 
     public enum Msg {
+      ApplicationConfigFileNotExists,
       CantReadParameter,
       CantWriteParameter,
       InvalidTypeName,
       ParameterNotExists,
+      SolutionConfigFileNotExists,
       ValidTypeNotFoundInStackTrace,
       XmlConfigurationFileNotExists,
     }

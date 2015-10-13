@@ -157,6 +157,7 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -186,6 +187,7 @@
     <Compile Include="Messaging\MessagingException.cs" />
     <Compile Include="Messaging\QueueFactory.cs" />
     <Compile Include="Messaging\WindowsEventLogQueue.cs" />
+    <Compile Include="RootTypes\ConfigurationSetting.cs" />
     <Compile Include="RootTypes\EmpiriaMath.cs" />
     <Compile Include="RootTypes\EmpiriaString.Customization.cs" />
     <Compile Include="RootTypes\EmpiriaString.Money.cs" />
@@ -227,7 +229,7 @@
     <Compile Include="Security\IntegrityValidator.cs" />
     <Compile Include="Security\SingleSignOnToken.cs" />
     <Compile Include="RootTypes\OperationBase.cs" />
-    <Compile Include="RootTypes\XmlConfigurationFile.cs" />
+    <Compile Include="RootTypes\ConfigurationFile.cs" />
     <Compile Include="RootTypes\WindowsRegistryFile.cs" />
     <Compile Include="RootTypes\ExecutionServerException.cs" />
     <Compile Include="RootTypes\EmpiriaException.cs">
@@ -281,7 +283,9 @@
     <EmbeddedResource Include="Messaging\MessagingExceptionMsg.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="RootTypes\KernelExceptionMsg.resx" />
+    <EmbeddedResource Include="RootTypes\KernelExceptionMsg.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Security\SecurityExceptionMsg.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>

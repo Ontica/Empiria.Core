@@ -105,7 +105,7 @@ namespace Empiria {
         AssertIsStarted();
 
         return ServerType == ExecutionServerType.WebApiServer ||
-                ServerType == ExecutionServerType.WebServicesServer;
+               ServerType == ExecutionServerType.WebServicesServer;
       }
     }
 
