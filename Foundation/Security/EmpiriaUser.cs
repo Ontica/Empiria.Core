@@ -20,7 +20,7 @@ namespace Empiria.Security {
     #region Constructors and parsers
 
     private EmpiriaUser() {
-      // Required by Empiria Framework.
+      // Required by Empiria Framework
     }
 
     static public EmpiriaUser Parse(int id) {

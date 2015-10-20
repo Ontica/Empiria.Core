@@ -18,7 +18,7 @@ namespace Empiria.Security {
     #region Constructors and parsers
 
     private SecurityClaimType() {
-      // Required by Empiria Framework.
+      // Required by Empiria Framework
     }
 
     static public SecurityClaimType Parse(int id) {

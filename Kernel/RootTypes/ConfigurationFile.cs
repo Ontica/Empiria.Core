@@ -5,21 +5,19 @@
 *  Type      : ConfigurationFile                                Pattern  : Static Class                      *
 *  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Gets data elements using a Json based configuration file.                                     *
+*  Summary   : Gets data items defined in the app.config or in a Json based configuration file.              *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-using System.Xml;
-
 using Empiria.Json;
 using Empiria.Security;
 
 namespace Empiria {
 
-  /// <summary>Gets data elements using a Json-based configuration file.</summary>
+  /// <summary>Gets data items defined in the app.config or in a Json based configuration file.</summary>
   internal class ConfigurationFile {
 
     #region Fields
@@ -49,22 +47,24 @@ namespace Empiria {
     static private ConfigurationFile Load() {
       var configFile = new ConfigurationFile();
 
-      // Try load all settings defined in the application settings file
+      // First, load all settings directly from the app.config or the web.config
+      configFile.LoadSettingsFromAppConfig();
+
+      // Then, try to load the settings defined in the application settings file, if any
       string appSettingsFileName = TryGetFileNameFromAppConfig();
       if (!String.IsNullOrWhiteSpace(appSettingsFileName)) {
-        configFile.LoadData(appSettingsFileName);
+        configFile.LoadSettingsFromJsonFile(appSettingsFileName);
       }
 
       // Try load all settings defined in the solutions settings file, if any
       if (!String.IsNullOrWhiteSpace(configFile.SolutionSettingsFile)) {
         if (ExistsFile(configFile.SolutionSettingsFile)) {
-          configFile.LoadData(configFile.SolutionSettingsFile);
+          configFile.LoadSettingsFromJsonFile(configFile.SolutionSettingsFile);
         } else {
           throw new ConfigurationDataException(ConfigurationDataException.Msg.SolutionConfigFileNotExists,
                                                configFile.SolutionSettingsFile);
         }
       }
-
       return configFile;
     }
 
@@ -72,6 +72,7 @@ namespace Empiria {
 
     #region Private methods
 
+    /// <summary>Holds the solution settings filename, if any.</summary>
     private string SolutionSettingsFile {
       get;
       set;
@@ -84,6 +85,19 @@ namespace Empiria {
       }
     }
 
+    /// <summary>Builds a case-insensitive dictionary key.</summary>
+    private string BuildKey(string typeName, string key) {
+      string temp = String.Empty;
+
+      if (typeName.Length != 0) {
+        temp = typeName + "." + key;
+      } else {
+        temp = key;
+      }
+      return temp.ToLowerInvariant();
+    }
+
+    /// <summary>Returns true if the given fileName string is a real path to a file.</summary>
     static private bool ExistsFile(string fileName) {
       if (String.IsNullOrWhiteSpace(fileName)) {
         return false;
@@ -91,14 +105,28 @@ namespace Empiria {
       return File.Exists(fileName);
     }
 
-    private void LoadData(string fileName) {
+    /// <summary>Loads all the application settings from the app.config or web.config file.</summary>
+    private void LoadSettingsFromAppConfig() {
+      var appSettings = System.Configuration.ConfigurationManager.AppSettings;
+
+      foreach (var settingKey in appSettings.AllKeys) {
+        string key = this.BuildKey("", settingKey);
+        if (!_settingsCache.ContainsKey(key)) {
+          _settingsCache.Add(key, appSettings[settingKey]);
+        }
+      }
+    }
+
+    /// <summary>Loads all settings defined in a JSON file.</summary>
+    private void LoadSettingsFromJsonFile(string fileName) {
       var json = JsonObject.Parse(File.ReadAllText(fileName));
 
       // Load the settings from the JSON config file
       List<ConfigurationSetting> settingsList = json.GetList<ConfigurationSetting>("settings");
       foreach (var item in settingsList) {
-        if (!_settingsCache.ContainsKey(item.TypeName + "." + item.Key)) {
-          _settingsCache.Add(item.TypeName + "." + item.Key, item.Value);
+        string key = this.BuildKey(item.TypeName, item.Key);
+        if (!_settingsCache.ContainsKey(key)) {
+          _settingsCache.Add(key, item.Value);
         }
       }
 
@@ -115,18 +143,14 @@ namespace Empiria {
     static private string TryGetFileNameFromAppConfig() {
       var appSettings = System.Configuration.ConfigurationManager.AppSettings;
 
-      string configFile = appSettings["ConfigFile"];
+      // Look the filename under the 'SettingsConfigurationFile' key of the app.config file
+      string configFile = appSettings["SettingsConfigurationFile"];
       if (configFile != null) {
         AssertApplicationFileExists(configFile);
         return configFile;
       }
 
-      configFile = appSettings["EmpiriaConfigFile"];
-      if (configFile != null) {
-        AssertApplicationFileExists(configFile);
-        return configFile;
-      }
-
+      // If not 'SettingsConfigurationFile' key, then look for a file with name "empiria.config"
       configFile = GetFullFileNameFromCurrentExecutionPath("empiria.app.config");
       if (ExistsFile(configFile)) {
         return configFile;
@@ -135,9 +159,13 @@ namespace Empiria {
     }
 
     private string TryGetSetting(string typeName, string parameterName) {
-      string retrivedValue = null;
-      string tempTypeName = typeName;
+      if (!(typeName.StartsWith("Empiria") || typeName.StartsWith(ExecutionServer.LicenseName))) {
+        throw new ConfigurationDataException(ConfigurationDataException.Msg.InvalidTypeName,
+                                             parameterName, typeName);
+      }
 
+      string tempTypeName = typeName.Substring(typeName.IndexOf('.') + 1);
+      string retrivedValue = null;
       while (true) {
         if ((retrivedValue == null) && (tempTypeName != null)) {
           retrivedValue = ReadConfigurationValue(tempTypeName, parameterName);
@@ -168,9 +196,10 @@ namespace Empiria {
     }
 
     private string ReadConfigurationValue(string typeName, string parameterName) {
-      string keyValue = null;
+      string key = this.BuildKey(typeName, parameterName);
 
-      if (!_settingsCache.TryGetValue(typeName + "." + parameterName, out keyValue)) {
+      string keyValue = null;
+      if (!_settingsCache.TryGetValue(key, out keyValue)) {
         keyValue = null;
       }
       if ((keyValue != null) && parameterName.StartsWith("§")) {
