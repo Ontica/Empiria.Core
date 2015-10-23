@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
 *  Namespace : Empiria.Ontology                                 Assembly : Empiria.Foundation.dll            *
 *  Type      : TypeRelationInfo                                 Pattern  : Standard class                    *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Sealed class that represents an ontology type relation definition.                            *
 *                                                                                                            *
@@ -11,8 +11,6 @@
 using System;
 using System.Data;
 
-using Empiria.Data;
-using Empiria.Reflection;
 using Empiria.Security;
 
 namespace Empiria.Ontology {

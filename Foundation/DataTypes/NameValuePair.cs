@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Data Types Library                *
 *  Namespace : Empiria.DataTypes                                Assembly : Empiria.Foundation.dll            *
 *  Type      : NameValuePair                                    Pattern  : Value object                      *
-*  Version   : 2.0        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 2.0                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : String Name-Value pair value object.                                                          *
 *                                                                                                            *

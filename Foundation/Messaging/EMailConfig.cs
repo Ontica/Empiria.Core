@@ -1,18 +1,14 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Messaging Services                *
 *  Namespace : Empiria.Messaging                                Assembly : Empiria.Foundation.dll            *
 *  Type      : EMailConfig                                      Pattern  : Empiria Semiabstract Object Type  *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Configuration data for email SMTP clients.                                                    *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
-
-using System.Net;
-using System.Net.Mail;
 
 using Empiria.Json;
 

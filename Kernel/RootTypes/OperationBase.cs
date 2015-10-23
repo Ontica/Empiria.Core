@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *  Type      : OperationBase                                    Pattern  : Structure Type                    *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Abstract class that represents a named operation with or without parameters.                  *
 *                                                                                                            *

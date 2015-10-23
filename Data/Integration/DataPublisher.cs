@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Data Integration Services         *
 *  Namespace : Empiria.Data.Integration                         Assembly : Empiria.Data.dll                  *
 *  Type      : DataIntegrator                                   Pattern  : Static Class                      *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Provides read and write data operations allocated on external servers throw web services.     *
 *                                                                                                            *

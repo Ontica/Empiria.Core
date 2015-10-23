@@ -1,11 +1,11 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Data Integration Services         *
 *  Namespace : Empiria.Data.Integration                         Assembly : Empiria.Data.dll                  *
 *  Type      : DataIntegrationEngine                            Pattern  : Singleton Class                   *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Executes asynchronous data operations published on queues throw web services invoking.        *
+*  Summary   : Executes async data operations published on queues throw web services invocation.             *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -13,12 +13,12 @@ using System.Data;
 using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using System.Timers;
-using Empiria.Security;
 
+using Empiria.Security;
 
 namespace Empiria.Data.Integration {
 
-  /// <summary>Executes asynchronous data operations published on queues throw web services invoking.</summary>
+  /// <summary>Executes async data operations published on queues throw web services invocation.</summary>
   //[StrongNameIdentityPermission(SecurityAction.LinkDemand, PublicKey="8b7fe9c60c0f43bd")]
   public class DataIntegrationEngine {
 

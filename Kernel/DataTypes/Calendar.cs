@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Data Types Library                *
+*  Solution  : Empiria Foundation Framework                     System   : Kernel Types                      *
 *  Namespace : Empiria.DataTypes                                Assembly : Empiria.Kernel.dll                *
 *  Type      : Date                                             Pattern  : Static Data Type                  *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Performs datetime data operations.                                                            *
 *                                                                                                            *

@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Security Framework                *
+*  Solution  : Empiria Foundation Framework                     System   : Security Services                 *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.Kernel.dll                *
 *  Type      : IEmpiriaSession                                  Pattern  : Separated Interface               *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : This interface contains the fields of the EmpiriaSession object and provides a separated      *
 *              interface for integrate Empiria.Kernel.dll assembly with this assembly.                       *

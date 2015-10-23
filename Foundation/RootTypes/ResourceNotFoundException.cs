@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Domain Services Layer             *
 *  Namespace : Empiria                                          Assembly : Empiria.Foundation.dll            *
 *  Type      : ResourceNotFoundException                        Pattern  : Exception Class                   *
-*  Version   : 6.0        Date: Apr/2015                        License  : Please read license.txt file      *
+*  Version   : 6.0                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : The exception that is thrown when a resource (object instance, file, ...) was not found.      *
 *                                                                                                            *

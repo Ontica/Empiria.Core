@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Storage Services                  *
+*  Solution  : Empiria Foundation Framework                     System   : Kernel Types                      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *  Type      : ITransaction                                     Pattern  : Separated Interface               *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Interface that represents a transactional operation.                                          *
 *                                                                                                            *

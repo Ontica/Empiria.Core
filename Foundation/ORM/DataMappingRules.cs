@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Object-relational mapping         *
 *  Namespace : Empiria.ORM                                      Assembly : Empiria.Foundation.dll            *
 *  Type      : DataMappingRules                                 Pattern  : Standard class                    *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Holds data mapping rules for a giving type using DataFieldAttribute decorators,               *
 *              and performs those type instances data loading.                                               *
@@ -15,9 +15,7 @@ using System.Data;
 using System.Reflection;
 using System.Linq;
 
-using Empiria.Data;
 using Empiria.Json;
-using Empiria.Reflection;
 
 namespace Empiria.ORM {
 

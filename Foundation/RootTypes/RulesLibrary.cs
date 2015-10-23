@@ -1,13 +1,14 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
 *  Namespace : Empiria                                          Assembly : Empiria.Foundation.dll            *
 *  Type      : RulesLibrary                                     Pattern  : Ontology Object Type              *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents a collection of business rules belonging to a named library.                       *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
 using System.Data;
 
 using Empiria.Ontology;

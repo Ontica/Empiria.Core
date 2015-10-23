@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
-*  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
+*  Namespace : Empiria                                          Assembly : Empiria.Foundation.dll            *
 *  Type      : IValueObject                                     Pattern  : Loose coupling interface          *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Interface that represents an Empiria Framework value object. Could be used with value         *
 *              types (C# struct) or with immutable reference types. Value objects are well described in      *

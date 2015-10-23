@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
-*																																																						 *
-*  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
+﻿/* Empiria Foundation Framework ******************************************************************************
+*                                                                                                            *
+*  Solution  : Empiria Foundation Framework                     System   : Kernel Types                      *
 *  Namespace : Empiria.Messaging                                Assembly : Empiria.Kernel.dll                *
 *  Type      : QueueFactory                                     Pattern  : Factory                           *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *																																																						 *
 *  Summary   : Factory used for create messaging queues based on message type and content rules.             *
 *																																																						 *

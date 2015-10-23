@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Domain Services Layer             *
 *  Namespace : Empiria                                          Assembly : Empiria.Foundation.dll            *
 *  Type      : Validate                                         Pattern  : Stateless Domain Service          *
-*  Version   : 1.0        Date: May/2015                        License  : Please read license.txt file      *
+*  Version   : 1.0                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Provides validation methods.                                                                  *
 *                                                                                                            *

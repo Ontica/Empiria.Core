@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Messaging Services                *
+*  Solution  : Empiria Foundation Framework                     System   : Kernel Types                      *
 *  Namespace : Empiria.Messaging                                Assembly : Empiria.Kernel.dll                *
 *  Type      : Message                                          Pattern  : Standard Class                    *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents an atomic data package that can be transmitted by a message queue.                 *
 *                                                                                                            *

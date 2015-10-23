@@ -1,16 +1,15 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Contacts Management               *
 *  Namespace : Empiria.Contacts                                 Assembly : Empiria.Foundation.dll            *
 *  Type      : Contact                                          Pattern  : Empiria Semiabstract Object Type  *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents either a person, an organization or a group that has a meaningful name and can be  *
 *              contacted in some way and can play one or more roles.                                         *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Data;
 
 using Empiria.DataTypes;
 using Empiria.Json;

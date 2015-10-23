@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Security Framework                *
+*  Solution  : Empiria Foundation Framework                     System   : Security Services                 *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.Kernel.dll                *
 *  Type      : IntegrityValidator                               Pattern  : Standard Class                    *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Provides a service to secure entities using a data integrity field, which it is calculted     *
 *              as a hash code of a list of the entity's protected fields.                                    *

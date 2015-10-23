@@ -236,7 +236,7 @@
     <Compile Include="Modeler\DBView.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RootTypes\DataObject.cs" />
+    <Compile Include="Modeler\DataObject.cs" />
     <Compile Include="RootTypes\CachedObject.cs">
       <SubType>Code</SubType>
     </Compile>

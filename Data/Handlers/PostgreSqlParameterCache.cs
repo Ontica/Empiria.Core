@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
 *  Namespace : Empiria.Data.Handlers                            Assembly : Empiria.Data.dll                  *
 *  Type      : PostgreSqlParameterCache                         Pattern  : Static Class With Objects Cache   *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : This type is a wrapper of a static hash table that contains the loaded SqlParameters.         *
 *                                                                                                            *

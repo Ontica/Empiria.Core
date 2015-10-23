@@ -1,10 +1,10 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
-*  Assembly  : Empiria.dll                                      Pattern  : Assembly Attributes File          *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Assembly  : Empiria.Foundation.dll                           Pattern  : Assembly Attributes File          *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Empiria Foundation Framework Library.                                                         *
+*  Summary   : Empiria Ontology, ORM, messaging and other foundation types.                                  *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -15,9 +15,9 @@ using System.Runtime.InteropServices;
 * Assembly configuration attributes.                                                                         *
 *************************************************************************************************************/
 [assembly: AssemblyTitle("Empiria")]
-[assembly: AssemblyDescription("Empiria Foundation Framework Library")]
-[assembly: AssemblyVersion("6.5.0625.0")]
-[assembly: AssemblyFileVersion("6.5.0625")]
+[assembly: AssemblyDescription("Empiria Ontology, ORM, messaging and other foundation types.")]
+[assembly: AssemblyVersion("6.5.1023.0")]
+[assembly: AssemblyFileVersion("6.5.1023")]
 [assembly: AssemblyCompany("Ontica")]
 [assembly: AssemblyProduct("Empiria Foundation Framework 2015")]
 [assembly: AssemblyCopyright("(c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.")]
@@ -26,16 +26,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(true)]
-
-/*************************************************************************************************************
-* Assembly security attributes.                                                                              *
-*************************************************************************************************************/
-//[assembly: SecurityPermission(SecurityAction.RequestRefuse, Flags = (SecurityPermissionFlag.Assertion &
-//                                                                     SecurityPermissionFlag.ControlEvidence &
-//                                                                     SecurityPermissionFlag.ControlPolicy &
-//                                                                     SecurityPermissionFlag.Infrastructure &
-//                                                                     SecurityPermissionFlag.SkipVerification &
-//                                                                     SecurityPermissionFlag.UnmanagedCode))]
-//[assembly: EnvironmentPermission(SecurityAction.RequestRefuse, Unrestricted = true)]
-//[assembly: FileDialogPermission(SecurityAction.RequestRefuse, Unrestricted = true)]
-//[assembly: FileIOPermission(SecurityAction.RequestRefuse, Unrestricted = true)]

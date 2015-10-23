@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
 *  Namespace : Empiria.Ontology                                 Assembly : Empiria.Foundation.dll            *
 *  Type      : PartitionedTypeAttribute                         Pattern  : Attribute class                   *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Specifies a type whose subtypes are instances of a powertype.                                 *
 *                                                                                                            *

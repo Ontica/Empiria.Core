@@ -209,11 +209,11 @@
     <Compile Include="RootTypes\ValueObject.cs" />
     <Compile Include="RootTypes\DataFieldAttribute.cs" />
     <Compile Include="RootTypes\IValueObject.cs" />
-    <Compile Include="RootTypes\ZZKeyValuePair.cs" />
+    <Compile Include="ZZTypes\ZZKeyValuePair.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />
     <Compile Include="DataTypes\TimeFrame.cs" />
-    <Compile Include="RootTypes\ZZDynamicState.cs" />
-    <Compile Include="RootTypes\ZZTypeList.cs" />
+    <Compile Include="ZZTypes\ZZDynamicState.cs" />
+    <Compile Include="ZZTypes\ZZTypeList.cs" />
     <Compile Include="RootTypes\GeneralList.cs" />
     <Compile Include="Data\ContactsData.cs" />
     <Compile Include="Contacts\Contact.cs">
@@ -243,9 +243,9 @@
     <Compile Include="RootTypes\BaseObject.cs" />
     <Compile Include="RootTypes\GeneralObject.cs" />
     <Compile Include="RootTypes\RulesLibrary.cs" />
-    <Compile Include="Collections\ZZObjectSearcher.cs" />
-    <Compile Include="RootTypes\ZZRule.cs" />
-    <Compile Include="RootTypes\ZZRelation.cs" />
+    <Compile Include="ZZTypes\ZZObjectSearcher.cs" />
+    <Compile Include="ZZTypes\ZZRule.cs" />
+    <Compile Include="ZZTypes\ZZRelation.cs" />
     <Compile Include="Security\AuditTrail.cs" />
     <Compile Include="Security\AuthorizationType.cs" />
     <Compile Include="Security\ClientApplication.cs" />
@@ -260,7 +260,7 @@
     <Compile Include="RootTypes\SearchExpression.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RootTypes\ZZSortExpression.cs">
+    <Compile Include="ZZTypes\ZZSortExpression.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Security\SecurityData.cs">
@@ -296,10 +296,10 @@
     <Compile Include="Ontology\MetaModelType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RootTypes\ZZFindResult.cs">
+    <Compile Include="ZZTypes\ZZFindResult.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Collections\ZZObjectPager.cs">
+    <Compile Include="ZZTypes\ZZObjectPager.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Ontology\OntologyException.cs">

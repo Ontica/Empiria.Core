@@ -1,21 +1,14 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Data Types Library                *
+*  Solution  : Empiria Foundation Framework                     System   : Kernel Types                      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *  Type      : EmpiriaMath                                      Pattern  : Static Data Type                  *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Mathematical methods library class.                                                           *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Globalization;
-using System.Reflection;
-using System.Text;
-
-using Empiria.DataTypes;
 
 namespace Empiria {
 

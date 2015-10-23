@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Storage Services                  *
 *  Namespace : Empiria                                          Assembly : Empiria.Data.dll                  *
 *  Type      : FixedList                                        Pattern  : Empiria List Class                *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents a list of objects that cannot be added, removed or changed.                        *
 *                                                                                                            *
@@ -16,14 +16,14 @@ using Empiria.Collections;
 
 namespace Empiria {
 
-  static public class ListExtensionMethods {
+  static public class FixedListExtensionMethods {
 
     /// <summary>Extends List<T> objects to return a FixedList<T> type</summary>
     static public FixedList<T> ToFixedList<T>(this List<T> list) {
       return new FixedList<T>(list);
     }
 
-  }  // class ListExtensionMethods
+  }  // class FixedListExtensionMethods
 
   /// <summary>Represents a list of objects that cannot be added, removed or changed.</summary>
   public class FixedList<T> : BaseList<T> {

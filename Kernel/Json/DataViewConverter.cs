@@ -1,9 +1,9 @@
-﻿/* Empiria Foundation Framework 2015 *************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
+*  Solution  : Empiria Foundation Framework                     System   : JSON Data Services                *
 *  Namespace : Empiria.Json                                     Assembly : Empiria.Kernel.dll                *
 *  Type      : DataRowConverter                                 Pattern  : Newtonsoft Json Converter         *
-*  Version   : 6.5        Date: 25/Jun/2015                     License  : Please read license.txt file      *
+*  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Provides serialization services of DataView objects into Json strings.                        *
 *                                                                                                            *
