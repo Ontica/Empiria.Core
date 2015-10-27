@@ -30,18 +30,14 @@ namespace Empiria.Security {
         throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
       }
 
-      // if (Land) {
-        password = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, password, username);
-        password = Cryptographer.Decrypt(password, username);
+      password = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, password, username);
+      password = Cryptographer.Decrypt(password, username);
 
-        password = Cryptographer.Encrypt(EncryptionMode.EntropyKey, password, username);
-      //} else {
+      password = Cryptographer.Encrypt(EncryptionMode.EntropyKey, password, username);
 
-         //password"= Cryptographer.Encrypt(EncryptionMode.EntropyKey,
-         //                                 Cryptographer.GetMD5HashCode(password), username);
-
-
-      //}
+      // Warning: This is the former encryption model (before Empiria v6.0)
+      // password"= Cryptographer.Encrypt(EncryptionMode.EntropyKey,
+      //                                  Cryptographer.GetMD5HashCode(password), username);
 
       string sql = "UPDATE Contacts SET UserPassword = '{0}' WHERE UserName = '{1}'";
 

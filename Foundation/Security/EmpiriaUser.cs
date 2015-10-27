@@ -31,19 +31,19 @@ namespace Empiria.Security {
       return BaseObject.ParseDataRow<EmpiriaUser>(row);
     }
 
-    static public EmpiriaUser Parse(string userName, string email) {
-      Assertion.AssertObject(userName, "userName");
+    static public EmpiriaUser Parse(string username, string email) {
+      Assertion.AssertObject(username, "username");
       Assertion.AssertObject(email, "email");
 
-      EmpiriaUser user = SecurityData.TryGetUserWithUserName(userName);
+      EmpiriaUser user = SecurityData.TryGetUserWithUserName(username);
 
       if (user == null) {
-        throw new SecurityException(SecurityException.Msg.UserWithEMailNotFound, userName, email);
+        throw new SecurityException(SecurityException.Msg.UserWithEMailNotFound, username, email);
       }
       if (user.EMail.Equals(email)) {
         return user;
       } else {
-        throw new SecurityException(SecurityException.Msg.UserWithEMailNotFound, userName, email);
+        throw new SecurityException(SecurityException.Msg.UserWithEMailNotFound, username, email);
       }
     }
 
@@ -68,13 +68,15 @@ namespace Empiria.Security {
       Assertion.AssertObject(extendedData, "extendedData");
 
       var newUser = new EmpiriaUser();
-      newUser.Id = SecurityData.GetNextContactId();
       newUser.UserName = userName;
       newUser.FullName = fullName;
       newUser.EMail = email;
       newUser.Claims = new SecurityClaimList(newUser);
       newUser.FillExtendedData(extendedData);
 
+      newUser.VerifyPasswordStrengthRules(password);
+
+      newUser.Id = SecurityData.GetNextContactId();
       SecurityData.CreateUser(newUser, password, ObjectStatus.Pending);
 
       newUser.Claims.AppendSecure(SecurityClaimType.ActivationToken, activationToken);
@@ -206,10 +208,13 @@ namespace Empiria.Security {
       this.IsActive = true;
     }
 
-    static public void ChangePassword(string apiKey, string username, string password) {
+    static public void ChangePassword(string apiKey, string username, string email, string password) {
       if (apiKey != ConfigurationData.GetString("ChangePasswordKey")) {
         throw new SecurityException(SecurityException.Msg.InvalidClientAppKey, apiKey);
       }
+      EmpiriaUser user = EmpiriaUser.Parse(username, email);
+
+      user.VerifyPasswordStrengthRules(password);
       SecurityData.ChangePassword(username, password);
     }
 
@@ -219,6 +224,7 @@ namespace Empiria.Security {
 
       EmpiriaUser user = EmpiriaUser.GetUserWithCredentials(this.UserName, currentPassword);
 
+      user.VerifyPasswordStrengthRules(newPassword);
       Assertion.Assert(user != null && user.Id == this.Id, "Invalid current user credentials");
 
       SecurityData.ChangePassword(this.UserName, newPassword);
@@ -261,6 +267,11 @@ namespace Empiria.Security {
       this.Claims.RemoveSecure(SecurityClaimType.ResetPasswordToken, resetPasswordToken);
     }
 
+    public void VerifyPasswordStrengthRules(string password) {
+      var helper = new PasswordStrength(this, password);
+
+      helper.VerifyStrength();
+    }
     #endregion Public methods
 
     #region Private methods

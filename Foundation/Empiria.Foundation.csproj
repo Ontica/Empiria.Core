@@ -209,6 +209,7 @@
     <Compile Include="RootTypes\ValueObject.cs" />
     <Compile Include="RootTypes\DataFieldAttribute.cs" />
     <Compile Include="RootTypes\IValueObject.cs" />
+    <Compile Include="Security\PasswordStrength.cs" />
     <Compile Include="ZZTypes\ZZKeyValuePair.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />
     <Compile Include="DataTypes\TimeFrame.cs" />

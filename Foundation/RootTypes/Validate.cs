@@ -15,6 +15,10 @@ namespace Empiria {
   /// <summary>Provides validation methods.</summary>
   static public class Validate {
 
+    static public void Fail(string message, params object[] messageArgs) {
+      throw new ValidationException("Validate.Fail", message, messageArgs);
+    }
+
     static public void IsTrue(bool value, string message,
                               params object[] messageArgs) {
       if (!value) {

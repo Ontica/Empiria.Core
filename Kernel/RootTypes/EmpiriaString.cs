@@ -71,6 +71,35 @@ namespace Empiria {
       return false;
     }
 
+    static public bool ContainsAnyChar(string source, string characterSet) {
+      for (int i = 0; i < characterSet.Length; i++) {
+        if (source.Contains(characterSet.Substring(i, 1))) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    static public bool ContainsSegment(string source, string data, int segmentLength) {
+      if (segmentLength <= 0) {
+        return false;
+      }
+      if (data.Length < segmentLength) {
+        return false;
+      }
+      if (source.Length < segmentLength) {
+        return false;
+      }
+
+      for (int startIndex = 0; startIndex <= data.Length - segmentLength; startIndex++) {
+        string segment = data.Substring(startIndex, segmentLength);
+        if (source.Contains(segment)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     static public string RemoveNoiseStrings(string source) {
       string[] tokens = source.Split(' ');
       string temp = String.Empty;
