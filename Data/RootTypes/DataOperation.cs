@@ -104,6 +104,18 @@ namespace Empiria.Data {
 
     #region Public properties
 
+    internal CommandType CommandType {
+      get {
+        return GetCommandType(base.Name);
+      }
+    }
+
+    internal DataSource DataSource {
+      get {
+        return dataSource;
+      }
+    }
+
     public int ExecutionTimeout {
       get { return executionTimeout; }
       set { executionTimeout = value; }
@@ -121,30 +133,19 @@ namespace Empiria.Data {
 
     #endregion Public properties
 
-    #region Internal properties
+    #region Public methods
 
-    internal CommandType CommandType {
-      get { return GetCommandType(base.Name); }
-    }
-
-    internal DataSource DataSource {
-      get { return dataSource; }
-    }
-
-    #endregion Internal properties
-
-    #region Internal methods
-
-    public string GetSourceFull() {
-      if (base.Parameters == null || base.Parameters.Length == 0) {
-        return sourceText;
-      } else {
+    /// <summary>Gets the data operation source text with its parameters values parsed.</summary>
+    public string AsText() {
+      if (base.Parameters.Length != 0) {
         return String.Format(sourceText, base.Parameters);
+      } else {
+        return sourceText;
       }
     }
 
     internal void FillParameters(IDbCommand command) {
-      if (base.Parameters == null || base.Parameters.Length == 0) {
+      if (base.Parameters.Length == 0) {
         return;
       }
       IDataParameter[] pars = null;
@@ -174,7 +175,7 @@ namespace Empiria.Data {
       }
     }
 
-    #endregion Internal methods
+    #endregion Public methods
 
     #region Private methods
 
