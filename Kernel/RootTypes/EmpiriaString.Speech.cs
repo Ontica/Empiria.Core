@@ -2,26 +2,56 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Kernel Types                      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
-*  Type      : EmpiriaString                                    Pattern  : Static Data Type                  *
+*  Type      : EmpiriaString (Partial)                          Pattern  : Static Data Type                  *
 *  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Represents a string data type.                                                                *
+*  Summary   : Contains methods that gets textual representation of currencies, integers and dates.          *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria {
 
+  /// <summary>Contains methods that gets textual representation of currencies, integers and dates.</summary>
   static public partial class EmpiriaString {
 
     #region Public methods
 
-    static public string SpeechInteger(int value) {
-      if (value >= 2 && value <= 12) {
-        return SpeechHundreds(value);
+    static public string SpeechDate(DateTime date) {
+      string temp = String.Empty;
+
+      if (date.Day == 1) {
+        temp = "Primero";
       } else {
-        return value.ToString("N0");
+        temp = EmpiriaString.SpeechInteger(date.Day);
       }
+      temp += " de " + date.ToString("MMMM") + " del año ";
+      temp += EmpiriaString.SpeechInteger(date.Year);
+
+      return temp;
+    }
+
+    static public string SpeechInteger(int value) {
+      string result = String.Empty;
+
+      if (value == 0) {
+        return "Cero";
+      } else if (value == 1) {
+        return "Uno";
+      }
+      if ((value >= 1000000m) && ((int) (value / 1000000)) == 1) {
+        result = SpeechHundreds((int) (value / 1000000)) + " Millón ";
+      } else if (value > 1000000m) {
+        result = SpeechHundreds((int) (value / 1000000)) + " Millones ";
+      }
+      value = value % 1000000;
+      if (value >= 1000m) {
+        result += (value / 1000) == 1 ? " Mil " : SpeechHundreds(value / 1000) + " Mil ";
+      }
+      if (value > 0) {
+        result += SpeechHundreds((int) (value % 1000)) + " ";
+      }      
+      return EmpiriaString.TrimAll(result);
     }
 
     static public string SpeechMoney(decimal amount) {
@@ -125,6 +155,6 @@ namespace Empiria {
 
     #endregion Private methods
 
-  }  // class EmpiriaString (Money)
+  }  // class EmpiriaString (Speech)
 
 } // namespace Empiria

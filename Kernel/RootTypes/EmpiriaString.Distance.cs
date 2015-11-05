@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Kernel Types                      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
-*  Type      : EmpiriaString                                    Pattern  : Static Data Type                  *
+*  Type      : EmpiriaString (Partial)                          Pattern  : Static Data Type                  *
 *  Version   : 6.5                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents a string data type.                                                                *

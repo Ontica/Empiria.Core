@@ -190,7 +190,7 @@
     <Compile Include="RootTypes\ConfigurationSetting.cs" />
     <Compile Include="RootTypes\EmpiriaMath.cs" />
     <Compile Include="RootTypes\EmpiriaString.Customization.cs" />
-    <Compile Include="RootTypes\EmpiriaString.Money.cs" />
+    <Compile Include="RootTypes\EmpiriaString.Speech.cs" />
     <Compile Include="RootTypes\EmpiriaString.Distance.cs" />
     <Compile Include="RootTypes\EmpiriaString.cs" />
     <Compile Include="DataTypes\Keyword.cs" />
