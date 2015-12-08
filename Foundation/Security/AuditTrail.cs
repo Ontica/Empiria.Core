@@ -173,8 +173,10 @@ namespace Empiria.Security {
       this.TrySetSessionData();
       try {
         this.Id = SecurityData.WriteAuditTrail(this);
-      } catch {
-        Publisher.Publish(this);
+      } catch (Exception inner) {
+        var e = new SecurityException(SecurityException.Msg.CantWriteAuditTrail, inner,
+                                      this.Operation);
+        Publisher.Publish(e);
       }
     }
 

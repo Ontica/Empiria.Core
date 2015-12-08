@@ -221,4 +221,7 @@
   <data name="InvalidResetPasswordToken" xml:space="preserve">
     <value>The reset password token is invalid: {0}</value>
   </data>
+  <data name="CantWriteAuditTrail" xml:space="preserve">
+    <value>There was a problem writing on the audit log. The requested operation was '{0}'.</value>
+  </data>
 </root>

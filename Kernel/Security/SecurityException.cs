@@ -24,6 +24,7 @@ namespace Empiria.Security {
       CantEncryptString,
       CantExecuteOperationOnOtherUser,
       CantVerifyPasswordOnUnauthenticatedUser,
+      CantWriteAuditTrail,
       ClientApplicationClaimNotFound,
       EncryptedObjectWasAltered,
       ExpiredSessionToken,
