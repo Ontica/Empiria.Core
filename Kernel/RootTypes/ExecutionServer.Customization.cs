@@ -25,22 +25,6 @@ namespace Empiria {
 
     #endregion Public custom fields
 
-    #region Public must custom properties
-
-    static public bool IsSpecialLicense {
-      get {
-        return false;
-      }
-    }
-
-    static public string LicenseName {
-      get {
-        return "Tlaxcala";
-      }
-    }
-
-    #endregion Public custom properties
-
     #region Public custom additional properties
 
     static public string CustomerName {
@@ -107,7 +91,7 @@ namespace Empiria {
 
     #endregion Public custom additional properties
 
-    #region Static methods called by the main partial class
+    #region Static methods called from the main partial class
 
     static private void SetCustomFields() {
       customerName = ConfigurationData.GetString("Empiria", "Customer.Name");
@@ -116,7 +100,7 @@ namespace Empiria {
       serverName = ConfigurationData.GetString("Empiria", "Server.Name");
     }
 
-    #endregion Static methods called by the main partial class
+    #endregion Static methods called from the main partial class
 
   } // class ExecutionServer
 

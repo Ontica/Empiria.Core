@@ -34,12 +34,14 @@ namespace Empiria {
 
     #region Fields
 
+    static private string licenseName = null;
+    static private bool? isSpecialLicense = false;
+    static private string licenseNumber = null;
+    static private string licenseSerialNumber = null;
+
     static private DateTime dateMaxValue = DateTime.MaxValue;
     static private DateTime dateMinValue = DateTime.MinValue;
     static private DateTime dateNullValue = DateTime.MinValue;
-
-    static private string licenseNumber = null;
-    static private string licenseSerialNumber = null;
     static private int serverId = 0;
     static private string supportUrl = null;
     static private bool isStarted = false;
@@ -47,11 +49,53 @@ namespace Empiria {
 
     static private ExecutionServerType executionServerType = ExecutionServerType.WebApplicationServer;
 
-    static private readonly object _locker = new object();
-
     #endregion Fields
 
-    #region Public properties
+    #region Public license properties
+
+    static public bool IsSpecialLicense {
+      get {
+        if (isSpecialLicense.HasValue) {
+          return isSpecialLicense.Value;
+        } else {
+          throw new ExecutionServerException(ExecutionServerException.Msg.CantReadExecutionServerProperty);
+        }
+      }
+    }
+
+    static public string LicenseName {
+      get {
+        if (licenseName != null) {
+          return licenseName;
+        } else {
+          throw new ExecutionServerException(ExecutionServerException.Msg.CantReadExecutionServerProperty);
+        }
+      }
+    }
+
+    static public string LicenseNumber {
+      get {
+        if (licenseNumber != null) {
+          return licenseNumber;
+        } else {
+          throw new ExecutionServerException(ExecutionServerException.Msg.CantReadExecutionServerProperty);
+        }
+      }
+    }
+
+    static public string LicenseSerialNumber {
+      get {
+        if (licenseSerialNumber != null) {
+          return licenseSerialNumber;
+        } else {
+          throw new ExecutionServerException(ExecutionServerException.Msg.CantReadExecutionServerProperty);
+        }
+      }
+    }
+
+    #endregion Public license properties
+
+    #region Other public properties
 
     static public AssortedDictionary ContextItems {
       get {
@@ -143,22 +187,6 @@ namespace Empiria {
       get { return isStarted; }
     }
 
-    static public string LicenseNumber {
-      get {
-        AssertIsStarted();
-
-        return licenseNumber;
-      }
-    }
-
-    static public string LicenseSerialNumber {
-      get {
-        AssertIsStarted();
-
-        return licenseSerialNumber;
-      }
-    }
-
     static public int ServerId {
       get {
         AssertIsStarted();
@@ -179,10 +207,11 @@ namespace Empiria {
       }
     }
 
-    #endregion Public properties
+    #endregion Other public properties
 
     #region Public methods
 
+    static private readonly object _locker = new object();
     static public void Start(ExecutionServerType serverType) {
       if (!IsStarted) {
         lock (_locker) {
@@ -208,16 +237,17 @@ namespace Empiria {
         return;
       }
       executionServerType = serverType;
-
       try {
         Messaging.Publisher.Start();
       } catch (Exception innerException) {
-        isStarted = false;
         throw innerException;
       }
       try {
+        licenseName = ConfigurationData.GetString("Empiria", "License.Name");
+        isSpecialLicense = ConfigurationData.GetBoolean("Empiria", "License.IsSpecial");
         licenseNumber = ConfigurationData.GetString("Empiria", "License.Number");
         licenseSerialNumber = ConfigurationData.GetString("Empiria", "License.SerialNumber");
+
         dateMaxValue = ConfigurationData.GetDateTime("Empiria", "DateTime.MaxValue");
         dateMinValue = ConfigurationData.GetDateTime("Empiria", "DateTime.MinValue");
         dateNullValue = ConfigurationData.GetDateTime("Empiria", "DateTime.NullValue");
@@ -228,7 +258,6 @@ namespace Empiria {
         isDevelopmentServer = ConfigurationData.GetBoolean("Empiria", "IsDevelopmentServer");
 
         ExecutionServer.SetCustomFields();
-
         isStarted = true;
       } catch (Exception innerException) {
         throw new ExecutionServerException(ExecutionServerException.Msg.CantReadExecutionServerProperty,

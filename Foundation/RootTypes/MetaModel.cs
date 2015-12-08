@@ -181,9 +181,8 @@ namespace Empiria {
     }
 
     private DataRow GetInstanceDataRow(string instanceUID) {
-      string sql = "SELECT * FROM {0} WHERE {1} = '{2}'";
-
-      sql = String.Format(sql, this.DataSource, this.DataSourceKeyField, instanceUID);
+      var sql = String.Format("SELECT * FROM {0} WHERE {1} = '{2}'",
+                              this.DataSource, this.DataSourceKeyField, instanceUID);
 
       var dataRow = DataReader.GetDataRow(DataOperation.Parse(sql));
 

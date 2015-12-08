@@ -101,9 +101,6 @@ namespace Empiria {
       throw new ConfigurationDataException(ConfigurationDataException.Msg.ValidTypeNotFoundInStackTrace, stackString);
     }
 
-    /// <summary>
-    /// </summary>
-
     static private string ReadValue(string typeName, string parameterName) {
       try {
         Assertion.AssertObject(typeName, "typeName");

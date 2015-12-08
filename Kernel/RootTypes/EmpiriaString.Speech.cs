@@ -50,7 +50,7 @@ namespace Empiria {
       }
       if (value > 0) {
         result += SpeechHundreds((int) (value % 1000)) + " ";
-      }      
+      }
       return EmpiriaString.TrimAll(result);
     }
 

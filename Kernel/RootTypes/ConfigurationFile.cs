@@ -150,8 +150,8 @@ namespace Empiria {
         return configFile;
       }
 
-      // If not 'SettingsConfigurationFile' key, then look for a file with name "empiria.config"
-      configFile = GetFullFileNameFromCurrentExecutionPath("empiria.app.config");
+      // If not 'SettingsConfigurationFile' key, then look for a file with name "empiria.config.json"
+      configFile = GetFullFileNameFromCurrentExecutionPath("empiria.config.json");
       if (ExistsFile(configFile)) {
         return configFile;
       }

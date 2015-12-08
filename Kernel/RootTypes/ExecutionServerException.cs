@@ -34,7 +34,7 @@ namespace Empiria {
     public ExecutionServerException(Msg message, params object[] args)
       : base(message.ToString(), GetMessage(message, args)) {
       try {
-        base.Publish();
+
       } catch {
         // no-op
       }
@@ -48,7 +48,7 @@ namespace Empiria {
     public ExecutionServerException(Msg message, Exception innerException, params object[] args)
       : base(message.ToString(), GetMessage(message, args), innerException) {
       try {
-        base.Publish();
+
       } catch {
         // no-op
       }
