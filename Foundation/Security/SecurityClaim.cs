@@ -23,11 +23,11 @@ namespace Empiria.Security {
     }
 
     static public SecurityClaim Parse(int id) {
-      return BaseObjectFactory.Parse<SecurityClaim>(id);
+      return BaseObject.ParseId<SecurityClaim>(id);
     }
 
     static private SecurityClaim Parse(DataRow row) {
-      return BaseObjectFactory.Parse<SecurityClaim>(row);
+      return BaseObject.ParseDataRow<SecurityClaim>(row);
     }
 
     static internal SecurityClaim Create(SecurityClaimType claimType,

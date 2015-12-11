@@ -37,7 +37,12 @@ namespace Empiria {
     private MetaModel() {
       Type type = typeof(T);
       defaultConstructorDelegate = GetDefaultConstructorDelegate(type);
-      dataModel = (DataModelAttribute) Attribute.GetCustomAttribute(type, typeof(DataModelAttribute));
+
+      var attribute = Attribute.GetCustomAttribute(type, typeof(DataModelAttribute));
+
+      Assertion.AssertObject(attribute, type.FullName + " has not defined the attribute DataModelAttribute.");
+
+      dataModel = (DataModelAttribute) attribute;
     }
 
     static public MetaModel<T> Parse() {

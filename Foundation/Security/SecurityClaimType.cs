@@ -22,13 +22,13 @@ namespace Empiria.Security {
     }
 
     static public SecurityClaimType Parse(int id) {
-      return BaseObjectFactory.Parse<SecurityClaimType>(id);
+      return BaseObject.ParseId<SecurityClaimType>(id);
     }
 
     static public SecurityClaimType Parse(string securityClaimTypeName) {
       Assertion.AssertObject(securityClaimTypeName, "securityClaimTypeName");
 
-      return BaseObjectFactory.Parse<SecurityClaimType>(securityClaimTypeName);
+      return BaseObject.ParseKey<SecurityClaimType>(securityClaimTypeName);
     }
 
     internal protected override void OnLoadObjectData(DataRow row) {

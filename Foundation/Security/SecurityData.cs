@@ -72,7 +72,7 @@ namespace Empiria.Security {
                                     claimType.Type, resourceId, "?");
       }
 
-      return BaseObjectFactory.Parse<SecurityClaim>(row);
+      return BaseObject.ParseDataRow<SecurityClaim>(row);
     }
 
     static internal void CreateUser(EmpiriaUser o, string password, ObjectStatus status) {
@@ -102,7 +102,7 @@ namespace Empiria.Security {
       var dataTable = DataReader.GetDataTable(DataOperation.Parse("qryResourceSecurityClaims",
                                                                   resourceTypeId, resource.Id));
 
-      return BaseObjectFactory.Parse<SecurityClaim>(dataTable);
+      return BaseObject.ParseList<SecurityClaim>(dataTable);
     }
 
     static internal DataRow GetSessionData(string sessionToken) {
@@ -151,7 +151,7 @@ namespace Empiria.Security {
       var dataRow = DataReader.GetDataRow(DataOperation.Parse("getContactWithUserName", userName));
 
       if (dataRow != null) {
-        return BaseObjectFactory.Parse<EmpiriaUser>(dataRow);
+        return BaseObject.ParseDataRow<EmpiriaUser>(dataRow);
       } else {
         return null;
       }
