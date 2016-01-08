@@ -9,27 +9,23 @@
  *  Copyright (c) 2015-2016. Ontica LLC, La Vía Óntica SC and contributors. <http://ontica.org>
 */
 
-module Empiria {
+export class Exception extends Error {
 
-  export class Exception extends Error {
+  private tag: string = "undefined";
+  private stack: string;
 
-    private tag: string = "undefined";
-    private stack: string
+  constructor(message: string, tag?: string) {
+    super(message);
+    super.name = "EmpiriaException";
+    this.tag = tag;
+    super.message = message;      // Assign because there are ES6 issues yet
+                                  // look at: https://github.com/Microsoft/TypeScript/issues/5069
+                                  //          https://github.com/Microsoft/TypeScript/issues/1168
+  }
 
-    constructor(message: string, tag?: string) {
-      super(message);
-      super.name = "EmpiriaException";
-      this.tag = tag;
-      super.message = message;      // Assign because there are ES6 issues yet
-                                    // look at: https://github.com/Microsoft/TypeScript/issues/5069
-                                    //          https://github.com/Microsoft/TypeScript/issues/1168
-    }
+  // Override of the toString method, in order to return a specific message.
+  toString(): string {
+    return super.message + " [Code: " + this.tag + "]";
+  }
 
-    // Override of the toString method, in order to return a specific message.
-    toString(): string {
-      return super.message + " [Code: " + this.tag + "]";
-    }
-
-  }  // class Exception
-
-}  // module Empiria
+}  // class Exception

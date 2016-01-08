@@ -9,29 +9,25 @@
  *  Copyright (c) 2015-2016. Ontica LLC, La Vía Óntica SC and contributors. <http://ontica.org>
 */
 
-module Empiria {
+/** Static library that validate conditions.
+  *
+  *  @class Validate
+  */
+export class Validate {
 
-  /** Static library that validate conditions.
-    *
-    *  @class Validate
+  // #region Static methods
+
+  /** Returns true if the object value is equal to null, undefined, NaN, an empty
+      string or an empty object.
+    * @param object The object to check its value.
     */
-  export class Validate {
-
-    // #region Static methods
-
-    /** Returns true if the object value is equal to null, undefined, NaN, an empty
-        string or an empty object.
-      * @param object The object to check its value.
-      */
-    public static hasValue(object: any): boolean {
-      if (object == null || object == undefined || object == {} || object == NaN || object == "") {
-        return false;
-      }
-      return true;
+  public static hasValue(object: any): boolean {
+    if (object == null || object == undefined || object == {} || object == NaN || object == "") {
+      return false;
     }
+    return true;
+  }
 
-    // #endregion Static methods
+  // #endregion Static methods
 
-  }  // class Validate
-
-}  // module Empiria
+}  // class Validate
