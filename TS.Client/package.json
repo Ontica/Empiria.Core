@@ -1,0 +1,39 @@
+{
+  "name": "empiria-core",
+  "author": "La Vía Óntica SC || Ontica LLC",
+  "version": "0.1.0",
+  "description": "Empiria Core TypeScript Library",
+  "license": "AGPL-3.0",
+  "homepage": "http://ontica.org",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ontica/Empiria.Core"
+  },
+  "contributors": [
+    "José Manuel Cota  <jmcota@ontica.org>"
+  ],
+  "keywords": [
+    "Empiria",
+    "Core",
+    "framework",
+    "library"
+  ],
+  "scripts": {
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+    "tslint": "tslint -o tslint-results.log src/**/*.ts ",
+    "test": "gulp test.all.js"
+  },
+  "devDependencies": {
+    "del": "^2.1.0",
+    "dts-bundle": "^0.3.0",
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-tslint": "^3.5.0",
+    "gulp-typescript": "^2.10.0",
+    "jasmine": "2.3.1",
+    "tslint": "^3.0.0-dev.1",
+    "typescript": "^1.7.3"
+  }
+}
