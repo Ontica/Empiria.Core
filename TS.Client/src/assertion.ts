@@ -9,8 +9,8 @@
  *  Copyright (c) 2015-2016. Ontica LLC, La Vía Óntica SC and contributors. <http://ontica.org>
 */
 
-import {Exception} from './exception';
-import {Validate} from './validate';
+import {Exception} from "./exception";
+import {Validate} from  "./validate";
 
 /** Static type that allows assertion checking.
   *
@@ -25,9 +25,9 @@ export class Assertion {
     * @param failMessage The message to throw if the assertion fails.
     * @param parameters Optional strings list to merge into the throwed message.
     */
-  static assert(condition: boolean, failMessage: string, ...parameters: string[]): void {
+  public static assert(condition: boolean, failMessage: string, ...parameters: string[]): void {
     if (!condition) {
-      var msg = this.prototype.mergeParametersIntoString(failMessage, parameters);
+      let msg = this.prototype.mergeParametersIntoString(failMessage, parameters);
 
       throw new Exception(msg, "Assert");
     }
@@ -37,13 +37,13 @@ export class Assertion {
   /** Throws a noReachThisCode exception. Used to stop the execution
       when the code flow reaches an invalid code line.
     */
-  static assertNoReachThisCode(failMessage? : string): void {
+  public static assertNoReachThisCode(failMessage? : string): void {
     const defaultMsg = "PROGRAMMING ERROR: The program reached an invalid code flow statement." +
                         "Probably it has a loop, if or switch that miss an exit condition or " +
                         "there are data with unexpected values. Please report this incident " +
                         "immediately to the system administrator or at support @ ontica.org.";
 
-    var msg = Validate.hasValue(failMessage) ? failMessage : defaultMsg;
+    let msg = Validate.hasValue(failMessage) ? failMessage : defaultMsg;
 
     throw new Exception(msg, "AssertNoReachThisCode");
   }
@@ -54,9 +54,9 @@ export class Assertion {
     * @param failMessage The message to throw if the assertion fails.
     * @param parameters Optional strings list to merge into the throwed message.
     */
-  static assertValue(object: any, failMessage: string, ...parameters: string[]): void {
-    if (object == null || object == undefined || object == {} || object == NaN || object == "") {
-      var msg = this.prototype.mergeParametersIntoString(failMessage, parameters);
+  public static assertValue(object: any, failMessage: string, ...parameters: string[]): void {
+    if (object == null || object === undefined || object === {} || isNaN(object) || object === "") {
+      let msg = this.prototype.mergeParametersIntoString(failMessage, parameters);
 
       throw new Exception(msg, "AssertValue");
     }
@@ -69,9 +69,9 @@ export class Assertion {
   /** Helper that merges a set of strings into a parmeterized message.
     */
   private mergeParametersIntoString(message: string, parameters: string[]): string {
-    var temp: string = message;
+    let temp: string = message;
 
-    for (var i = 0; i < parameters.length; i++) {
+    for (let i = 0; i < parameters.length; i++) {
       temp = temp.replace("{" + i.toString() + "}", parameters[i]);
     }
     return temp;

@@ -8,8 +8,8 @@
  *
  *  Copyright (c) 2015-2016. Ontica LLC, La Vía Óntica SC and contributors. <http://ontica.org>
 */
-
-import {DataOperation} from './data.operation';
+import {Assertion} from "./assertion";
+import {DataOperation} from "./data.operation";
 
 /** Holds data about a user's session. */
 export class Session {
@@ -19,23 +19,20 @@ export class Session {
   private static _singletonInstance: Session = new Session();
 
   private token: string = "";
+
+  /* tslint:disable --> Unused fields */
   private tokenType: string = "";
   private refreshToken: string = "";
   private startTime: Date = new Date();
   private expiresIn: number = 0;
+  /* tslint:enable */
+
   private apiKey: string = "";
+
 
   // #endregion Fields
 
   // #region Constructor and parsers
-
-  // constructor(data : any) {
-
-  // }
-
-  public getToken(): string {
-    return this.token;
-  }
 
   constructor() {
     if (Session._singletonInstance) {
@@ -53,7 +50,8 @@ export class Session {
 
     // var data = dataOperation.getData();
 
-    // Empiria.Assertion.hasValue(data, "There was a problem reading session data for active token {0}.", activeToken);
+    // Empiria.Assertion.hasValue(data,
+    //            "There was a problem reading session data for active token {0}.", activeToken);
 
     // return new Session(this.prototype.parseServerData(data));
 
@@ -66,20 +64,20 @@ export class Session {
   }
 
   public static authenticate(apiKey: string, username: string, password: string): Session {
-    var dataOperation = DataOperation.parse("createEmpiriaSession",
+    let dataOperation = DataOperation.parse("createEmpiriaSession",
                                              apiKey, username, this.prototype.md5(password));
 
-    var data = dataOperation.getData();
+    let data = dataOperation.getData();
+    Assertion.assertValue(data, "There was a problem authenticating user '{0}'.", username);
 
-    // Empiria.Assertion.hasValue(data, "There was a problem authenticating user '{0}'.", username);
+    Session._singletonInstance.parseServerData(data);
 
-    // return new Session(this.prototype.parseServerData(data));
-    return null;
+    return Session._singletonInstance;
   }
 
   /** Closes this user session if it is opened. */
   public close(): void {
-    var dataOperation = DataOperation.parse("closeEmpiriaSession", this.apiKey, this.token);
+    let dataOperation = DataOperation.parse("closeEmpiriaSession", this.apiKey, this.token);
 
     try {
       dataOperation.execute();
@@ -88,9 +86,14 @@ export class Session {
     }
   }
 
+  /** Returns the session's token. */
+  public getToken(): string {
+    return this.token;
+  }
+
   /** Refreshes this user session if it is not closed, otherwise throws an error. */
   public refresh(): void {
-    var dataOperation = DataOperation.parse("refreshEmpiriaSession", this.apiKey, this.token);
+    let dataOperation = DataOperation.parse("refreshEmpiriaSession", this.apiKey, this.token);
 
     try {
       dataOperation.execute();
@@ -101,13 +104,13 @@ export class Session {
   }
 
   private parseServerData(serverData: any): any {
-    var sessionData = {
-      token: serverData.token,
-      tokenType: serverData.tokenType,
+    let sessionData = {
+      apiKey: serverData.apiKey,
+      expiresIn: serverData.expiresIn,
       refreshToken: serverData.refreshToken,
       startTime: serverData.startTime,
-      expiresIn: serverData.expiresIn,
-      apiKey: serverData.apiKey,
+      token: serverData.token,
+      tokenType: serverData.tokenType
     };
     return sessionData;
   }

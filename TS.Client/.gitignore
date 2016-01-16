@@ -8,7 +8,6 @@ assets/
 dist/
 .build/
 
-
 # Debug logs
 *.log
 

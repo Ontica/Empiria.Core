@@ -22,7 +22,7 @@ export class Validate {
     * @param object The object to check its value.
     */
   public static hasValue(object: any): boolean {
-    if (object == null || object == undefined || object == {} || object == NaN || object == "") {
+    if (object == null || object === undefined || object === {} || isNaN(object) || object === "") {
       return false;
     }
     return true;

@@ -27,7 +27,7 @@ export class DataOperation {
 
   // #region Constructor and parsers
 
-  constructor(dataOperationUID : any) {
+  constructor(dataOperationUID: any) {
     this.uid = dataOperationUID;
   }
 
@@ -139,14 +139,14 @@ export class DataOperation {
 
     jQuery.ajax(this.url, {
       async: this.async,
-      type: this.method,
       contentType: "application/json; charset=utf-8",
       crossDomain: this.crossDomain,
+      data: JSON.stringify(dataToWrite),
       dataType: "json",
       headers: {
         "Authorization": "bearer " + this.getSessionToken(),
       },
-      data: JSON.stringify(dataToWrite),
+      type: this.method,
     })
     .done(function (response) {
       returnedData = response.data;
@@ -162,20 +162,20 @@ export class DataOperation {
 
   // #region Private methods
 
+  private getConfigurationData(): any {
+    let allRules = this.readConfigurationFile();
+
+    return allRules[this.uid];
+  }
+
   private getServer(): string {
     // return "http://jmcota/empiria.land/tlaxcala/api/";
     // return "http://187.157.152.5/services/";
     return "http://192.168.1.22/services/";
   }
 
-  public getSessionToken() : string {
+  private getSessionToken(): string {
     return Session.getCurrent().getToken();
-  }
-
-  private getConfigurationData(): any {
-    let allRules = this.readConfigurationFile();
-
-    return allRules[this.uid];
   }
 
   /** Loads data operation configuration rules from a json.config data file.
@@ -194,7 +194,7 @@ export class DataOperation {
     }
   }
 
-  private readConfigurationFile() : any {
+  private readConfigurationFile(): any {
     return {
       "getLandCertificate": {
         "url": "v1/certificates/{0}",

@@ -12,7 +12,6 @@
 export class Exception extends Error {
 
   private tag: string = "undefined";
-  private stack: string;
 
   constructor(message: string, tag?: string) {
     super(message);
@@ -24,7 +23,7 @@ export class Exception extends Error {
   }
 
   // Override of the toString method, in order to return a specific message.
-  toString(): string {
+  public toString(): string {
     return super.message + " [Code: " + this.tag + "]";
   }
 
