@@ -43,6 +43,7 @@ namespace Empiria {
     public EmpiriaException(string exceptionTag, string message) : base(message) {
       this.exceptionTag = exceptionTag;
       this.timestamp = DateTime.Now;
+      InitializeEnvironmentInformation();
     }
 
     /// <summary>Initializes a new instance of EmpiriaException class with a specified error
@@ -53,6 +54,7 @@ namespace Empiria {
                             base(message, innerException) {
       this.exceptionTag = exceptionTag;
       this.timestamp = DateTime.Now;
+      InitializeEnvironmentInformation();
     }
 
     public EmpiriaException(SerializationInfo info, StreamingContext context) : base(info, context) {
@@ -78,12 +80,9 @@ namespace Empiria {
     }
 
     /// <summary>Session Guid where the exception was occured.</summary>
-    public Guid SessionGuid {
+    public string SessionGuid {
       get {
-        if (!initialized) {
-          InitializeEnvironmentInformation();
-        }
-        return userSessionGuid;
+        return Empiria.ExecutionServer.CurrentSessionToken.Substring(0, 36);
       }
     }
 
@@ -137,7 +136,15 @@ namespace Empiria {
 
     #region Protected methods
 
-    protected static string GetResourceMessage(string messageTag, string resourceBaseName,
+    static protected string BuildMessage(string message, params object[] args) {
+      if (args != null && args.Length != 0) {
+        return String.Format(message, args);
+      } else {
+        return message;
+      }
+    }
+
+    static protected string GetResourceMessage(string messageTag, string resourceBaseName,
                                                Assembly assembly, params object[] args) {
       ResourceManager resMgr = new ResourceManager(resourceBaseName, assembly);
       string temp = null;
@@ -175,7 +182,7 @@ namespace Empiria {
       while (true) {
         stringBuilder.AppendFormat("{0}{0}", (exceptionCount != 1) ? Environment.NewLine : String.Empty);
         stringBuilder.AppendFormat("<b>{1}) <u>{2}</u></b>{0}{0}", Environment.NewLine, exceptionCount.ToString(),
-                                                exceptionCount == 1 ? "Exception Information" : "Inner Exception Information");
+                                   exceptionCount == 1 ? "Exception Information" : "Inner Exception Information");
         stringBuilder.AppendFormat("ExceptionType: {0}", tempException.GetType().FullName);
 
         PropertyInfo[] exceptionProperties = tempException.GetType().GetProperties();
@@ -195,19 +202,23 @@ namespace Empiria {
         }
       }  // while
 
-      if (tempException.StackTrace != null) {
-        stringBuilder.AppendFormat("{0}{0}<u>Exception Stack Trace:</u>{0}", Environment.NewLine);
-        stringBuilder.AppendFormat("{0}", tempException.StackTrace);
-      }
-      if (System.Environment.StackTrace != null) {
-        stringBuilder.AppendFormat("{0}{0}<u>Environment Stack Trace:</u>{0}", Environment.NewLine);
-        stringBuilder.AppendFormat("{0}", System.Environment.StackTrace);
+      try {
+        if (tempException.StackTrace != null) {
+          stringBuilder.AppendFormat("{0}{0}<u>Exception Stack Trace:</u>{0}", Environment.NewLine);
+          stringBuilder.AppendFormat("{0}", tempException.StackTrace);
+        }
+        if (System.Environment.StackTrace != null) {
+          stringBuilder.AppendFormat("{0}{0}<u>Environment Stack Trace:</u>{0}", Environment.NewLine);
+          stringBuilder.AppendFormat("{0}", System.Environment.StackTrace);
+        }
+      } catch {
+        //no-op
       }
       return stringBuilder.ToString();
     }
 
-    static private string GetSourceMethodName(int skipFrames) {
-      MethodBase sourceMethod = new StackFrame(skipFrames).GetMethod();
+    static private string GetSourceMethodName() {
+      MethodBase sourceMethod = new StackFrame(3).GetMethod();
       ParameterInfo[] methodPars = sourceMethod.GetParameters();
 
       string methodName = String.Format("{0}.{1}", sourceMethod.DeclaringType, sourceMethod.Name);
@@ -233,7 +244,7 @@ namespace Empiria {
         this.exceptionTag = unknownExceptionTag;
       }
       try {
-        base.Source = GetSourceMethodName(4);
+        base.Source = GetSourceMethodName();
       } catch {
         base.Source = unknownExceptionTag;
       }

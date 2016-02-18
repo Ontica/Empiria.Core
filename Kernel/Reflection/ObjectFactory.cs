@@ -45,8 +45,7 @@ namespace Empiria.Reflection {
     static public object EmptyInstance(Type type) {
       try {
         PropertyInfo property = ObjectFactory.GetEmptyInstanceProperty(type);
-        Assertion.AssertObject(property, String.Format("Type {0} doesn't has a static Empty property.",
-                                                        type.FullName));
+        Assertion.AssertObject(property, "Type {0} doesn't has a static Empty property.", type.FullName);
         return property.GetMethod.Invoke(null, null);
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
@@ -137,8 +136,7 @@ namespace Empiria.Reflection {
     static public object InvokeParseMethod(Type type, int objectId) {
       try {
         MethodInfo method = ObjectFactory.GetParseMethod(type);
-        Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(int) method.",
-                                                     type.FullName));
+        Assertion.AssertObject(method, "Type {0} doesn't has static Parse(int) method.", type.FullName);
         return method.Invoke(null, new object[] { objectId });
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
@@ -152,8 +150,7 @@ namespace Empiria.Reflection {
     static public object InvokeParseMethod(Type type, string value) {
       try {
         MethodInfo method = ObjectFactory.GetParseStringMethod(type);
-        Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(string) method.",
-                                                      type.FullName));
+        Assertion.AssertObject(method, "Type {0} doesn't has static Parse(string) method.", type.FullName);
         return method.Invoke(null, new object[] { value });
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
@@ -168,8 +165,8 @@ namespace Empiria.Reflection {
       Type type = typeof(T);
       try {
         MethodInfo method = GetParseJsonMethod(type);
-        Assertion.AssertObject(method, String.Format("Type {0} doesn't has static Parse(JsonObject) method.",
-                                                     type.FullName));
+        Assertion.AssertObject(method,
+                               "Type {0} doesn't has static Parse(JsonObject) method.", type.FullName);
         return (T) method.Invoke(null, new object[] { jsonObject });
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,

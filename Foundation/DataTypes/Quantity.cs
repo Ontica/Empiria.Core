@@ -38,6 +38,12 @@ namespace Empiria.DataTypes {
       return new Quantity(unit, amount);
     }
 
+    public static Quantity One {
+      get {
+        return new Quantity(Unit.Empty, 1m);
+      }
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties

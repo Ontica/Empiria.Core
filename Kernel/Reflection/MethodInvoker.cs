@@ -178,8 +178,8 @@ namespace Empiria.Reflection {
       Assertion.AssertObject(type, "propertyName");
 
       PropertyInfo property = type.GetProperty(propertyName, BindingFlags.Static | BindingFlags.Public);
-      Assertion.AssertObject(property, String.Format("Type {0} doesn't has a static property with name '{1}'.",
-                                                     type.FullName, propertyName));
+      Assertion.AssertObject(property, "Type {0} doesn't has a static property with name '{1}'.",
+                                        type.FullName, propertyName);
       return property;
     }
 

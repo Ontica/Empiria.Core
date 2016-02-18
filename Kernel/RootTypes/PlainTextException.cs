@@ -24,7 +24,7 @@ namespace Empiria {
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="args">An optional array of objects to format into the exception message.</param>
     protected PlainTextException(string messageCode, string message, params object[] args)
-      : base(messageCode, GetMessage(message, args)) {
+      : base(messageCode, BuildMessage(message, args)) {
     }
 
     /// <summary>Initializes a new instance of PlainTextException class with a specified error
@@ -34,22 +34,10 @@ namespace Empiria {
     /// <param name="args">An optional array of objects to format into the exception message.</param>
     protected PlainTextException(string messageCode, string message, Exception exception,
                                  params object[] args)
-      : base(messageCode, GetMessage(message, args), exception) {
+      : base(messageCode, BuildMessage(message, args), exception) {
     }
 
     #endregion Constructors and parsers
-
-    #region Private methods
-
-    static private string GetMessage(string message, params object[] args) {
-      if (args != null && args.Length != 0) {
-        return String.Format(message, args);
-      } else {
-        return message;
-      }
-    }
-
-    #endregion Private methods
 
   } // class PlainTextException
 

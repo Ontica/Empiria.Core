@@ -58,6 +58,10 @@ namespace Empiria.DataTypes {
       get { return new Money(Currency.NoLegible, 0m); }
     }
 
+    static public Money Zero {
+      get { return new Money(Currency.Default, 0m); }
+    }
+
     #endregion Constructors and parsers
 
     #region Public properties

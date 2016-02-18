@@ -147,7 +147,7 @@
     <value>Assembly doesn't have the type '{0}'. It may be a programming or metadata inconsistency.</value>
   </data>
   <data name="AssertFails" xml:space="preserve">
-    <value>Assertion fails inside {0}: \n{1}</value>
+    <value>{0}</value>
   </data>
   <data name="ParameterNotExists" xml:space="preserve">
     <value>There is not defined a system configuration parameter with name '{0}' for type '{1}'.</value>
