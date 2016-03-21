@@ -12,11 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Security.Permissions;
 
 namespace Empiria.Data.Handlers {
 
-  [StrongNameIdentityPermission(SecurityAction.LinkDemand, PublicKey = "8b7fe9c60c0f43bd")]
   static internal class SqlParameterCache {
 
     #region Fields

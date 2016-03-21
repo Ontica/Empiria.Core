@@ -11,13 +11,11 @@
 using System;
 using System.Data;
 using System.EnterpriseServices;
-using System.Security.Permissions;
 
 using Npgsql;
 
 namespace Empiria.Data.Handlers {
 
-  [StrongNameIdentityPermission(SecurityAction.LinkDemand, PublicKey = "8b7fe9c60c0f43bd")]
   static internal class PostgreSqlMethods {
 
     #region Internal methods

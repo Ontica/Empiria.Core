@@ -118,6 +118,7 @@ namespace Empiria {
         AssertIsStarted();
 
         var principal = Thread.CurrentPrincipal;
+
         if (principal != null && principal is IEmpiriaPrincipal) {
           return (IEmpiriaPrincipal) principal;
         }

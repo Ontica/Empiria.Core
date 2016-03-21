@@ -149,9 +149,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mono.Security">
-      <HintPath>..\..\..\empiria.assemblies\Mono.Security.dll</HintPath>
-    </Reference>
     <Reference Include="MySql.Data">
       <HintPath>..\..\..\empiria.assemblies\MySql.Data.dll</HintPath>
     </Reference>

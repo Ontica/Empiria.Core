@@ -9,6 +9,7 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2014-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -17,7 +18,7 @@ using Empiria.Data;
 
 namespace Empiria {
 
-  internal class MetaModel<T> where T : BaseObject {
+  internal class MetaModel<T> where T : BaseObjectLite {
 
     #region Delegates
 
@@ -87,8 +88,23 @@ namespace Empiria {
 
     #region Public methods
 
+    internal FixedList<T> GetFixedList(string sql) {
+      var dataTable = DataReader.GetDataTable(DataOperation.Parse(sql));
+
+      List<T> list = new List<T>(dataTable.Rows.Count);
+
+      for (int i = 0; i < dataTable.Rows.Count; i++) {
+        DataRow dataRow = dataTable.Rows[i];
+        T instance = this.InvokeInstanceConstructor((int) dataRow[this.DataSourceIdField]);
+
+        instance.OnLoadObjectData(dataRow);
+
+        list.Add(instance);
+      }
+      return list.ToFixedList();
+    }
     internal T GetInstance(int id) {
-      var dataRow = this.GetInstanceDataRow(id);
+      DataRow dataRow = this.GetInstanceDataRow(id);
 
       T instance = this.InvokeInstanceConstructor(id);
 
@@ -98,7 +114,7 @@ namespace Empiria {
     }
 
     internal T GetInstance(string instanceUID) {
-      var dataRow = this.GetInstanceDataRow(instanceUID);
+      DataRow dataRow = this.GetInstanceDataRow(instanceUID);
 
       T instance = this.InvokeInstanceConstructor((int) dataRow[this.DataSourceIdField]);
 
@@ -118,7 +134,7 @@ namespace Empiria {
     }
 
     internal T GetInstanceWithQuery(string query) {
-      var dataRow = this.TryGetInstanceDataRow(query);
+      DataRow dataRow = this.TryGetInstanceDataRow(query);
 
       if (dataRow != null) {
         return this.GetInstance(dataRow);
@@ -127,6 +143,10 @@ namespace Empiria {
                                             "An object of type '{0}' was not found using the query {1}.",
                                             UnderlyingType.Name, query);
       }
+    }
+
+    internal int GetNextInstanceId() {
+      return DataWriter.CreateId(this.DataSource);
     }
 
     internal T TryGetInstance(string key) {
@@ -142,7 +162,7 @@ namespace Empiria {
     }
 
     internal T TryGetInstanceWithQuery(string query) {
-      var dataRow = this.TryGetInstanceDataRow(query);
+      DataRow dataRow = this.TryGetInstanceDataRow(query);
 
       if (dataRow != null) {
         return this.GetInstance(dataRow);
@@ -186,8 +206,9 @@ namespace Empiria {
     }
 
     private DataRow GetInstanceDataRow(string instanceUID) {
-      var sql = String.Format("SELECT * FROM {0} WHERE {1} = '{2}'",
-                              this.DataSource, this.DataSourceKeyField, instanceUID);
+      string sql = "SELECT * FROM {0} WHERE {1} = '{2}'";
+
+      sql = String.Format(sql, this.DataSource, this.DataSourceKeyField, instanceUID);
 
       var dataRow = DataReader.GetDataRow(DataOperation.Parse(sql));
 

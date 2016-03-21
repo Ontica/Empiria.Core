@@ -19,7 +19,6 @@ using Empiria.Security;
 namespace Empiria.Data.Integration {
 
   /// <summary>Executes async data operations published on queues throw web services invocation.</summary>
-  //[StrongNameIdentityPermission(SecurityAction.LinkDemand, PublicKey="8b7fe9c60c0f43bd")]
   public class DataIntegrationEngine {
 
     #region Fields

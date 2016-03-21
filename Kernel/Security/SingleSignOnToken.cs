@@ -16,7 +16,6 @@ namespace Empiria.Security {
 
   /// <summary>Represents a single sign-on data token that enables a looged user log in once and gain access
   /// to multiple software systems without beign prompted to log in again.</summary>
-  //[StrongNameIdentityPermission(SecurityAction.LinkDemand, PublicKey="8b7fe9c60c0f43bd")]
   public sealed class SingleSignOnToken {
 
     #region Fields

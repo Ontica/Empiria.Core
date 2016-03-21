@@ -28,7 +28,6 @@ namespace Empiria.Data.Integration {
   #endregion Enumerations
 
   /// <summary>Represents a data integration rule.</summary>
-  //[StrongNameIdentityPermission(SecurityAction.LinkDemand, PublicKey="8b7fe9c60c0f43bd")]
   internal class DataIntegrationRule : IIdentifiable {
 
     #region Fields

@@ -20,25 +20,37 @@ namespace Empiria {
 
     #region Public methods
 
-    static public T Parse<T>(int id) where T : BaseObject {
+    public static FixedList<T> GetFixedList<T>(string sql) where T : BaseObjectLite {
+      var metamodel = MetaModel<T>.Parse();
+
+      return metamodel.GetFixedList(sql);
+    }
+
+    public static int GetNextId<T>() where T : BaseObjectLite {
+      var metamodel = MetaModel<T>.Parse();
+
+      return metamodel.GetNextInstanceId();
+    }
+
+    static public T Parse<T>(int id) where T : BaseObjectLite {
       var metamodel = MetaModel<T>.Parse();
 
       return metamodel.GetInstance(id);
     }
 
-    static public T Parse<T>(string key) where T : BaseObject {
+    static public T Parse<T>(string key) where T : BaseObjectLite {
       var metamodel = MetaModel<T>.Parse();
 
       return metamodel.GetInstance(key);
     }
 
-    static public T Parse<T>(DataRow row) where T : BaseObject {
+    static public T Parse<T>(DataRow row) where T : BaseObjectLite {
       var metamodel = MetaModel<T>.Parse();
 
       return metamodel.GetInstance(row);
     }
 
-    static public List<T> Parse<T>(DataTable table) where T : BaseObject {
+    static public List<T> Parse<T>(DataTable table) where T : BaseObjectLite {
       var metamodel = MetaModel<T>.Parse();
 
       List<T> list = new List<T>(table.Rows.Count);
@@ -48,19 +60,19 @@ namespace Empiria {
       return list;
     }
 
-    static public T ParseWithQuery<T>(string query) where T : BaseObject {
+    static public T ParseWithQuery<T>(string query) where T : BaseObjectLite {
       var metamodel = MetaModel<T>.Parse();
 
       return metamodel.GetInstanceWithQuery(query);
     }
 
-    static public T TryParse<T>(string key) where T : BaseObject {
+    static public T TryParse<T>(string key) where T : BaseObjectLite {
       var metamodel = MetaModel<T>.Parse();
 
       return metamodel.TryGetInstance(key);
     }
 
-    static public T TryParseWithQuery<T>(string query) where T : BaseObject {
+    static public T TryParseWithQuery<T>(string query) where T : BaseObjectLite {
       var metamodel = MetaModel<T>.Parse();
 
       return metamodel.TryGetInstanceWithQuery(query);

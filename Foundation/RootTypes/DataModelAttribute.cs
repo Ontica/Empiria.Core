@@ -18,7 +18,7 @@ namespace Empiria {
 
     #region Constructors and parsers
 
-    /// <summary>Initializes a new instance of the <see cref="DataFieldAttribute"/> class.</summary>
+    /// <summary>Initializes a new instance of the <see cref="DataModelAttribute"/> class.</summary>
     /// <param name="sourceName">The name of the data item to map to the property or field.</param>
     public DataModelAttribute(string sourceName, string idFieldName) {
       Assertion.AssertObject(sourceName, "sourceName");
@@ -30,7 +30,7 @@ namespace Empiria {
       this.NoCache = false;
     }
 
-    /// <summary>Initializes a new instance of the <see cref="DataFieldAttribute"/> class.</summary>
+    /// <summary>Initializes a new instance of the <see cref="DataModelAttribute"/> class.</summary>
     /// <param name="sourceName">The name of the data item to map to the property or field.</param>
     /// <param name="idFieldName">The name of the field that holds the integer id of the instance.</param>
     /// <param name="keyFieldName">The name of the field that holds the UID or unique key of the instance.</param>

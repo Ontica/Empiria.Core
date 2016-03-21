@@ -16,7 +16,6 @@ using Empiria.Security;
 namespace Empiria.Data.Integration {
 
   /// <summary>Provides read and write data operations allocated on external servers throw web services.</summary>
-  //[StrongNameIdentityPermission(SecurityAction.LinkDemand, PublicKey="8b7fe9c60c0f43bd")]
   static public class DataPublisher {
 
     #region Public methods

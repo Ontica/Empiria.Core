@@ -10,8 +10,9 @@
 ********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Security.Permissions;
-using Empiria.Security;
 using Microsoft.Win32;
+
+using Empiria.Security;
 
 namespace Empiria {
 

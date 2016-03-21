@@ -10,12 +10,10 @@
 ********************************* Copyright (c) 2006-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
-using System.Security.Permissions;
 using MySql.Data.MySqlClient;
 
 namespace Empiria.Data.Handlers {
 
-  [StrongNameIdentityPermission(SecurityAction.LinkDemand, PublicKey = "8b7fe9c60c0f43bd")]
   static internal class MySqlMethods {
 
     #region Internal methods

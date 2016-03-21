@@ -40,16 +40,6 @@ namespace Empiria.Security {
       this.AuditTrailType = auditTrailType;
     }
 
-    //static public AuditTrail WriteException(Exception exception) {
-    //  var auditTrail = new AuditTrail(ExecutionServer.CurrentRequest, AuditTrailType.Exception);
-
-    //  auditTrail.SetOperationInfo(exception.Source, exception.TargetSite.Name, JsonObject.Empty);
-    //  auditTrail.SetResponse(500, exception);
-    //  auditTrail.Write();
-
-    //  return auditTrail;
-    //}
-
     private void Initialize() {
       this.Id = -1;
       this.SessionId = -1;

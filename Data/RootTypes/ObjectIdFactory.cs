@@ -15,7 +15,6 @@ using System.Threading;
 
 namespace Empiria.Data {
 
-  //[StrongNameIdentityPermission(SecurityAction.LinkDemand, PublicKey = "8b7fe9c60c0f43bd")]
   internal sealed class ObjectIdFactory {
 
     #region Fields

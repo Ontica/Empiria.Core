@@ -13,7 +13,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
-using System.Security.Permissions;
 using System.Text;
 
 namespace Empiria.Security {
@@ -27,7 +26,6 @@ namespace Empiria.Security {
   }
 
   /// <summary>Provides encryption and decryption services for strings, objects and files.</summary>
-  [StrongNameIdentityPermission(SecurityAction.LinkDemand, PublicKey = "8b7fe9c60c0f43bd")]
   static public class Cryptographer {
 
     #region Fields

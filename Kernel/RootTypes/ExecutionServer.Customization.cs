@@ -67,7 +67,7 @@ namespace Empiria {
       }
     }
 
-    //OOJJOO: To deprecate
+    // ToDo: To deprecate it
     static public string CurrentSessionToken {
       get {
         AssertIsStarted();

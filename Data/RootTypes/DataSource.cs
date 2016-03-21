@@ -8,14 +8,13 @@
 *  Summary   : Represents a data source formed by the source or connection string and the data technology.   *
 *                                                                                                            *
 ********************************* Copyright (c) 1999-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Security.Permissions;
 
 using Empiria.Data.Handlers;
 
 namespace Empiria.Data {
-  using System.Diagnostics.CodeAnalysis;
 
   #region Enumerations
 
@@ -32,12 +31,6 @@ namespace Empiria.Data {
 
   #endregion Enumerations
 
-  [StrongNameIdentityPermission(SecurityAction.LinkDemand,
-                                PublicKey = "00240000048000009400000006020000002400005253413100040000010001007f32" +
-                                            "5fc5c22fde128ef71827d4c9682bbc9b5c722a5b5becf866167211f931bc2afbf2bb" +
-                                            "f85e478d2a436ecb50a2d21a3cdd64153180245a42fa1bea2e51acbe6ee3b26a39b9" +
-                                            "404a2e010231c6dccdfc6d0c26c4957b4f10538e367010ac1735639c145f819db968" +
-                                            "fc7c84c8f6875bc95e3f1a9e66bd65a66dd0115efaae0bb4")]
   internal struct DataSource {
 
     #region Fields

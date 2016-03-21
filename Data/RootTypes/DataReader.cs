@@ -20,7 +20,6 @@ using Empiria.Security;
 namespace Empiria.Data {
 
   /// <summary>Static class with methods that performs data reading operations.</summary>
-  //[StrongNameIdentityPermission(SecurityAction.LinkDemand, PublicKey="8b7fe9c60c0f43bd")]
   static public class DataReader {
 
     #region Delegates

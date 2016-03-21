@@ -13,7 +13,7 @@ using System;
 namespace Empiria.Security {
 
   /// <summary>Helper class that verifies a password strength.</summary>
-  internal class PasswordStrength {
+  public class PasswordStrength {
 
     #region Fields;
 
@@ -24,6 +24,9 @@ namespace Empiria.Security {
 
     #region Constructors and parsers
 
+    private PasswordStrength(string password) {
+      this.password = password;
+    }
     internal PasswordStrength(EmpiriaUser user, string password) {
       Assertion.AssertObject(user, "user");
       Assertion.AssertObject(password, "password");
@@ -32,6 +35,14 @@ namespace Empiria.Security {
       this.password = password;
     }
 
+    static public void AssertIsValid(string password) {
+      Assertion.AssertObject(password, "password");
+
+      var instance = new PasswordStrength(password);
+
+      instance.VerifyLength();
+      instance.VerifyCharactersCombination();
+    }
     #endregion Constructors and parsers
 
     #region Public methods

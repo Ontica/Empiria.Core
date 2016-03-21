@@ -13,7 +13,6 @@ using System.Data;
 
 namespace Empiria.Security {
 
-  //[DataModel("SecurityClaims", "SecurityClaimId")]
   public sealed class SecurityClaim : BaseObject {
 
     #region Constructors and parsers

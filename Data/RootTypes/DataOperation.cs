@@ -11,7 +11,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Security.Permissions;
 
 using Empiria.Data.Handlers;
 
@@ -21,8 +20,6 @@ namespace Empiria.Data {
   public sealed class DataOperation : OperationBase {
 
     #region Fields
-
-    static public Dictionary<string, int> PerformanceTable = new Dictionary<string, int>();
 
     static private Dictionary<string, string> textCommandDictionary = new Dictionary<string, string>();
 
@@ -38,21 +35,12 @@ namespace Empiria.Data {
       : base(sourceName) {
       this.dataSource = dataSource;
       this.sourceText = GetSourceText(sourceName);
-      IncrementPerformanceItem(sourceName);
     }
 
     private DataOperation(DataSource dataSource, string sourceName, object[] parameters)
       : base(sourceName, parameters) {
       this.dataSource = dataSource;
       this.sourceText = GetSourceText(sourceName);
-      IncrementPerformanceItem(sourceName);
-    }
-
-    static private void IncrementPerformanceItem(string sourceName) {
-      if (!PerformanceTable.ContainsKey(sourceName)) {
-        PerformanceTable[sourceName] = 0;
-      }
-      PerformanceTable[sourceName]++;
     }
 
     static public DataOperation Parse(string sourceName) {
@@ -205,7 +193,6 @@ namespace Empiria.Data {
       }
     }
 
-    [StrongNameIdentityPermission(SecurityAction.LinkDemand, PublicKey = "8b7fe9c60c0f43bd")]
     static private string ReadDataSourceText(string sourceName) {
       try {
         DataOperation operation = DataOperation.Parse("qryDBQueryString", sourceName);

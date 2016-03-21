@@ -1,6 +1,4 @@
-﻿//TODO: To be deprecated
-
-using System;
+﻿using System;
 
 namespace Empiria {
 

@@ -12,11 +12,9 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.EnterpriseServices;
-using System.Security.Permissions;
 
 namespace Empiria.Data.Handlers {
 
-  [StrongNameIdentityPermission(SecurityAction.LinkDemand, PublicKey = "8b7fe9c60c0f43bd")]
   static internal class SqlMethods {
 
     #region Internal methods
@@ -233,7 +231,6 @@ namespace Empiria.Data.Handlers {
         command.Parameters.Clear();
         connection.Dispose();
       }
-      //Messaging.Publisher.Publish(command.CommandText + " returns " + dataTable.Rows.Count + " rows.");
       return dataTable;
     }
 
