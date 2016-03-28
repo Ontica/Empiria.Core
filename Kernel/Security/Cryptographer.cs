@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Security Services                 *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.Kernel.dll                *
 *  Type      : Cryptographer                                    Pattern  : Static Class                      *
-*  Version   : 6.5                                              License  : Please read license.txt file      *
+*  Version   : 6.7                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Provides encryption and decryption services for strings, objects and files.                   *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.IO;
 using System.Runtime.InteropServices;

@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
 *  Namespace : Empiria.Data.Handlers                            Assembly : Empiria.Data.dll                  *
 *  Type      : OleDbParameterCache                              Pattern  : Static Class With Objects Cache   *
-*  Version   : 6.5                                              License  : Please read license.txt file      *
+*  Version   : 6.7                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : This type is a wrapper of a static hash table that contains the loaded OleDbParameters.       *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 1999-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Data;

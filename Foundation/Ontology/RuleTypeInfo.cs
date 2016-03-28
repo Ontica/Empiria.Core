@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
 *  Namespace : Empiria.Ontology                                 Assembly : Empiria.Foundation.dll            *
 *  Type      : RuleTypeInfo                                     Pattern  : Type metadata class               *
-*  Version   : 6.5                                              License  : Please read license.txt file      *
+*  Version   : 6.7                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents a rule type definition.                                                            *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Ontology {

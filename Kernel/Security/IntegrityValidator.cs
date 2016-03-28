@@ -3,12 +3,12 @@
 *  Solution  : Empiria Foundation Framework                     System   : Security Services                 *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.Kernel.dll                *
 *  Type      : IntegrityValidator                               Pattern  : Standard Class                    *
-*  Version   : 6.5                                              License  : Please read license.txt file      *
+*  Version   : 6.7                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Provides a service to secure entities using a data integrity field, which it is calculted     *
 *              as a hash code of a list of the entity's protected fields.                                    *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Security {

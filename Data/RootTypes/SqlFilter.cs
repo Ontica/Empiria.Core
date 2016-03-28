@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
 *  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
 *  Type      : DataFilter                                       Pattern  : Static Class With Objects Cache   *
-*  Version   : 6.5                                              License  : Please read license.txt file      *
+*  Version   : 6.7                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents a data source formed by the source or connection string and the data technology.   *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 1999-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Data {

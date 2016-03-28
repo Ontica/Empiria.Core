@@ -3,12 +3,12 @@
 *  Solution  : Empiria Foundation Framework                     System   : Kernel Types                      *
 *  Namespace : Empiria.Collections                              Assembly : Empiria.Kernel.dll                *
 *  Type      : EmpiriaCollection                                Pattern  : Collection Class                  *
-*  Version   : 6.5                                              License  : Please read license.txt file      *
+*  Version   : 6.7                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Abstract class that represents a strongly typed list of items that can be accessed            *
 *              by index or key.                                                                              *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Data;

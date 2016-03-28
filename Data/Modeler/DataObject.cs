@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Modeler Library              *
 *  Namespace : Empiria.Data.Modeler                             Assembly : Empiria.Data.dll                  *
 *  Type      : DataObject                                       Pattern  : Standard Class                    *
-*  Version   : 6.5                                              License  : Please read license.txt file      *
+*  Version   : 6.7                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : This type represents a data object metadata.                                                  *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Data.Modeler {

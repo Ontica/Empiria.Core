@@ -3,13 +3,13 @@
 *  Solution  : Empiria Foundation Framework                     System   : Security Services                 *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.Foundation.dll            *
 *  Type      : EmpiriaPrincipal                                 Pattern  : Standard Class                    *
-*  Version   : 6.5                                              License  : Please read license.txt file      *
+*  Version   : 6.7                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents the security context of the user or access account on whose behalf the Empiria     *
 *              framework code is running, including that user's identity (EmpiriaIdentity) and any domain    *
 *              roles to which they belong. This class can't be derived.                                      *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Security.Principal;
 

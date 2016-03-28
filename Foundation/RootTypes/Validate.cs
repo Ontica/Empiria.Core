@@ -7,7 +7,7 @@
 *                                                                                                            *
 *  Summary   : Provides validation methods.                                                                  *
 *                                                                                                            *
-********************************* Copyright (c) 2003-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2003-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria {

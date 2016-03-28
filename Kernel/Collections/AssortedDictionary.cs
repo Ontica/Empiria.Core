@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Kernel Types                      *
 *  Namespace : Empiria.Collections                              Assembly : Empiria.Kernel.dll                *
 *  Type      : AssortedDictionary                               Pattern  : HashList Class                    *
-*  Version   : 6.5                                              License  : Please read license.txt file      *
+*  Version   : 6.7                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents an assorted objects dictionary retrived by a string key.                           *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections;
 using System.Collections.Generic;

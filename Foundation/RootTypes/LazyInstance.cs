@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Framework Library      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
 *  Type      : LazyInstance                                     Pattern  : Lazy Load                         *
-*  Version   : 6.5                                              License  : Please read license.txt file      *
+*  Version   : 6.7                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Performs lazy loading of BaseObject instances of types.                                       *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 1999-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Ontology;

@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Kernel Types                      *
 *  Namespace : Empiria.Collections                              Assembly : Empiria.Foundation.dll            *
 *  Type      : DoubleKeyList                                    Pattern  : Collection class                  *
-*  Version   : 6.5                                              License  : Please read license.txt file      *
+*  Version   : 6.7                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Sealed class that holds a double dictionary list.                                             *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections;
 using System.Collections.Generic;

@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
 *  Namespace : Empiria.Data.Handlers                            Assembly : Empiria.Data.dll                  *
 *  Type      : OracleMethods                                    Pattern  : Static Class                      *
-*  Version   : 6.5                                              License  : Please read license.txt file      *
+*  Version   : 6.7                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Static internal class used to read data stored in Oracle databases.                           *
 *                                                                                                            *
-********************************* Copyright (c) 2001-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2001-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 using System.Data.OracleClient;

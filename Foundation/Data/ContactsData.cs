@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Contacts Management               *
 *  Namespace : Empiria.Contacts.Data                            Assembly : Empiria.Foundation.dll            *
 *  Type      : ObjectReader                                     Pattern  : Data Services Static Class        *
-*  Version   : 6.5                                              License  : Please read license.txt file      *
+*  Version   : 6.7                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Provides data read methods for Empiria Foundation Ontology objects.                           *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2015. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Data;
