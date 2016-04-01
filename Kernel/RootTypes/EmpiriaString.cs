@@ -542,6 +542,17 @@ namespace Empiria {
       return result;
     }
 
+    static public string TrimIfLongThan(string text, int maxLength) {
+      if (String.IsNullOrWhiteSpace(text)) {
+        return String.Empty;
+      }
+      if (text.Length > (maxLength - 3)) {
+        return text.Substring(0, maxLength - 4) + "...";
+      } else {
+        return text;
+      }
+    }
+
     static public string TrimAll(string source) {
       string temp = TrimAll(source, "  ", " ");
 

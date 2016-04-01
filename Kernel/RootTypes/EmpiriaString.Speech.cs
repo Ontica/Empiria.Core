@@ -102,7 +102,7 @@ namespace Empiria {
       array[3, 0] = "Tres"; array[3, 1] = "Treinta"; array[3, 2] = "Trescientos"; array[3, 3] = "Trece"; array[3, 4] = "Veintitrés";
       array[4, 0] = "Cuatro"; array[4, 1] = "Cuarenta"; array[4, 2] = "Cuatrocientos"; array[4, 3] = "Catorce"; array[4, 4] = "Veinticuatro";
       array[5, 0] = "Cinco"; array[5, 1] = "Cincuenta"; array[5, 2] = "Quinientos"; array[5, 3] = "Quince"; array[5, 4] = "Veinticinco";
-      array[6, 0] = "Seis"; array[6, 1] = "Sesenta"; array[6, 2] = "Seiscientos"; array[6, 3] = "Dieciseis"; array[6, 4] = "Veintiseis";
+      array[6, 0] = "Seis"; array[6, 1] = "Sesenta"; array[6, 2] = "Seiscientos"; array[6, 3] = "Dieciséis"; array[6, 4] = "Veintiséis";
       array[7, 0] = "Siete"; array[7, 1] = "Setenta"; array[7, 2] = "Setecientos"; array[7, 3] = "Diecisiete"; array[7, 4] = "Veintisiete";
       array[8, 0] = "Ocho"; array[8, 1] = "Ochenta"; array[8, 2] = "Ochocientos"; array[8, 3] = "Dieciocho"; array[8, 4] = "Veintiocho";
       array[9, 0] = "Nueve"; array[9, 1] = "Noventa"; array[9, 2] = "Novecientos"; array[9, 3] = "Diecinueve"; array[9, 4] = "Veintinueve";
