@@ -24,7 +24,26 @@ namespace Empiria.Security {
       DataWriter.Execute(DataOperation.Parse(sql));
     }
 
-    static internal void ChangePasswordLand(string username, string password) {
+    static internal void ChangePassword(string username, string password) {
+      if (ConfigurationData.GetBoolean("UseFormerPasswordEncryption")) {
+        ChangePasswordUsingFormerEncryption(username, password);
+        return;
+      }
+
+      var dataRow = DataReader.GetDataRow(DataOperation.Parse("getContactWithUserName", username));
+      if (dataRow == null) {
+        throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
+      }
+
+      string p = Cryptographer.Encrypt(EncryptionMode.EntropyKey,
+                                       Cryptographer.GetMD5HashCode(password), username);
+
+      string sql = "UPDATE Contacts SET UserPassword = '{0}' WHERE UserName = '{1}'";
+
+      DataWriter.Execute(DataOperation.Parse(String.Format(sql, p, username)));
+    }
+
+    static private void ChangePasswordUsingFormerEncryption(string username, string password) {
       var dataRow = DataReader.GetDataRow(DataOperation.Parse("getContactWithUserName", username));
       if (dataRow == null) {
         throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
@@ -42,20 +61,6 @@ namespace Empiria.Security {
       string sql = "UPDATE Contacts SET UserPassword = '{0}' WHERE UserName = '{1}'";
 
       DataWriter.Execute(DataOperation.Parse(String.Format(sql, password, username)));
-    }
-
-    static internal void ChangePassword(string username, string password) {
-      var dataRow = DataReader.GetDataRow(DataOperation.Parse("getContactWithUserName", username));
-      if (dataRow == null) {
-        throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
-      }
-
-      string p = Cryptographer.Encrypt(EncryptionMode.EntropyKey,
-                                       Cryptographer.GetMD5HashCode(password), username);
-
-      string sql = "UPDATE Contacts SET UserPassword = '{0}' WHERE UserName = '{1}'";
-
-      DataWriter.Execute(DataOperation.Parse(String.Format(sql, p, username)));
     }
 
     static internal SecurityClaim GetPendingSecurityClaim(SecurityClaimType claimType,

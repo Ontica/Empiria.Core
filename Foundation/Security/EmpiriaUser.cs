@@ -272,6 +272,7 @@ namespace Empiria.Security {
 
       helper.VerifyStrength();
     }
+
     #endregion Public methods
 
     #region Private methods
