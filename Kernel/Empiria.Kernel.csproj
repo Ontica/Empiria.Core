@@ -183,6 +183,7 @@
     <Compile Include="Json\JsonDataException.cs" />
     <Compile Include="Json\JsonItem.cs" />
     <Compile Include="Json\JsonObject.cs" />
+    <Compile Include="Json\ValueObjectConverter.cs" />
     <Compile Include="Messaging\FileBasedQueue.cs" />
     <Compile Include="Messaging\IQueueFactory.cs" />
     <Compile Include="Messaging\MessagingException.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="RootTypes\ExecutionServer.Customization.cs" />
     <Compile Include="RootTypes\ExecutionServer.cs" />
     <Compile Include="RootTypes\IUnitOfWork.cs" />
+    <Compile Include="RootTypes\IValueObject.cs" />
     <Compile Include="RootTypes\PlainTextException.cs" />
     <Compile Include="RootTypes\ProductInformation.cs">
       <SubType>Code</SubType>

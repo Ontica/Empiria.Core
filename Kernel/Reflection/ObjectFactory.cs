@@ -9,7 +9,6 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -33,9 +32,11 @@ namespace Empiria.Reflection {
                                               BindingFlags.NonPublic, null, CallingConventions.HasThis,
                                               parametersTypes, null);
         return constructor.Invoke(parameters);
-      } catch (TargetInvocationException innerException) {
-        throw new ReflectionException(ReflectionException.Msg.ConstructorExecutionFails, innerException,
+      } catch (TargetException e) {
+        throw new ReflectionException(ReflectionException.Msg.ConstructorNotDefined, e,
                                       type.FullName);
+      } catch (TargetInvocationException e) {
+        throw e.InnerException ?? e;
       } catch (Exception innerException) {
         throw new ReflectionException(ReflectionException.Msg.ConstructorNotDefined,
                                       innerException, type.FullName);
@@ -50,6 +51,8 @@ namespace Empiria.Reflection {
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
                                       type.FullName);
+      } catch (TargetInvocationException e) {
+        throw e.InnerException ?? e;
       } catch (Exception e) {
         throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
                                       type.FullName);
@@ -141,6 +144,8 @@ namespace Empiria.Reflection {
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
                                       type.FullName);
+      } catch (TargetInvocationException e) {
+        throw e.InnerException ?? e;
       } catch (Exception e) {
         throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
                                       type.FullName + "[ Id = " + objectId + " ]");
@@ -155,9 +160,12 @@ namespace Empiria.Reflection {
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
                                       type.FullName);
+      } catch (TargetInvocationException e) {
+        throw e.InnerException ?? e;
       } catch (Exception e) {
-        throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
-                                      type.FullName + "[ Value = " + value + " ]");
+        throw e;
+        //throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
+        //                              type.FullName + "[ Value = " + value + " ]");
       }
     }
 
@@ -171,6 +179,8 @@ namespace Empiria.Reflection {
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
                                       type.FullName);
+      } catch (TargetInvocationException e) {
+        throw e.InnerException ?? e;
       } catch (Exception e) {
         throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
                                       type.FullName + "JsonObject =  " + jsonObject.ToString());

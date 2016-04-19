@@ -38,6 +38,12 @@ namespace Empiria {
       return metamodel.GetInstance(id);
     }
 
+    public static T ParseEmptyInstance<T>() where T : BaseObjectLite {
+      var metamodel = MetaModel<T>.Parse();
+
+      return metamodel.GetInstance(-1);
+    }
+
     static public T Parse<T>(string key) where T : BaseObjectLite {
       var metamodel = MetaModel<T>.Parse();
 
@@ -60,10 +66,10 @@ namespace Empiria {
       return list;
     }
 
-    static public T ParseWithQuery<T>(string query) where T : BaseObjectLite {
+    static public T ParseWithFilter<T>(string filter) where T : BaseObjectLite {
       var metamodel = MetaModel<T>.Parse();
 
-      return metamodel.GetInstanceWithQuery(query);
+      return metamodel.GetInstanceWithQuery(filter);
     }
 
     static public T TryParse<T>(string key) where T : BaseObjectLite {
@@ -72,10 +78,10 @@ namespace Empiria {
       return metamodel.TryGetInstance(key);
     }
 
-    static public T TryParseWithQuery<T>(string query) where T : BaseObjectLite {
+    static public T TryParseWithFilter<T>(string filter) where T : BaseObjectLite {
       var metamodel = MetaModel<T>.Parse();
 
-      return metamodel.TryGetInstanceWithQuery(query);
+      return metamodel.TryGetInstanceWithFilter(filter);
     }
 
     #endregion Public methods

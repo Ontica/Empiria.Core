@@ -31,6 +31,13 @@ namespace Empiria {
       protected internal set;
     }
 
+    [Newtonsoft.Json.JsonIgnore]
+    public bool IsEmptyInstance {
+      get {
+        return (this.Id == -1);
+      }
+    }
+
     protected bool IsNew {
       get {
         return (this.Id == 0);
@@ -40,6 +47,30 @@ namespace Empiria {
     #endregion Properties
 
     #region Public methods
+
+    public bool Distinct(BaseObjectLite obj) {
+      Assertion.AssertObject(obj, "obj");
+
+      return !this.Equals(obj);
+    }
+
+    public override bool Equals(object obj) {
+      if (obj == null || this.GetType() != obj.GetType()) {
+        return false;
+      }
+      return base.Equals(obj) && (this.Id == ((BaseObjectLite) obj).Id);
+    }
+
+    public bool Equals(BaseObjectLite obj) {
+      if (obj == null) {
+        return false;
+      }
+      return (this.GetType() == obj.GetType()) && (this.Id == obj.Id);
+    }
+
+    public override int GetHashCode() {
+      return (this.GetType().GetHashCode() ^ this.Id);
+    }
 
     /// <summary>Raised after initialization and after databinding if their type is
     /// marked as IsDatabounded.</summary>

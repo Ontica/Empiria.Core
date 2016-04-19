@@ -79,7 +79,13 @@ namespace Empiria.Data.Handlers {
 
       for (int i = 0, j = sourceParameters.Length; i < j; i++) {
         clonedParameters[i] = (SqlParameter) ((ICloneable) sourceParameters[i]).Clone();
-        clonedParameters[i].Value = parameterValues[i];
+        if (parameterValues[i] is IValueObject) {
+          clonedParameters[i].Value = parameterValues[i].ToString();
+        } else if (parameterValues[i] is IIdentifiable) {
+          clonedParameters[i].Value = ((IIdentifiable) parameterValues[i]).Id;
+        } else {
+          clonedParameters[i].Value = parameterValues[i];
+        }
       }
       return clonedParameters;
     }

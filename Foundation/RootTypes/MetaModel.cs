@@ -150,9 +150,9 @@ namespace Empiria {
     }
 
     internal T TryGetInstance(string key) {
-      string query = "{0} = '{1}'";
+      string filter = "{0} = '{1}'";
 
-      var dataRow = this.TryGetInstanceDataRow(String.Format(query, this.DataSourceKeyField, key));
+      var dataRow = this.TryGetInstanceDataRow(String.Format(filter, this.DataSourceKeyField, key));
 
       if (dataRow != null) {
         return this.GetInstance(dataRow);
@@ -161,8 +161,8 @@ namespace Empiria {
       }
     }
 
-    internal T TryGetInstanceWithQuery(string query) {
-      DataRow dataRow = this.TryGetInstanceDataRow(query);
+    internal T TryGetInstanceWithFilter(string filter) {
+      DataRow dataRow = this.TryGetInstanceDataRow(filter);
 
       if (dataRow != null) {
         return this.GetInstance(dataRow);
@@ -220,10 +220,10 @@ namespace Empiria {
       return dataRow;
     }
 
-    private DataRow TryGetInstanceDataRow(string query) {
+    private DataRow TryGetInstanceDataRow(string filter) {
       string sql = "SELECT * FROM {0} WHERE {1}";
 
-      sql = String.Format(sql, this.DataSource, query);
+      sql = String.Format(sql, this.DataSource, filter);
 
       return DataReader.GetDataRow(DataOperation.Parse(sql));
     }

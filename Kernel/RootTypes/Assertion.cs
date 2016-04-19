@@ -61,6 +61,22 @@ namespace Empiria {
                                         failMessage, args);
     }
 
+    /// <summary>Checks if a value object is not empty. Throws an AssertionFailException if the value
+    /// is marked as empty.</summary>
+    /// <param name="value">The value object to check.</param>
+    /// <param name="messageOrInstanceName">A message or the field name that holds the value object.</param>
+    static public void AssertObject(IValueObject value, string messageOrFieldName, params object[] args) {
+      if (!value.IsEmptyValue) {
+        return;
+      }
+      string msg = String.Empty;
+      if (messageOrFieldName.Contains(" ")) {
+        msg = messageOrFieldName;
+      } else {
+        msg = String.Format("{0} can't have an empty value.", messageOrFieldName);
+      }
+      throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, msg, args);
+    }
     /// <summary>Special assertion used to check if an object is not null, and for strings, if not is
     /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
     /// <param name="instance">The object to check.</param>
@@ -107,6 +123,24 @@ namespace Empiria {
       }
     }
 
+    /// <summary>Checks if a value object is not empty and has a registered value too.</summary>
+    /// <param name="value">The IValueObject to check.</param>
+    /// <param name="messageOrInstanceName">A message or the field name that holds the value object.</param>
+    static public void AssertRegistered(IValueObject value, string messageOrFieldName, params object[] args) {
+      if (!value.IsEmptyValue && value.IsRegistered) {
+        return;
+      }
+      string msg = String.Empty;
+      if (messageOrFieldName.Contains(" ")) {
+        msg = messageOrFieldName;
+      } else if (value.IsEmptyValue) {
+        msg = String.Format("{0} can't have an empty value.", messageOrFieldName);
+      } else {
+        msg = String.Format("Value '{1}' for field {0} is not registered.", messageOrFieldName, value);
+      }
+
+      throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, msg, args);
+    }
     #endregion Public methods
 
   } //class Assertion

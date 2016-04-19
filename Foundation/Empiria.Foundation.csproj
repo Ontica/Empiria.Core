@@ -151,6 +151,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\empiria.assemblies\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
       <Private>False</Private>
@@ -194,7 +198,6 @@
     <Compile Include="RootTypes\BaseObjectFactory.cs" />
     <Compile Include="RootTypes\BaseObjectLite.cs" />
     <Compile Include="RootTypes\DataModelAttribute.cs" />
-    <Compile Include="RootTypes\IDataModel.cs" />
     <Compile Include="RootTypes\MetaModel.cs" />
     <Compile Include="RootTypes\ObjectsCache.cs" />
     <Compile Include="RootTypes\LazyInstance.cs" />
@@ -207,6 +210,7 @@
     <Compile Include="RootTypes\ValueObject.cs" />
     <Compile Include="RootTypes\DataFieldAttribute.cs" />
     <Compile Include="RootTypes\IValueObject.cs" />
+    <Compile Include="RootTypes\ValueObjectFactory.cs" />
     <Compile Include="Security\PasswordStrength.cs" />
     <Compile Include="ZZTypes\ZZKeyValuePair.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />
