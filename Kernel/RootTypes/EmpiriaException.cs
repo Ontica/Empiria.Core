@@ -79,10 +79,10 @@ namespace Empiria {
       }
     }
 
-    /// <summary>Session Guid where the exception was occured.</summary>
-    public string SessionGuid {
+    /// <summary>Session ID where the exception was occured.</summary>
+    public string SessionID {
       get {
-        return Empiria.ExecutionServer.CurrentSessionToken.Substring(0, 36);
+        return Empiria.ExecutionServer.CurrentSessionToken;
       }
     }
 
@@ -175,37 +175,36 @@ namespace Empiria {
     /// <summary>Creates and returns a string representation of the current exception.</summary>
     static private string GetHTMLString(Exception exception) {
       StringBuilder stringBuilder = new StringBuilder();
-      Exception tempException = null;
+
+      Exception tempException = exception;
       int exceptionCount = 1;
-
-      tempException = exception;
-      while (true) {
-        stringBuilder.AppendFormat("{0}{0}", (exceptionCount != 1) ? Environment.NewLine : String.Empty);
-        stringBuilder.AppendFormat("<b>{1}) <u>{2}</u></b>{0}{0}", Environment.NewLine, exceptionCount.ToString(),
-                                   exceptionCount == 1 ? "Exception Information" : "Inner Exception Information");
-        stringBuilder.AppendFormat("ExceptionType: {0}", tempException.GetType().FullName);
-
-        PropertyInfo[] exceptionProperties = tempException.GetType().GetProperties();
-        foreach (PropertyInfo property in exceptionProperties) {
-          if (property.Name != "InnerException" && property.Name != "StackTrace" && property.Name != "Data") {
-            object propertyValue = property.GetValue(tempException, null);
-            if (propertyValue != null) {
-              stringBuilder.AppendFormat("{0}{1}: {2}", Environment.NewLine, property.Name, propertyValue);
-            }
-          }
-        } // foreach
-        if (tempException.InnerException == null) {
-          break;
-        } else {
-          tempException = tempException.InnerException;
-          exceptionCount++;
-        }
-      }  // while
-
       try {
-        if (tempException.StackTrace != null) {
+        while (true) {
+          stringBuilder.AppendFormat("{0}{0}", (exceptionCount != 1) ? Environment.NewLine : String.Empty);
+          stringBuilder.AppendFormat("<b>{1}) <u>{2}</u></b>{0}{0}", Environment.NewLine, exceptionCount.ToString(),
+                                     exceptionCount == 1 ? "Exception Information" : "Inner Exception Information");
+          stringBuilder.AppendFormat("ExceptionType: {0}", tempException.GetType().FullName);
+
+          PropertyInfo[] exceptionProperties = tempException.GetType().GetProperties();
+          foreach (PropertyInfo property in exceptionProperties) {
+            if (property.Name != "InnerException" && property.Name != "StackTrace" && property.Name != "Data") {
+              object propertyValue = property.GetValue(tempException, null);
+              if (propertyValue != null) {
+                stringBuilder.AppendFormat("{0}{1}: {2}", Environment.NewLine, property.Name, propertyValue);
+              }
+            }
+          } // foreach
+          if (tempException.InnerException == null) {
+            break;
+          } else {
+            tempException = tempException.InnerException;
+            exceptionCount++;
+          }
+        }  // while
+
+        if (exception.StackTrace != null) {
           stringBuilder.AppendFormat("{0}{0}<u>Exception Stack Trace:</u>{0}", Environment.NewLine);
-          stringBuilder.AppendFormat("{0}", tempException.StackTrace);
+          stringBuilder.AppendFormat("{0}", exception.StackTrace);
         }
         if (System.Environment.StackTrace != null) {
           stringBuilder.AppendFormat("{0}{0}<u>Environment Stack Trace:</u>{0}", Environment.NewLine);

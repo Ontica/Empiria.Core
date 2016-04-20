@@ -41,7 +41,7 @@ namespace Empiria {
 
     static private DateTime dateMaxValue = DateTime.MaxValue;
     static private DateTime dateMinValue = DateTime.MinValue;
-    static private DateTime dateNullValue = DateTime.MinValue;
+
     static private int serverId = 0;
     static private string supportUrl = null;
     static private bool isStarted = false;
@@ -154,19 +154,13 @@ namespace Empiria {
       }
     }
 
-    static public DateTime DateNullValue {
-      get {
-        AssertIsStarted();
-
-        return dateNullValue;
-      }
-    }
-
     static public bool IsAuthenticated {
       get {
         var principal = Thread.CurrentPrincipal;
 
-        return (principal != null && principal is IEmpiriaPrincipal);
+        return (principal?.Identity != null && principal is IEmpiriaPrincipal &&
+                principal.Identity.IsAuthenticated &&
+                !String.IsNullOrWhiteSpace(((IEmpiriaPrincipal) principal)?.Session?.Token));
       }
     }
 
@@ -251,7 +245,6 @@ namespace Empiria {
 
         dateMaxValue = ConfigurationData.GetDateTime("Empiria", "DateTime.MaxValue");
         dateMinValue = ConfigurationData.GetDateTime("Empiria", "DateTime.MinValue");
-        dateNullValue = ConfigurationData.GetDateTime("Empiria", "DateTime.NullValue");
 
         serverId = ConfigurationData.GetInteger("Empiria", "Server.Id");
         supportUrl = ConfigurationData.GetString("Empiria", "Support.Url");

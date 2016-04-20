@@ -10,8 +10,6 @@
 ********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
-using Empiria.Reflection;
-
 namespace Empiria.Messaging {
 
   /// <summary>Class used to publish or serialize objects to specific message queue.</summary>
