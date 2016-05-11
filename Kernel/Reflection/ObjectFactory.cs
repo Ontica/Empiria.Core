@@ -212,7 +212,8 @@ namespace Empiria.Reflection {
     }
 
     static public MethodInfo GetParseMethod(Type type) {
-      return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public,
+      return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.FlattenHierarchy |
+                            BindingFlags.Static | BindingFlags.Public,
                             null, CallingConventions.Any, new Type[] { typeof(int) }, null);
     }
 
