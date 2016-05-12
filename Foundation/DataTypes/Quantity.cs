@@ -40,7 +40,13 @@ namespace Empiria.DataTypes {
 
     public static Quantity One {
       get {
-        return new Quantity(Unit.Empty, 1m);
+        return new Quantity(Unit.Empty, decimal.One);
+      }
+    }
+
+    public static Quantity Zero {
+      get {
+        return new Quantity(Unit.Empty, decimal.Zero);
       }
     }
 

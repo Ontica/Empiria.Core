@@ -159,7 +159,7 @@
     <value>Empiria Framework license is not valid.\n\nWARNING: This computer program is protected by copyright law and international treaties. Unauthorized reproduction or distribution of this program, or any portion of it, may result in server civil and criminal penalties.\n\nIf you are not sure about the authenticity of this program or if you have comments or any questions, please contact us at www.ontica.org.</value>
   </data>
   <data name="CantReadExecutionServerProperty" xml:space="preserve">
-    <value>There was a problem reading loading system's configuration data.</value>
+    <value>There was a problem reading or loading system's configuration data.</value>
   </data>
   <data name="XmlConfigurationFileNotExists" xml:space="preserve">
     <value>Xml file '{0}' with system's configuration data not exists.</value>
