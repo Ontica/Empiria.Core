@@ -39,6 +39,22 @@ namespace Empiria {
       return new SearchExpression(expression);
     }
 
+    public static string AllRecordsFilter {
+      get {
+        return "(1 = 1)";
+      }
+    }
+
+    static public string NoRecordsFilter {
+      get {
+        return "(1 = 0)";
+      }
+    }
+
+    #endregion Constructors and parsers
+
+    #region Static methods
+
     static public SearchExpression ParseAndLike(string fieldName, string searchKeywords) {
       if (String.IsNullOrEmpty(searchKeywords)) {
         return String.Empty;
@@ -195,15 +211,17 @@ namespace Empiria {
       return SearchExpression.ParseInSet(fieldName, valuesArray);
     }
 
-    static public SearchExpression ParseLike(string fieldName, string fieldValue) {
+    static public SearchExpression ParseLike(string fieldName, string fieldValue, bool searchAsIs = false) {
       if (String.IsNullOrEmpty(fieldValue)) {
         return String.Empty;
+      } else if (searchAsIs) {
+        return "([" + fieldName + "] LIKE '%" + fieldValue + "%')";
       } else {
         return "([" + fieldName + "] LIKE '%" + Prepare(fieldValue) + "%')";
       }
     }
 
-    #endregion Constructors and parsers
+    #endregion Static methods
 
     #region Public properties
 

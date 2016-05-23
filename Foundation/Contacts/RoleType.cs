@@ -2,14 +2,6 @@
 
 namespace Empiria.Contacts {
 
-      //  var roleType = RoleType.Parse(positionId);
-      //var place = GeographicRegion.Parse(placeId);
-      //FixedList<Person> list = roleType.GetActors<Person>(place);
-
-      ////var place = GeographicRegion.Parse(placeId);
-      ////TypeAssociationInfo role = place.ObjectTypeInfo.Associations[positionId];
-      ////FixedList<Person> list = place.GetPeople(role.Name);
-
   public class RoleType : BaseObject {
 
     static public RoleType Parse(int id) {
