@@ -37,7 +37,7 @@ namespace Empiria {
     }
 
     /// <summary>Returns the value of a boolean configuration parameter belongs to the caller type.</summary>
-    /// <param name="parameter">Name of the configuration parameter.</param>
+    /// <param name="parameterName">Name of the configuration parameter.</param>
     static public bool GetBoolean(string typeName, string parameterName) {
       return bool.Parse(ReadValue(typeName, parameterName));
     }
@@ -49,33 +49,33 @@ namespace Empiria {
     }
 
     /// <summary>Returns the value of a Int32 configuration parameter belongs to the caller type.</summary>
-    /// <param name="parameter">Name of the configuration parameter.</param>
+    /// <param name="parameterName">Name of the configuration parameter.</param>
     static public int GetInteger(string typeName, string parameterName) {
       return int.Parse(ReadValue(typeName, parameterName));
     }
 
     /// <summary>Returns the value of a string configuration parameter belongs to the caller type.</summary>
-    /// <param name="parameter">Name of the configuration parameter.</param>
+    /// <param name="parameterName">Name of the configuration parameter.</param>
     static public string GetString(string parameterName) {
       return ReadValue(GetCallerTypeName(), parameterName);
     }
 
     /// <summary>Returns the value of a date-time configuration parameter belongs to the caller type.</summary>
-    /// <param name="parameter">Name of the configuration parameter.</param>
+    /// <param name="parameterName">Name of the configuration parameter.</param>
     static public DateTime GetDateTime(string parameterName) {
       return DateTime.Parse(ReadValue(GetCallerTypeName(), parameterName));
     }
 
     /// <summary>Returns the value of a date-time configuration setting of the gived type.</summary>
     /// <param name="typeName">Name of the type.</param>
-    /// <param name="name">Name of the configuration setting.</param>
+    /// <param name="parameterName">Name of the configuration setting.</param>
     static public DateTime GetDateTime(string typeName, string parameterName) {
       return DateTime.Parse(ReadValue(typeName, parameterName));
     }
 
     /// <summary>Returns the value of a string configuration setting of the gived type.</summary>
     /// <param name="typeName">Name of the type.</param>
-    /// <param name="name">Name of the configuration setting.</param>
+    /// <param name="parameterName">Name of the configuration setting.</param>
     static public string GetString(string typeName, string parameterName) {
       return ReadValue(typeName, parameterName);
     }

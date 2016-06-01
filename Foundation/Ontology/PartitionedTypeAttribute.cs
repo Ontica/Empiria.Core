@@ -17,7 +17,7 @@ namespace Empiria.Ontology {
   public class PartitionedTypeAttribute : Attribute {
 
     /// <summary>Initializes a new instance of the <see cref="PartitionedTypeAttribute"/> class.</summary>
-    /// <param name="name">The type of the powertype type associated to this partitioned type.</param>
+    /// <param name="powertypeType">The type of the powertype type associated to this partitioned type.</param>
     public PartitionedTypeAttribute(Type powertypeType) {
       Assertion.AssertObject(powertypeType, "powertypeType");
       this.Powertype = powertypeType;

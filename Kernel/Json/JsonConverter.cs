@@ -96,7 +96,7 @@ namespace Empiria.Json {
     }
 
     /// <summary>Converts an object into a JSON string.</summary>
-    /// <param name="json">The object to convert.</param>
+    /// <param name="o">The object to convert.</param>
     /// <returns>The JSON string with properties and values equals to the supplied
     /// object public properties.</returns>
     static public string ToJson(object o) {
@@ -130,7 +130,7 @@ namespace Empiria.Json {
     }
 
     /// <summary>Converts a JSON string into a dynamic ExpandoObject.</summary>
-    /// <param name="json">The JSON string to convert.</param>
+    /// <param name="jsonString">The JSON string to convert.</param>
     /// <returns>A .Net ExpandoObject with properties similar to the JSON string structure.</returns>
     static public dynamic ToObject(string jsonString) {
       var converter = new ExpandoObjectConverter();

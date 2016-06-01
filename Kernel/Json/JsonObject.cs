@@ -203,9 +203,6 @@ namespace Empiria.Json {
     /// <summary>Extracts a new JsonObject from this instance given an itemPath.</summary>
     /// <param name="itemPath">The item path to search. If starts with '@' then the object name
     /// is included in the returned object, else only the item path contents.</param>
-    /// <param name="itemPaths">The item path to search. If starts with '@', then that path's object name
-    /// is also included in the returned object, otherwise the objects inside it are returned
-    /// as direct items of the root.</param>
     /// <param name="required">Throws an exception if is true and the searched item was not found.</param>
     /// <returns>The JsonObject relative to the searched path, or the JsonObject.Empty
     /// instance if the required flag is false. Otherwise throws an exception.</returns>

@@ -31,8 +31,6 @@ namespace Empiria {
     /// <summary>Initializes a new instance of AssertionFailsException class with a specified error
     /// message.</summary>
     /// <param name="msgType">Used to indicate the description of the exception.</param>
-    /// <param name="message">The assertion message.</param>
-    /// <param name="args">An optional array of objects to format into the exception message.</param>
     internal AssertionFailsException(Msg msgType) :
                                      base(msgType.ToString(), GetMessage(msgType)) {
       try {

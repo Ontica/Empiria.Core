@@ -30,8 +30,7 @@ namespace Empiria {
 
     /// <summary>Checks for an assertion and throws an AssertionFailException if it fails.</summary>
     /// <param name="assertion">The assertion to check.</param>
-    /// <param name="failsMessage">Used to indicate the description of the exception
-    /// if the assertion fails.</param>
+    /// <param name="onFailsException">The exception to throw if the assertion fails.</param>
     static public void Assert(bool assertion, Exception onFailsException) {
       if (!assertion) {
         throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, onFailsException);
@@ -64,7 +63,7 @@ namespace Empiria {
     /// <summary>Checks if a value object is not empty. Throws an AssertionFailException if the value
     /// is marked as empty.</summary>
     /// <param name="value">The value object to check.</param>
-    /// <param name="messageOrInstanceName">A message or the field name that holds the value object.</param>
+    /// <param name="messageOrFieldName">A message or the field name that holds the value object.</param>
     static public void AssertObject(IValueObject value, string messageOrFieldName, params object[] args) {
       if (!value.IsEmptyValue) {
         return;
@@ -112,7 +111,7 @@ namespace Empiria {
     /// <summary>Special assertion used to check if an object is not null, and for strings, if not is
     /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
     /// <param name="instance">The object to check.</param>
-    /// <param name="instanceName">The name or identificator of the object in code.</param>
+    /// <param name="onFailException">The exception to throw if the assertion fails.</param>
     static public void AssertObject(object instance, Exception onFailException) {
       if (instance == null) {
         throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
@@ -125,7 +124,7 @@ namespace Empiria {
 
     /// <summary>Checks if a value object is not empty and has a registered value too.</summary>
     /// <param name="value">The IValueObject to check.</param>
-    /// <param name="messageOrInstanceName">A message or the field name that holds the value object.</param>
+    /// <param name="messageOrFieldName">A message or the field name that holds the value object.</param>
     static public void AssertRegistered(IValueObject value, string messageOrFieldName, params object[] args) {
       if (!value.IsEmptyValue && value.IsRegistered) {
         return;

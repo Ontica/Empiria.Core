@@ -81,7 +81,7 @@ namespace Empiria.Security {
     }
 
     /// <summary>Takes a ciphertext string and decrypts it.</summary>
-    /// <param name="ciphertext">Text string to be decrypted.</param>
+    /// <param name="cipherText">Text string to be decrypted.</param>
     static public string Decrypt(string cipherText) {
       Assertion.AssertObject(cipherText, "cipherText");
 
@@ -89,8 +89,8 @@ namespace Empiria.Security {
     }
 
     /// <summary>Takes a ciphertext string and decrypts it using the giving public key.</summary>
-    /// <param name="ciphertext">Text string to be decrypted.</param>
-    /// <param name="publicKey">The public key used to decrypt the text string.</param>
+    /// <param name="cipherText">Text string to be decrypted.</param>
+    /// <param name="entropy">The public key used to decrypt the text string.</param>
     static public string Decrypt(string cipherText, string entropy) {
       Assertion.AssertObject(cipherText, "cipherText");
       Assertion.AssertObject(entropy, "entropy");
@@ -99,7 +99,7 @@ namespace Empiria.Security {
     }
 
     /// <summary>Takes a plaintext string and encrypts it.</summary>
-    /// <param name="plaintext">Text string to be encrypted.</param>
+    /// <param name="plainText">Text string to be encrypted.</param>
     static public string Encrypt(EncryptionMode protectionMode, string plainText) {
       Assertion.AssertObject(plainText, "plainText");
 
@@ -111,8 +111,8 @@ namespace Empiria.Security {
     }
 
     /// <summary>Takes a plaintext string and encrypts it with the giving public key.</summary>
-    /// <param name="plaintext">Text string to be encrypted.</param>
-    /// <param name="publicKey">The public key used to encrypt the text string.</param>
+    /// <param name="plainText">Text string to be encrypted.</param>
+    /// <param name="entropy">The entropy string used to encrypt the text string.</param>
     static public string Encrypt(EncryptionMode protectionMode, string plainText, string entropy) {
       Assertion.AssertObject(plainText, "plainText");
 

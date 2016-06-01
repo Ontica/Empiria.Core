@@ -312,7 +312,7 @@ namespace Empiria.Collections {
 
     /// <summary>Sets the item with a specific index from a Collection.</summary>
     /// <param name="index">The zero-based index of the parameter to set its value.</param>
-    /// <param name="parameterValue">The new item.</param>
+    /// <param name="item">The new item to set at the given index.</param>
     protected void SetItemAt(int index, T item) {
       if (isSynchronized) {
         lock (items) {

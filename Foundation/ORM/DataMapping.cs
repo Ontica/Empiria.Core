@@ -245,7 +245,7 @@ namespace Empiria.ORM {
     #region Private members
 
     MethodInfo _jsonGetItemMethod = null;
-    /// <summary>Returns method Empiria.Data.JsonObject.Get<T>(string itemPath)</summary>
+    /// <summary>Returns method Empiria.Data.JsonObject.Get[T](string itemPath)</summary>
     private MethodInfo JsonGetItemMethod {
       get {
         if (_jsonGetItemMethod == null) {
@@ -260,7 +260,7 @@ namespace Empiria.ORM {
     }
 
     MethodInfo _jsonGetItemMethodWDefault = null;
-    /// <summary>Returns method Empiria.Data.JsonObject.Get<T>(string itemPath, T defaultValue)</summary>
+    /// <summary>Returns method Empiria.Data.JsonObject.Get[T](string itemPath, T defaultValue)</summary>
     private MethodInfo JsonGetItemMethodWithDefault {
       get {
         if (_jsonGetItemMethodWDefault == null) {
