@@ -72,6 +72,12 @@ namespace Empiria {
       return metamodel.GetInstanceWithQuery(filter);
     }
 
+    static public T TryParse<T>(int id) where T : BaseObjectLite {
+      var metamodel = MetaModel<T>.Parse();
+
+      return metamodel.TryGetInstance(id);
+    }
+
     static public T TryParse<T>(string key) where T : BaseObjectLite {
       var metamodel = MetaModel<T>.Parse();
 

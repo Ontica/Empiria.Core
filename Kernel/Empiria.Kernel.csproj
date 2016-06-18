@@ -173,8 +173,12 @@
     <Compile Include="Collections\DoubleKeyList.cs" />
     <Compile Include="Collections\EmpiriaCollection.cs" />
     <Compile Include="Collections\EmpiriaHashList.cs" />
+    <Compile Include="Collections\FixedListComparer.cs" />
+    <Compile Include="Collections\MergeResultType.cs" />
+    <Compile Include="Collections\MergeResult.cs" />
     <Compile Include="Collections\ObjectsCache.cs" />
     <Compile Include="DataTypes\Calendar.cs" />
+    <Compile Include="DataTypes\YearMonth.cs" />
     <Compile Include="Json\DataRowConverter.cs" />
     <Compile Include="Json\DataViewConverter.cs" />
     <Compile Include="Json\JsonConverter.cs" />
@@ -220,6 +224,7 @@
     </Compile>
     <Compile Include="RootTypes\ExecutionServer.Customization.cs" />
     <Compile Include="RootTypes\ExecutionServer.cs" />
+    <Compile Include="RootTypes\FixedList.cs" />
     <Compile Include="RootTypes\IUnitOfWork.cs" />
     <Compile Include="RootTypes\IValueObject.cs" />
     <Compile Include="RootTypes\PlainTextException.cs" />

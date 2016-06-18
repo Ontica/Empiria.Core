@@ -16,6 +16,16 @@ namespace Empiria.Data {
   /// <summary>Static library with general purpose data read operations.</summary>
   static public class GeneralDataOperations {
 
+    #region Public properties
+
+    public static string AllRecordsFilter {
+      get {
+        return "(1 = 1)";
+      }
+    }
+
+    #endregion Public properties
+
     #region Public methods
 
     static public string BuildSqlAndFilter(string firstFilter, string secondFilter, params string[] otherFilters) {

@@ -38,7 +38,6 @@ namespace Empiria {
     private MetaModel() {
       Type type = typeof(T);
       defaultConstructorDelegate = GetDefaultConstructorDelegate(type);
-
       var attribute = Attribute.GetCustomAttribute(type, typeof(DataModelAttribute));
 
       Assertion.AssertObject(attribute, type.FullName + " has not defined the attribute DataModelAttribute.");
@@ -103,8 +102,15 @@ namespace Empiria {
       }
       return list.ToFixedList();
     }
+
     internal T GetInstance(int id) {
-      DataRow dataRow = this.GetInstanceDataRow(id);
+      DataRow dataRow = this.TryGetInstanceDataRow(id);
+
+      if (dataRow == null) {
+        throw new ResourceNotFoundException(UnderlyingType.Name + ".NotFound",
+                                            "An object of type '{0}' with id = {1} was not found.",
+                                            UnderlyingType.Name, id);
+      }
 
       T instance = this.InvokeInstanceConstructor(id);
 
@@ -149,6 +155,20 @@ namespace Empiria {
       return DataWriter.CreateId(this.DataSource);
     }
 
+    internal T TryGetInstance(int id) {
+      DataRow dataRow = this.TryGetInstanceDataRow(id);
+
+      if (dataRow == null) {
+        return null;
+      }
+
+      T instance = this.InvokeInstanceConstructor(id);
+
+      instance.OnLoadObjectData(dataRow);
+
+      return instance;
+    }
+
     internal T TryGetInstance(string key) {
       string filter = "{0} = '{1}'";
 
@@ -190,19 +210,12 @@ namespace Empiria {
       return (DefaultConstructorDelegate) dynMethod.CreateDelegate(typeof(DefaultConstructorDelegate));
     }
 
-    private DataRow GetInstanceDataRow(int id) {
+    private DataRow TryGetInstanceDataRow(int id) {
       string sql = "SELECT * FROM {0} WHERE {1} = {2}";
 
       sql = String.Format(sql, this.DataSource, this.DataSourceIdField, id);
 
-      var dataRow = DataReader.GetDataRow(DataOperation.Parse(sql));
-
-      if (dataRow == null) {
-        throw new ResourceNotFoundException(UnderlyingType.Name + ".NotFound",
-                                            "An object of type '{0}' with id = {1} was not found.",
-                                            UnderlyingType.Name, id);
-      }
-      return dataRow;
+      return DataReader.GetDataRow(DataOperation.Parse(sql));
     }
 
     private DataRow GetInstanceDataRow(string instanceUID) {

@@ -193,8 +193,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Kernel\IExtensible.cs" />
-    <Compile Include="Kernel\Merger.cs" />
-    <Compile Include="Kernel\FixedListComparer.cs" />
     <Compile Include="Kernel\lFilter.cs" />
     <Compile Include="Kernel\StorageVersion.cs" />
     <Compile Include="Modeler\DbBaseQuery.cs">
@@ -288,7 +286,6 @@
     <Compile Include="Handlers\SqlParameterCache.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Kernel\FixedList.cs" />
     <Compile Include="Kernel\StorageChangeItem.cs" />
     <Compile Include="Kernel\StorageChangeItemList.cs" />
     <Compile Include="Kernel\StorageContext.cs" />
