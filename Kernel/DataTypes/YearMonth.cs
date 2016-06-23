@@ -5,7 +5,7 @@
 *  Type      : YearMonth                                        Pattern  : Static Data Type                  *
 *  Version   : 6.7                                              License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Holds a year-month pair value.                                                                *
+*  Summary   : Structure that holds a year-month pair value.                                                 *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -13,11 +13,13 @@ using System.Collections.Generic;
 
 namespace Empiria.DataTypes {
 
-  /// <summary>Holds a year-month pair value.</summary>
+  /// <summary>Structure that holds a year-month pair value.</summary>
   public struct YearMonth {
 
     #region Constructors and parsers
 
+    /// <summary>Initializes a new instance of the YearMonth structure
+    ///  to the specified year and month.</summary>
     public YearMonth(int year, int month) {
       Assertion.Assert(DateTime.MinValue.Year <= year && year <= DateTime.MaxValue.Year,
                        "Year value is out of bounds.");
@@ -74,6 +76,27 @@ namespace Empiria.DataTypes {
     public int Month {
       get;
       private set;
+    }
+
+    /// <summary>Returns the first calendar date of this YearMonth.</summary>
+    public DateTime FirstDate {
+      get {
+        return new DateTime(this.Year, this.Month, 1);
+      }
+    }
+
+    /// <summary>Returns the last calendar date of this YearMonth.</summary>
+    public DateTime LastDate {
+      get {
+        return new DateTime(this.Year, this.Month, this.DaysInMonth);
+      }
+    }
+
+    /// <summary>Returns the number of days in this YearMonth.</summary>
+    public int DaysInMonth {
+      get {
+        return DateTime.DaysInMonth(this.Year, this.Month);
+      }
     }
 
     #endregion Properties

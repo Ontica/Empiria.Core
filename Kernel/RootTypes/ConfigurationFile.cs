@@ -32,6 +32,12 @@ namespace Empiria {
 
     }
 
+    static public string GetFullFileNameFromCurrentExecutionPath(string fileName) {
+      string baseExecutionPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+
+      return Path.Combine(baseExecutionPath, fileName);
+    }
+
     #endregion Constructors and parsers
 
     #region Internal methods
@@ -144,16 +150,16 @@ namespace Empiria {
       var appSettings = System.Configuration.ConfigurationManager.AppSettings;
 
       // Look the filename under the 'SettingsConfigurationFile' key of the app.config file
-      string configFile = appSettings["SettingsConfigurationFile"];
-      if (configFile != null) {
-        AssertApplicationFileExists(configFile);
-        return configFile;
+      string configFileName = appSettings["SettingsConfigurationFile"];
+      if (configFileName != null) {
+        AssertApplicationFileExists(configFileName);
+        return configFileName;
       }
 
       // If not 'SettingsConfigurationFile' key, then look for a file with name "empiria.config.json"
-      configFile = GetFullFileNameFromCurrentExecutionPath("empiria.config.json");
-      if (ExistsFile(configFile)) {
-        return configFile;
+      configFileName = GetFullFileNameFromCurrentExecutionPath("empiria.config.json");
+      if (ExistsFile(configFileName)) {
+        return configFileName;
       }
       return null;
     }
@@ -187,12 +193,6 @@ namespace Empiria {
       } else {
         return null;
       }
-    }
-
-    static private string GetFullFileNameFromCurrentExecutionPath(string fileName) {
-      string baseExecutionPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-
-      return Path.Combine(baseExecutionPath, fileName);
     }
 
     private string ReadConfigurationValue(string typeName, string parameterName) {

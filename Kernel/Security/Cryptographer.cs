@@ -248,10 +248,10 @@ namespace Empiria.Security {
           case 0:
             if ((x % 3) != 2) {
               x = 65 + (x % 26);
-              hashCode += System.Convert.ToChar(x);
+              hashCode += Convert.ToChar(x);
             } else {
               x = 49 + (x % 9);
-              hashCode += System.Convert.ToChar(x);
+              hashCode += Convert.ToChar(x);
             }
             x += licenseArray[i] * 3;
             break;
@@ -265,10 +265,10 @@ namespace Empiria.Security {
       }  // for
       if ((x % 3) != 2) {
         x = 65 + (x % 26);
-        hashCode += System.Convert.ToChar(x);
+        hashCode += Convert.ToChar(x);
       } else {
         x = 48 + (x % 10);
-        hashCode += System.Convert.ToChar(x);
+        hashCode += Convert.ToChar(x);
       }
       return hashCode;
     }
@@ -303,12 +303,26 @@ namespace Empiria.Security {
     static private string ReadString(string name) {
       string data = ConfigurationData.GetString(name);
 
-      byte[] bytes = Convert.FromBase64String(data);
-      byte[] entropy = ASCIIEncoding.ASCII.GetBytes(name + "-" + ExecutionServer.LicenseSerialNumber);
+      if (!data.StartsWith("@")) {
+        byte[] bytes = Convert.FromBase64String(data);
+        byte[] entropy = ASCIIEncoding.ASCII.GetBytes(name + "-" + ExecutionServer.LicenseSerialNumber);
 
-      byte[] returnBytes = ProtectedData.Unprotect(bytes, entropy, DataProtectionScope.LocalMachine);
+        byte[] returnBytes = ProtectedData.Unprotect(bytes, entropy, DataProtectionScope.LocalMachine);
 
-      return ASCIIEncoding.ASCII.GetString(returnBytes);
+        return ASCIIEncoding.ASCII.GetString(returnBytes);
+
+      } else {    // If starts with '@' then it contains the file path
+        string fileName = data.Substring(1);
+
+        string path = String.Empty;
+
+        if (fileName.StartsWith("~")) {
+          path = ConfigurationFile.GetFullFileNameFromCurrentExecutionPath(fileName.Substring(1));
+        } else {
+          path = fileName;
+        }
+        return File.ReadAllText(path);
+      }
     }
 
     static private void SetLicenseKey() {
