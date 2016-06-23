@@ -209,12 +209,14 @@ namespace Empiria {
       get { return this.isDirty; }
     }
 
+    [Newtonsoft.Json.JsonIgnore]
     public bool IsEmptyInstance {
       get {
         return (this.objectId == ObjectTypeInfo.EmptyInstanceId);
       }
     }
 
+    [Newtonsoft.Json.JsonIgnore]
     public bool IsNew {
       get { return (this.objectId == 0 || isNewFlag == true); }
     }

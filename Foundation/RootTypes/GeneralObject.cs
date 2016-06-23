@@ -79,6 +79,7 @@ namespace Empiria {
       protected set;
     }
 
+    [Newtonsoft.Json.JsonIgnore]
     public string StatusName {
       get {
         switch (this.Status) {
