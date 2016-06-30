@@ -64,6 +64,18 @@ namespace Empiria.DataTypes {
 
     #endregion Constructors and parsers
 
+    #region Operators overloading
+
+    static public bool operator ==(YearMonth yearMonthA, YearMonth yearMonthB) {
+      return ((yearMonthA.Year == yearMonthB.Year) && (yearMonthA.Month == yearMonthB.Month));
+    }
+
+    static public bool operator !=(YearMonth yearMonthA, YearMonth yearMonthB) {
+      return !(yearMonthA == yearMonthB);
+    }
+
+    #endregion Operators overloading
+
     #region Properties
 
     /// <summary>The year value in four digits.</summary>
@@ -100,6 +112,28 @@ namespace Empiria.DataTypes {
     }
 
     #endregion Properties
+
+    #region Methods
+
+    public override bool Equals(object o) {
+      if (!(o is YearMonth)) {
+        return false;
+      }
+      YearMonth temp = (YearMonth) o;
+
+      return ((this.Year == temp.Year) && (this.Month == temp.Month));
+    }
+
+    public override int GetHashCode() {
+      return (this.ToString().GetHashCode());
+    }
+
+    /// <summary>Returns the number of days in this YearMonth.</summary>
+    public override string ToString() {
+      return Year.ToString("0000") + '-' + Month.ToString("00");
+    }
+
+    #endregion Methods
 
   }  // struct YearMonth
 

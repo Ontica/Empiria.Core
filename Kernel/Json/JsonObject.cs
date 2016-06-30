@@ -273,6 +273,18 @@ namespace Empiria.Json {
     static private T Convert<T>(object value) {
       var convertToType = typeof(T);
 
+      if (convertToType == typeof(string)) {
+        return (T) (object) System.Convert.ToString(value);
+      } else if (convertToType == typeof(int)) {
+        return (T) (object) System.Convert.ToInt32(value);
+      } else if (convertToType == typeof(bool)) {
+        return (T) (object) System.Convert.ToBoolean(value);
+      } else if (convertToType == typeof(DateTime)) {
+        return (T) (object) System.Convert.ToDateTime(value);
+      } else if (convertToType == typeof(decimal)) {
+        return (T) (object) System.Convert.ToDecimal(value);
+      }
+
       if (convertToType == value.GetType()) {
         return (T) value;
       } else if (convertToType == typeof(object)) {
@@ -345,7 +357,7 @@ namespace Empiria.Json {
         if (item[pathMembers[i]] is IDictionary<string, object>) {
           item = (IDictionary<string, object>) item[pathMembers[i]];
         } else {   // This item is a scalar (not a subtree), so the next item
-          // in the path necessarily doesn't exist.
+                   // in the path necessarily doesn't exist.
           throw new JsonDataException(JsonDataException.Msg.JsonPathItemNotFound,
                                       itemPath, pathMembers[i + 1]);
         }
