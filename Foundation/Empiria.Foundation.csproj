@@ -51,7 +51,8 @@
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Empiria.Foundation</AssemblyName>
-    <AssemblyOriginatorKeyFile>empiria.strong.name.public.key.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -65,7 +66,7 @@
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <OldToolsVersion>3.5</OldToolsVersion>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
@@ -175,25 +176,11 @@
     <Compile Include="DataTypes\TempAddress.cs" />
     <Compile Include="Contacts\Organization.cs" />
     <Compile Include="DataTypes\InterestRateType.cs" />
-    <Compile Include="Ontology.Modeler\TypeModeler.cs" />
-    <Compile Include="Ontology.Modeler\TypeReader.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Ontology.Modeler\TypeClass.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Ontology.Modeler\TypeField.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Ontology.Modeler\TypeProperty.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="RootTypes\IExtensible.cs" />
     <Compile Include="RootTypes\KeyValuePair.cs" />
     <Compile Include="RootTypes\LazyObject.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />
     <Compile Include="RootTypes\TimePeriod.cs" />
-    <Compile Include="RootTypes\ZZTypeList.cs" />
     <Compile Include="RootTypes\GeneralList.cs" />
     <Compile Include="Data\ContactsData.cs" />
     <Compile Include="Contacts\Contact.cs">
@@ -227,18 +214,12 @@
     <Compile Include="RootTypes\PowerType.cs" />
     <Compile Include="RootTypes\GeneralObject.cs" />
     <Compile Include="RootTypes\RulesLibrary.cs" />
-    <Compile Include="Collections\ZZObjectSearcher.cs" />
-    <Compile Include="RootTypes\ZZRule.cs" />
-    <Compile Include="RootTypes\ZZRelation.cs" />
     <Compile Include="Security\ImpersonationContext.cs" />
     <Compile Include="Security\UserSettings.cs" />
     <Compile Include="Security\WebServer.cs" />
     <Compile Include="Security\EmpiriaUser.cs" />
     <Compile Include="Empiria.AssemblyInfo.cs" />
     <Compile Include="RootTypes\SearchExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="RootTypes\ZZSortExpression.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Data\SecurityData.cs">
@@ -277,15 +258,6 @@
     <Compile Include="Ontology\MetaModelType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RootTypes\ZZEnumeration.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="RootTypes\ZZFindResult.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Collections\ZZObjectPager.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Ontology\OntologyException.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -297,20 +269,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="empiria.strong.name.public.key.snk" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Data\Empiria.Data.csproj">
-      <Project>{20C01648-86CC-4E9E-AD71-BA7AA8E44DBC}</Project>
-      <Name>Empiria.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Kernel\Empiria.Kernel.csproj">
-      <Project>{F518E007-2B16-4804-BA45-695EA098E1C0}</Project>
-      <Name>Empiria.Kernel</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <Folder Include="Collections\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
@@ -329,6 +291,16 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Data\Empiria.Data.csproj">
+      <Project>{20c01648-86cc-4e9e-ad71-ba7aa8e44dbc}</Project>
+      <Name>Empiria.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Kernel\Empiria.Kernel.csproj">
+      <Project>{f518e007-2b16-4804-ba45-695ea098e1c0}</Project>
+      <Name>Empiria.Kernel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
