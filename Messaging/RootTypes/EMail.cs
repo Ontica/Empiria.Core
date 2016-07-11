@@ -22,7 +22,7 @@ namespace Empiria.Messaging {
 
     #region Public methods
 
-    static public void Send(string eMail, string subject, string body, FileInfo[] attachments) {
+    static public void Send(string eMailList, string subject, string body, FileInfo[] attachments) {
       SmtpClient smtp = new SmtpClient("smtpout.secureserver.net");
 
       NetworkCredential credential = new NetworkCredential("pineda@masautopartes.com.mx", "Hercules0201");
@@ -31,8 +31,8 @@ namespace Empiria.Messaging {
 
       MailMessage message = new MailMessage();
       message.From = new MailAddress("pineda@masautopartes.com.mx", "Auto Refacciones Pineda, S.A. de C.V.");
-      message.To.Add(new MailAddress(eMail));
-      message.Bcc.Add(new MailAddress("facturas.pineda@masautopartes.com.mx"));
+      message.To.Add(eMailList);
+      message.Bcc.Add("facturas.pineda@masautopartes.com.mx");
       message.Subject = subject;
       message.Body = body;
       if (attachments != null) {
