@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
-using Empiria.Contacts;
 using Empiria.Ontology;
 
 namespace Empiria {
@@ -56,6 +55,7 @@ namespace Empiria {
     }
 
     [DataField("ObjectName")]
+    [Newtonsoft.Json.JsonIgnore]
     public string Name {
       get;
       protected set;
@@ -74,6 +74,7 @@ namespace Empiria {
     }
 
     [DataField("ObjectStatus", Default = GeneralObjectStatus.Active)]
+    [Newtonsoft.Json.JsonIgnore]
     public GeneralObjectStatus Status {
       get;
       protected set;
