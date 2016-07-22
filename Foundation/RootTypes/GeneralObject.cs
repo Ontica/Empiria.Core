@@ -33,13 +33,13 @@ namespace Empiria {
       // Required by Empiria Framework.
     }
 
-    static protected FixedList<T> ParseList<T>() where T : BaseObject {
+    static protected FixedList<T> ParseList<T>(string filter = "", string sort = "") where T : BaseObject {
       ObjectTypeInfo objectTypeInfo = ObjectTypeInfo.Parse<T>();
 
-      DataTable table = OntologyData.GetSimpleObjectsDataTable(objectTypeInfo);
-      List<T> list = new List<T>(table.Rows.Count);
-      for (int i = 0; i < table.Rows.Count; i++) {
-        list.Add(BaseObject.ParseDataRow<T>(table.Rows[i]));
+      DataView view = OntologyData.GetSimpleObjects(objectTypeInfo, filter, sort);
+      List<T> list = new List<T>(view.Count);
+      for (int i = 0; i < view.Count; i++) {
+        list.Add(BaseObject.ParseDataRow<T>(view[i].Row));
       }
       return list.ToFixedList();
     }

@@ -55,10 +55,10 @@ namespace Empiria.Ontology {
       return GeneralDataOperations.GetEntitiesByField("Types", "BaseTypeId", baseTypeId);
     }
 
-    static internal DataTable GetSimpleObjectsDataTable(ObjectTypeInfo objectTypeInfo) {
+    static internal DataView GetSimpleObjects(ObjectTypeInfo objectTypeInfo, string filter = "", string sort = "") {
       var operation = DataOperation.Parse("qrySimpleObjects", objectTypeInfo.Id);
 
-      return DataReader.GetDataTable(operation);
+      return DataReader.GetDataView(operation, filter, sort);
     }
 
     static internal int GetNextObjectId(ObjectTypeInfo objectTypeInfo) {
