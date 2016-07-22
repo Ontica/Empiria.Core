@@ -271,6 +271,12 @@ namespace Empiria {
       return association.GetLink<T>(this);
     }
 
+    protected T GetInverseLink<T>(string linkName) where T : BaseObject {
+      var association = TypeAssociationInfo.Parse(linkName);
+
+      return association.GetInverseLink<T>(this);
+    }
+
     protected FixedList<T> GetLinks<T>(string linkName) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
@@ -307,6 +313,7 @@ namespace Empiria {
 
       return association.GetLinks<T>(this, predicate);
     }
+
 
     protected void LoadAttributesBag(DataRow row) {
       this.AttributesBag = new AttributesBag(this, row);

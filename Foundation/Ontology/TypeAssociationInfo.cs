@@ -110,22 +110,22 @@ namespace Empiria.Ontology {
       throw new NotImplementedException();
     }
 
-    internal T GetInverseLink<T>(BaseObject target) where T : BaseObject {
-      DataRow row = OntologyData.GetObjectLinkDataRow(this, target);
+    public T GetInverseLink<T>(BaseObject target) where T : BaseObject {
+      DataTable table = OntologyData.GetInverseObjectLinksTable(this, target);
 
-      if (row != null) {
-        return BaseObject.ParseDataRow<T>(row);
+      if (table.Rows[0] != null) {
+        return BaseObject.ParseDataRow<T>(table.Rows[0]);
       } else {
         throw new OntologyException(OntologyException.Msg.LinkNotFoundForTarget, target.Id,
                                     target.GetEmpiriaType().Name, this.Id, this.Name);
       }
     }
 
-    internal T GetInverseLink<T>(BaseObject source, T defaultValue) where T : BaseObject {
-      DataRow row = OntologyData.GetObjectLinkDataRow(this, source);
+    public T GetInverseLink<T>(BaseObject target, T defaultValue) where T : BaseObject {
+      DataTable table = OntologyData.GetInverseObjectLinksTable(this, target);
 
-      if (row != null) {
-        return BaseObject.ParseDataRow<T>(row);
+      if (table.Rows[0] != null) {
+        return BaseObject.ParseDataRow<T>(table.Rows[0]);
       } else {
         return defaultValue;
       }
