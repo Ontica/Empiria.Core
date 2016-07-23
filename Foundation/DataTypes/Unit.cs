@@ -56,8 +56,22 @@ namespace Empiria.DataTypes {
 
     #region Properties
 
-    [DataField(GeneralObject.ExtensionDataFieldName  + ".Abbr", IsOptional = true)]
-    public string Symbol {
+    public new string Name {
+      get {
+        return base.Name;
+      }
+    }
+
+
+    [DataField(ExtensionDataFieldName + ".PluralName")]
+    public string PluralName {
+      get;
+      private set;
+    }
+
+
+    [DataField(GeneralObject.ExtensionDataFieldName  + ".Abbreviation", IsOptional = true)]
+    public string Abbreviation {
       get;
       private set;
     }

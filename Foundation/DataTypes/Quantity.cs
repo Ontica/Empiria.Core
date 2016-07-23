@@ -134,7 +134,7 @@ namespace Empiria.DataTypes {
     }
 
     public override string ToString() {
-      return amount.ToString("N2") + " " + unit.Symbol;
+      return amount.ToString("N2") + " " + unit.Abbreviation;
     }
 
     #endregion Public methods
