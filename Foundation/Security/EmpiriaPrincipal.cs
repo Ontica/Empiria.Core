@@ -103,7 +103,7 @@ namespace Empiria.Security {
     }
 
     /// <summary>Gets the IIdentity instance of the current principal.</summary>
-    public EmpiriaIdentity Identity {
+    public IEmpiriaIdentity Identity {
       get;
       private set;
     }
@@ -166,7 +166,7 @@ namespace Empiria.Security {
       string[] users = SecurityData.GetUsersInRole(role);
 
       for (int i = 0; i < users.Length; i++) {
-        if (users[i].Trim() == this.Identity.UserId.ToString()) {
+        if (users[i].Trim() == this.Identity.User.Id.ToString()) {
           return true;
         }
       }
@@ -210,11 +210,11 @@ namespace Empiria.Security {
         this.ContextId = contextId;
         this.Session = EmpiriaSession.Create(this);
       }
-      LoadRolesArray(identity.UserId);
+      LoadRolesArray(identity.User.Id);
       principalsCache.Add(this.Session.Token, this);
       this.RefreshBeforeReturn();
 
-      this.Claims = this.Identity.User.Claims;
+      this.Claims = identity.User.Claims;
     }
 
     private void LoadRolesArray(int participantId) {

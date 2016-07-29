@@ -28,8 +28,9 @@ namespace Empiria.Security {
 
     #region Constructors and parsers
 
-    private EmpiriaIdentity(EmpiriaUser user) {
+    private EmpiriaIdentity(EmpiriaUser user, AuthenticationMode mode) {
       this.User = user;
+      this.SetAuthenticationType(mode);
     }
 
     static public EmpiriaPrincipal Authenticate(string sessionToken) {
@@ -37,15 +38,15 @@ namespace Empiria.Security {
 
       EmpiriaPrincipal principal = EmpiriaPrincipal.TryParseWithToken(sessionToken);
       if (principal != null) {
-        principal.Identity.SetAuthenticationType(AuthenticationMode.Realm);
         return principal;
       }
       EmpiriaSession session = EmpiriaSession.ParseActive(sessionToken);
 
       EmpiriaUser user = EmpiriaUser.Authenticate(session);
 
-      var identity = new EmpiriaIdentity(user);
+      var identity = new EmpiriaIdentity(user, AuthenticationMode.Realm);
       identity.SetAuthenticationType(AuthenticationMode.Realm);
+
       return new EmpiriaPrincipal(identity, session);
     }
 
@@ -58,8 +59,8 @@ namespace Empiria.Security {
 
       Assertion.AssertObject(user, "user");
 
-      var identity = new EmpiriaIdentity(user);
-      identity.SetAuthenticationType(AuthenticationMode.Basic);
+      var identity = new EmpiriaIdentity(user, AuthenticationMode.Basic);
+
       return new EmpiriaPrincipal(identity, clientApplication, contextId);
     }
 
@@ -75,8 +76,7 @@ namespace Empiria.Security {
 
       Assertion.AssertObject(user, "user");
 
-      var identity = new EmpiriaIdentity(user);
-      identity.SetAuthenticationType(AuthenticationMode.Basic);
+      var identity = new EmpiriaIdentity(user, AuthenticationMode.Basic);
 
       return new EmpiriaPrincipal(identity, clientApplication, contextId);
     }
@@ -108,18 +108,14 @@ namespace Empiria.Security {
     }
 
     IEmpiriaUser IEmpiriaIdentity.User {
-      get { return this.User; }
+      get {
+        return this.User;
+      }
     }
 
     public EmpiriaUser User {
       get;
       private set;
-    }
-
-    public int UserId {
-      get {
-        return this.User.Id;
-      }
     }
 
     #endregion Public properties

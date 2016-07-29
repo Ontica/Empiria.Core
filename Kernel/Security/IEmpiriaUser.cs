@@ -17,6 +17,14 @@ namespace Empiria.Security {
 
     #region Members definition
 
+    string UserName {
+      get;
+    }
+
+    string EMail {
+      get;
+    }
+
     #endregion Members definition
 
   } //interface IEmpiriaUser

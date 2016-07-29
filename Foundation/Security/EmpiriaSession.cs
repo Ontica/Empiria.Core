@@ -9,10 +9,8 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
 using System.Data;
 
-using Empiria.Data;
 using Empiria.Json;
 
 namespace Empiria.Security {
@@ -29,7 +27,7 @@ namespace Empiria.Security {
       Initialize();
       this.ServerId = ExecutionServer.ServerId;
       this.ClientAppId = principal.ClientApp.Id;
-      this.UserId = principal.Identity.UserId;
+      this.UserId = principal.Identity.User.Id;
       this.ContextId = principal.ContextId;
       if (contextData != null) {
         this.ExtendedData = contextData;
@@ -38,7 +36,7 @@ namespace Empiria.Security {
       this.Create();
     }
 
-    internal static EmpiriaSession Create(EmpiriaPrincipal principal, JsonObject contextData = null) {
+    static internal EmpiriaSession Create(EmpiriaPrincipal principal, JsonObject contextData = null) {
       Assertion.AssertObject(principal, "principal");
 
       return new EmpiriaSession(principal, contextData);

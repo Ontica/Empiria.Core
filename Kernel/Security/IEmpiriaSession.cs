@@ -17,15 +17,15 @@ namespace Empiria.Security {
 
     #region Members definition
 
-    DateTime EndTime { get; }
-
-    int ServerId { get; }
-
     DateTime StartTime { get; }
+
+    int ExpiresIn { get; }
 
     string Token { get; }
 
-    int UserId { get; }
+    string TokenType { get; }
+
+    string RefreshToken { get; }
 
     #endregion Members definition
 
