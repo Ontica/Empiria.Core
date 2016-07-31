@@ -43,6 +43,7 @@ namespace Empiria.Contacts {
 
     #region Public properties
 
+    [Newtonsoft.Json.JsonIgnore]
     public TempAddress Address {
       get {
         return this.ExtendedData.Get<TempAddress>("Address", TempAddress.Empty);
@@ -61,24 +62,28 @@ namespace Empiria.Contacts {
       set;
     }
 
+    [Newtonsoft.Json.JsonIgnore]
     public string TaxIDNumber {
       get {
         return this.ExtendedData.Get<string>("TaxIDNumber", String.Empty);
       }
     }
 
+    [Newtonsoft.Json.JsonIgnore]
     public string FormattedTaxIDNumber {
       get {
         return EmpiriaString.FormatTaxTag(this.TaxIDNumber);
       }
     }
 
+    [Newtonsoft.Json.JsonIgnore]
     public virtual string Keywords {
       get {
         return EmpiriaString.BuildKeywords(FullName, Alias, Nickname, EMail, TaxIDNumber);
       }
     }
 
+    [Newtonsoft.Json.JsonIgnore]
     [DataField("ContactExtData")]
     public JsonObject ExtendedData {
       get;
@@ -91,12 +96,14 @@ namespace Empiria.Contacts {
       protected set;
     }
 
+    [Newtonsoft.Json.JsonIgnore]
     [DataField("Nickname")]
     public string Nickname {
       get;
       set;
     }
 
+    [Newtonsoft.Json.JsonIgnore]
     [DataField("ContactStatus", Default = GeneralObjectStatus.Active)]
     public GeneralObjectStatus Status {
       get;
