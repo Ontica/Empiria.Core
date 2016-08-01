@@ -75,12 +75,16 @@ namespace Empiria {
       return (result != null);
     }
 
+    public new bool Exists(Predicate<T> match) {
+      return base.Exists(match);
+    }
+
     public new T Find(Predicate<T> match) {
       return base.Find(match);
     }
 
-    public new List<T> FindAll(Predicate<T> match) {
-      return base.FindAll(match);
+    public new FixedList<T> FindAll(Predicate<T> match) {
+      return base.FindAll(match).ToFixedList();
     }
 
     public new T FindLast(Predicate<T> match) {

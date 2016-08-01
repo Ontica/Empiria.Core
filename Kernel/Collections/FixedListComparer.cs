@@ -105,7 +105,7 @@ namespace Empiria.Collections {
     public void Merge(MergeKeyBuilder<T> mergeKeyBuilder, Predicate2<T> match, Predicate2<T> condition) {
       mergeResultList = new List<MergeResult<T>>((LeftList.Count + this.RightList.Count) / 2);
 
-      List<T> listTemp = this.RightList.FindAll((x) => true);
+      List<T> listTemp = new List<T>(this.RightList.FindAll((x) => true));
       for (int i = 0; i < LeftList.Count; i++) {
         string mergeKey = mergeKeyBuilder.Invoke(LeftList[i]);
         T item = listTemp.Find((y) => match.Invoke(LeftList[i], y));

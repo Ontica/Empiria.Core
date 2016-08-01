@@ -180,6 +180,10 @@ namespace Empiria.Collections {
       }
     }
 
+    protected bool Exists(Predicate<T> match) {
+      return items.Exists(match);
+    }
+
     protected List<T> FindAll(Predicate<T> match) {
       if (isSynchronized) {
         lock (items) {
