@@ -371,8 +371,14 @@ namespace Empiria.Security {
 
       static internal RSACryptoServiceProvider GetRSACryptoServiceProvider() {
         string privateKeyFileName = ConfigurationData.GetString("§RSACryptoFile");
+        string path = String.Empty;
 
-        Byte[] bytes = System.IO.File.ReadAllBytes(privateKeyFileName);
+        if (privateKeyFileName.StartsWith("~")) {
+          path = ConfigurationFile.GetFullFileNameFromCurrentExecutionPath(privateKeyFileName.Substring(1));
+        } else {
+          path = privateKeyFileName;
+        }
+        Byte[] bytes = System.IO.File.ReadAllBytes(path);
 
         return CryptoServices.DecodeEncryptedPrivateKeyInfo(bytes);
       }
