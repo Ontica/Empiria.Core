@@ -113,8 +113,11 @@ namespace Empiria.Ontology {
     public T GetInverseLink<T>(BaseObject target) where T : BaseObject {
       DataTable table = OntologyData.GetInverseObjectLinksTable(this, target);
 
-      if (table.Rows[0] != null) {
+      if (table.Rows.Count == 1) {
         return BaseObject.ParseDataRow<T>(table.Rows[0]);
+      } else if (table.Rows.Count > 1) {
+        throw new OntologyException(OntologyException.Msg.MultipleLinksFoundForTarget, target.Id,
+                                    target.GetEmpiriaType().Name, this.Id, this.Name);
       } else {
         throw new OntologyException(OntologyException.Msg.LinkNotFoundForTarget, target.Id,
                                     target.GetEmpiriaType().Name, this.Id, this.Name);
@@ -124,8 +127,11 @@ namespace Empiria.Ontology {
     public T GetInverseLink<T>(BaseObject target, T defaultValue) where T : BaseObject {
       DataTable table = OntologyData.GetInverseObjectLinksTable(this, target);
 
-      if (table.Rows[0] != null) {
+      if (table.Rows.Count == 1) {
         return BaseObject.ParseDataRow<T>(table.Rows[0]);
+      } else if (table.Rows.Count > 1) {
+        throw new OntologyException(OntologyException.Msg.MultipleLinksFoundForTarget, target.Id,
+                                    target.GetEmpiriaType().Name, this.Id, this.Name);
       } else {
         return defaultValue;
       }

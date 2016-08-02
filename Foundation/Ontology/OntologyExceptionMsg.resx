@@ -191,4 +191,7 @@
   <data name="ObjectWithConditionNotFound" xml:space="preserve">
     <value>There is not any object of type '{0}' that match the condition '{1}'.</value>
   </data>
+  <data name="MultipleLinksFoundForTarget" xml:space="preserve">
+    <value>Existen varias relaciones (links) inversas del tipo {3} (id = {2})) del objeto con id {0} del tipo {1}. Se esperaba sólo una.</value>
+  </data>
 </root>

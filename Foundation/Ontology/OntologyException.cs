@@ -31,6 +31,7 @@ namespace Empiria.Ontology {
       LinkNotFoundForSource,
       LinkNotFoundForTarget,
       MappingDataColumnNotFound,
+      MultipleLinksFoundForTarget,
       ObjectIdNotFound,
       ObjectNamedKeyNotFound,
       ObjectWithConditionNotFound,
