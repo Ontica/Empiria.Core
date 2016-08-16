@@ -186,6 +186,13 @@ namespace Empiria {
       if (objectData == null) {
         return null;
       }
+
+      int objectId = (int) objectData.Item2[objectTypeInfo.IdFieldName];
+
+      T item = cache.TryGetItem<T>(objectTypeInfo.Name, objectId);
+      if (item != null) {
+        return item;    // Only use dataRow when item is not in cache
+      }
       return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
     }
 
