@@ -75,9 +75,26 @@ namespace Empiria.Security {
 
       byte[] data = Encoding.UTF8.GetBytes(text + ExecutionServer.LicenseNumber +
                                            ConstructKey(ExecutionServer.LicenseNumber + entropy));
+
+
       SHA256 sha = SHA256.Create();
 
       return ConvertToString(sha.ComputeHash(data));
+    }
+
+    static public string CreateHashCode(byte[] bytesArray, string entropy) {
+      Assertion.AssertObject(bytesArray, "bytesArray");
+
+      StartEngine();
+
+      if (String.IsNullOrWhiteSpace(entropy)) {
+        bytesArray = Encoding.UTF8.GetBytes(bytesArray + entropy + ExecutionServer.LicenseNumber +
+                                            ConstructKey(ExecutionServer.LicenseNumber + entropy));
+      }
+
+      SHA256 sha = SHA256.Create();
+
+      return ConvertToString(sha.ComputeHash(bytesArray));
     }
 
     /// <summary>Takes a ciphertext string and decrypts it.</summary>
