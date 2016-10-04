@@ -37,18 +37,18 @@ namespace Empiria.Data {
     }
 
     static public int CreateId(string sourceName) {
-      if (DataIntegrationRules.HasExternalCreateIdRule(sourceName)) {
-        return CreateExternalId(sourceName);
-      }
+      //if (DataIntegrationRules.HasExternalCreateIdRule(sourceName)) {
+      //  return CreateExternalId(sourceName);
+      //}
       return CreateInternalId(sourceName);
     }
 
     static public int Execute(DataOperation operation) {
       Assertion.EnsureObject(operation, "operation");
 
-      if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
-        return ExecuteExternal(operation);
-      }
+      //if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
+      //  return ExecuteExternal(operation);
+      //}
 
       int result = ExecuteInternal(operation);
 
@@ -64,9 +64,9 @@ namespace Empiria.Data {
       Assertion.EnsureObject(token, "token");
       Assertion.EnsureObject(operation, "operation");
 
-      if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
-        return ExecuteExternal(operation);
-      }
+      //if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
+      //  return ExecuteExternal(operation);
+      //}
 
       int result = ExecuteInternal(operation);
 
@@ -114,13 +114,7 @@ namespace Empiria.Data {
     #region Internal methods
 
     static internal int CreateInternalId(string sourceName) {
-      if (ExecutionServer.IsWebServicesServer()) {
-        return ObjectIdFactory.Instance.GetNextId(sourceName, 0);
-      } else {
-        using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(DataIntegratorWSProxy.CurrentServer)) {
-          return proxy.CreateObjectId(sourceName);
-        }
-      }
+      return ObjectIdFactory.Instance.GetNextId(sourceName, 0);
     }
 
     static internal int Execute(IDbConnection connection, DataOperation operation) {
