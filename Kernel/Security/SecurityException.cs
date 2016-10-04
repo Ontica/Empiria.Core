@@ -50,6 +50,8 @@ namespace Empiria.Security {
       SessionTokenNotFound,
       UnauthenticatedIdentity,
       UserPasswordExpired,
+      UserNotFound,
+      UserNotInRole,
       UserWithEMailNotFound,
       WrongAuthentication,
       WrongDIFVersionRequested,

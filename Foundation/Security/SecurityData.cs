@@ -66,7 +66,7 @@ namespace Empiria.Security {
     static internal SecurityClaim GetPendingSecurityClaim(SecurityClaimType claimType,
                                                           int resourceTypeId, int resourceId) {
       string sql = "SELECT * FROM SecurityClaims WHERE ClaimTypeId = {0} AND " +
-                    "ResourceTypeId = {1} AND ResourceId = {2} AND ClaimStatus = 'P'";
+                   "ResourceTypeId = {1} AND ResourceId = {2} AND ClaimStatus = 'P'";
 
       sql = String.Format(sql, claimType.Id, resourceTypeId, resourceId);
 

@@ -224,4 +224,10 @@
   <data name="CantWriteAuditTrail" xml:space="preserve">
     <value>There was a problem writing on the audit log. The requested operation was '{0}'.</value>
   </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>There is not a registered user with UserID = '{0}'.</value>
+  </data>
+  <data name="UserNotInRole" xml:space="preserve">
+    <value>To execute this operation the current user must belong to at least one of the following roles: {0}.</value>
+  </data>
 </root>

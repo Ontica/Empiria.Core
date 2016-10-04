@@ -79,16 +79,7 @@ namespace Empiria.Json {
     }
 
     public void AddIfValue(JsonItem item) {
-      if (item.Value == null) {
-        return;
-      }
-      if (item.Value is String &&
-          String.IsNullOrWhiteSpace((string) item.Value)) {
-        return;
-      }
-      if (item.Value is DateTime &&
-          (((DateTime) item.Value) == ExecutionServer.DateMaxValue ||
-          ((DateTime) item.Value) == ExecutionServer.DateMinValue)) {
+      if (!HasValue(item.Value)) {
         return;
       }
       dictionary.Add(item.Key, item.Value);
@@ -117,6 +108,40 @@ namespace Empiria.Json {
       Assertion.AssertObject(itemPath, "itemPath");
 
       return this.Find<T>(itemPath, false, defaultValue);
+    }
+
+
+    /// <summary>Adds a new JsonObject from this instance given an itemPath.</summary>
+    /// <param name="itemPath">The item path to set.</param>
+    /// <param name="value">The value of the item to set.</param>
+    public void Set<T>(string itemPath, T value) {
+      Assertion.AssertObject(itemPath, "itemPath");
+
+      if (!dictionary.ContainsKey(itemPath)) {
+        dictionary.Add(itemPath, value);
+      } else {
+        dictionary[itemPath] = value;
+      }
+    }
+
+    /// <summary>Adds a new JsonObject from this instance given an itemPath.</summary>
+    /// <param name="itemPath">The item path to set.</param>
+    /// <param name="value">The value of the item to set.</param>
+    public void SetIfValue<T>(string itemPath, T value) {
+      Assertion.AssertObject(itemPath, "itemPath");
+
+      if (!HasValue(value)) {
+        if (dictionary.ContainsKey(itemPath)) {
+          dictionary.Remove(itemPath);
+        }
+        return;
+      }
+
+      if (!dictionary.ContainsKey(itemPath)) {
+        dictionary.Add(itemPath, value);
+      } else {
+        dictionary[itemPath] = value;
+      }
     }
 
     IEnumerator IEnumerable.GetEnumerator() {
@@ -327,6 +352,25 @@ namespace Empiria.Json {
       string[] pathMembers = this.SplitItemPath(itemPath);
 
       return pathMembers[pathMembers.Length - 1];
+    }
+
+    private bool HasValue(object item) {
+      if (item == null) {
+        return false;
+      }
+      if (item is String &&
+          String.IsNullOrWhiteSpace((string) item)) {
+        return false;
+      }
+      if (item is DateTime &&
+          (((DateTime) item) == ExecutionServer.DateMaxValue ||
+          ((DateTime) item) == ExecutionServer.DateMinValue)) {
+        return false;
+      }
+      if (item is decimal && ((decimal) item == 0)) {
+        return false;
+      }
+      return true;
     }
 
     private string[] SplitItemPath(string itemPath) {
