@@ -87,8 +87,6 @@ namespace Empiria.Data.Handlers {
     }
 
     static private SqlParameter[] DiscoverParameters(string connectionString, string sourceName) {
-      Empiria.Messaging.Publisher.Publish("connectionString: " + connectionString);
-
       SqlParameter[] discoveredParameters = null;
 
       using (SqlConnection connection = new SqlConnection(connectionString)) {
