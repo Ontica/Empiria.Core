@@ -139,7 +139,7 @@ namespace Empiria.Security {
     }
 
     internal string RegenerateToken() {
-      this.token = CreateToken(); 
+      this.token = CreateToken();
       SecurityData.WriteSession(this);
 
       return this.token;

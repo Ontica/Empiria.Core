@@ -67,7 +67,7 @@ namespace Empiria {
     }
 
     public FixedList<TypeAssociationInfo> GetTypeRelationItems() {
-      FixedList<TypeAssociationInfo> list = 
+      FixedList<TypeAssociationInfo> list =
                             base.GetTypeAssociationLinks("GeneralList_TypeRelations");
 
       list.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));

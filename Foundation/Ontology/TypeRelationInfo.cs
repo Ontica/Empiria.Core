@@ -83,14 +83,13 @@ namespace Empiria.Ontology {
     //static internal T Parse<T>(int typeRelationId) where T : TypeRelationInfo {
     //  DataRow dataRow = OntologyData.GetTypeRelation(typeRelationId);
     //  MetaModelType sourceType = MetaModelType.Parse((int) dataRow["SourceTypeId"]);
-    //  var relationTypeFamily = 
+    //  var relationTypeFamily =
     //                    TypeRelationInfo.ParseRelationTypeFamily((string) dataRow["RelationTypeFamily"]);
     //  if (relationTypeFamily == RelationTypeFamily.Attribute) {
     //    return TypeAttributeInfo.Parse(sourceType, dataRow);
     //  } else {
     //    return TypeAttributeInfo.Parse(sourceType, dataRow);
     //  }
-      
 
     //  TypeRelationInfo instance = TypeRelationInfo.Create(relationTypeFamily, sourceType);
     //  instance.LoadDataRow(dataRow);

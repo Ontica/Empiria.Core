@@ -29,7 +29,7 @@ namespace Empiria.Contacts {
     }
 
     static internal FixedList<Contact> GetContacts(string keywords, string sort = "") {
-      string filter = keywords.Length != 0 ? 
+      string filter = keywords.Length != 0 ?
                       SearchExpression.ParseAndLikeWithNoiseWords("ContactKeywords", keywords).ToString() :
                       String.Empty;
       string sql = "SELECT * FROM EOSContacts";
@@ -58,7 +58,7 @@ namespace Empiria.Contacts {
     }
 
     static internal int WriteTempUserSettings(int userId, int organizationId, int externalObjectId) {
-      return DataWriter.Execute(DataOperation.Parse("writeTempUserSettings", 
+      return DataWriter.Execute(DataOperation.Parse("writeTempUserSettings",
                                 userId, organizationId, externalObjectId));
     }
 

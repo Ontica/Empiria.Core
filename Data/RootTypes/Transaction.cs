@@ -134,8 +134,7 @@ namespace Empiria.Data {
 
     //internal void Execute(DataOperationList collection) {
     //  operations = collection;
-    //}   
-
+    //}
     internal int PerformCommit() {
       if (wasCommited == true) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.TransactionAlreadyCommited);

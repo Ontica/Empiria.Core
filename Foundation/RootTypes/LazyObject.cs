@@ -24,7 +24,7 @@ namespace Empiria {
     private bool isCreated = false;
 
     private object threadSafeObject = new object();
-    
+
     #endregion Fields
 
     #region Constructors and parsers
@@ -59,7 +59,7 @@ namespace Empiria {
     // User-defined conversion from T to LazyObject<T>
     static public implicit operator LazyObject<T>(T instance) {
       Assertion.AssertObject(instance, "Assignment right operator");
-      
+
       return new LazyObject<T>(instance);
     }
 

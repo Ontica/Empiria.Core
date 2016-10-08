@@ -41,11 +41,11 @@ namespace Empiria.Ontology {
         return true;
       } catch {
         objectTypeInfo = null;
-        return false;  
+        return false;
       }
     }
 
-    public static ObjectTypeInfo Empty { 
+    public static ObjectTypeInfo Empty {
       get { return ObjectTypeInfo.Parse(-1); }
     }
 

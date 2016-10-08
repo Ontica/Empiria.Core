@@ -119,7 +119,7 @@ namespace Empiria.Security {
 
       //Remove this two lines
       username = Cryptographer.Decrypt(username, entropy);
-      password = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, 
+      password = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode,
                                        Cryptographer.Decrypt(password, entropy), username);
       int userId = ContactsData.GetContactIdWithUserName(username);
       if (userId == 0) {

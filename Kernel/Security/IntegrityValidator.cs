@@ -13,7 +13,7 @@ using System;
 
 namespace Empiria.Security {
 
-  /// <summary>Provides a service to secure entities using a data integrity field, which it is calculted 
+  /// <summary>Provides a service to secure entities using a data integrity field, which it is calculted
   /// as a hash code of a list of the entity's protected fields.</summary>
   public class IntegrityValidator {
 
@@ -43,7 +43,7 @@ namespace Empiria.Security {
 
     public string GetUpdatedHashCode() {
       int version = resource.CurrentDataIntegrityVersion;
-      
+
       Assertion.Assert(1 <= version && version <= 16, "Invalid version number");
 
       return version.ToString("X") + this.GetDIFHashCode(version);
@@ -84,8 +84,8 @@ namespace Empiria.Security {
           dif += ((IIdentifiable) item).Id;
         } else {
           throw new SecurityException(SecurityException.Msg.InvalidDIFDataItemDataType,
-                                      resourceTypeName, currentData[i], 
-                                      currentData[i].GetType().FullName, i, 
+                                      resourceTypeName, currentData[i],
+                                      currentData[i].GetType().FullName, i,
                                       version, resource.Id);
         }
         dif += "|";

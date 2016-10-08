@@ -16,7 +16,7 @@ using Empiria.Reflection;
 
 namespace Empiria {
 
-  /// <summary>A power type is a an object type whose instances are subtypes of another object type, named 
+  /// <summary>A power type is a an object type whose instances are subtypes of another object type, named
   ///the partitioned type. Powertyping enables dynamic specialization.</summary>
   public abstract class PowerType<T> : ObjectTypeInfo where T : BaseObject {
 
@@ -99,7 +99,7 @@ namespace Empiria {
     #region Public methods
 
     protected T CreateInstance() {
-      return (T) ObjectFactory.CreateObject(partitionedType.UnderlyingSystemType, 
+      return (T) ObjectFactory.CreateObject(partitionedType.UnderlyingSystemType,
                                             new Type[] { typeof(string) },
                                             new object[] { partitionedType.Name });
     }

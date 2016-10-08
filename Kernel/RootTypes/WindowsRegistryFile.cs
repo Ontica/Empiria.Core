@@ -53,7 +53,7 @@ namespace Empiria {
               tempTypeName = String.Empty;
             } else if (tempTypeName == String.Empty) {
               tempTypeName = null;      //Key not found in the search tree. Flag the loop exit
-            } // if else if 
+            } // if else if
           } // if
         } else {
           break;

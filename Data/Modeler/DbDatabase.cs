@@ -6,21 +6,19 @@ using System.Linq;
 namespace Empiria.Data.Modeler {
 
   public class DbDatabase {
-  
+
   private DbDataSource  dbDataSource;
 
     #region Constructors and parsers
-        
+
     private DbDatabase(string databaseName){
       this.DatabaseName = databaseName;
       dbDataSource = DbDataSource.Parse(this.DatabaseName);
-    }    
-
+    }
     public static DbDatabase Parse(string dataBaseName){
       var dbDatabase = new DbDatabase(dataBaseName);
       return dbDatabase;
-    }           
-     
+    }
     #endregion Constructors and parsers
 
     #region Public properties
@@ -37,11 +35,10 @@ namespace Empiria.Data.Modeler {
     public List<DBView> Views{
       get{return dbDataSource.GetViews();}
     }
-    
+
     public List<DbStoredProcedure> StoredProcedures{
       get{return dbDataSource.GetStoredProcedures(); }
-    }   
-
+    }
     public List<DbFunction> Functions{
       get{ return dbDataSource.GetFunctions(); }
     }
@@ -59,6 +56,6 @@ namespace Empiria.Data.Modeler {
     public List<DbStoredProcedure> GetStoredProcedures(string[] exceptions) {
       return dbDataSource.GetStoredProcedures(exceptions);
     }
-              
+
   }
 }

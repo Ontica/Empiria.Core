@@ -20,7 +20,7 @@ using Empiria.Reflection;
 namespace Empiria {
 
   /// <summary>
-  /// BaseObject is the root type of the object type hierarchy in Empiria Framework. 
+  /// BaseObject is the root type of the object type hierarchy in Empiria Framework.
   /// All object types that uses the framework must be descendants of this abstract type.
   /// </summary>
   public abstract class BaseObject : IStorable {

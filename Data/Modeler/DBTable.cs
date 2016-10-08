@@ -7,7 +7,7 @@ namespace Empiria.Data.Modeler {
    public class DBTable : DbBaseTable {
 
     #region Fields
-    
+
     private DbDataSource dbDataSource ;
 
     #endregion Fields
@@ -49,13 +49,13 @@ namespace Empiria.Data.Modeler {
     #region Private methods
 
     private int GetTotalRows() {
-      return dbDataSource.GetTableRows(this.TableName);      
+      return dbDataSource.GetTableRows(this.TableName);
     }
 
     private List<DbIndex> GetTableIndex(){
       return dbDataSource.GetTableIndex(this.TableName);
     }
-    
+
     #endregion
 
     #region Public methods

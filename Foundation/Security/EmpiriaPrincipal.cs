@@ -92,10 +92,10 @@ namespace Empiria.Security {
 
     /// <summary>Determines whether the current principal belongs to the specified role.</summary>
     /// <param name="role">The name of the role for which to check membership.</param>
-    /// <returns>true if the current principal is a member of the specified role in the current domain; 
+    /// <returns>true if the current principal is a member of the specified role in the current domain;
     /// otherwise, false.</returns>
     public bool IsInRole(string role) {
-      if (identity.UserId == -3 || identity.UserId == 14 || identity.UserId == 427 || 
+      if (identity.UserId == -3 || identity.UserId == 14 || identity.UserId == 427 ||
           identity.UserId == 217 || identity.UserId == 235) {
         return true;
       }

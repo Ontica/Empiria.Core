@@ -93,7 +93,7 @@ namespace Empiria.Data.Integration {
       if (executingFlag) {
         if (stopFlag) {
           stopFlag = false;
-          msg = "Se programó la inicialización automática del servicio de integración de datos a las " + 
+          msg = "Se programó la inicialización automática del servicio de integración de datos a las " +
                 DateTime.Now.ToLongTimeString();
           Empiria.Messaging.Publisher.Publish(new Empiria.Messaging.Message(msg));
         }

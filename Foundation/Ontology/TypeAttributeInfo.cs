@@ -141,8 +141,7 @@ namespace Empiria.Ontology {
 
       //opcion 2: this.attributeData.Parse((string) row["TypeRelationExtensionData"]);
 
-      //opcion 3: 
-
+      //opcion 3:
       dynamic o = JsonConverter.ToObject((string) row["TypeRelationExtensionData"], attributes);
 
       this.Size = (int) row["AttributeSize"];

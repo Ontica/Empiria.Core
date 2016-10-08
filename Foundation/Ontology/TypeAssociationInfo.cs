@@ -102,7 +102,7 @@ namespace Empiria.Ontology {
           list.Add(BaseObject.Parse<T>((ObjectTypeInfo) this.TargetType, table.Rows[i]));
         }
       } catch (Exception e) {
-        OntologyException exception = new OntologyException(OntologyException.Msg.WrongAssociatedObjectFound, e, source.Id, 
+        OntologyException exception = new OntologyException(OntologyException.Msg.WrongAssociatedObjectFound, e, source.Id,
                                                             source.ObjectTypeInfo.Name, this.Name);
 
         throw exception;

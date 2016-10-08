@@ -385,7 +385,7 @@ namespace Empiria.Ontology {
 
     internal KeyValuePair<string, object>[] GetAttibuteKeyValues() {
       Type thisType = this.GetType();
-      //this.TypeFamily == MetaModelTypeFamily.PowerType      
+      //this.TypeFamily == MetaModelTypeFamily.PowerType
       if (thisType.IsGenericType && thisType.IsSubclassOf(typeof(PowerType<>).GetGenericTypeDefinition())) {
         //Empiria.Messaging.Publisher.Publish("1) PT GetAttibuteKeyValues for " + this.Id.ToString() + " " + this.Name);
         return ((PowerType<BaseObject>) this).PartitionedType.GetAttibuteKeyValues();

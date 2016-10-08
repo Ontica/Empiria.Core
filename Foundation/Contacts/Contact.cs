@@ -133,7 +133,7 @@ namespace Empiria.Contacts {
       set;
     }
 
-    /// <summary>OOJJOO</summary> 
+    /// <summary>OOJJOO</summary>
     internal int externalObjectId {
       get;
       set;
@@ -154,7 +154,7 @@ namespace Empiria.Contacts {
       this.address = TempAddress.Parse(row);
       this.keywords = (string) row["ContactKeywords"];
       this.status = (GeneralObjectStatus) Convert.ToChar(row["ContactStatus"]);
-     
+
       this.organizationId = (int) row["EMail2TypeId"];
       this.externalObjectId = (int) row["Phone2TypeId"];
     }

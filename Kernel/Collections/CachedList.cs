@@ -177,7 +177,7 @@ namespace Empiria.Collections {
       lock (objects) {
         List<long> sortedList = new List<long>(lastAccess.Values);
 
-        int toDeleteItems = lastAccess.Count / 4;   // Remove 25 percent of old accessed objects 
+        int toDeleteItems = lastAccess.Count / 4;   // Remove 25 percent of old accessed objects
         long trimValueUpperBound = sortedList[toDeleteItems];
 
         string[] keys = new string[lastAccess.Keys.Count];

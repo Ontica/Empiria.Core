@@ -75,7 +75,7 @@ namespace Empiria.Security {
     }
 
     /// <summary>Takes a ciphertext string and decrypts it.</summary>
-    /// <param name="ciphertext">Text string to be decrypted.</param>    
+    /// <param name="ciphertext">Text string to be decrypted.</param>
     static public string Decrypt(string cipherText) {
       Assertion.RequireObject(cipherText, "cipherText");
 
@@ -106,7 +106,7 @@ namespace Empiria.Security {
 
     /// <summary>Takes a plaintext string and encrypts it with the giving public key.</summary>
     /// <param name="plaintext">Text string to be encrypted.</param>
-    /// <param name="publicKey">The public key used to encrypt the text string.</param>    
+    /// <param name="publicKey">The public key used to encrypt the text string.</param>
     static public string Encrypt(EncryptionMode protectionMode, string plainText, string entropy) {
       Assertion.RequireObject(plainText, "plainText");
 
@@ -417,7 +417,7 @@ namespace Empiria.Security {
       //------- Parses binary asn.1 EncryptedPrivateKeyInfo; returns RSACryptoServiceProvider ---
       static private RSACryptoServiceProvider DecodeEncryptedPrivateKeyInfo(byte[] encpkcs8) {
         // encoded OID sequence for  PKCS #1 rsaEncryption szOID_RSA_RSA = "1.2.840.113549.1.1.1"
-        // this byte[] includes the sequence byte and terminal encoded null 
+        // this byte[] includes the sequence byte and terminal encoded null
         byte[] OIDpkcs5PBES2 = { 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x05, 0x0D };
         byte[] OIDpkcs5PBKDF2 = { 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x05, 0x0C };
         byte[] OIDdesEDE3CBC = { 0x06, 0x08, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x03, 0x07 };
@@ -601,7 +601,7 @@ namespace Empiria.Security {
       //------- Parses binary asn.1 PKCS #8 PrivateKeyInfo; returns RSACryptoServiceProvider ---
       public static RSACryptoServiceProvider DecodePrivateKeyInfo(byte[] pkcs8) {
         // encoded OID sequence for  PKCS #1 rsaEncryption szOID_RSA_RSA = "1.2.840.113549.1.1.1"
-        // this byte[] includes the sequence byte and terminal encoded null 
+        // this byte[] includes the sequence byte and terminal encoded null
         byte[] SeqOID = { 0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x01, 0x05, 0x00 };
         byte[] seq = new byte[15];
         // ---------  Set up stream to read the asn.1 encoded SubjectPublicKeyInfo blob  ------
@@ -637,7 +637,7 @@ namespace Empiria.Security {
             return null;
           }
           bt = binr.ReadByte();
-          if (bt != 0x04) {  //expect an Octet string 
+          if (bt != 0x04) {  //expect an Octet string
             return null;
           }
           bt = binr.ReadByte();    //read next byte, or next 2 bytes is  0x81 or 0x82; otherwise bt is the byte count

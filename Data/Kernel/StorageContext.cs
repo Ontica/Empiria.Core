@@ -171,7 +171,7 @@ namespace Empiria {
     }
 
     private void FillDataWriterContext() {
-      foreach (StorageChangeItem changeItem in changesList) {  
+      foreach (StorageChangeItem changeItem in changesList) {
       // OOJJOO
       //  dataWriterContext.Add(changeItem.StorableObject.ImplementsStorageUpdate(changeItem.Operation, timeStamp));
       }

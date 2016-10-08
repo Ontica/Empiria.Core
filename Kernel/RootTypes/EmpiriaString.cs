@@ -712,7 +712,7 @@ namespace Empiria {
     }
 
     static public string RemovePunctuation(string source) {
-      char[] punctuations = new char[] {'.', ',', ';', ':', '"', '\'', '/', '\\', '>', '<', '=', '-', '_', 
+      char[] punctuations = new char[] {'.', ',', ';', ':', '"', '\'', '/', '\\', '>', '<', '=', '-', '_',
                                         '?', '*', '$', '&', '+', '(', ')', '{', '}', '[', ']', '^', '¬',
                                         '°', '%', '#', '¿', '!', '¡', '`', '~', '|'};
 

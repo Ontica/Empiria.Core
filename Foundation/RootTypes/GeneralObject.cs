@@ -15,7 +15,7 @@ using Empiria.Contacts;
 
 namespace Empiria {
 
-  /// <summary>Abstract type that holds basic object instances which are 
+  /// <summary>Abstract type that holds basic object instances which are
   /// stored in a general common table</summary>
   public abstract class GeneralObject : BaseObject {
 

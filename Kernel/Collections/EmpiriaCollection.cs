@@ -15,7 +15,7 @@ using System.Data;
 
 namespace Empiria.Collections {
 
-  /// <summary>Abstract class that represents a strongly typed list of items that can be 
+  /// <summary>Abstract class that represents a strongly typed list of items that can be
   /// accessed by index or key.</summary>
   public abstract class EmpiriaCollection<TKey, TItem> : ICollection<TItem> {
 

@@ -27,7 +27,6 @@ namespace Empiria.Data.Modeler {
 
     #endregion Properties
 
-    
 
   }
 }

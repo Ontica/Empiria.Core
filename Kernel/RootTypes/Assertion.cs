@@ -45,7 +45,7 @@ namespace Empiria {
     /// <summary>Special assertion used to check if an object is not null, and for strings, if not is
     /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
     /// <param name="instance">The object to check.</param>
-    /// <param name="instanceName">The name or identificator of the object in code.</param>    
+    /// <param name="instanceName">The name or identificator of the object in code.</param>
     static public void AssertObject(object instance, string instanceName) {
       if (instance == null) {
         throw new AssertionFailsException(AssertionFailsException.Msg.AssertNotNullObjectFails,
@@ -59,7 +59,7 @@ namespace Empiria {
     /// <summary>Special assertion used to check if an object is not null, and for strings, if not is
     /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
     /// <param name="instance">The object to check.</param>
-    /// <param name="instanceName">The name or identificator of the object in code.</param>    
+    /// <param name="instanceName">The name or identificator of the object in code.</param>
     static public void AssertObject(object instance, Exception onFailsException) {
       if (instance == null) {
         throw new AssertionFailsException(AssertionFailsException.Msg.AssertNotNullObjectFails,
@@ -95,7 +95,7 @@ namespace Empiria {
     /// <summary>Special postcondition used to check if an object is not null, and for strings, if not is
     /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
     /// <param name="instance">The object to check.</param>
-    /// <param name="instanceName">The name or identificator of the object in code.</param>    
+    /// <param name="instanceName">The name or identificator of the object in code.</param>
     static public void EnsureObject(object instance, string instanceName) {
       if (instance == null) {
         throw new AssertionFailsException(AssertionFailsException.Msg.EnsureNotNullObjectFails,
@@ -109,7 +109,7 @@ namespace Empiria {
     /// <summary>Special postcondition used to check if an object is not null, and for strings, if not is
     /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
     /// <param name="instance">The object to check.</param>
-    /// <param name="instanceName">The name or identificator of the object in code.</param>    
+    /// <param name="instanceName">The name or identificator of the object in code.</param>
     static public void EnsureObject(object instance, Exception onFailsException) {
       if (instance == null) {
         throw new AssertionFailsException(AssertionFailsException.Msg.EnsureNotNullObjectFails,

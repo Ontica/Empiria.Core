@@ -15,7 +15,7 @@ using System.Web.Security;
 namespace Empiria.Security {
 
   public sealed class EmpiriaIdentity : IEmpiriaIdentity, IDisposable {
-    
+
     #region Fields
 
     private EmpiriaUser user = null;
@@ -24,8 +24,7 @@ namespace Empiria.Security {
     private int regionId = 0;
     private bool disposed = false;
 
-    static readonly private string globalApiKey = ConfigurationData.GetString("Empiria.Trade.API.Key"); 
-
+    static readonly private string globalApiKey = ConfigurationData.GetString("Empiria.Trade.API.Key");
     #endregion Fields
 
     #region Constructors and parsers
@@ -80,7 +79,7 @@ namespace Empiria.Security {
       return false;
     }
 
-    // For Empiria Web-Api's authentication 
+    // For Empiria Web-Api's authentication
     static public EmpiriaPrincipal Authenticate(string apiClientKey, string userName, string password,
                                                 string entropy,  int contextId) {
       if (!globalApiKey.Equals(apiClientKey)) {
@@ -107,8 +106,7 @@ namespace Empiria.Security {
       } else {
         return null;
       }
-    }  
-
+    }
     static public EmpiriaIdentity AuthenticateGuest() {
       EmpiriaUser user = Empiria.Security.EmpiriaUser.AuthenticateGuest();
 
