@@ -91,6 +91,10 @@ namespace Empiria {
       return base.FindLast(match);
     }
 
+    public new void Reverse() {
+      base.Reverse();
+    }
+
     public new void Sort(Comparison<T> comparison) {
       base.Sort(comparison);
     }
