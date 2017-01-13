@@ -218,6 +218,26 @@ namespace Empiria.Data {
       }
     }
 
+    static public List<T> GetFieldValues<T>(DataOperation operation,
+                                            string fieldName = "", bool filterUniqueValues = true) {
+      var view = DataReader.GetDataView(operation);
+
+      if (String.IsNullOrWhiteSpace(fieldName)) {
+        fieldName = view.Table.Columns[0].ColumnName;
+      }
+      List<T> list = new List<T>(view.Count);
+
+      for (int i = 0; i < view.Count; i++) {
+        T value = (T) view[i][fieldName];
+        if (filterUniqueValues && list.Contains(value)) {
+          // no-op
+        } else {
+          list.Add(value);
+        }
+      }
+      return list;
+    }
+
     static public List<T> GetList<T>(DataOperation operation, Func<DataTable, List<T>> parser) {
       Assertion.AssertObject(operation, "operation");
       Assertion.AssertObject(parser, "parser");
