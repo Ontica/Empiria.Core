@@ -32,8 +32,15 @@ namespace Empiria.Ontology {
       if (objectTypeInfo.DataSource.StartsWith("qry") || objectTypeInfo.DataSource.StartsWith("get")) {
         return DataReader.GetDataRow(DataOperation.Parse(objectTypeInfo.DataSource, objectKey));
       }
-      return GeneralDataOperations.GetEntityByKey(objectTypeInfo.DataSource,
-                                                  objectTypeInfo.NamedIdFieldName, objectKey);
+
+      if (objectTypeInfo.TypeIdFieldName.Length != 0) {
+        return GeneralDataOperations.GetEntityByKeyFiltered(objectTypeInfo.DataSource,
+                                                            objectTypeInfo.NamedIdFieldName, objectKey,
+                                                            objectTypeInfo.TypeIdFieldName + " = " + objectTypeInfo.Id);
+      } else {
+        return GeneralDataOperations.GetEntityByKey(objectTypeInfo.DataSource,
+                                                    objectTypeInfo.NamedIdFieldName, objectKey);
+      }
     }
 
     internal static DataRow GetBaseObjectDataRow(ObjectTypeInfo objectTypeInfo, IFilter condition) {

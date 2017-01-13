@@ -141,7 +141,7 @@
     <value>El tipo '{0}' no tiene definido el nombre del campo de donde se debe leer el nombre identificador del objeto '{1}'. </value>
   </data>
   <data name="ObjectNamedKeyNotFound" xml:space="preserve">
-    <value>An object of type {1} and named identificator '{0}' doesn't exist.\n (Hint: This problem generally is caused by wrong database values.)</value>
+    <value>An object of type {0} and named identificator '{1}' doesn't exist.\n (Hint: This problem generally is caused by wrong database values.)</value>
   </data>
   <data name="RelationMemberNameNotFound" xml:space="preserve">
     <value>El tipo '{0}' no tiene definida una relación con el nombre '{1}'.</value>
