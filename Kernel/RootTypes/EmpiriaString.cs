@@ -120,6 +120,62 @@ namespace Empiria {
       }
     }
 
+    public static string EncodeAsUrlIdentifier(string identifier) {
+      Assertion.AssertObject(identifier, "identifier");
+      Assertion.Assert(!identifier.Contains("¯") &&
+                       !identifier.Contains("―") &&
+                       !identifier.Contains("¢") &&
+                       !identifier.Contains("§") &&
+                       !identifier.Contains("¿") &&
+                       !identifier.Contains("¤") &&
+                       !identifier.Contains("±") &&
+                       !identifier.Contains("÷") &&
+                       !identifier.Contains("¦"),
+                       "Identifier has one or more characters that makes it not suitable for encoding.");
+
+      identifier = identifier.Replace("_", "¯");   // Protect underscores with macrons
+      identifier = identifier.Replace("/", @"_");  // Replace slashes with underscores
+
+      identifier = identifier.Replace("-", "―");   // Protect hypens with horizontal bars (U+2015)
+      identifier = identifier.Replace(" ", "-");   // Replace spaces with hypens
+
+      identifier = identifier.Replace("%", "¢");   // Protect percentage with cent sign
+      identifier = identifier.Replace("&", "§");   // Replace ampersands with section signs
+      identifier = identifier.Replace("?", "¿");   // Replace question ma__rks with initial question marks
+      identifier = identifier.Replace("=", "¤");   // Replace equal with currency sign ¤
+      identifier = identifier.Replace("+", "±");   // Replace plus with currency plus-minus
+      identifier = identifier.Replace(":", "÷");   // Replace colons with division sign
+      identifier = identifier.Replace(@"\", "¦");  // Replace back slashes with broken bars
+
+      return identifier;
+    }
+
+    public static string DecodeUrlIdentifier(string identifier) {
+      Assertion.AssertObject(identifier, "identifier");
+
+      // Identifiers that starts with a '!' are not encoded, so return them as is without the '!' char.
+      if (identifier.StartsWith("!")) {
+        return identifier.Substring(1);
+      }
+
+      identifier = identifier.Replace("¦", @"\");  // Replace broken bars with back slashes
+      identifier = identifier.Replace("÷", ":");   // Replace division sign with colons
+      identifier = identifier.Replace("±", "+");   // Replace currency plus-minus with plus sign
+      identifier = identifier.Replace("¤", "=");   // Replace currency sign ¤ with equal sign
+      identifier = identifier.Replace("¿", "?");   // Replace initial question marks with question marks
+      identifier = identifier.Replace("§", "&");   // Replace section signs with ampersands
+      identifier = identifier.Replace("¢", "%");   // Protect cent signs with percentage symbols
+
+      identifier = identifier.Replace("-", " ");   // Replace hypens with spaces
+      identifier = identifier.Replace("―", "-");   // Replace protected horizontal bars (U+2015) with hypens
+
+      identifier = identifier.Replace(@"_", "/");  // Replace underscores with slashes
+      identifier = identifier.Replace("¯", "_");   // Replace protected macrons with underscores
+
+      return identifier;
+    }
+
+
     static public string Exclude(string source, string excludeThis) {
       string[] excludeArray = excludeThis.Split(' ');
       int index = 0;
