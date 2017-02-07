@@ -94,7 +94,7 @@ namespace Empiria.Data.Integration {
           stopFlag = false;
           msg = "Se programó la inicialización automática del servicio de integración de datos a las " +
                 DateTime.Now.ToLongTimeString();
-          Empiria.Messaging.Publisher.Publish(new Empiria.Messaging.Message(msg));
+          EmpiriaLog.Info(msg);
         }
         return;
       }
@@ -104,7 +104,7 @@ namespace Empiria.Data.Integration {
         timer.Interval = 1000;
         msg = "Se inicializó el servicio de integración de datos a las " + DateTime.Now.ToLongTimeString();
         msg += ", mismo que se estará ejecutando cada " + (interval / 1000).ToString() + " segundos.";
-        Empiria.Messaging.Publisher.Publish(new Empiria.Messaging.Message(msg));
+        EmpiriaLog.Info(msg);
       } else {
         timer = new System.Timers.Timer();
         timer.Interval = interval;
@@ -122,12 +122,12 @@ namespace Empiria.Data.Integration {
       string msg = String.Empty;
       if (executingFlag) {
         msg = "Se envió el comando 'Stop' al servicio de integración de datos a las " + DateTime.Now.ToLongTimeString();
-        Empiria.Messaging.Publisher.Publish(new Empiria.Messaging.Message(msg));
+        EmpiriaLog.Info(msg);
       } else {
         timer.Stop();
         timer = null;
         msg = "Se detuvo el servicio de integración de datos a las " + DateTime.Now.ToLongTimeString();
-        Empiria.Messaging.Publisher.Publish(new Empiria.Messaging.Message(msg));
+        EmpiriaLog.Info(msg);
       }
     }
 
@@ -202,7 +202,7 @@ namespace Empiria.Data.Integration {
       } else {
         timer = null;
         string msg = "Se detuvo el servicio de integración de datos a las " + DateTime.Now.ToLongTimeString();
-        Empiria.Messaging.Publisher.Publish(new Empiria.Messaging.Message(msg));
+        EmpiriaLog.Info(msg);
       }
     }
 

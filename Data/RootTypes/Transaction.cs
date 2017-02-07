@@ -228,8 +228,7 @@ namespace Empiria.Data {
             operations.Clear();
           }
         } catch (Exception innerException) {
-          Empiria.Messaging.Message message = new Empiria.Messaging.Message(innerException);
-          Empiria.Messaging.Publisher.Publish(message);
+          EmpiriaLog.Error(innerException);
           throw;
         }// try
       } // if

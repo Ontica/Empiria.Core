@@ -14,7 +14,6 @@ using System.Data;
 using System.Web.Caching;
 
 using Empiria.Data.Integration;
-using Empiria.Messaging;
 
 namespace Empiria.Data {
 
@@ -233,7 +232,7 @@ namespace Empiria.Data {
       message += "El objeto con clave " + key.Replace(keyPrefix, String.Empty);
       message += " fue removido de la caché del sistema, ya que se cumplió la regla " + reason.ToString();
 
-      Publisher.Publish(new Message(MessageType.EventMessage, message));
+      EmpiriaLog.Info(message);
 
       //  switch (reason) {
       //    case CacheItemRemovedReason.Removed:

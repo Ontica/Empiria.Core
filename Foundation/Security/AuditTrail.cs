@@ -166,7 +166,7 @@ namespace Empiria.Security {
       } catch (Exception inner) {
         var e = new SecurityException(SecurityException.Msg.CantWriteAuditTrail, inner,
                                       this.Operation);
-        Publisher.Publish(e);
+        EmpiriaLog.Critical(e);
       }
     }
 

@@ -293,8 +293,7 @@ namespace Empiria.Data {
       string message = "Se ejecutó satisfactoriamente el procedimiento de optimización " +
                        "de índices para todas las bases de datos del sistema.";
 
-      Empiria.Messaging.Publisher.Publish(
-                  new Empiria.Messaging.Message(Empiria.Messaging.MessageType.EventMessage, message));
+      EmpiriaLog.Info(message);
     }
 
     static public T ReadValue<T>(DataRow row, string columnName, T defaultValue) {

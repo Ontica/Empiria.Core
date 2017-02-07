@@ -121,7 +121,7 @@ namespace Empiria {
 
     /// <summary>Publish this exception.</summary>
     public void Publish() {
-      Empiria.Messaging.Publisher.Publish(this);
+      EmpiriaLog.Error(this);
     }
 
     public string ToHtmlString() {
@@ -153,7 +153,7 @@ namespace Empiria {
         temp = resMgr.GetString(messageTag);
         temp = temp.Replace(@"\n", System.Environment.NewLine);
       } catch (Exception e) {
-        Empiria.Messaging.Publisher.Publish(e.Message);
+        EmpiriaLog.Error(e.Message);
       } finally {
         if (String.IsNullOrEmpty(temp)) {
           temp = messageTag;

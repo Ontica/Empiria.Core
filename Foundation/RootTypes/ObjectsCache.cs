@@ -244,8 +244,8 @@ namespace Empiria {
             namedObjects.Remove(namedKey);
           }
         }
-        Empiria.Messaging.Publisher.Publish("Se eliminaron " + toDeleteItems.ToString() +
-                                            " objetos de la caché del sistema Empiria.");
+        EmpiriaLog.Info("Se eliminaron " + toDeleteItems.ToString() +
+                        " objetos de la caché del sistema Empiria.");
       } // lock
     }
 
