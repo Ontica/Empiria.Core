@@ -209,4 +209,7 @@
   <data name="ApplicationConfigFileNotExists" xml:space="preserve">
     <value>The application configuration file '{0}' defined inside the config file was not found.</value>
   </data>
+  <data name="LoggingIssue" xml:space="preserve">
+    <value>There was a problem executing Empiria logging services.</value>
+  </data>
 </root>

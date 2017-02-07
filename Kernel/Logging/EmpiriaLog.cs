@@ -23,7 +23,13 @@ namespace Empiria {
     static private Guid CurrentTraceGuid {
       get;
       set;
-    }
+    } = Guid.NewGuid();
+
+
+    static private bool StopExecution {
+      get;
+      set;
+    } = false;
 
     #endregion Static properties
 
@@ -87,12 +93,26 @@ namespace Empiria {
       return logEntry;
     }
 
+    static private Object _lockObject = new object();
     static private void CreateLogEntryInCurrentLogTrail(LogEntryType type, string data) {
-      var logTrail = GetDefaultLogTrail();
+      lock (_lockObject) {
+        try {
+          if (EmpiriaLog.StopExecution) {
+            return;
+          }
+          EmpiriaLog.StopExecution = true;
 
-      var logEntry = CreateLogEntry(type, data);
+          var logTrail = GetDefaultLogTrail();
 
-      logTrail.Write(logEntry);
+          var logEntry = CreateLogEntry(type, data);
+
+          logTrail.Write(logEntry);
+        } catch (Exception innerException) {
+          throw new LoggingException(LoggingException.Msg.LoggingIssue, innerException);
+        } finally {
+          EmpiriaLog.StopExecution = false;
+        }
+      }
     }
 
     static private ILogTrail _defaultLogTrail = null;

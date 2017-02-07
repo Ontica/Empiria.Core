@@ -186,6 +186,7 @@
     <Compile Include="Json\JsonItem.cs" />
     <Compile Include="Json\JsonObject.cs" />
     <Compile Include="Json\ValueObjectConverter.cs" />
+    <Compile Include="Logging\LoggingException.cs" />
     <Compile Include="Logging\EmpiriaLog.cs" />
     <Compile Include="Logging\ILogEntry.cs" />
     <Compile Include="Logging\LogEntryModel.cs" />
