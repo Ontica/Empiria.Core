@@ -43,13 +43,19 @@ namespace Empiria.Logging {
     #region Public methods
 
     public void Write(ILogEntry logEntry) {
+      Assertion.AssertObject(logEntry, "logEntry");
+
       WriteLogEntry(logEntry);
     }
 
 
     public void Write(ILogEntry[] logEntries) {
-      foreach (var logEntry in logEntries) {
-        WriteLogEntry(logEntry);
+      Assertion.AssertObject(logEntries, "logEntries");
+
+      if (logEntries.Length > 1) {
+        WriteLogEntries(logEntries);
+      } else {
+        WriteLogEntry(logEntries[0]);
       }
     }
 
@@ -57,12 +63,29 @@ namespace Empiria.Logging {
 
     #region Private methods
 
-    private void WriteLogEntry(ILogEntry o) {
-      var op = DataOperation.Parse("apdLogEntry", this.ClientApplication.Id,
-                                    o.UserSessionId, o.Timestamp,
-                                    (char) o.EntryType, o.TraceGuid, o.Data);
+    private DataOperation GetDataOperation(ILogEntry o) {
+      return DataOperation.Parse("apdLogEntry", this.ClientApplication.Id,
+                                 o.UserSessionId, o.Timestamp,
+                                 (char) o.EntryType, o.TraceGuid, o.Data);
+    }
 
-      DataWriter.Execute(op);
+
+    private void WriteLogEntry(ILogEntry o) {
+      var dataOperation = GetDataOperation(o);
+
+      DataWriter.Execute(dataOperation);
+    }
+
+
+    private void WriteLogEntries(ILogEntry[] logEntries) {
+      var dataOperationList = new DataOperationList("LogEntries");
+
+      foreach (var logEntry in logEntries) {
+        DataOperation op = GetDataOperation(logEntry);
+
+        dataOperationList.Add(op);
+      }
+      DataWriter.Execute(dataOperationList);
     }
 
     #endregion Private methods
