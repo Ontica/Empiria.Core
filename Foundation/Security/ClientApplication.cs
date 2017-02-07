@@ -24,11 +24,12 @@ namespace Empiria.Security {
       // Required by Empiria Framework
     }
 
+
     static internal ClientApplication Parse(int id) {
       return BaseObject.ParseId<ClientApplication>(id);
     }
 
-    static internal ClientApplication ParseActive(string clientAppKey) {
+    static public ClientApplication ParseActive(string clientAppKey) {
       ClientApplication application =
                 BaseObject.TryParse<ClientApplication>("ObjectKey = '" + clientAppKey + "'");
 
@@ -41,6 +42,7 @@ namespace Empiria.Security {
       return application;
     }
 
+
     static public ClientApplication Current {
       get {
         if (EmpiriaPrincipal.Current != null) {
@@ -48,6 +50,19 @@ namespace Empiria.Security {
         } else {
           return null;
         }
+      }
+    }
+
+
+    static ClientApplication _innerApplication = null;
+    static public ClientApplication Inner {
+      get {
+        if (_innerApplication == null) {
+          string clientAppKey = ConfigurationData.GetString("ApplicationKey");
+
+          _innerApplication = ParseActive(clientAppKey);
+        }
+        return _innerApplication;
       }
     }
 

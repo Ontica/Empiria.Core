@@ -38,6 +38,7 @@ namespace Empiria {
     static private bool? isSpecialLicense = false;
     static private string licenseNumber = null;
     static private string licenseSerialNumber = null;
+    static private string applicationKey = null;
 
     static private DateTime dateMaxValue = DateTime.MaxValue;
     static private DateTime dateMinValue = DateTime.MinValue;
@@ -52,6 +53,16 @@ namespace Empiria {
     #endregion Fields
 
     #region Public license properties
+
+    static public string ApplicationKey {
+      get {
+        if (applicationKey != null) {
+          return applicationKey;
+        } else {
+          throw new ExecutionServerException(ExecutionServerException.Msg.CantReadExecutionServerProperty);
+        }
+      }
+    }
 
     static public bool IsSpecialLicense {
       get {
@@ -92,7 +103,6 @@ namespace Empiria {
         }
       }
     }
-
     #endregion Public license properties
 
     #region Other public properties
@@ -238,6 +248,7 @@ namespace Empiria {
         throw innerException;
       }
       try {
+        applicationKey = ConfigurationData.GetString("Empiria", "ApplicationKey");
         licenseName = ConfigurationData.GetString("Empiria", "License.Name");
         isSpecialLicense = ConfigurationData.GetBoolean("Empiria", "License.IsSpecial");
         licenseNumber = ConfigurationData.GetString("Empiria", "License.Number");
