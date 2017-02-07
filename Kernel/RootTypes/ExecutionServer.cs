@@ -243,11 +243,6 @@ namespace Empiria {
       }
       executionServerType = serverType;
       try {
-        Messaging.Publisher.Start();
-      } catch (Exception innerException) {
-        throw innerException;
-      }
-      try {
         applicationKey = ConfigurationData.GetString("Empiria", "ApplicationKey");
         licenseName = ConfigurationData.GetString("Empiria", "License.Name");
         isSpecialLicense = ConfigurationData.GetBoolean("Empiria", "License.IsSpecial");

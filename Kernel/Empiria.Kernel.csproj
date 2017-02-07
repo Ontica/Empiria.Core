@@ -191,11 +191,6 @@
     <Compile Include="Logging\LogEntryModel.cs" />
     <Compile Include="Logging\LogEntryType.cs" />
     <Compile Include="Logging\ILogTrail.cs" />
-    <Compile Include="Messaging\FileBasedQueue.cs" />
-    <Compile Include="Messaging\IQueueFactory.cs" />
-    <Compile Include="Messaging\MessagingException.cs" />
-    <Compile Include="Messaging\QueueFactory.cs" />
-    <Compile Include="Messaging\WindowsEventLogQueue.cs" />
     <Compile Include="RootTypes\ConfigurationSetting.cs" />
     <Compile Include="RootTypes\EmpiriaMath.cs" />
     <Compile Include="RootTypes\EmpiriaString.Customization.cs" />
@@ -205,11 +200,6 @@
     <Compile Include="DataTypes\Keyword.cs" />
     <Compile Include="Empiria.Kernel.AssemblyInfo.cs" />
     <Compile Include="Collections\ListException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Messaging\Message.cs" />
-    <Compile Include="Messaging\Queue.cs" />
-    <Compile Include="Messaging\Publisher.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Reflection\MethodInvoker.cs" />
@@ -287,9 +277,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Messaging\MessagingExceptionMsg.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="RootTypes\KernelExceptionMsg.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
