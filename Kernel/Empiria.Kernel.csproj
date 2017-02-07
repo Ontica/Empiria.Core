@@ -186,6 +186,11 @@
     <Compile Include="Json\JsonItem.cs" />
     <Compile Include="Json\JsonObject.cs" />
     <Compile Include="Json\ValueObjectConverter.cs" />
+    <Compile Include="Logging\EmpiriaLog.cs" />
+    <Compile Include="Logging\ILogEntry.cs" />
+    <Compile Include="Logging\LogEntryModel.cs" />
+    <Compile Include="Logging\LogEntryType.cs" />
+    <Compile Include="Logging\ILogTrail.cs" />
     <Compile Include="Messaging\FileBasedQueue.cs" />
     <Compile Include="Messaging\IQueueFactory.cs" />
     <Compile Include="Messaging\MessagingException.cs" />

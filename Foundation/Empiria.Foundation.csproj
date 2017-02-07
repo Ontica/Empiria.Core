@@ -180,6 +180,7 @@
     <Compile Include="Contacts\Organization.cs" />
     <Compile Include="DataTypes\InterestRateType.cs" />
     <Compile Include="Empiria.Foundation.AssemblyInfo.cs" />
+    <Compile Include="Logging\LogTrail.cs" />
     <Compile Include="Messaging\EMail.cs" />
     <Compile Include="Messaging\EMailConfig.cs" />
     <Compile Include="ORM\DataFieldMapping.cs" />
