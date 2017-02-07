@@ -17,7 +17,7 @@ namespace Empiria.Logging {
 
     #region Properties
 
-    int UserSessionId {
+    string SessionToken {
       get;
     }
 
@@ -41,8 +41,13 @@ namespace Empiria.Logging {
       get;
     }
 
-
     #endregion Properties
+
+    #region Methods
+
+    void AssertIsValid();
+
+    #endregion Methods
 
   }  // interface ILogEntry
 

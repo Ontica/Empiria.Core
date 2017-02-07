@@ -84,7 +84,7 @@ namespace Empiria {
 
       logEntry.EntryType = type;
       if (ExecutionServer.IsAuthenticated) {
-        logEntry.UserSessionId = ExecutionServer.CurrentPrincipal.Session.Id;
+        logEntry.SessionToken = ExecutionServer.CurrentPrincipal.Session.Token;
       }
       logEntry.Data = data;
       if (logEntry.EntryType == LogEntryType.Trace) {

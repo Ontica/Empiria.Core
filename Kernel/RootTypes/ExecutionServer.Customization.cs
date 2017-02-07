@@ -84,6 +84,9 @@ namespace Empiria {
       get {
         AssertIsStarted();
 
+        // DANGER: RULE CHANGED FOR TLAXCALA CITYS TESTS
+        //return ServerType == ExecutionServerType.WebServicesServer;
+
         return ServerType == ExecutionServerType.WebApiServer ||
                ServerType == ExecutionServerType.WebServicesServer;
       }

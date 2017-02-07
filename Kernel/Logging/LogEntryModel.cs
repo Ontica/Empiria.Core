@@ -15,19 +15,25 @@ namespace Empiria.Logging {
   /// <summary>Data Transfer Object used to describe log entries.</summary>
   public class LogEntryModel : ILogEntry {
 
+    #region Fields
+
+    private const int TIMESTAMP_LOWER_BOUND_DAYS = 5;
+    private const int TIMESTAMP_UPPER_BOUND_DAYS = 1;
+
+    #endregion Fields
+
     #region Properties
 
-    public int UserSessionId {
+    public string SessionToken {
       get;
       set;
-    } = -1;
+    } = String.Empty;
 
 
     public DateTime Timestamp {
       get;
       set;
     } = DateTime.Now;
-
 
     public LogEntryType EntryType {
       get;
@@ -51,7 +57,26 @@ namespace Empiria.Logging {
     #region Methods
 
     public void AssertIsValid() {
+      Assertion.Assert(this.SessionToken != null,
+                       "Session token can't be null. Please send an empty string for no active sessions.");
+
+      if (!Enum.IsDefined(typeof(LogEntryType), this.EntryType)) {
+        Assertion.AssertFail("EntryType must have a valid value. Received value was {0}.", this.EntryType);
+      }
+
+      Assertion.Assert(this.EntryType != LogEntryType.Unknown,
+                       "EntryType can't have the 'Unknown' value.");
+
+      Assertion.Assert(this.EntryType != LogEntryType.Trace ||
+                       this.TraceGuid != Guid.Empty,
+                       "Trace logs must contain a non-empty TraceGuid value.");
+
+      Assertion.Assert(DateTime.Now.AddDays(-1 * TIMESTAMP_LOWER_BOUND_DAYS) <= this.Timestamp &&
+                       this.Timestamp <= DateTime.Now.AddDays(TIMESTAMP_UPPER_BOUND_DAYS),
+                       "Timestamp value is out of bounds of the logging service time window.");
+
       Assertion.AssertObject(this.Data, "Data");
+
     }
 
     #endregion Methods

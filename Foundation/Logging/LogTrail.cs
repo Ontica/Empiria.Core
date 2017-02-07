@@ -44,6 +44,7 @@ namespace Empiria.Logging {
 
     public void Write(ILogEntry logEntry) {
       Assertion.AssertObject(logEntry, "logEntry");
+      logEntry.AssertIsValid();
 
       WriteLogEntry(logEntry);
     }
@@ -51,6 +52,12 @@ namespace Empiria.Logging {
 
     public void Write(ILogEntry[] logEntries) {
       Assertion.AssertObject(logEntries, "logEntries");
+      Assertion.Assert(logEntries.Length > 0,
+                       "logEntries can't be an empty array.");
+
+      foreach (var logEntry in logEntries) {
+        logEntry.AssertIsValid();
+      }
 
       if (logEntries.Length > 1) {
         WriteLogEntries(logEntries);
@@ -65,7 +72,7 @@ namespace Empiria.Logging {
 
     private DataOperation GetDataOperation(ILogEntry o) {
       return DataOperation.Parse("apdLogEntry", this.ClientApplication.Id,
-                                 o.UserSessionId, o.Timestamp,
+                                 o.SessionToken, o.Timestamp,
                                  (char) o.EntryType, o.TraceGuid, o.Data);
     }
 
