@@ -164,9 +164,9 @@ namespace Empiria.Ontology {
       get { return baseType; }
     }
 
-    internal string DataSource {
+    public string DataSource {
       get { return dataSource; }
-      set { dataSource = EmpiriaString.TrimAll(value); }
+      private set { dataSource = EmpiriaString.TrimAll(value); }
     }
 
     public string DisplayName {

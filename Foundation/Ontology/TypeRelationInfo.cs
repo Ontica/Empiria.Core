@@ -64,7 +64,7 @@ namespace Empiria.Ontology {
       this.sourceType = sourceType;
     }
 
-    static internal T Parse<T>(int typeRelationId) where T : TypeRelationInfo {
+    static public T Parse<T>(int typeRelationId) where T : TypeRelationInfo {
       DataRow dataRow = OntologyData.GetTypeRelation(typeRelationId);
       MetaModelType sourceType = MetaModelType.Parse((int) dataRow["SourceTypeId"]);
       var relationTypeFamily =
@@ -76,7 +76,7 @@ namespace Empiria.Ontology {
       }
     }
 
-    static internal T Parse<T>(string typeRelationName) where T : TypeRelationInfo {
+    static public T Parse<T>(string typeRelationName) where T : TypeRelationInfo {
       DataRow dataRow = OntologyData.GetTypeRelation(typeRelationName);
       MetaModelType sourceType = MetaModelType.Parse((int) dataRow["SourceTypeId"]);
       var relationTypeFamily =
@@ -100,7 +100,7 @@ namespace Empiria.Ontology {
 
     #region Public properties
 
-    internal string DataSource {
+    public string DataSource {
       get { return dataSource; }
     }
 
