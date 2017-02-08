@@ -25,7 +25,7 @@ namespace Empiria.Data {
     #region Fields
 
     static private readonly bool IsObjectIdGeneratorServer =
-                                        ConfigurationData.GetBoolean("IsObjectIdGeneratorServer");
+                                        ConfigurationData.Get<Boolean>("IsObjectIdGeneratorServer", false);
 
     #endregion Fields
 

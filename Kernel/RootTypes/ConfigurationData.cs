@@ -11,12 +11,27 @@
 using System;
 using System.Diagnostics;
 
+using Empiria.Reflection;
+
 namespace Empiria {
 
   /// <summary>Gets configuration values for the application or solution.</summary>
   static public class ConfigurationData {
 
     #region Public methods
+
+    /// <summary>Returns the value of a boolean configuration parameter belongs to the caller type.</summary>
+    /// <param name="parameterName">Name of the configuration parameter.</param>
+    static public T Get<T>(string parameterName, T defaultValue = default(T)) {
+      string value = String.Empty;
+
+      try {
+        value = ReadValue(GetCallerTypeName(), parameterName);
+      } catch {
+        return defaultValue;
+      }
+      return ObjectFactory.Convert<T>(defaultValue);
+    }
 
     static public byte[] GetByteArray(string typeName, string parameterName, char separator) {
       string[] sbytes = ReadValue(typeName, parameterName).Split(separator);

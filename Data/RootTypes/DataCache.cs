@@ -28,7 +28,7 @@ namespace Empiria.Data {
 
     #region Fields
 
-    static private readonly bool isCacheServer = ConfigurationData.GetBoolean("DataCache.IsCacheServer");
+    static private readonly bool isCacheServer = ConfigurationData.Get<Boolean>("IsCacheServer", false);
     static private readonly int placeBackExpirationMinutes = ConfigurationData.GetInteger("DataCache.PlaceBackExpirationMinutes");
     private const string keyPrefix = "empiria.data.data_cache.";
 
