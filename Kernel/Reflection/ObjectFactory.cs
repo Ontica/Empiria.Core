@@ -9,14 +9,52 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+
+using Empiria.Json;
 
 namespace Empiria.Reflection {
 
   static public class ObjectFactory {
 
     #region Public methods
+
+    static public T Convert<T>(object value) {
+      var convertToType = typeof(T);
+
+      if (convertToType == typeof(string)) {
+        return (T) (object) System.Convert.ToString(value);
+      } else if (convertToType == typeof(int)) {
+        return (T) (object) System.Convert.ToInt32(value);
+      } else if (convertToType == typeof(bool)) {
+        return (T) (object) System.Convert.ToBoolean(value);
+      } else if (convertToType == typeof(DateTime)) {
+        return (T) (object) System.Convert.ToDateTime(value);
+      } else if (convertToType == typeof(decimal)) {
+        return (T) (object) System.Convert.ToDecimal(value);
+      }
+
+      if (convertToType == value.GetType()) {
+        return (T) value;
+      } else if (convertToType == typeof(object)) {
+        return (T) value;
+      } else if (ObjectFactory.IsStorable(convertToType)) {
+        if (EmpiriaString.IsInteger(value.ToString())) {
+          return ObjectFactory.InvokeParseMethod<T>(System.Convert.ToInt32(value));
+        } else {
+          return ObjectFactory.InvokeParseMethod<T>((string) value);
+        }
+      } else if (convertToType.IsEnum) {
+        return ObjectFactory.ParseEnumValue<T>(value);
+      } else if (convertToType == typeof(string) && value is IDictionary<string, object>) {
+        object o = JsonObject.Parse((IDictionary<string, object>) value).ToString();
+        return (T) o;
+      } else {
+        return (T) System.Convert.ChangeType(value, convertToType);
+      }
+    }
 
     static public object CreateObject(Type type) {
       return CreateObject(type, new Type[] { }, new object[] { });
@@ -91,7 +129,7 @@ namespace Empiria.Reflection {
     static public bool IsConvertible(Type sourceType, Type targetType) {
       try {
         var instanceOfSourceType = Activator.CreateInstance(sourceType);
-        Convert.ChangeType(instanceOfSourceType, targetType);
+        System.Convert.ChangeType(instanceOfSourceType, targetType);
         return true;
       } catch {
         return false;
