@@ -22,6 +22,13 @@ namespace Empiria.Data {
   /// <summary>Static class with methods that performs data writing operations.</summary>
   static public class DataWriter {
 
+    #region Fields
+
+    static private readonly bool IsObjectIdGeneratorServer =
+                                        ConfigurationData.GetBoolean("IsObjectIdGeneratorServer");
+
+    #endregion Fields
+
     #region Public methods
 
     static public int AppendRows(string tableName, DataTable table, string filter) {
@@ -145,7 +152,7 @@ namespace Empiria.Data {
     #region Internal methods
 
     static internal int CreateInternalId(string sourceName) {
-      if (ExecutionServer.IsDataSourceServer) {
+      if (DataWriter.IsObjectIdGeneratorServer) {
         return ObjectIdFactory.Instance.GetNextId(sourceName, 0);
       } else {
         using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(DataIntegratorWSProxy.CurrentServer)) {

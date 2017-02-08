@@ -28,6 +28,7 @@ namespace Empiria.Data {
 
     #region Fields
 
+    static private readonly bool isCacheServer = ConfigurationData.GetBoolean("DataCache.IsCacheServer");
     static private readonly int placeBackExpirationMinutes = ConfigurationData.GetInteger("DataCache.PlaceBackExpirationMinutes");
     private const string keyPrefix = "empiria.data.data_cache.";
 
@@ -143,7 +144,7 @@ namespace Empiria.Data {
       lock (SystemCache) {
         removedObject = SystemCache.Remove(keyPrefix + key);
 
-        if (ExecutionServer.IsDataSourceServer) {
+        if (isCacheServer) {
           DataIntegratorWSProxy.SynchronizeServerCaches(key);
         }
       }

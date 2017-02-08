@@ -80,18 +80,6 @@ namespace Empiria {
       }
     }
 
-    static public bool IsDataSourceServer {
-      get {
-        AssertIsStarted();
-
-        // DANGER: RULE CHANGED FOR TLAXCALA CITYS TESTS
-        //return ServerType == ExecutionServerType.WebServicesServer;
-
-        return ServerType == ExecutionServerType.WebApiServer ||
-               ServerType == ExecutionServerType.WebServicesServer;
-      }
-    }
-
     #endregion Public custom additional properties
 
     #region Static methods called from the main partial class
