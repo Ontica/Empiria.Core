@@ -180,14 +180,16 @@ namespace Empiria.Security {
       byte[] license = licenseKey;
 
       int x = 0;
-      for (int i = 1; i < license.Length; i++) {
-        x += (key[i] * ((license[license.Length - i - 1] % 7) + 1)) -
-             (license[i] * ((key[key.Length - i - 1] % 13) + 1));
-      }
-      result[0] = (byte) (Math.Abs((x * 11) - 23) % 255);
-      for (int i = 1; i < key.Length / 2; i++) {
-        result[i] = (byte) ((((x + 53) * result[i - 1]) + key[i]) + (x * key[key.Length - i - 1]) % 255);
-        x += Math.Abs((license[i] * key[key.Length - i - 1]) - result[i]);
+      unchecked {
+        for (int i = 1; i < license.Length; i++) {
+          x += (key[i] * ((license[license.Length - i - 1] % 7) + 1)) -
+               (license[i] * ((key[key.Length - i - 1] % 13) + 1));
+        }
+        result[0] = (byte) (Math.Abs((x * 11) - 23) % 255);
+        for (int i = 1; i < key.Length / 2; i++) {
+          result[i] = (byte) ((((x + 53) * result[i - 1]) + key[i]) + (x * key[key.Length - i - 1]) % 255);
+          x += Math.Abs((license[i] * key[key.Length - i - 1]) - result[i]);
+        }
       }
       if (entropy != null) {
         result = ParseEntropyKey(entropy, result);
@@ -202,14 +204,16 @@ namespace Empiria.Security {
       byte[] license = licenseKey;
 
       int x = 0;
-      for (int i = 1; i < license.Length; i++) {
-        x += (key[i] * ((license[license.Length - i - 1] % 7) + 1)) -
-          (license[i] * ((key[key.Length - i - 1] % 13) + 1));
-      }
-      result[0] = (byte) (Math.Abs((x * 3) - 11) % 255);
-      for (int i = 1; i < key.Length / 2; i++) {
-        result[i] = (byte) ((((x + 43) * result[i - 1]) + key[i]) + ((x + 5) * key[key.Length - i - 1]) % 255);
-        x += Math.Abs((license[i] * key[key.Length - i - 1]) - result[i]);
+      unchecked {
+        for (int i = 1; i < license.Length; i++) {
+          x += (key[i] * ((license[license.Length - i - 1] % 7) + 1)) -
+            (license[i] * ((key[key.Length - i - 1] % 13) + 1));
+        }
+        result[0] = (byte) (Math.Abs((x * 3) - 11) % 255);
+        for (int i = 1; i < key.Length / 2; i++) {
+          result[i] = (byte) ((((x + 43) * result[i - 1]) + key[i]) + ((x + 5) * key[key.Length - i - 1]) % 255);
+          x += Math.Abs((license[i] * key[key.Length - i - 1]) - result[i]);
+        }
       }
       if (entropy != null) {
         result = ParseEntropyKey(entropy, result);
@@ -300,8 +304,10 @@ namespace Empiria.Security {
       if (publicKey.IndexOf('.') != -1) {
         publicKey = publicKey.Substring(0, publicKey.IndexOf('.'));
       }
-      for (int i = 0; i < byteArray.Length; i++) {
-        result[i] = (byte) (byteArray[i] + publicKey[i % publicKey.Length] % 255);
+      unchecked {
+        for (int i = 0; i < byteArray.Length; i++) {
+          result[i] = (byte) (byteArray[i] + publicKey[i % publicKey.Length] % 255);
+        }
       }
       return result;
     }
@@ -350,15 +356,17 @@ namespace Empiria.Security {
       string license = ExecutionServer.LicenseNumber;
 
       int x = 0;
-      for (int i = 1; i < license.Length; i++) {
-        x += licenseName[i % licenseName.Length] +
-             (key[i] * ((license[license.Length - i - 1] % 5) + 1)) -
-             (license[i] * ((key[key.Length - i - 1] % 3) + 1));
-      }
-      result[0] = (byte) (Math.Abs(x) % 255);
-      for (int i = 1; i < key.Length / 2; i++) {
-        result[i] = (byte) (((x * result[i - 1]) + key[i]) + (x * key[key.Length - i - 1]) % 255);
-        x += license[i] + license[license.Length - i - 1];
+      unchecked {
+        for (int i = 1; i < license.Length; i++) {
+          x += licenseName[i % licenseName.Length] +
+               (key[i] * ((license[license.Length - i - 1] % 5) + 1)) -
+               (license[i] * ((key[key.Length - i - 1] % 3) + 1));
+        }
+        result[0] = (byte) (Math.Abs(x) % 255);
+        for (int i = 1; i < key.Length / 2; i++) {
+          result[i] = (byte) (((x * result[i - 1]) + key[i]) + (x * key[key.Length - i - 1]) % 255);
+          x += license[i] + license[license.Length - i - 1];
+        }
       }
       licenseKey = result;
     }
