@@ -154,26 +154,6 @@ namespace Empiria.Ontology {
       return DataReader.GetDataTable(DataOperation.Parse(sql));
     }
 
-    static internal DataRow GetRule(int ruleId) {
-      string sql = "SELECT * FROM vwRules WHERE (RuleId = " + ruleId.ToString() + ")";
-
-      return DataReader.GetDataRow(DataOperation.Parse(sql));
-    }
-
-    static internal DataTable GetRulesLibrary(int rulesLibraryId) {
-      string sql = "SELECT * FROM vwRules WHERE (RulesLibraryId = " + rulesLibraryId.ToString() + ")";
-
-      return DataReader.GetDataTable(DataOperation.Parse(sql));
-    }
-
-    static internal DataTable GetRuleItems(int ruleId, string ruleItemType) {
-      string sql = "SELECT * FROM RuleStructure " +
-                   "WHERE (RuleId = " + ruleId.ToString() + " AND RuleItemType = '" + ruleItemType + "') " +
-                   "ORDER BY RuleItemIndex";
-
-      return DataReader.GetDataTable(DataOperation.Parse(sql));
-    }
-
     static internal DataRow GetTypeDataRow(int typeId) {
       DataRow row = GeneralDataOperations.GetEntityById("Types", "TypeId", typeId);
       if (row != null) {

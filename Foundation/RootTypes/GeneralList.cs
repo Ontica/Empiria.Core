@@ -10,10 +10,6 @@
 ********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
-using Empiria.Data;
-using Empiria.Json;
-using Empiria.Ontology;
-
 namespace Empiria {
 
   /// <summary>Represents a list type that holds BaseObject instances.</summary>

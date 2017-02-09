@@ -242,6 +242,7 @@
     <Compile Include="Empiria.Foundation.AssemblyInfo.cs" />
     <Compile Include="Json\DataRowConverter.cs" />
     <Compile Include="Json\DataViewConverter.cs" />
+    <Compile Include="Json\DateTimeConverter.cs" />
     <Compile Include="Json\JsonConverter.cs" />
     <Compile Include="Json\JsonDataException.cs" />
     <Compile Include="Json\JsonItem.cs" />
@@ -355,11 +356,8 @@
     <Compile Include="Ontology\MetaModelTypeInfo.cs" />
     <Compile Include="Ontology\RuleTypeInfo.cs" />
     <Compile Include="Ontology\EventTypeInfo.cs" />
-    <Compile Include="RootTypes\BusinessRule.cs" />
-    <Compile Include="RootTypes\BusinessRuleItem.cs" />
     <Compile Include="RootTypes\BaseObject.cs" />
     <Compile Include="RootTypes\GeneralObject.cs" />
-    <Compile Include="RootTypes\RulesLibrary.cs" />
     <Compile Include="ZZTypes\ZZObjectSearcher.cs" />
     <Compile Include="ZZTypes\ZZRule.cs" />
     <Compile Include="ZZTypes\ZZRelation.cs" />
