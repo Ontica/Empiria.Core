@@ -118,10 +118,7 @@ namespace Empiria {
     static private ILogTrail _defaultLogTrail = null;
     static internal ILogTrail GetDefaultLogTrail() {
       if (_defaultLogTrail == null) {
-        Type logTrailType = ObjectFactory.GetType("Empiria.Foundation",
-                                                  "Empiria.Logging.LogTrail");
-
-        _defaultLogTrail = (ILogTrail) ObjectFactory.CreateObject(logTrailType);
+        _defaultLogTrail = new LogTrail();
       }
       return _defaultLogTrail;
     }

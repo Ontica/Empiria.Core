@@ -216,19 +216,6 @@
     <Compile Include="Data.Integration\WebApplicationWSProxy.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Data.Modeler\DataObject.cs" />
-    <Compile Include="Data.Modeler\DbBaseQuery.cs" />
-    <Compile Include="Data.Modeler\DbBaseTable.cs" />
-    <Compile Include="Data.Modeler\DbDatabase.cs" />
-    <Compile Include="Data.Modeler\DbDataSource.cs" />
-    <Compile Include="Data.Modeler\DbDependencies.cs" />
-    <Compile Include="Data.Modeler\DbField.cs" />
-    <Compile Include="Data.Modeler\DbFunction.cs" />
-    <Compile Include="Data.Modeler\DbIndex.cs" />
-    <Compile Include="Data.Modeler\DbQueryParameter.cs" />
-    <Compile Include="Data.Modeler\DbStoredProcedure.cs" />
-    <Compile Include="Data.Modeler\DBTable.cs" />
-    <Compile Include="Data.Modeler\DBView.cs" />
     <Compile Include="DataTypes\Calendar.cs" />
     <Compile Include="DataTypes\Interest.cs" />
     <Compile Include="DataTypes\Discount.cs" />
@@ -267,8 +254,6 @@
     <Compile Include="Logging\LogEntryType.cs" />
     <Compile Include="Logging\LoggingException.cs" />
     <Compile Include="Logging\LogTrail.cs" />
-    <Compile Include="Messaging\EMail.cs" />
-    <Compile Include="Messaging\EMailConfig.cs" />
     <Compile Include="ORM\DataFieldMapping.cs" />
     <Compile Include="ORM\DataMapping.cs" />
     <Compile Include="ORM\DataMappingException.cs" />
@@ -460,6 +445,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Ontology.Modeler\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>

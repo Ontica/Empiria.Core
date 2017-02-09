@@ -9,11 +9,8 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2009-2016. Ontica LLC, La Vía Óntica SC, and contributors.  **/
 using System;
-using System.Data;
 
-using Empiria.Data;
 using Empiria.Json;
-using Empiria.Messaging;
 
 namespace Empiria.Security {
 
