@@ -54,7 +54,7 @@ namespace Empiria.Data {
       WrongQueryParametersNumber,
     }
 
-    static private string resourceBaseName = "Empiria.Data.RootTypes.DataExceptionMsg";
+    static private string resourceBaseName = "Empiria.Data.DataExceptionMsg";
 
     #region Constructors and parsers
 

@@ -90,7 +90,7 @@
     <OutputPath>..\..\..\empiria.assemblies\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -98,7 +98,7 @@
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
-    <NoWarn>CS1591,CS1587,CS1573</NoWarn>
+    <NoWarn>0618,CS1591,CS1587,CS1573</NoWarn>
     <Optimize>false</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
@@ -113,7 +113,7 @@
     <OutputPath>..\..\..\empiria.assemblies\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>TRACE</DefineConstants>
@@ -122,8 +122,7 @@
     <DebugSymbols>false</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
-    <NoWarn>
-    </NoWarn>
+    <NoWarn>0618,CS1591,CS1587,CS1573</NoWarn>
     <Optimize>true</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
@@ -149,14 +148,23 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\empiria.assemblies\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Npgsql, Version=3.1.8.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\empiria.assemblies\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -164,22 +172,100 @@
       <Name>System.Data</Name>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\AssortedDictionary.cs" />
+    <Compile Include="Collections\BaseList.cs" />
+    <Compile Include="Collections\DoubleKeyList.cs" />
+    <Compile Include="Collections\EmpiriaCollection.cs" />
+    <Compile Include="Collections\EmpiriaHashList.cs" />
+    <Compile Include="Collections\FixedListComparer.cs" />
+    <Compile Include="Collections\ListException.cs" />
+    <Compile Include="Collections\MergeResult.cs" />
+    <Compile Include="Collections\MergeResultType.cs" />
+    <Compile Include="Collections\ObjectsCache.cs" />
     <Compile Include="Contacts\RoleType.cs" />
+    <Compile Include="Data.Handlers\MySqlMethods.cs" />
+    <Compile Include="Data.Handlers\MySqlParameterCache.cs" />
+    <Compile Include="Data.Handlers\OleDbMethods.cs" />
+    <Compile Include="Data.Handlers\OleDbParameterCache.cs" />
+    <Compile Include="Data.Handlers\OracleMethods.cs" />
+    <Compile Include="Data.Handlers\OracleParameterCache.cs" />
+    <Compile Include="Data.Handlers\PostgreSqlMethods.cs" />
+    <Compile Include="Data.Handlers\PostgreSqlParameterCache.cs" />
+    <Compile Include="Data.Handlers\SqlMethods.cs" />
+    <Compile Include="Data.Handlers\SqlParameterCache.cs" />
+    <Compile Include="Data.Integration\DataIntegrationEngine.cs" />
+    <Compile Include="Data.Integration\DataIntegrationRules.cs" />
+    <Compile Include="Data.Integration\DataIntegratorRule.cs" />
+    <Compile Include="Data.Integration\DataIntegratorWSProxy.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Data.Integration\DataPublisher.cs" />
+    <Compile Include="Data.Integration\WebApplicationWSProxy.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Data.Modeler\DataObject.cs" />
+    <Compile Include="Data.Modeler\DbBaseQuery.cs" />
+    <Compile Include="Data.Modeler\DbBaseTable.cs" />
+    <Compile Include="Data.Modeler\DbDatabase.cs" />
+    <Compile Include="Data.Modeler\DbDataSource.cs" />
+    <Compile Include="Data.Modeler\DbDependencies.cs" />
+    <Compile Include="Data.Modeler\DbField.cs" />
+    <Compile Include="Data.Modeler\DbFunction.cs" />
+    <Compile Include="Data.Modeler\DbIndex.cs" />
+    <Compile Include="Data.Modeler\DbQueryParameter.cs" />
+    <Compile Include="Data.Modeler\DbStoredProcedure.cs" />
+    <Compile Include="Data.Modeler\DBTable.cs" />
+    <Compile Include="Data.Modeler\DBView.cs" />
+    <Compile Include="DataTypes\Calendar.cs" />
     <Compile Include="DataTypes\Interest.cs" />
     <Compile Include="DataTypes\Discount.cs" />
     <Compile Include="DataTypes\DiscountType.cs" />
+    <Compile Include="DataTypes\Keyword.cs" />
     <Compile Include="DataTypes\TempAddress.cs" />
     <Compile Include="Contacts\Organization.cs" />
     <Compile Include="DataTypes\InterestRateType.cs" />
+    <Compile Include="DataTypes\YearMonth.cs" />
+    <Compile Include="Data\CachedObject.cs" />
+    <Compile Include="Data\DataCache.cs" />
+    <Compile Include="Data\DataOperation.cs" />
+    <Compile Include="Data\DataOperationList.cs" />
+    <Compile Include="Data\DataQuery.cs" />
+    <Compile Include="Data\DataReader.cs" />
+    <Compile Include="Data\DataSource.cs" />
+    <Compile Include="Data\DataWriter.cs" />
+    <Compile Include="Data\DataWriterContext.cs" />
+    <Compile Include="Data\EmpiriaDataException.cs" />
+    <Compile Include="Data\GeneralDataOperations.cs" />
+    <Compile Include="Data\ObjectIdFactory.cs" />
+    <Compile Include="Data\SqlFilter.cs" />
+    <Compile Include="Data\Transaction.cs" />
     <Compile Include="Empiria.Foundation.AssemblyInfo.cs" />
+    <Compile Include="Json\DataRowConverter.cs" />
+    <Compile Include="Json\DataViewConverter.cs" />
+    <Compile Include="Json\JsonConverter.cs" />
+    <Compile Include="Json\JsonDataException.cs" />
+    <Compile Include="Json\JsonItem.cs" />
+    <Compile Include="Json\JsonObject.cs" />
+    <Compile Include="Json\ValueObjectConverter.cs" />
+    <Compile Include="Logging\EmpiriaLog.cs" />
+    <Compile Include="Logging\ILogEntry.cs" />
+    <Compile Include="Logging\ILogTrail.cs" />
+    <Compile Include="Logging\LogEntryModel.cs" />
+    <Compile Include="Logging\LogEntryType.cs" />
+    <Compile Include="Logging\LoggingException.cs" />
     <Compile Include="Logging\LogTrail.cs" />
     <Compile Include="Messaging\EMail.cs" />
     <Compile Include="Messaging\EMailConfig.cs" />
@@ -188,6 +274,11 @@
     <Compile Include="ORM\DataMappingException.cs" />
     <Compile Include="ORM\DataMappingRules.cs" />
     <Compile Include="ORM\DataPropertyMapping.cs" />
+    <Compile Include="Reflection\MethodInvoker.cs" />
+    <Compile Include="Reflection\ObjectFactory.cs" />
+    <Compile Include="Reflection\ReflectionException.cs" />
+    <Compile Include="RootTypes\Assertion.cs" />
+    <Compile Include="RootTypes\AssertionFailsException.cs" />
     <Compile Include="RootTypes\AttributesBag.cs" />
     <Compile Include="RootTypes\AttributesBagBoxing.cs" />
     <Compile Include="Ontology\PartitionedTypeAttribute.cs" />
@@ -196,28 +287,67 @@
     <Compile Include="DataTypes\NameValuePair.cs" />
     <Compile Include="RootTypes\BaseObjectFactory.cs" />
     <Compile Include="RootTypes\BaseObjectLite.cs" />
+    <Compile Include="RootTypes\ConfigurationData.cs" />
+    <Compile Include="RootTypes\ConfigurationDataException.cs" />
+    <Compile Include="RootTypes\ConfigurationFile.cs" />
+    <Compile Include="RootTypes\ConfigurationSetting.cs" />
     <Compile Include="RootTypes\DataModelAttribute.cs" />
+    <Compile Include="RootTypes\EmpiriaException.cs" />
+    <Compile Include="RootTypes\EmpiriaMath.cs" />
+    <Compile Include="RootTypes\EmpiriaString.cs" />
+    <Compile Include="RootTypes\EmpiriaString.Customization.cs" />
+    <Compile Include="RootTypes\EmpiriaString.Distance.cs" />
+    <Compile Include="RootTypes\EmpiriaString.Speech.cs" />
+    <Compile Include="RootTypes\ExecutionServer.cs" />
+    <Compile Include="RootTypes\ExecutionServer.Customization.cs" />
+    <Compile Include="RootTypes\ExecutionServerException.cs" />
+    <Compile Include="RootTypes\FixedList.cs" />
+    <Compile Include="RootTypes\IExtensible.cs" />
+    <Compile Include="RootTypes\IIdentifiable.cs" />
+    <Compile Include="RootTypes\IStorable.cs" />
+    <Compile Include="RootTypes\ITransaction.cs" />
+    <Compile Include="RootTypes\IUnitOfWork.cs" />
+    <Compile Include="RootTypes\IValueObject.cs" />
+    <Compile Include="RootTypes\lFilter.cs" />
     <Compile Include="RootTypes\MetaModel.cs" />
     <Compile Include="RootTypes\ObjectsCache.cs" />
     <Compile Include="RootTypes\LazyInstance.cs" />
     <Compile Include="RootTypes\ObjectStatus.cs" />
+    <Compile Include="RootTypes\OperationBase.cs" />
+    <Compile Include="RootTypes\PlainTextException.cs" />
+    <Compile Include="RootTypes\ProductInformation.cs" />
     <Compile Include="RootTypes\ResourceConflictException.cs" />
     <Compile Include="RootTypes\ResourceNotFoundException.cs" />
+    <Compile Include="RootTypes\StorageChangeItem.cs" />
+    <Compile Include="RootTypes\StorageChangeItemList.cs" />
+    <Compile Include="RootTypes\StorageContext.cs" />
+    <Compile Include="RootTypes\StorageVersion.cs" />
     <Compile Include="RootTypes\UnauthorizedException.cs" />
     <Compile Include="RootTypes\Validate.cs" />
     <Compile Include="RootTypes\ValidationException.cs" />
     <Compile Include="RootTypes\ValueObject.cs" />
     <Compile Include="RootTypes\DataFieldAttribute.cs" />
-    <Compile Include="RootTypes\IValueObject.cs" />
+    <Compile Include="RootTypes\IValueObjectGeneric.cs" />
     <Compile Include="RootTypes\ValueObjectFactory.cs" />
+    <Compile Include="RootTypes\WindowsRegistryFile.cs" />
+    <Compile Include="Security\Cryptographer.cs" />
+    <Compile Include="Security\IEmpiriaIdentity.cs" />
+    <Compile Include="Security\IEmpiriaPrincipal.cs" />
+    <Compile Include="Security\IEmpiriaServer.cs" />
+    <Compile Include="Security\IEmpiriaSession.cs" />
+    <Compile Include="Security\IEmpiriaUser.cs" />
+    <Compile Include="Security\IntegrityValidator.cs" />
+    <Compile Include="Security\IProtected.cs" />
     <Compile Include="Security\PasswordStrength.cs" />
+    <Compile Include="Security\SecurityException.cs" />
+    <Compile Include="Security\SingleSignOnToken.cs" />
     <Compile Include="ZZTypes\ZZKeyValuePair.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />
     <Compile Include="DataTypes\TimeFrame.cs" />
     <Compile Include="ZZTypes\ZZDynamicState.cs" />
     <Compile Include="ZZTypes\ZZTypeList.cs" />
     <Compile Include="RootTypes\GeneralList.cs" />
-    <Compile Include="Data\ContactsData.cs" />
+    <Compile Include="Contacts\ContactsData.cs" />
     <Compile Include="Contacts\Contact.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -280,7 +410,7 @@
     <Compile Include="Security\EmpiriaSession.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\OntologyData.cs">
+    <Compile Include="Ontology\OntologyData.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Ontology\TypeRelationInfo.cs">
@@ -307,10 +437,20 @@
     <Compile Include="Ontology\OntologyException.cs">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="Data\DataExceptionMsg.resx">
+      <LastGenOutput>DataExceptionMsg.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Ontology\OntologyExceptionMsg.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ORM\DataMappingExceptionMsg.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RootTypes\KernelExceptionMsg.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Security\SecurityExceptionMsg.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -318,16 +458,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Data\Empiria.Data.csproj">
-      <Project>{20C01648-86CC-4E9E-AD71-BA7AA8E44DBC}</Project>
-      <Name>Empiria.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Kernel\Empiria.Kernel.csproj">
-      <Project>{F518E007-2B16-4804-BA45-695EA098E1C0}</Project>
-      <Name>Empiria.Kernel</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
