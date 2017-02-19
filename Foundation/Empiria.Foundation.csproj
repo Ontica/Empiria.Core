@@ -317,11 +317,6 @@
     <Compile Include="RootTypes\ValueObjectFactory.cs" />
     <Compile Include="RootTypes\WindowsRegistryFile.cs" />
     <Compile Include="Security\Cryptographer.cs" />
-    <Compile Include="Security\IEmpiriaIdentity.cs" />
-    <Compile Include="Security\IEmpiriaPrincipal.cs" />
-    <Compile Include="Security\IEmpiriaServer.cs" />
-    <Compile Include="Security\IEmpiriaSession.cs" />
-    <Compile Include="Security\IEmpiriaUser.cs" />
     <Compile Include="Security\IntegrityValidator.cs" />
     <Compile Include="Security\IProtected.cs" />
     <Compile Include="Security\PasswordStrength.cs" />

@@ -13,7 +13,7 @@ using System;
 namespace Empiria.Security {
 
   /// <summary>Type that represents and manage Empiria deploy web servers information</summary>
-  public sealed class WebServer : GeneralObject, IEmpiriaServer {
+  public sealed class WebServer : GeneralObject {
 
     #region Fields
 

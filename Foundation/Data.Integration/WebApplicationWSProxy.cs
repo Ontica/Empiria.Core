@@ -20,7 +20,7 @@ namespace Empiria.Data.Integration {
 
     #region Constructors and Parsers
 
-    public WebApplicationWSProxy(IEmpiriaServer server) {
+    public WebApplicationWSProxy(WebServer server) {
       this.Url = server.WebSiteURL + "services/services.asmx";
     }
 

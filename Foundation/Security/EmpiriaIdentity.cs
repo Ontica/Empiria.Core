@@ -9,6 +9,7 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Security.Principal;
 
 namespace Empiria.Security {
 
@@ -24,7 +25,7 @@ namespace Empiria.Security {
     Tester = -4,
   }
 
-  public sealed class EmpiriaIdentity : IEmpiriaIdentity {
+  public sealed class EmpiriaIdentity : IIdentity {
 
     #region Constructors and parsers
 
@@ -104,12 +105,6 @@ namespace Empiria.Security {
     public string Name {
       get {
         return this.User.UserName;
-      }
-    }
-
-    IEmpiriaUser IEmpiriaIdentity.User {
-      get {
-        return this.User;
       }
     }
 

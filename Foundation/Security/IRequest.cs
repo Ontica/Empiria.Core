@@ -19,7 +19,7 @@ namespace Empiria.Security {
       get;
     }
 
-    IEmpiriaPrincipal Principal {
+    EmpiriaPrincipal Principal {
       get;
     }
 

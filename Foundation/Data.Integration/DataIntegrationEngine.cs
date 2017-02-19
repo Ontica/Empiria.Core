@@ -175,7 +175,7 @@ namespace Empiria.Data.Integration {
         string dataOperationMessage = (string) taskRow["OperationName"] + '§' + (string) taskRow["OperationParameters"];
 
         try {
-          IEmpiriaServer targetServer = DataIntegratorWSProxy.GetIntegrationServer(targetServerId);
+          WebServer targetServer = DataIntegratorWSProxy.GetIntegrationServer(targetServerId);
           using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(targetServer)) {
             int result = proxy.Execute(ssoToken, dataOperationMessage);
             if (result != 0) {

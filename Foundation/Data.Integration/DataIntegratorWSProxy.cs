@@ -22,9 +22,9 @@ namespace Empiria.Data.Integration {
 
     #region Constructors and Parsers
 
-    static private IEmpiriaServer currentServer = null;
+    static private WebServer currentServer = null;
 
-    static internal IEmpiriaServer CurrentServer {
+    static internal WebServer CurrentServer {
       get {
         if (currentServer == null) {
           currentServer = GetIntegrationServer(ExecutionServer.ServerId);
@@ -33,7 +33,7 @@ namespace Empiria.Data.Integration {
       }
     }
 
-    internal DataIntegratorWSProxy(Empiria.Security.IEmpiriaServer targetServer) {
+    internal DataIntegratorWSProxy(WebServer targetServer) {
       this.Url = targetServer.WebServicesSiteURL + "data.integration/services.asmx";
     }
 
@@ -48,15 +48,13 @@ namespace Empiria.Data.Integration {
       }
     }
 
-    static internal IEmpiriaServer GetIntegrationServer(int serverId) {
+    static internal WebServer GetIntegrationServer(int serverId) {
       try {
         if (serverId == 0) {
           return null;
         }
+        return WebServer.Parse(serverId);
 
-        Type serverType = ObjectFactory.GetType("Empiria.Foundation", "Empiria.Security.WebServer");
-
-        return (IEmpiriaServer) ObjectFactory.InvokeParseMethod(serverType, serverId);
       } catch (Exception innerException) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotParseDataIntegrationServer, innerException, serverId);
       }

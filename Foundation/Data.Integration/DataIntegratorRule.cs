@@ -33,7 +33,7 @@ namespace Empiria.Data.Integration {
     #region Fields
 
     private int id = 0;
-    private IEmpiriaServer targetServer = null;
+    private WebServer targetServer = null;
     private string condition = String.Empty;
     DataIntegrationRulePriority priority = DataIntegrationRulePriority.Normal;
 
@@ -41,7 +41,7 @@ namespace Empiria.Data.Integration {
 
     #region Constructors and Parsers
 
-    internal DataIntegrationRule(int id, IEmpiriaServer targetServer, string condition, DataIntegrationRulePriority priority) {
+    internal DataIntegrationRule(int id, WebServer targetServer, string condition, DataIntegrationRulePriority priority) {
       this.id = id;
       this.targetServer = targetServer;
       this.condition = condition;
@@ -68,7 +68,7 @@ namespace Empiria.Data.Integration {
       get { return priority; }
     }
 
-    internal IEmpiriaServer TargetServer {
+    internal WebServer TargetServer {
       get { return targetServer; }
     }
 

@@ -29,7 +29,7 @@ namespace Empiria.Security {
 
     #region Constructors and Parsers
 
-    private SingleSignOnToken(IEmpiriaServer targetServer) {
+    private SingleSignOnToken(WebServer targetServer) {
       this.sessionToken = ExecutionServer.CurrentSessionToken;
       this.userId = ExecutionServer.CurrentUserId;
 
@@ -47,7 +47,7 @@ namespace Empiria.Security {
       CalculateChecksum();
     }
 
-    static public SingleSignOnToken Create(IEmpiriaServer targetServer) {
+    static public SingleSignOnToken Create(WebServer targetServer) {
       return new SingleSignOnToken(targetServer);
     }
 
@@ -91,7 +91,7 @@ namespace Empiria.Security {
       return token;
     }
 
-    public bool ExistsOnPath(IEmpiriaServer server) {
+    public bool ExistsOnPath(WebServer server) {
       for (int i = 0; i < this.path.Count; i++) {
         if (this.path[i] == server.Id) {
           return true;
@@ -100,7 +100,7 @@ namespace Empiria.Security {
       return false;
     }
 
-    public SingleSignOnToken SignOnServer(IEmpiriaServer targetServer) {
+    public SingleSignOnToken SignOnServer(WebServer targetServer) {
       SingleSignOnToken token = this.Copy();
 
       if (targetServer.Id != ExecutionServer.ServerId) {

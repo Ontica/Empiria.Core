@@ -31,7 +31,7 @@ namespace Empiria.Data.Integration {
 
     #region Internal methods
 
-    static internal IEmpiriaServer GetObjectIdServer(string sourceName) {
+    static internal WebServer GetObjectIdServer(string sourceName) {
       return dataIntegrationRules["I@" + sourceName.ToUpperInvariant()][0].TargetServer;
     }
 
@@ -43,7 +43,7 @@ namespace Empiria.Data.Integration {
       return dataIntegrationRules["P@" + sourceName.ToUpperInvariant()];
     }
 
-    static internal IEmpiriaServer GetReadRuleServer(string sourceName) {
+    static internal WebServer GetReadRuleServer(string sourceName) {
       return dataIntegrationRules["R@" + sourceName.ToUpperInvariant()][0].TargetServer;
     }
 
@@ -92,7 +92,7 @@ namespace Empiria.Data.Integration {
 
           int integrationRuleId = (int) table.Rows[i]["DbRuleId"];
           string condition = (string) table.Rows[i]["DbRuleCondition"];
-          IEmpiriaServer targetServer = DataIntegratorWSProxy.GetIntegrationServer((int) table.Rows[i]["TargetServerId"]);
+          WebServer targetServer = DataIntegratorWSProxy.GetIntegrationServer((int) table.Rows[i]["TargetServerId"]);
           DataIntegrationRulePriority priority = (DataIntegrationRulePriority) (short) table.Rows[i]["DbRulePriority"];
           DataIntegrationRule dataIntegrationRule = new DataIntegrationRule(integrationRuleId, targetServer, condition, priority);
 

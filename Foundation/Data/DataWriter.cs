@@ -155,6 +155,7 @@ namespace Empiria.Data {
       if (DataWriter.IsObjectIdGeneratorServer) {
         return ObjectIdFactory.Instance.GetNextId(sourceName, 0);
       } else {
+
         using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(DataIntegratorWSProxy.CurrentServer)) {
           return proxy.CreateObjectId(sourceName);
         }
@@ -219,7 +220,7 @@ namespace Empiria.Data {
     #region Private methods
 
     static private int CreateExternalId(string sourceName) {
-      IEmpiriaServer targetServer = DataIntegrationRules.GetObjectIdServer(sourceName);
+      WebServer targetServer = DataIntegrationRules.GetObjectIdServer(sourceName);
 
       using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(targetServer)) {
         return proxy.CreateObjectId(sourceName);

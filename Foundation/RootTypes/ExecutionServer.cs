@@ -115,22 +115,22 @@ namespace Empiria {
       }
     }
 
-    static public IEmpiriaIdentity CurrentIdentity {
+    static public EmpiriaIdentity CurrentIdentity {
       get {
         AssertIsStarted();
 
-        return (IEmpiriaIdentity) ExecutionServer.CurrentPrincipal.Identity;
+        return ExecutionServer.CurrentPrincipal.Identity;
       }
     }
 
-    static public IEmpiriaPrincipal CurrentPrincipal {
+    static public EmpiriaPrincipal CurrentPrincipal {
       get {
         AssertIsStarted();
 
         var principal = Thread.CurrentPrincipal;
 
-        if (principal != null && principal is IEmpiriaPrincipal) {
-          return (IEmpiriaPrincipal) principal;
+        if (principal != null && principal is EmpiriaPrincipal) {
+          return (EmpiriaPrincipal) principal;
         }
         throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
       }
@@ -168,9 +168,9 @@ namespace Empiria {
       get {
         var principal = Thread.CurrentPrincipal;
 
-        return (principal?.Identity != null && principal is IEmpiriaPrincipal &&
+        return (principal?.Identity != null && principal is EmpiriaPrincipal &&
                 principal.Identity.IsAuthenticated &&
-                !String.IsNullOrWhiteSpace(((IEmpiriaPrincipal) principal)?.Session?.Token));
+                !String.IsNullOrWhiteSpace(((EmpiriaPrincipal) principal)?.Session?.Token));
       }
     }
 

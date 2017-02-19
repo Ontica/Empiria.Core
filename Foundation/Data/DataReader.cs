@@ -357,7 +357,7 @@ namespace Empiria.Data {
     }
 
     static private int GetExternalCount(DataOperation dataOperation) {
-      IEmpiriaServer targetServer = DataIntegrationRules.GetReadRuleServer(dataOperation.SourceName);
+      WebServer targetServer = DataIntegrationRules.GetReadRuleServer(dataOperation.SourceName);
 
       using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(targetServer)) {
         return proxy.CountData(dataOperation.ToMessage());
@@ -374,7 +374,7 @@ namespace Empiria.Data {
     }
 
     static private DataTable GetExternalDataTable(DataOperation dataOperation, string dataTableName) {
-      IEmpiriaServer targetServer = DataIntegrationRules.GetReadRuleServer(dataOperation.SourceName);
+      WebServer targetServer = DataIntegrationRules.GetReadRuleServer(dataOperation.SourceName);
 
       using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(targetServer)) {
         return proxy.GetDataTable(dataOperation.ToMessage(), String.Empty, String.Empty);
@@ -382,7 +382,7 @@ namespace Empiria.Data {
     }
 
     static private DataView GetExternalDataView(DataOperation dataOperation, string filter, string sort) {
-      IEmpiriaServer targetServer = DataIntegrationRules.GetReadRuleServer(dataOperation.SourceName);
+      WebServer targetServer = DataIntegrationRules.GetReadRuleServer(dataOperation.SourceName);
 
       using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(targetServer)) {
         return proxy.GetDataTable(dataOperation.ToMessage(), filter, sort).DefaultView;
@@ -390,7 +390,7 @@ namespace Empiria.Data {
     }
 
     static private object GetExternalFieldValue(DataOperation dataOperation, string fieldName) {
-      IEmpiriaServer targetServer = DataIntegrationRules.GetReadRuleServer(dataOperation.SourceName);
+      WebServer targetServer = DataIntegrationRules.GetReadRuleServer(dataOperation.SourceName);
 
       using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(targetServer)) {
         return proxy.GetFieldValue(dataOperation.ToMessage(), fieldName);
@@ -398,7 +398,7 @@ namespace Empiria.Data {
     }
 
     static private object GetExternalScalar(DataOperation dataOperation) {
-      IEmpiriaServer targetServer = DataIntegrationRules.GetReadRuleServer(dataOperation.SourceName);
+      WebServer targetServer = DataIntegrationRules.GetReadRuleServer(dataOperation.SourceName);
 
       using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(targetServer)) {
         return proxy.GetScalar(dataOperation.ToMessage());

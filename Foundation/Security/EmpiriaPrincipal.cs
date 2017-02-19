@@ -20,7 +20,7 @@ namespace Empiria.Security {
   /// <summary>Represents the security context of the user or access account on whose behalf the Empiria
   /// framework code is running, including that user's identity (EmpiriaIdentity) and any domain
   /// roles to which they belong. This class can't be derived.</summary>
-  public sealed class EmpiriaPrincipal : IEmpiriaPrincipal {
+  public sealed class EmpiriaPrincipal : IPrincipal {
 
     #region Fields
 
@@ -28,7 +28,6 @@ namespace Empiria.Security {
                                         new ObjectsCache<string, EmpiriaPrincipal>(128);
 
     private string[] rolesArray = new string[0];
-    private bool disposed = false;
 
     #endregion Fields
 
@@ -78,10 +77,6 @@ namespace Empiria.Security {
       this.Session.UpdateEndTime();
     }
 
-    ~EmpiriaPrincipal() {
-      Dispose(false);
-    }
-
     #endregion Constructors and parsers
 
     #region Public properties
@@ -103,7 +98,7 @@ namespace Empiria.Security {
     }
 
     /// <summary>Gets the IIdentity instance of the current principal.</summary>
-    public IEmpiriaIdentity Identity {
+    public EmpiriaIdentity Identity {
       get;
       private set;
     }
@@ -123,12 +118,6 @@ namespace Empiria.Security {
     public EmpiriaSession Session {
       get;
       private set;
-    }
-
-    IEmpiriaSession IEmpiriaPrincipal.Session {
-      get {
-        return this.Session;
-      }
     }
 
     public SecurityClaimList Claims {
@@ -153,9 +142,13 @@ namespace Empiria.Security {
       throw new SecurityException(SecurityException.Msg.PrincipalClaimNotFound, assertionFailMsg);
     }
 
-    public void Dispose() {
-      Dispose(true);
-      GC.SuppressFinalize(this);
+    public void CloseSession() {
+      try {
+        this.Session.Close();
+        principalsCache.Remove(this.Session.Token);
+      } finally {
+        // no-op
+      }
     }
 
     /// <summary>Determines whether the current principal belongs to the specified role.</summary>
@@ -180,21 +173,6 @@ namespace Empiria.Security {
     private string BuildAssertionClaimFailMsg(SecurityClaimType claimType, string claimValue) {
       return String.Format("Principal '{0}' doesn't have a security claim with value '{1}' of type '{2}'.",
                             this.Identity.User.UserName, claimValue, claimType.Key);
-    }
-
-    private void Dispose(bool disposing) {
-      try {
-        if (!disposed) {
-          disposed = true;
-          this.Session.Close();
-          principalsCache.Remove(this.Session.Token);
-          if (disposing) {
-            //this.InnerObject.Dispose();
-          }
-        }
-      } finally {
-        // no-op
-      }
     }
 
     private void Initialize(EmpiriaIdentity identity, ClientApplication clientApp = null,

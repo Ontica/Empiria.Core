@@ -15,7 +15,7 @@ using Empiria.Json;
 
 namespace Empiria.Security {
 
-  public sealed class EmpiriaSession : IEmpiriaSession {
+  public sealed class EmpiriaSession : IIdentifiable {
 
     #region Constructors and parsers
 
