@@ -27,10 +27,11 @@ namespace Empiria {
 
       try {
         value = ReadValue(GetCallerTypeName(), parameterName);
+
+        return ObjectFactory.Convert<T>(value);
       } catch {
         return defaultValue;
       }
-      return ObjectFactory.Convert<T>(defaultValue);
     }
 
     static public byte[] GetByteArray(string typeName, string parameterName, char separator) {
