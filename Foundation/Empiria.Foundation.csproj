@@ -174,7 +174,6 @@
     </Reference>
     <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Security" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
@@ -319,6 +318,8 @@
     <Compile Include="Security\PasswordStrength.cs" />
     <Compile Include="Security\SecurityException.cs" />
     <Compile Include="Security\SingleSignOnToken.cs" />
+    <Compile Include="WebApi.Client\WebApiClientFactory.cs" />
+    <Compile Include="WebApi.Client\IWebApiClient.cs" />
     <Compile Include="ZZTypes\ZZKeyValuePair.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />
     <Compile Include="DataTypes\TimeFrame.cs" />
