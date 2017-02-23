@@ -172,9 +172,7 @@ namespace Empiria.Data.Integration {
     static private DataOperation GetPublishDataOperation(SingleSignOnToken token, int dataIntegrationRuleId,
                                                          Guid unitOfWorkGuid, string contextName,
                                                          DataOperation operation, int operationIndex) {
-      int dataTaskId = DataWriter.CreateInternalId("DbIntegrationTasks");
-
-      return DataOperation.Parse("writeDBIntegrationTask", dataTaskId, dataIntegrationRuleId, token.ToMessage(),
+      return DataOperation.Parse("apdDBIntegrationTask", dataIntegrationRuleId, token.ToMessage(),
                                  unitOfWorkGuid, contextName, operation.SourceName,
                                  operation.ParametersToString(), operationIndex, DateTime.Now,
                                  ExecutionServer.DateMaxValue, 'N', -1, 'P');

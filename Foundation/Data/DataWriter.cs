@@ -11,11 +11,13 @@
 using System;
 using System.Data;
 using System.Reflection;
+using System.Threading.Tasks;
 
 using Empiria.Data.Handlers;
 using Empiria.Data.Integration;
 using Empiria.Reflection;
 using Empiria.Security;
+using Empiria.WebApi.Client;
 
 namespace Empiria.Data {
 
@@ -44,10 +46,10 @@ namespace Empiria.Data {
     }
 
     static public int CreateId(string sourceName) {
-      if (DataIntegrationRules.HasExternalCreateIdRule(sourceName)) {
-        return CreateExternalId(sourceName);
+      if (DataIntegrationRules.HasExternalClusterCreateIdRule(sourceName)) {
+        return CreateExternalClusterIdAsync(sourceName).Result;
       }
-      return CreateInternalId(sourceName);
+      return CreateThisClusterIdAsync(sourceName).Result;
     }
 
     static public int Execute(DataOperation operation) {
@@ -141,26 +143,9 @@ namespace Empiria.Data {
       }
     }
 
-    static public void ResetIdFactory() {
-      lock (ObjectIdFactory.Instance) {
-        ObjectIdFactory.Instance.Reset();
-      }
-    }
-
     #endregion Public methods
 
     #region Internal methods
-
-    static internal int CreateInternalId(string sourceName) {
-      if (DataWriter.IsObjectIdGeneratorServer) {
-        return ObjectIdFactory.Instance.GetNextId(sourceName, 0);
-      } else {
-
-        using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(DataIntegratorWSProxy.CurrentServer)) {
-          return proxy.CreateObjectId(sourceName);
-        }
-      }
-    }
 
     static internal int Execute(IDbConnection connection, DataOperation operation) {
       switch (operation.DataSource.Technology) {
@@ -219,12 +204,22 @@ namespace Empiria.Data {
 
     #region Private methods
 
-    static private int CreateExternalId(string sourceName) {
+    static private async Task<int> CreateThisClusterIdAsync(string sourceName) {
+      if (DataWriter.IsObjectIdGeneratorServer) {
+        return ObjectIdFactory.Instance.GetNextId(sourceName, 0);
+      } else {
+        IWebApiClient apiClient = WebApiClientFactory.CreateWebApiClient();
+
+        return await apiClient.GetAsync<int>("Empiria.IdGenerator.NextTableRowId", sourceName);
+      }
+    }
+
+    static private async Task<int> CreateExternalClusterIdAsync(string sourceName) {
       WebServer targetServer = DataIntegrationRules.GetObjectIdServer(sourceName);
 
-      using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(targetServer)) {
-        return proxy.CreateObjectId(sourceName);
-      }
+      IWebApiClient apiClient = WebApiClientFactory.CreateWebApiClient(targetServer.WebSiteURL);
+
+      return await apiClient.GetAsync<int>("Empiria.IdGenerator.NextTableRowId", sourceName);
     }
 
     static private void DoPostExecutionTask(DataOperation operation) {

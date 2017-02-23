@@ -168,7 +168,7 @@ namespace Empiria.Data.Integration {
 
       for (int i = 0; i < table.Rows.Count; i++) {
         DataRow taskRow = table.Rows[i];
-        int integrationTaskId = (int) taskRow["IntegrationTaskId"];
+        long integrationTaskId = (long) taskRow["IntegrationTaskId"];
         int targetServerId = (int) taskRow["TargetServerId"];
         string ssoToken = (string) taskRow["SSOToken"];
 
@@ -210,7 +210,7 @@ namespace Empiria.Data.Integration {
       return DataReader.GetDataTable(DataOperation.Parse("qryDBPendingIntegrationTasks"));
     }
 
-    private void UpdateIntegrationTask(int integrationTaskId, bool integrated) {
+    private void UpdateIntegrationTask(long integrationTaskId, bool integrated) {
       char executionMode = 'A';
 
       if (integrated) {

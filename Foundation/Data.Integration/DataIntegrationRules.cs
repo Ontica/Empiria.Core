@@ -55,7 +55,7 @@ namespace Empiria.Data.Integration {
       return dataIntegrationRules.ContainsKey("C@" + sourceName.ToUpperInvariant());
     }
 
-    static internal bool HasExternalCreateIdRule(string sourceName) {
+    static internal bool HasExternalClusterCreateIdRule(string sourceName) {
       return dataIntegrationRules.ContainsKey("I@" + sourceName.ToUpperInvariant());
     }
 

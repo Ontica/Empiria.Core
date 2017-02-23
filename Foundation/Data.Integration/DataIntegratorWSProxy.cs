@@ -75,17 +75,6 @@ namespace Empiria.Data.Integration {
       }
     }
 
-    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://empiria.ontica.org/web.services/CreateObjectId", RequestNamespace = "http://empiria.ontica.org/web.services/", ResponseNamespace = "http://empiria.ontica.org/web.services/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-    public int CreateObjectId(string sourceName) {
-      try {
-        object[] results = this.Invoke("CreateObjectId", new object[] { sourceName });
-
-        return ((int) results[0]);
-      } catch (Exception innerException) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.DataIntegrationWSProxyException, innerException, "CreateObjectId", this.Url);
-      }
-    }
-
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://empiria.ontica.org/web.services/Execute", RequestNamespace = "http://empiria.ontica.org/web.services/", ResponseNamespace = "http://empiria.ontica.org/web.services/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
     public int Execute(string singleSignOnTokenMessage, string dataOperationMessage) {
       try {
