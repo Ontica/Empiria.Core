@@ -190,6 +190,14 @@ namespace Empiria {
       return TrimAll(source);
     }
 
+    static public string Format(string source, object[] arguments) {
+      if (source != null && arguments != null && arguments.Length != 0) {
+        return String.Format(source, arguments);
+      } else {
+        return source;
+      }
+    }
+
     static public bool IsBoolean(string source) {
       try {
         if (String.IsNullOrEmpty(source)) {
@@ -346,23 +354,19 @@ namespace Empiria {
       }
     }
 
-    static public bool IsInList(string source, string format, string[] values) {
-      try {
-        string formatted = String.Empty;
-        if (format != null && format.Length != 0) {
-          formatted = String.Format("{0:" + format + "}", source);
-        } else {
-          formatted = source;
-        }
-        for (int i = 0; i < values.Length; i++) {
-          if (values[i] == formatted) {
-            return true;
-          }
-        }
-        return false;
-      } catch {
-        return false;
+    static public bool IsInList(string source, string firstValue, params string[] moreValues) {
+      Assertion.AssertObject(source, "source");
+      Assertion.AssertObject(firstValue, "firstValue");
+
+      if (source == firstValue) {
+        return true;
       }
+      for (int i = 0; i < moreValues.Length; i++) {
+        if (moreValues[i] == source) {
+          return true;
+        }
+      }
+      return false;
     }
 
     static public bool IsInteger(string source) {
