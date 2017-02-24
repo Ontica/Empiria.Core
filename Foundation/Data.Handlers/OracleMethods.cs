@@ -68,6 +68,34 @@ namespace Empiria.Data.Handlers {
       return affectedRows;
     }
 
+    static internal T Execute<T>(DataOperation operation) {
+      OracleConnection connection = new OracleConnection(operation.DataSource.Source);
+      OracleCommand command = new OracleCommand(operation.SourceName, connection);
+
+      T result = default(T);
+      try {
+        command.CommandType = operation.CommandType;
+        operation.FillParameters(command);
+        connection.Open();
+        if (ContextUtil.IsInTransaction) {
+          connection.EnlistDistributedTransaction((System.EnterpriseServices.ITransaction) ContextUtil.Transaction);
+        }
+        result = (T) command.ExecuteScalar();
+        command.Parameters.Clear();
+      } catch (Exception exception) {
+        string parametersString = String.Empty;
+        for (int i = 0; i < operation.Parameters.Length; i++) {
+          parametersString += (parametersString.Length != 0 ? ", " : String.Empty) + Convert.ToString(operation.Parameters[i]);
+        }
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
+                                       operation.SourceName, parametersString);
+      } finally {
+        command.Parameters.Clear();
+        connection.Dispose();
+      }
+      return result;
+    }
+
     static internal int Execute(OracleConnection connection, DataOperation operation) {
       OracleCommand command = new OracleCommand(operation.SourceName, connection);
 

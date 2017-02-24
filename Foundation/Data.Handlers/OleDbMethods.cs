@@ -71,6 +71,34 @@ namespace Empiria.Data.Handlers {
       return affectedRows;
     }
 
+    static internal T Execute<T>(DataOperation operation) {
+      OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
+      OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
+
+      T result = default(T);
+      try {
+        command.CommandType = operation.CommandType;
+        if (operation.ExecutionTimeout != 0) {
+          command.CommandTimeout = operation.ExecutionTimeout;
+        }
+        operation.FillParameters(command);
+        connection.Open();
+        result = (T) command.ExecuteScalar();
+        command.Parameters.Clear();
+      } catch (Exception exception) {
+        string parametersString = String.Empty;
+        for (int i = 0; i < operation.Parameters.Length; i++) {
+          parametersString += (parametersString.Length != 0 ? ", " : String.Empty) + Convert.ToString(operation.Parameters[i]);
+        }
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
+                                       operation.SourceName, parametersString);
+      } finally {
+        command.Parameters.Clear();
+        connection.Dispose();
+      }
+      return result;
+    }
+
     static internal int Execute(OleDbConnection connection, DataOperation operation) {
       OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
 

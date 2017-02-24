@@ -72,29 +72,26 @@ namespace Empiria.Data {
       return result;
     }
 
-    //static public T ExecuteScalar<T>(DataOperation operation) {
-    //  Assertion.AssertObject(operation, "operation");
 
-    //  if (StorageContext.IsStorageContextDefined) {
-    //    return (T) StorageContext.ActiveStorageContext.Add(operation);
-    //  }
+    static public T Execute<T>(DataOperation operation) {
+      Assertion.AssertObject(operation, "operation");
 
-    //  if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
-    //    return (T) ExecuteExternal(operation);
-    //  }
+      //if (StorageContext.IsStorageContextDefined) {
+      //  return StorageContext.ActiveStorageContext.Add(operation);
+      //}
 
-    //  T result = DataWriter.ExecuteScalarInternal<T>(operation);
+      //if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
+      //  return ExecuteExternal(operation);
+      //}
 
-    //  DataWriter.DoPostExecutionTask(operation);
+      T result = DataWriter.ExecuteInternal<T>(operation);
 
-    //  DataPublisher.Publish(operation);
+      DataWriter.DoPostExecutionTask(operation);
 
-    //  return result;
-    //}
+      DataPublisher.Publish(operation);
 
-    //private static T ExecuteScalarInternal<T>(DataOperation operation) {
-    //  throw new NotImplementedException();
-    //}
+      return result;
+    }
 
     static public int Execute(DataOperationList operationList) {
       Assertion.AssertObject(operationList, "operationList");
@@ -195,6 +192,23 @@ namespace Empiria.Data {
           return OracleMethods.Execute(operation);
         case DataTechnology.PostgreSql:
           return PostgreSqlMethods.Execute(operation);
+        default:
+          throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology, operation.DataSource.Technology);
+      }
+    }
+
+    private static T ExecuteInternal<T>(DataOperation operation) {
+      switch (operation.DataSource.Technology) {
+        case DataTechnology.SqlServer:
+          return SqlMethods.Execute<T>(operation);
+        case DataTechnology.MySql:
+          return MySqlMethods.Execute<T>(operation);
+        case DataTechnology.OleDb:
+          return OleDbMethods.Execute<T>(operation);
+        case DataTechnology.Oracle:
+          return OracleMethods.Execute<T>(operation);
+        case DataTechnology.PostgreSql:
+          return PostgreSqlMethods.Execute<T>(operation);
         default:
           throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology, operation.DataSource.Technology);
       }

@@ -101,6 +101,32 @@ namespace Empiria.Data.Handlers {
       return affectedRows;
     }
 
+    static internal T Execute<T>(DataOperation operation) {
+      NpgsqlConnection connection = new NpgsqlConnection(operation.DataSource.Source);
+      NpgsqlCommand command = new NpgsqlCommand(operation.SourceName, connection);
+
+      T result = default(T);
+      try {
+        command.CommandType = operation.CommandType;
+        if (operation.ExecutionTimeout != 0) {
+          command.CommandTimeout = operation.ExecutionTimeout;
+        }
+        operation.FillParameters(command);
+        connection.Open();
+        if (ContextUtil.IsInTransaction) {
+          connection.EnlistTransaction((System.Transactions.Transaction) ContextUtil.Transaction);
+        }
+        result = (T) command.ExecuteScalar();
+      } catch (Exception exception) {
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
+                                       operation.SourceName, operation.ParametersToString());
+      } finally {
+        command.Parameters.Clear();
+        connection.Dispose();
+      }
+      return result;
+    }
+
     static internal int Execute(NpgsqlConnection connection, DataOperation operation) {
       NpgsqlCommand command = new NpgsqlCommand(operation.SourceName, connection);
 

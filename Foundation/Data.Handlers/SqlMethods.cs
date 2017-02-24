@@ -97,6 +97,32 @@ namespace Empiria.Data.Handlers {
       return affectedRows;
     }
 
+    static internal T Execute<T>(DataOperation operation) {
+      var connection = new SqlConnection(operation.DataSource.Source);
+      var command = new SqlCommand(operation.SourceName, connection);
+
+      T result = default(T);
+      try {
+        command.CommandType = operation.CommandType;
+        if (operation.ExecutionTimeout != 0) {
+          command.CommandTimeout = operation.ExecutionTimeout;
+        }
+        operation.FillParameters(command);
+        connection.Open();
+        if (ContextUtil.IsInTransaction) {
+          connection.EnlistDistributedTransaction((System.EnterpriseServices.ITransaction) ContextUtil.Transaction);
+        }
+        result = (T) command.ExecuteScalar();
+      } catch (Exception exception) {
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
+                                       operation.SourceName, operation.ParametersToString());
+      } finally {
+        command.Parameters.Clear();
+        connection.Dispose();
+      }
+      return result;
+    }
+
     static internal int Execute(SqlConnection connection, DataOperation operation) {
       var command = new SqlCommand(operation.SourceName, connection);
 
