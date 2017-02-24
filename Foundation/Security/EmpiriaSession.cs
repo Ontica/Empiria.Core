@@ -135,7 +135,7 @@ namespace Empiria.Security {
     #region Public methods
 
     internal void Close() {
-      SecurityData.WriteSession(this);
+      SecurityData.CloseSession(this);
     }
 
     internal void UpdateEndTime() {
@@ -147,13 +147,10 @@ namespace Empiria.Security {
     #region Private methods
 
     private void Create() {
-      if (this.Id == 0) {
-        this.Id = SecurityData.GetNextSessionId();
-      }
       if (String.IsNullOrWhiteSpace(this.RefreshToken)) {
         this.RefreshToken = Guid.NewGuid().ToString() + Guid.NewGuid().ToString();
       }
-      SecurityData.WriteSession(this);
+      this.Id = SecurityData.CreateSession(this);
     }
 
     private string CreateToken() {

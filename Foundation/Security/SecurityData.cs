@@ -80,6 +80,20 @@ namespace Empiria.Security {
       return BaseObject.ParseDataRow<SecurityClaim>(row);
     }
 
+    static internal int CloseSession(EmpiriaSession o) {
+      var op = DataOperation.Parse("doCloseUserSession", o.Token, o.EndTime);
+
+      return DataWriter.Execute(op);
+    }
+
+    static internal int CreateSession(EmpiriaSession o) {
+      var op = DataOperation.Parse("apdUserSession", o.Token, o.ServerId,
+                                    o.ClientAppId, o.UserId, o.ExpiresIn,
+                                    o.RefreshToken, o.ExtendedData.ToString(),
+                                    o.StartTime, o.EndTime);
+      return DataWriter.Execute<int>(op);
+    }
+
     static internal void CreateUser(EmpiriaUser o, string password, ObjectStatus status) {
       Assertion.Assert(o.Id != 0, "User.Id was not assigned.");
       Assertion.AssertObject(password, "Password can't be null.");
@@ -173,16 +187,6 @@ namespace Empiria.Security {
     static internal int WriteSecurityClaim(SecurityClaim o) {
       var op = DataOperation.Parse("writeSecurityClaim", o.Id, o.ClaimType.Id, o.ResourceTypeId,
                                    o.ResourceId, o.Value, (char) o.Status);
-      return DataWriter.Execute(op);
-    }
-
-    static internal int WriteSession(EmpiriaSession o) {
-      Assertion.Assert(o.Id != 0, "Session.Id was not assigned.");
-
-      var op = DataOperation.Parse("writeUserSession", o.Id, o.Token, o.ServerId,
-                                    o.ClientAppId, o.UserId, o.ExpiresIn,
-                                    o.RefreshToken, o.ExtendedData.ToString(),
-                                    o.StartTime, o.EndTime);
       return DataWriter.Execute(op);
     }
 
