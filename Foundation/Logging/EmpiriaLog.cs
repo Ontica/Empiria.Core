@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Logging Services                  *
 *  Namespace : Empiria                                          Assembly : Empiria.Foundation.dll            *
 *  Type      : EmpiriaLog                                       Pattern  : Service provider                  *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Public facade to invoke logging services.                                                     *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. Ontica LLC, La Vía Óntica SC, and contributors.  **/
+********************************* Copyright (c) 2009-2017. Ontica LLC, La Vía Óntica SC, and contributors.  **/
 using System;
 
 using Empiria.Logging;
@@ -102,7 +102,7 @@ namespace Empiria {
           }
           EmpiriaLog.StopExecution = true;
 
-          var logTrail = GetDefaultLogTrail();
+          ILogTrail logTrail = GetDefaultLogTrail();
 
           var logEntry = CreateLogEntry(type, data);
 

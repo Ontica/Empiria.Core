@@ -1,13 +1,13 @@
-﻿/* Empiria Extensions Framework ******************************************************************************
+﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Extensions Framework                   System   : Empiria Web API Services            *
-*  Namespace : Empiria.WebApi.Client                          Assembly : Empiria.WebApi.Client.dll           *
+*  Solution  : Empiria Foundation Framework                   System   : Empiria Web API Services            *
+*  Namespace : Empiria.WebApi.Client                          Assembly : Empiria.Foundation.dll              *
 *  Type      : IWebApiClient                                  Pattern  : Separated interface                 *
-*  Version   : 1.1                                            License  : Please read license.txt file        *
+*  Version   : 6.8                                            License  : Please read license.txt file        *
 *                                                                                                            *
 *  Summary   : Interface used to call Empiria WebApiClient services included in a separated component.       *
 *                                                                                                            *
-********************************* Copyright (c) 2004-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2016-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Threading.Tasks;
 

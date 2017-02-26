@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Integration Services         *
 *  Namespace : Empiria.Data.Integration                         Assembly : Empiria.Data.dll                  *
 *  Type      : DataIntegrationEngine                            Pattern  : Singleton Class                   *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Executes async data operations published on queues throw web services invocation.             *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 using System.Runtime.Remoting.Messaging;

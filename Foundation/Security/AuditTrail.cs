@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Security Services                 *
 *  Namespace : Empiria.Security                                 Assembly : Empiria.Foundation.dll            *
 *  Type      : AuditTrail                                       Pattern  : Standard Class                    *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Audit trail log information.                                                                  *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. Ontica LLC, La Vía Óntica SC, and contributors.  **/
+********************************* Copyright (c) 2009-2017. Ontica LLC, La Vía Óntica SC, and contributors.  **/
 using System;
 
 using Empiria.Json;

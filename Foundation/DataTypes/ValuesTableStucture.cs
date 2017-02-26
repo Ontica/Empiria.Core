@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Types Library                *
 *  Namespace : Empiria.DataTypes                                Assembly : Empiria.Foundation.dll            *
 *  Type      : ValuesTableStucture                              Pattern  : Data Type                         *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Defines a values table structure.                                                             *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 

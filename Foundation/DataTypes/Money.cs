@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Types Library                *
 *  Namespace : Empiria.DataTypes                                Assembly : Empiria.Foundation.dll            *
 *  Type      : Money                                            Pattern  : Value Type                        *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Value type that handles money operations.                                                     *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 1999-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.DataTypes {

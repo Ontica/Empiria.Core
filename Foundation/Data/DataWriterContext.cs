@@ -3,12 +3,12 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
 *  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
 *  Type      : DataWriterContext                                Pattern  : Unit of Work                      *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents a context for run transactional and non transactional data operations in synchro-  *
 *              nous or asynchronous mode. Instances are returned by the DataWriter.CreateContext() method.   *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Data;

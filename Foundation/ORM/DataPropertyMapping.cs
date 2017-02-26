@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Object-relational mapping         *
 *  Namespace : Empiria.ORM                                      Assembly : Empiria.Foundation.dll            *
 *  Type      : DataPropertyMapping                              Pattern  : Standard class                    *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Mapping rule between a type property and a data source element.                               *
 *                                                                                                            *
-********************************* Copyright (c) 2014-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2014-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Reflection;
 

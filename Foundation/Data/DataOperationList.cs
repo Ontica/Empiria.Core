@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
 *  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
 *  Type      : DataOperationList                                Pattern  : List Class                        *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents a synchronized and serializable list of Operation type objects.                    *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using Empiria.Collections;
 
 namespace Empiria.Data {

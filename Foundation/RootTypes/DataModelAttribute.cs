@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
 *  Namespace : Empiria                                          Assembly : Empiria.Foundation.dll            *
 *  Type      : DataModelAttribute                               Pattern  : Attribute class                   *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Describes a data model information linked to a type for automatic object loading.             *
 *                                                                                                            *
-********************************* Copyright (c) 2014-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2014-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria {

@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
 *  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
 *  Type      : DataReader                                       Pattern  : Static Class                      *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Static class with methods that performs data reading operations.                              *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 1999-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Data;

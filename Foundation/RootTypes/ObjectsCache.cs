@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Foundation Ontology               *
 *  Namespace : Empiria                                          Assembly : Empiria.Foundation.dll            *
 *  Type      : ObjectsCache                                     Pattern  : Cache Collection Class            *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Dynamic cached collection of BaseObject instances.                                            *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 

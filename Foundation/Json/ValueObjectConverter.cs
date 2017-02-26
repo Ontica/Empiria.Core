@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : JSON Data Services                *
 *  Namespace : Empiria.Json                                     Assembly : Empiria.Kernel.dll                *
 *  Type      : ValueObjectConverter                             Pattern  : Json Serializer Class             *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Empiria JSON serialization class for IValueObject types.                                      *
 *                                                                                                            *
-********************************* Copyright (c) 2013-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2013-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Newtonsoft.Json;

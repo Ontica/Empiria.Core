@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Logging Services                  *
 *  Namespace : Empiria.Logging                                  Assembly : Empiria.Foundation.dll            *
 *  Type      : ILogEntry                                        Pattern  : Loose coupling interface          *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Interface that represents a log entry.                                                        *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 1999-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Logging {

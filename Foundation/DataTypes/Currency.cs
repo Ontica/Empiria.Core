@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Types Library                *
 *  Namespace : Empiria.DataTypes                                Assembly : Empiria.Foundation.dll            *
 *  Type      : Currency                                         Pattern  : Storage Item Class                *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Represents a currency data type.                                                              *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 1999-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.DataTypes {

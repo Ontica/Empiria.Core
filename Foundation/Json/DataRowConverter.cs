@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : JSON Data Services                *
 *  Namespace : Empiria.Json                                     Assembly : Empiria.Kernel.dll                *
 *  Type      : DataRowConverter                                 Pattern  : Newtonsoft Json Converter         *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Provides serialization services of DataRow and DataRowView objects into Json strings.         *
 *                                                                                                            *
-********************************* Copyright (c) 2013-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2013-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Data;
 

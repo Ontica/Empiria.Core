@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Types Library                *
 *  Namespace : Empiria.DataTypes                                Assembly : Empiria.Foundation.dll            *
 *  Type      : NameValuePair                                    Pattern  : Value object                      *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : String Name-Value pair value object.                                                          *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 using Empiria.Json;

@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Kernel Types                      *
 *  Namespace : Empiria.Reflection                               Assembly : Empiria.Kernel.dll                *
 *  Type      : ObjectFactory                                    Pattern  : Static Class                      *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : This class provides services for a empiria type instance creation.                            *
 *                                                                                                            *
-********************************* Copyright (c) 2002-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;

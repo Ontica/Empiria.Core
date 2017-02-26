@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Domain Services Layer             *
 *  Namespace : Empiria                                          Assembly : Empiria.Foundation.dll            *
 *  Type      : Validate                                         Pattern  : Stateless Domain Service          *
-*  Version   : 1.0                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Provides validation methods.                                                                  *
 *                                                                                                            *
-********************************* Copyright (c) 2003-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2003-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria {

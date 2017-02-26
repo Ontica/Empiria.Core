@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Logging Services                  *
 *  Namespace : Empiria.Logging                                  Assembly : Empiria.Foundation.dll            *
 *  Type      : LoginModel                                       Pattern  : Data Transfer Object              *
-*  Version   : 1.1                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Data Transfer Object used to describe log entries.                                            *
 *                                                                                                            *
-********************************* Copyright (c) 2014-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2014-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
 namespace Empiria.Logging {

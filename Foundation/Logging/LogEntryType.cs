@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Logging Services                  *
 *  Namespace : Empiria.Logging                                  Assembly : Empiria.Foundation.dll            *
 *  Type      : LogEntryType                                     Pattern  : Enumeration                       *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Describes a log entry type.                                                                   *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2016. Ontica LLC, La Vía Óntica SC, and contributors.  **/
+********************************* Copyright (c) 2009-2017. Ontica LLC, La Vía Óntica SC, and contributors.  **/
 using System;
 
 namespace Empiria.Logging {

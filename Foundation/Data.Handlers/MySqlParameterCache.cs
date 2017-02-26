@@ -3,11 +3,11 @@
 *  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
 *  Namespace : Empiria.Data.Handlers                            Assembly : Empiria.Data.dll                  *
 *  Type      : MySqlParameterCache                              Pattern  : Static Class With Objects Cache   *
-*  Version   : 6.7                                              License  : Please read license.txt file      *
+*  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : This type is a wrapper of a static hash table that contains loaded MySql query parameters.    *
 *                                                                                                            *
-********************************* Copyright (c) 2006-2016. La Vía Óntica SC, Ontica LLC and contributors.  **/
+********************************* Copyright (c) 2006-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
 using System.Data;
