@@ -1,0 +1,60 @@
+# deployment branch configuration
+-
+  branches:
+    only:
+      - deployment
+
+  skip_tags: true
+
+  clone_depth: 5
+
+  version: 1.0.{build}.deployment
+
+  before_build:
+    - cmd: ECHO Starting the build for deployment branch ...
+    - nuget restore
+
+  after_build:
+    - cmd: ECHO Finishing deployment build ...
+
+
+# master (integration) branch configuration
+-
+  branches:
+    only:
+      - master
+
+  skip_tags: true
+
+  clone_depth: 5
+
+  version: 1.0.{build}.master
+
+  before_build:
+    - cmd: ECHO Starting build for master/integration branch ...
+    - nuget restore
+
+  after_build:
+    - cmd: ECHO Finishing master/integration build ...
+
+
+# Features and fixes branches configurations
+-
+  branches:
+    except:
+      - deployment
+      - master
+
+  skip_tags: true
+
+  clone_depth: 5
+
+  version: 1.0.{build}.feature
+
+  before_build:
+    - cmd: ECHO Starting build using features/fixes branch configuration ...
+    - nuget restore
+
+  after_build:
+    - cmd: ECHO Finishing features/fixes branch build ...
+ 

@@ -87,14 +87,15 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\..\empiria.assemblies\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>..\..\..\empiria.assemblies\Empiria.Foundation.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
@@ -110,7 +111,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\..\empiria.assemblies\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
@@ -149,21 +150,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\empiria.assemblies\MySql.Data.dll</HintPath>
+      <HintPath>..\packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Npgsql, Version=3.1.8.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\empiria.assemblies\Npgsql.dll</HintPath>
+      <HintPath>..\packages\Npgsql.3.1.8\lib\net451\Npgsql.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -174,11 +176,14 @@
     </Reference>
     <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Security" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\AssortedDictionary.cs" />
@@ -320,11 +325,8 @@
     <Compile Include="Security\SingleSignOnToken.cs" />
     <Compile Include="WebApi.Client\WebApiClientFactory.cs" />
     <Compile Include="WebApi.Client\IWebApiClient.cs" />
-    <Compile Include="ZZTypes\ZZKeyValuePair.cs" />
     <Compile Include="RootTypes\GeneralStatus.cs" />
     <Compile Include="DataTypes\TimeFrame.cs" />
-    <Compile Include="ZZTypes\ZZDynamicState.cs" />
-    <Compile Include="ZZTypes\ZZTypeList.cs" />
     <Compile Include="RootTypes\GeneralList.cs" />
     <Compile Include="Contacts\ContactsData.cs" />
     <Compile Include="Contacts\Contact.cs">
@@ -351,9 +353,6 @@
     <Compile Include="Ontology\EventTypeInfo.cs" />
     <Compile Include="RootTypes\BaseObject.cs" />
     <Compile Include="RootTypes\GeneralObject.cs" />
-    <Compile Include="ZZTypes\ZZObjectSearcher.cs" />
-    <Compile Include="ZZTypes\ZZRule.cs" />
-    <Compile Include="ZZTypes\ZZRelation.cs" />
     <Compile Include="Security\AuditTrail.cs" />
     <Compile Include="Security\AuthorizationType.cs" />
     <Compile Include="Security\ClientApplication.cs" />
@@ -366,9 +365,6 @@
     <Compile Include="Security\WebServer.cs" />
     <Compile Include="Security\EmpiriaUser.cs" />
     <Compile Include="RootTypes\SearchExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ZZTypes\ZZSortExpression.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Security\SecurityData.cs">
@@ -404,12 +400,6 @@
     <Compile Include="Ontology\MetaModelType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ZZTypes\ZZFindResult.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ZZTypes\ZZObjectPager.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Ontology\OntologyException.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -431,7 +421,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="app.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
