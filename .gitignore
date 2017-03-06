@@ -10,7 +10,6 @@ TestResults
 
 # User-specific files
 *.suo
-*.sln
 *.user
 *.sln.docstates
 *.rar
@@ -43,12 +42,9 @@ x64/
 *.vssscc
 .builds
 
-# Visual C++ cache files
-ipch/
-*.aps
-*.ncb
-*.opensdf
-*.sdf
+# Visual Studio configuration
+**/.vs
+**/.vscode
 
 # Visual Studio profiler
 *.psess

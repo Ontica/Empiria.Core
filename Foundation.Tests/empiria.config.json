@@ -1,0 +1,27 @@
+﻿{
+  "appName": "Empiria Foundation",
+  "version": "6.8",
+  "date": "2017-03-07",
+  "settings": [
+    {
+      "type": "",
+      "key": "ApplicationKey",
+      "value": "vQNLXJeCoRPOtINfussrnSabsNs5jaOCRpdEYg5aXIOehqiBIARTgPUwtbrA940Q"
+    },
+    {
+      "type": "",
+      "key": "GlobalConfig",
+      "value": "5jaOlkj977LLOH29347akjsdf23764ans234JHSFAF34L87M37amsngd=="
+    },
+    {
+      "type": "",
+      "key": "License.Name",
+      "value": "Tlaxcala"
+    },
+    {
+      "type": "",
+      "key": "License.IsSpecial",
+      "value": false
+    }
+  ]
+}
