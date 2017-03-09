@@ -30,7 +30,7 @@ namespace Empiria.Security {
     #region Constructors and Parsers
 
     private SingleSignOnToken(WebServer targetServer) {
-      this.sessionToken = ExecutionServer.CurrentSessionToken;
+      this.sessionToken = ExecutionServer.CurrentPrincipal.Session.Token;
       this.userId = ExecutionServer.CurrentUserId;
 
       this.path = new List<int>(2);

@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Kernel Types                      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
-*  Type      : ExecutionServer                                  Pattern  : Static Class                      *
+*  Type      : ExecutionServer                                  Pattern  : Singleton                         *
 *  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Static class that returns Empiria current execution server information.                       *
@@ -16,117 +16,105 @@ using Empiria.Security;
 
 namespace Empiria {
 
-  #region Enumerations
-
-  public enum ExecutionServerType {
-    WebApplicationServer = 1,
-    WebServicesServer = 2,
-    WindowsServiceServer = 3,
-    WindowsApplication = 4,
-    WebApiServer = 5,
-    UnitTesting = 6,
-  }
-
-  #endregion Enumerations
-
   /// <summary>Static class that returns Empiria current execution server information.</summary>
-  static public partial class ExecutionServer {
+  public sealed partial class ExecutionServer {
 
     #region Fields
 
-    static private string licenseName = null;
-    static private bool? isSpecialLicense = false;
-    static private string licenseNumber = null;
-    static private string licenseSerialNumber = null;
-    static private string applicationKey = null;
+    private string applicationKey = String.Empty;
+    private string licenseName = String.Empty;
+    private string licenseNumber = String.Empty;
+    private string licenseSerialNumber = String.Empty;
+    private bool isSpecialLicense = false;
 
-    static private DateTime dateMaxValue = DateTime.MaxValue;
-    static private DateTime dateMinValue = DateTime.MinValue;
+    private DateTime dateMaxValue = DateTime.MaxValue;
+    private DateTime dateMinValue = DateTime.MinValue;
 
-    static private int serverId = 0;
-    static private string supportUrl = null;
-    static private bool isStarted = false;
-    static private bool isDevelopmentServer = false;
-
-    static private ExecutionServerType executionServerType = ExecutionServerType.WebApplicationServer;
+    private int serverId = -1;
+    private string supportUrl = String.Empty;
+    private bool isDevelopmentServer = false;
+    private bool isPassThroughServer = false;
 
     #endregion Fields
+
+    #region Constructors and parsers
+
+    static private readonly ExecutionServer _singleton = new ExecutionServer();
+    private readonly Exception _startFailedException;
+
+    private ExecutionServer() {
+      try {
+        this.ExecuteStart();
+        _startFailedException = null;
+
+      } catch (Exception e) {
+        _startFailedException = e;
+      }
+    }
+
+    static private ExecutionServer Singleton {
+      get {
+        if (_singleton._startFailedException == null) {
+          return _singleton;
+        } else {
+          throw new ExecutionServerException(ExecutionServerException.Msg.StartFailed,
+                                             _singleton._startFailedException);
+        }
+      }
+    }
+
+    #endregion Constructors and parsers
 
     #region Public license properties
 
     static public string ApplicationKey {
       get {
-        if (applicationKey != null) {
-          return applicationKey;
-        } else {
-          throw new ExecutionServerException(ExecutionServerException.Msg.CantReadExecutionServerProperty);
-        }
+        return Singleton.applicationKey;
       }
     }
 
     static public bool IsSpecialLicense {
       get {
-        if (isSpecialLicense.HasValue) {
-          return isSpecialLicense.Value;
-        } else {
-          throw new ExecutionServerException(ExecutionServerException.Msg.CantReadExecutionServerProperty);
-        }
+        return Singleton.isSpecialLicense;
       }
     }
 
     static public string LicenseName {
       get {
-        if (licenseName != null) {
-          return licenseName;
-        } else {
-          throw new ExecutionServerException(ExecutionServerException.Msg.CantReadExecutionServerProperty);
-        }
+        return Singleton.licenseName;
       }
     }
 
     static public string LicenseNumber {
       get {
-        if (licenseNumber != null) {
-          return licenseNumber;
-        } else {
-          throw new ExecutionServerException(ExecutionServerException.Msg.CantReadExecutionServerProperty);
-        }
+        return Singleton.licenseNumber;
       }
     }
 
     static public string LicenseSerialNumber {
       get {
-        if (licenseSerialNumber != null) {
-          return licenseSerialNumber;
-        } else {
-          throw new ExecutionServerException(ExecutionServerException.Msg.CantReadExecutionServerProperty);
-        }
+        return Singleton.licenseSerialNumber;
       }
     }
+
     #endregion Public license properties
 
     #region Other public properties
 
     static public AssortedDictionary ContextItems {
       get {
-        AssertIsStarted();
-
         return ExecutionServer.CurrentPrincipal.ContextItems;
       }
     }
 
     static public EmpiriaIdentity CurrentIdentity {
       get {
-        AssertIsStarted();
-
         return ExecutionServer.CurrentPrincipal.Identity;
       }
     }
 
     static public EmpiriaPrincipal CurrentPrincipal {
       get {
-        AssertIsStarted();
-
         var principal = Thread.CurrentPrincipal;
 
         if (principal != null && principal is EmpiriaPrincipal) {
@@ -136,10 +124,18 @@ namespace Empiria {
       }
     }
 
+    static public string CurrentSessionToken {
+      get {
+        if (IsAuthenticated) {
+          return CurrentPrincipal.Session.Token;
+        } else {
+          return String.Empty;
+        }
+      }
+    }
+
     static public int CurrentUserId {
       get {
-        AssertIsStarted();
-
         if (IsAuthenticated) {
           return CurrentIdentity.User.Id;
         } else {
@@ -150,17 +146,13 @@ namespace Empiria {
 
     static public DateTime DateMaxValue {
       get {
-        AssertIsStarted();
-
-        return dateMaxValue;
+        return Singleton.dateMaxValue;
       }
     }
 
     static public DateTime DateMinValue {
       get {
-        AssertIsStarted();
-
-        return dateMinValue;
+        return Singleton.dateMinValue;
       }
     }
 
@@ -176,89 +168,53 @@ namespace Empiria {
 
     static public bool IsDevelopmentServer {
       get {
-        AssertIsStarted();
-
-        return isDevelopmentServer;
+        return Singleton.isDevelopmentServer;
       }
     }
 
     static public bool IsPassThroughServer {
       get {
-        return false;
+        return Singleton.isPassThroughServer;
       }
-    }
-
-    static public bool IsStarted {
-      get { return isStarted; }
     }
 
     static public int ServerId {
       get {
-        AssertIsStarted();
-
-        return serverId;
+        return Singleton.serverId;
       }
-    }
-
-    static public ExecutionServerType ServerType {
-      get { return executionServerType; }
     }
 
     static public string SupportUrl {
       get {
-        AssertIsStarted();
-
-        return supportUrl;
+        return Singleton.supportUrl;
       }
     }
 
     #endregion Other public properties
 
-    #region Public methods
-
-    static private readonly object _locker = new object();
-    static public void Start(ExecutionServerType serverType) {
-      if (!IsStarted) {
-        lock (_locker) {
-          if (!IsStarted) {
-            ExecuteStart(serverType);
-          }
-        }
-      }
-    }
-
-    #endregion Public methods
-
     #region Private members
 
-    static private void AssertIsStarted() {
-      if (!IsStarted) {
-        throw new ExecutionServerException(ExecutionServerException.Msg.NotStarted);
-      }
-    }
-
-    static private void ExecuteStart(ExecutionServerType serverType) {
-      if (isStarted) {
-        return;
-      }
-      executionServerType = serverType;
+    private void ExecuteStart() {
       try {
-        applicationKey = ConfigurationData.GetString("Empiria", "ApplicationKey");
-        licenseName = ConfigurationData.GetString("Empiria", "License.Name");
-        isSpecialLicense = ConfigurationData.GetBoolean("Empiria", "License.IsSpecial");
-        licenseNumber = ConfigurationData.GetString("Empiria", "License.Number");
-        licenseSerialNumber = ConfigurationData.GetString("Empiria", "License.SerialNumber");
+        var type = typeof(ExecutionServer);
 
-        dateMaxValue = ConfigurationData.GetDateTime("Empiria", "DateTime.MaxValue");
-        dateMinValue = ConfigurationData.GetDateTime("Empiria", "DateTime.MinValue");
+        applicationKey = ConfigurationData.Get<string>(type, "ApplicationKey");
+        licenseName = ConfigurationData.Get<string>(type, "License.Name");
+        isSpecialLicense = ConfigurationData.Get(type, "License.IsSpecial", false);
+        licenseNumber = ConfigurationData.Get<string>(type, "License.Number");
+        licenseSerialNumber = ConfigurationData.Get<string>(type, "License.SerialNumber");
 
-        serverId = ConfigurationData.GetInteger("Empiria", "Server.Id");
-        supportUrl = ConfigurationData.GetString("Empiria", "Support.Url");
+        dateMaxValue = ConfigurationData.Get(type, "DateTime.MaxValue", DateTime.Parse("2078-12-31"));
+        dateMinValue = ConfigurationData.Get(type, "DateTime.MinValue", DateTime.Parse("1900-01-01"));
 
-        isDevelopmentServer = ConfigurationData.GetBoolean("Empiria", "IsDevelopmentServer");
+        serverId = ConfigurationData.Get<int>(type, "Server.Id");
+        supportUrl = ConfigurationData.Get(type, "Support.Url", "http://empiria.ontica.org/support");
 
-        ExecutionServer.SetCustomFields();
-        isStarted = true;
+        isDevelopmentServer = ConfigurationData.Get(type, "IsDevelopmentServer", true);
+        isPassThroughServer = ConfigurationData.Get(type, "IsPassThroughServer", false);
+
+        this.SetCustomFields();
+
       } catch (Exception innerException) {
         throw new ExecutionServerException(ExecutionServerException.Msg.CantReadExecutionServerProperty,
                                            innerException);

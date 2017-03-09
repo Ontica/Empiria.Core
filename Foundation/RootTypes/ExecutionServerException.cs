@@ -20,7 +20,7 @@ namespace Empiria {
     public enum Msg {
       CantReadExecutionServerProperty,
       InvalidLicense,
-      NotStarted,
+      StartFailed,
     }
 
     static private string resourceBaseName = "Empiria.RootTypes.KernelExceptionMsg";
