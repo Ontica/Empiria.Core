@@ -66,12 +66,16 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
     <Compile Include="Empiria.Foundation.Tests.AssemblyInfo.cs" />
+    <Compile Include="RootTypes\LoggingTests.cs" />
+    <Compile Include="RootTypes\OntologyTests.cs" />
     <Compile Include="RootTypes\ConfigurationDataTests.cs" />
   </ItemGroup>
   <ItemGroup>
