@@ -23,9 +23,10 @@ namespace Empiria {
       ApplicationConfigFileNotExists,
       CantReadParameter,
       CantWriteParameter,
+      EnvironmentConfigFileNotExists,
+      GlobalConfigFileNotExists,
       InvalidTypeName,
       ParameterNotExists,
-      SolutionConfigFileNotExists,
       ValidTypeNotFoundInStackTrace,
       XmlConfigurationFileNotExists,
     }
