@@ -2,20 +2,19 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Kernel Types                      *
 *  Namespace : Empiria.Collections                              Assembly : Empiria.Kernel.dll                *
-*  Type      : ObjectsCache                                     Pattern  : HashList Class                    *
+*  Type      : EmpiriaDictionary                                Pattern  : HashList Class                    *
 *  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Represents an objects cache.                                                                  *
+*  Summary   : Represents a thread safe dictionary or hash table of items of the form key-value.             *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace Empiria.Collections {
 
-  /// <summary>Represents an objects cache.</summary>
-  public class ObjectsCache<KeyType, ItemsType> where ItemsType : class {
+  /// <summary>Represents a thread safe dictionary or hash table of items of the form key-value.</summary>
+  public class EmpiriaDictionary<KeyType, ItemsType> {
 
     #region Fields
 
@@ -26,16 +25,15 @@ namespace Empiria.Collections {
 
     #region Constructors and parsers
 
-    public ObjectsCache(int capacity = 16, int maxCapacity = -1) {
+    public EmpiriaDictionary(int capacity = 16) {
       items = new Dictionary<KeyType, ItemsType>(capacity);
-      this.MaxCapacity = maxCapacity;
     }
 
     #endregion Constructors and parsers
 
     #region Public properties
 
-    /// <summary>Gets or sets the item with a specific key.</summary>
+    /// <summary>Gets the item with a specific key.</summary>
     public ItemsType this[KeyType key] {
       get {
         if (ContainsKey(key)) {
@@ -43,17 +41,6 @@ namespace Empiria.Collections {
         } else {
           throw new ListException(ListException.Msg.ListKeyNotFound, key);
         }
-      }
-      set {
-        if (ContainsKey(key)) {
-          lock (locker) {
-            if (ContainsKey(key)) {
-              items[key] = value;
-              return;
-            }
-          } // lock
-        }
-        throw new ListException(ListException.Msg.ListKeyNotFound, key);
       }
     }
 
@@ -66,12 +53,6 @@ namespace Empiria.Collections {
       get { return items.Keys; }
     }
 
-    /// <summary>Gets the max count of items for the cache.</summary>
-    public int MaxCapacity {
-      get;
-      private set;
-    }
-
     public ICollection<ItemsType> Values {
       get { return items.Values; }
     }
@@ -79,18 +60,6 @@ namespace Empiria.Collections {
     #endregion Public properties
 
     #region Public methods
-
-    public void Add(KeyType key, ItemsType item) {
-      if (!items.ContainsKey(key)) {
-        lock (locker) {
-          if (!items.ContainsKey(key)) {
-            items.Add(key, item);
-            return;
-          }
-        }
-      }
-      throw new ListException(ListException.Msg.ListKeyAlreadyExists, key);
-    }
 
     public void Clear() {
       lock (locker) {
@@ -102,16 +71,18 @@ namespace Empiria.Collections {
       return items.ContainsKey(key);
     }
 
-    public ItemsType TryGetItem(KeyType key) {
-      if (this.ContainsKey(key)) {
-        return items[key];
-      } else {
-        return null;
-      }
-    }
-
     public bool ContainsValue(ItemsType value) {
       return items.ContainsValue(value);
+    }
+
+    public void CopyTo(ItemsType[] array, int index) {
+      IEnumerator<ItemsType> enumerator = items.Values.GetEnumerator();
+      int i = 0;
+      while (enumerator.MoveNext()) {
+        if (i >= index) {
+          array.SetValue(enumerator.Current, i);
+        }
+      }
     }
 
     public void Insert(KeyType key, ItemsType item) {
@@ -119,6 +90,8 @@ namespace Empiria.Collections {
         lock (locker) {
           if (!items.ContainsKey(key)) {
             items.Add(key, item);
+          } else {
+            items[key] = item;
           }
         }
       } else {
@@ -128,21 +101,19 @@ namespace Empiria.Collections {
       }
     }
 
-    public ItemsType Remove(KeyType key) {
+    public bool Remove(KeyType key) {
       if (this.ContainsKey(key)) {
         lock (locker) {
           if (this.ContainsKey(key)) {
-            ItemsType item = items[key];
-            items.Remove(key);
-            return item;
+            return items.Remove(key);
           }
         } // lock
       }
-      throw new ListException(ListException.Msg.ListKeyNotFound, key);
+      return false;
     }
 
     #endregion Public methods
 
-  } //class ObjectsCache
+  } //class EmpiriaDictionary
 
 } //namespace Empiria.Collections
