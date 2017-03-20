@@ -9,9 +9,9 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
 using System.Data;
 
+using Empiria.Collections;
 using Empiria.Data.Handlers;
 
 namespace Empiria.Data {
@@ -21,7 +21,7 @@ namespace Empiria.Data {
 
     #region Fields
 
-    static private Dictionary<string, string> textCommandDictionary = new Dictionary<string, string>();
+    static private EmpiriaDictionary<string, string> textCommandCache = new EmpiriaDictionary<string, string>(16);
 
     private readonly DataSource dataSource;
     private string sourceText = String.Empty;
@@ -183,9 +183,11 @@ namespace Empiria.Data {
     static private string GetSourceText(string sourceName) {
       if (sourceName.StartsWith("@")) {
         string textCommand = String.Empty;
-        if (!textCommandDictionary.TryGetValue(sourceName, out textCommand)) {
+        if (!textCommandCache.ContainsKey(sourceName)) {
           textCommand = ReadDataSourceText(sourceName);
-          textCommandDictionary[sourceName] = textCommand;
+          textCommandCache.Insert(sourceName, textCommand);
+        } else {
+          textCommand = textCommandCache[sourceName];
         }
         return textCommand;
       } else {

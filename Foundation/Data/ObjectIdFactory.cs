@@ -9,9 +9,10 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Threading;
+
+using Empiria.Collections;
 
 namespace Empiria.Data {
 
@@ -24,7 +25,7 @@ namespace Empiria.Data {
 
     static private readonly string mutexName = "{Empiria.ObjectIdFactory}.{" + Guid.NewGuid().ToString() + "}";
 
-    private Dictionary<string, ObjectIdRule> loadedRules = new Dictionary<string, ObjectIdRule>();
+    private EmpiriaDictionary<string, ObjectIdRule> loadedRules = new EmpiriaDictionary<string, ObjectIdRule>();
 
     #endregion Fields
 
@@ -66,9 +67,11 @@ namespace Empiria.Data {
           string hashCode = sourceName + "." + typeId.ToString();
           hashCode = hashCode.ToUpperInvariant();
           ObjectIdRule rule = null;
-          if (!loadedRules.TryGetValue(hashCode, out rule)) {
+          if (!loadedRules.ContainsKey(hashCode)) {
             rule = ObjectIdRule.Parse(sourceName, typeId);
-            loadedRules.Add(hashCode, rule);
+            loadedRules.Insert(hashCode, rule);
+          } else {
+            rule = loadedRules[sourceName];
           }
           return rule.GetNextId();
         } else {
