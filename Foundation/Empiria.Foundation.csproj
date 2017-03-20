@@ -188,14 +188,13 @@
   <ItemGroup>
     <Compile Include="Collections\AssortedDictionary.cs" />
     <Compile Include="Collections\BaseList.cs" />
-    <Compile Include="Collections\DoubleKeyList.cs" />
+    <Compile Include="Collections\EmpiriaIdAndKeyDictionary.cs" />
     <Compile Include="Collections\EmpiriaCollection.cs" />
-    <Compile Include="Collections\EmpiriaHashList.cs" />
     <Compile Include="Collections\FixedListComparer.cs" />
     <Compile Include="Collections\ListException.cs" />
     <Compile Include="Collections\MergeResult.cs" />
     <Compile Include="Collections\MergeResultType.cs" />
-    <Compile Include="Collections\ObjectsCache.cs" />
+    <Compile Include="Collections\EmpiriaDictionary.cs" />
     <Compile Include="Contacts\RoleType.cs" />
     <Compile Include="Data.Handlers\MySqlMethods.cs" />
     <Compile Include="Data.Handlers\MySqlParameterCache.cs" />
@@ -316,7 +315,6 @@
     <Compile Include="RootTypes\DataFieldAttribute.cs" />
     <Compile Include="RootTypes\IValueObjectGeneric.cs" />
     <Compile Include="RootTypes\ValueObjectFactory.cs" />
-    <Compile Include="RootTypes\WindowsRegistryFile.cs" />
     <Compile Include="Security\Cryptographer.cs" />
     <Compile Include="Security\IntegrityValidator.cs" />
     <Compile Include="Security\IProtected.cs" />
@@ -361,7 +359,6 @@
     <Compile Include="Security\SecurityClaim.cs" />
     <Compile Include="Security\SecurityClaimList.cs" />
     <Compile Include="Security\SecurityClaimType.cs" />
-    <Compile Include="Security\UserSettings.cs" />
     <Compile Include="Security\WebServer.cs" />
     <Compile Include="Security\EmpiriaUser.cs" />
     <Compile Include="RootTypes\SearchExpression.cs">
@@ -421,7 +418,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

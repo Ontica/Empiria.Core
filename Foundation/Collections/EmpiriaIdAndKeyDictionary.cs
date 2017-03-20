@@ -2,10 +2,10 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Kernel Types                      *
 *  Namespace : Empiria.Collections                              Assembly : Empiria.Foundation.dll            *
-*  Type      : DoubleKeyList                                    Pattern  : Collection class                  *
+*  Type      : EmpiriaIdAndKeyDictionary                        Pattern  : Collection class                  *
 *  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Sealed class that holds a double dictionary list.                                             *
+*  Summary   : Sealed class that holds a double dictionary, by id and key hashes.                            *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -14,24 +14,26 @@ using System.Collections.Generic;
 
 namespace Empiria.Collections {
 
-  /// <summary>Sealed class that holds a double dictionary list.</summary>
-  public sealed class DoubleKeyList<T> : IEnumerable<T> where T : class, IIdentifiable {
+  /// <summary>Sealed class that holds a double dictionary, by id and key hashes.</summary>
+  public sealed class EmpiriaIdAndKeyDictionary<T> : IEnumerable<T> where T : class, IIdentifiable {
 
     #region Fields
 
     private Dictionary<int, T> items = null;
     private Dictionary<string, T> keys = null;
 
+    private object _locker = new object();
+
     #endregion Fields
 
     #region Constructors and parsers
 
-    public DoubleKeyList() {
+    public EmpiriaIdAndKeyDictionary() {
       items = new Dictionary<int, T>();
       keys = new Dictionary<string, T>();
     }
 
-    public DoubleKeyList(int capacity) {
+    public EmpiriaIdAndKeyDictionary(int capacity) {
       items = new Dictionary<int, T>(capacity);
       keys = new Dictionary<string, T>(capacity);
     }
@@ -41,26 +43,34 @@ namespace Empiria.Collections {
     #region Public properties
 
     public T this[int id] {
-      get { return (T) items[id]; }
+      get {
+        if (ContainsId(id)) {
+          return items[id];
+        } else {
+          throw new ListException(ListException.Msg.ListKeyNotFound, id);
+        }
+      }
     }
 
     public T this[string key] {
-      get { return keys[key]; }
-      set { keys[key] = value; }
+      get {
+        if (ContainsKey(key)) {
+          return keys[key];
+        } else {
+          throw new ListException(ListException.Msg.ListKeyNotFound, key);
+        }
+      }
     }
 
     public int Count {
-      get { return items.Count; }
+      get {
+        return items.Count;
+      }
     }
 
     #endregion Public properties
 
     #region Public methods
-
-    public void Add(string key, T item) {
-      items.Add(item.Id, item);
-      keys.Add(key, item);
-    }
 
     public bool ContainsId(int id) {
       return items.ContainsKey(id);
@@ -87,14 +97,54 @@ namespace Empiria.Collections {
       return items.Values.GetEnumerator();
     }
 
+    public void Insert(string key, T item) {
+      Assertion.AssertObject(key, "key");
+      Assertion.AssertObject(item, "item");
+
+      if (!this.ContainsId(item.Id)) {
+        lock (_locker) {
+          if (!this.ContainsId(item.Id)) {
+            items.Add(item.Id, item);
+          } else {
+            items[item.Id] = item;
+          }
+        }  // lock
+      } else {
+        lock (_locker) {
+          items[item.Id] = item;
+        }
+      }  // if (this.ContainsId)
+
+      if (!this.ContainsKey(key)) {
+        lock (_locker) {
+          if (!this.ContainsKey(key)) {
+            keys.Add(key, item);
+          } else {
+            keys[key] = item;
+          }
+        }  // lock
+      } else {
+        lock (_locker) {
+          keys[key] = item;
+        }
+      }   // if (this.ContainsKey)
+
+    }
+
     public bool Remove(string key) {
-      if (!keys.ContainsKey(key)) {
-        return false;
+      if (keys.ContainsKey(key)) {
+        lock (_locker) {
+          if (keys.ContainsKey(key)) {
+            T item = keys[key];
+            keys.Remove(key);
+            if (items.ContainsKey(item.Id)) {
+              items.Remove(item.Id);
+            }
+            return true;
+          }
+        }
       }
-      var item = keys[key];
-      keys.Remove(key);
-      items.Remove(item.Id);
-      return true;
+      return false;
     }
 
     public T TryGetValue(int id) {
