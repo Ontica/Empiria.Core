@@ -165,6 +165,9 @@ namespace Empiria.Collections {
     #region Protected methods
 
     protected void Add(TKey key, TItem item) {
+      Assertion.AssertObject(key, "key");
+      Assertion.AssertObject(item, "item");
+
       if (Contains(key)) {
         throw new ListException(ListException.Msg.ListKeyAlreadyExists, key);
       }
