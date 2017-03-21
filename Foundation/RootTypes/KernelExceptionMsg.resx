@@ -194,8 +194,8 @@
   <data name="JsonSlicePathNotFound" xml:space="preserve">
     <value>Json slicing operation failed because there's not a Json item in the path '{}'. </value>
   </data>
-  <data name="NotStarted" xml:space="preserve">
-    <value>Execution server was not started using a call to the static method ExecutionServer.Start().</value>
+  <data name="StartFailed" xml:space="preserve">
+    <value>Execution server was not started because an internal exception was thrown.</value>
   </data>
   <data name="JsonListTypeConvertionFails" xml:space="preserve">
     <value>There was a problem trying to convert the items of the list '{0}' to type {1}.</value>
@@ -203,13 +203,16 @@
   <data name="JsonValueTypeConvertionFails" xml:space="preserve">
     <value>There was a problem trying to convert the value '{1}' of type {2} to type {3} for the Json path '{0}'.</value>
   </data>
-  <data name="SolutionConfigFileNotExists" xml:space="preserve">
-    <value>The solution configuration file '{0}' defined inside the config file was not found.</value>
+  <data name="GlobalConfigFileNotExists" xml:space="preserve">
+    <value>The global configuration file '{0}' defined inside the application or environment config file was not found.</value>
   </data>
   <data name="ApplicationConfigFileNotExists" xml:space="preserve">
     <value>The application configuration file '{0}' defined inside the config file was not found.</value>
   </data>
   <data name="LoggingIssue" xml:space="preserve">
     <value>There was a problem executing Empiria logging services.</value>
+  </data>
+  <data name="EnvironmentConfigFileNotExists" xml:space="preserve">
+    <value>The environment configuration file '{0}' defined inside the app config file (empiria.config or app.config) was not found.</value>
   </data>
 </root>

@@ -30,6 +30,8 @@ namespace Empiria.Security {
     }
 
     static public ClientApplication ParseActive(string clientAppKey) {
+      Assertion.AssertObject(clientAppKey, "clientAppKey");
+
       ClientApplication application =
                 BaseObject.TryParse<ClientApplication>("ObjectKey = '" + clientAppKey + "'");
 

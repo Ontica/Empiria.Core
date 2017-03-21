@@ -20,19 +20,83 @@ namespace Empiria {
 
     #region Public methods
 
-    /// <summary>Returns the value of a boolean configuration parameter belongs to the caller type.</summary>
-    /// <param name="parameterName">Name of the configuration parameter.</param>
-    static public T Get<T>(string parameterName, T defaultValue = default(T)) {
-      string value = String.Empty;
+    /// <summary>Returns the value of the configuration data belonging to the caller type.</summary>
+    /// <param name="key">The key name of the configuration value.</param>
+    static public T Get<T>(string key) {
+      Assertion.AssertObject(key, "key");
 
-      try {
-        value = ReadValue(GetCallerTypeName(), parameterName);
+      string typeName = GetCallerTypeName();
 
-        return ObjectFactory.Convert<T>(value);
-      } catch {
-        return defaultValue;
+      string valueAsString = TryReadValue(typeName, key);
+
+      if (valueAsString != null) {
+        return ObjectFactory.Convert<T>(valueAsString);
+
+      } else {
+        throw new ConfigurationDataException(ConfigurationDataException.Msg.ParameterNotExists,
+                                             key, typeName);
+
       }
     }
+
+
+    /// <summary>Returns the value of the configuration data belonging for the given type.</summary>
+    /// <param name="key">The key name of the configuration value.</param>
+    static public T Get<T>(Type type, string key) {
+      Assertion.AssertObject(type, "type");
+      Assertion.AssertObject(key, "key");
+
+      string valueAsString = TryReadValue(type.FullName, key);
+
+      if (valueAsString != null) {
+        return ObjectFactory.Convert<T>(valueAsString);
+
+      } else {
+        throw new ConfigurationDataException(ConfigurationDataException.Msg.ParameterNotExists,
+                                             key, type.FullName);
+
+      }
+    }
+
+
+    /// <summary>Returns the value of the configuration data belonging to the caller type.</summary>
+    /// <param name="key">The key name of the configuration value.</param>
+    /// <param name="defaultValue">The default value to return if the key is not found.</param>
+    static public T Get<T>(string key, T defaultValue) {
+      Assertion.AssertObject(key, "key");
+
+      string typeName = GetCallerTypeName();
+
+      string valueAsString = TryReadValue(typeName, key);
+
+      if (valueAsString != null) {
+        return ObjectFactory.Convert<T>(valueAsString);
+
+      } else {
+        return defaultValue;
+
+      }
+    }
+
+
+    /// <summary>Returns the value of the configuration data for the given type.</summary>
+    /// <param name="key">The key name of the configuration value.</param>
+    /// <param name="defaultValue">The default value to return if the key is not found.</param>
+    static public T Get<T>(Type type, string key, T defaultValue) {
+      Assertion.AssertObject(type, "type");
+      Assertion.AssertObject(key, "key");
+
+      string valueAsString = TryReadValue(type.FullName, key);
+
+      if (valueAsString != null) {
+        return ObjectFactory.Convert<T>(valueAsString);
+
+      } else {
+        return defaultValue;
+
+      }
+    }
+
 
     static public byte[] GetByteArray(string typeName, string parameterName, char separator) {
       string[] sbytes = ReadValue(typeName, parameterName).Split(separator);
@@ -107,8 +171,8 @@ namespace Empiria {
 
       for (int i = 1; i < stack.FrameCount; i++) {
         callerFullName = stack.GetFrame(i).GetMethod().DeclaringType.FullName;
-        if (!callerFullName.StartsWith("Empiria.ConfigurationData") &&
-            (callerFullName.StartsWith("Empiria") || callerFullName.StartsWith(ExecutionServer.LicenseName))) {
+        if (callerFullName != typeof(ConfigurationData).FullName &&
+           (callerFullName.StartsWith("Empiria") || callerFullName.StartsWith(ExecutionServer.LicenseName))) {
           return callerFullName;
         } else {
           stackString += callerFullName + "\n";
@@ -122,18 +186,29 @@ namespace Empiria {
         Assertion.AssertObject(typeName, "typeName");
         Assertion.AssertObject(parameterName, "parameterName");
 
-        // Try get the parameter's value form the app or solution configuration file
-        string value = ConfigurationFile.TryGetValue(typeName, parameterName);
+        // Try get the parameter's value from the application's configuration file
+        var value = ConfigurationFile.TryGetValue(typeName, parameterName);
         if (value != null) {
           return value;
         }
 
-        // If not found then get the value from the Windows Registry
-        value = WindowsRegistryFile.GetValue(typeName, parameterName);
-
         Assertion.AssertObject(value, "ReadValue.Value");
 
         return value;
+      } catch (Exception innerException) {
+        throw new ConfigurationDataException(ConfigurationDataException.Msg.CantReadParameter,
+                                             innerException, parameterName, typeName);
+      }
+    }
+
+    static private string TryReadValue(string typeName, string parameterName) {
+      try {
+        Assertion.AssertObject(typeName, "typeName");
+        Assertion.AssertObject(parameterName, "parameterName");
+
+        // Try get the parameter's value from the application's configuration file
+        return ConfigurationFile.TryGetValue(typeName, parameterName);
+
       } catch (Exception innerException) {
         throw new ConfigurationDataException(ConfigurationDataException.Msg.CantReadParameter,
                                              innerException, parameterName, typeName);

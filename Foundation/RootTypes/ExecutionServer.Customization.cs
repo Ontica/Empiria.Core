@@ -13,15 +13,15 @@ using System;
 namespace Empiria {
 
   /// <summary>Static class that returns Empiria custom current execution server information.</summary>
-  static public partial class ExecutionServer {
+  public partial class ExecutionServer {
 
     #region Public custom fields
 
-    static private string customerName = null;
-    static private string customerUrl = null;
-    static private int organizationId = 0;
-    static private string serviceProvider = null;
-    static private string serverName = null;
+    private string customerName = null;
+    private string customerUrl = null;
+    private int organizationId = 0;
+    private string serviceProvider = null;
+    private string serverName = null;
 
     #endregion Public custom fields
 
@@ -29,54 +29,31 @@ namespace Empiria {
 
     static public string CustomerName {
       get {
-        AssertIsStarted();
-
-        return customerName;
+        return Singleton.customerName;
       }
     }
 
     static public string CustomerUrl {
       get {
-        AssertIsStarted();
-
-        return customerUrl;
+        return Singleton.customerUrl;
       }
     }
 
     static public int OrganizationId {
       get {
-        AssertIsStarted();
-
-        return organizationId;
+        return Singleton.organizationId;
       }
     }
 
     static public string ServerName {
       get {
-        AssertIsStarted();
-
-        return serverName;
+        return Singleton.serverName;
       }
     }
 
     static public string ServiceProvider {
       get {
-        AssertIsStarted();
-
-        return serviceProvider;
-      }
-    }
-
-    // ToDo: To deprecate it
-    static public string CurrentSessionToken {
-      get {
-        AssertIsStarted();
-
-        if (IsAuthenticated) {
-          return CurrentPrincipal.Session.Token;
-        } else {
-          return String.Empty;
-        }
+        return Singleton.serviceProvider;
       }
     }
 
@@ -84,11 +61,13 @@ namespace Empiria {
 
     #region Static methods called from the main partial class
 
-    static private void SetCustomFields() {
-      customerName = ConfigurationData.GetString("Empiria", "Customer.Name");
-      customerUrl = ConfigurationData.GetString("Empiria", "Customer.Url");
-      organizationId = ConfigurationData.GetInteger("Empiria", "Organization.Id");
-      serverName = ConfigurationData.GetString("Empiria", "Server.Name");
+    private void SetCustomFields() {
+      var type = typeof(ExecutionServer);
+
+      this.customerName = ConfigurationData.Get<string>(type, "Customer.Name");
+      this.customerUrl = ConfigurationData.Get<string>(type, "Customer.Url");
+      this.organizationId = ConfigurationData.Get<int>(type, "Organization.Id");
+      this.serverName = ConfigurationData.Get<string>(type, "Server.Name");
     }
 
     #endregion Static methods called from the main partial class
