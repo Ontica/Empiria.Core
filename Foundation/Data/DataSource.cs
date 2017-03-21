@@ -9,9 +9,9 @@
 *                                                                                                            *
 ********************************* Copyright (c) 1999-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
-using System.Collections.Generic;
 using System.Data;
 
+using Empiria.Collections;
 using Empiria.Data.Handlers;
 
 namespace Empiria.Data {
@@ -35,7 +35,7 @@ namespace Empiria.Data {
 
     #region Fields
 
-    static private Dictionary<string, DataSource> sourcesCache = new Dictionary<string, DataSource>();
+    static private EmpiriaDictionary<string, DataSource> sourcesCache = new EmpiriaDictionary<string, DataSource>(8);
 
     private readonly string name;
     private readonly string source;
@@ -54,12 +54,11 @@ namespace Empiria.Data {
     static internal DataSource Parse(string sourceName) {
       string dataSourceName = GetDataSourceName(sourceName);
 
-      DataSource dataSource;
-      if (!sourcesCache.TryGetValue(dataSourceName, out dataSource)) {
-        dataSource = new DataSource(dataSourceName);
-        sourcesCache[dataSourceName] = dataSource;
+      if (!sourcesCache.ContainsKey(dataSourceName)) {
+        var dataSource = new DataSource(dataSourceName);
+        sourcesCache.Insert(dataSourceName, dataSource);
       }
-      return dataSource;
+      return sourcesCache[dataSourceName];
     }
 
     static internal DataSource Default {
@@ -67,16 +66,6 @@ namespace Empiria.Data {
         return DataSource.Parse("Default");
       }
     }
-
-    //static internal DataSource Parse(string callerTypeName) {
-    //  DataSource dataSource;
-
-    //  if (!sourcesCache.TryGetValue(callerTypeName, out dataSource)) {
-    //    dataSource = new DataSource(callerTypeName);
-    //    sourcesCache[callerTypeName] = dataSource;
-    //  }
-    //  return dataSource;
-    //}
 
     #endregion Constructors and parsers
 

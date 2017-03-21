@@ -24,8 +24,8 @@ namespace Empiria.Security {
 
     #region Fields
 
-    static private ObjectsCache<string, EmpiriaPrincipal> principalsCache =
-                                        new ObjectsCache<string, EmpiriaPrincipal>(128);
+    static private EmpiriaDictionary<string, EmpiriaPrincipal> principalsCache =
+                                        new EmpiriaDictionary<string, EmpiriaPrincipal>(128);
 
     private string[] rolesArray = new string[0];
 
@@ -189,7 +189,7 @@ namespace Empiria.Security {
         this.Session = EmpiriaSession.Create(this);
       }
       LoadRolesArray(identity.User.Id);
-      principalsCache.Add(this.Session.Token, this);
+      principalsCache.Insert(this.Session.Token, this);
       this.RefreshBeforeReturn();
 
       this.Claims = identity.User.Claims;

@@ -10,7 +10,6 @@
 ********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 using System.Collections.Generic;
-using System.Data;
 
 using Empiria.Collections;
 
@@ -21,7 +20,7 @@ namespace Empiria.Security {
 
     #region Fields
 
-    private ObjectsCache<string, List<SecurityClaim>> internalList = new ObjectsCache<string, List<SecurityClaim>>();
+    private EmpiriaDictionary<string, List<SecurityClaim>> internalList = new EmpiriaDictionary<string, List<SecurityClaim>>();
 
     #endregion Fields
 
@@ -70,7 +69,7 @@ namespace Empiria.Security {
       // 4) Load the activated claim into the list
       string cacheKey = SecurityClaim.BuildUniqueKey(claimType, this.Resource);
       if (!internalList.ContainsKey(cacheKey)) {
-        internalList.Add(cacheKey, new List<SecurityClaim>());
+        internalList.Insert(cacheKey, new List<SecurityClaim>());
       }
       internalList[cacheKey].Add(claim);
 
@@ -211,7 +210,7 @@ namespace Empiria.Security {
       string cacheKey = SecurityClaim.BuildUniqueKey(claimType, this.Resource);
 
       if (!internalList.ContainsKey(cacheKey)) {
-        internalList.Add(cacheKey, new List<SecurityClaim>());
+        internalList.Insert(cacheKey, new List<SecurityClaim>());
       }
       SecurityClaim claim = SecurityClaim.Create(claimType, this.Resource,
                                                  claimValue, status);
@@ -225,7 +224,7 @@ namespace Empiria.Security {
 
       foreach (SecurityClaim claim in fullList) {
         if (!internalList.ContainsKey(claim.UniqueKey)) {
-          internalList.Add(claim.UniqueKey, new List<SecurityClaim>());
+          internalList.Insert(claim.UniqueKey, new List<SecurityClaim>());
         }
         internalList[claim.UniqueKey].Add(claim);
       }

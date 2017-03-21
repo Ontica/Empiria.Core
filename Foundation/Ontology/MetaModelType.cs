@@ -36,7 +36,7 @@ namespace Empiria.Ontology {
 
     #region Fields
 
-    static private DoubleKeyList<MetaModelType> cache = new DoubleKeyList<MetaModelType>();
+    static private EmpiriaIdAndKeyDictionary<MetaModelType> cache = new EmpiriaIdAndKeyDictionary<MetaModelType>();
 
     private int id = 0;
     private string name = String.Empty;
@@ -65,7 +65,7 @@ namespace Empiria.Ontology {
     private GeneralObjectStatus status = GeneralObjectStatus.Active;
 
     private Type underlyingSystemType = null;
-    private DoubleKeyList<TypeAssociationInfo> associationInfoList = null;
+    private EmpiriaIdAndKeyDictionary<TypeAssociationInfo> associationInfoList = null;
     private TypeMethodInfo[] methodsArray = null;
 
     #endregion Fields
@@ -95,17 +95,14 @@ namespace Empiria.Ontology {
     }
 
     static protected MetaModelType Parse(DataRow row) {
+      Assertion.AssertObject(row, "row");
+
       MetaModelTypeFamily typeFamily = MetaModelType.ParseMetaModelTypeFamily((string) row["TypeFamily"]);
 
       MetaModelType instance = MetaModelType.CreateInstance(typeFamily, row);
       instance.LoadDataRow(row);
 
-      //Load instance into cache
-      if (!cache.ContainsId(instance.Id)) {
-        cache.Add(instance.Name, instance);
-      } else {
-        cache[instance.Name] = instance;
-      }
+      cache.Insert(instance.Name, instance);
       instance.SetBaseType();
 
       return instance;
@@ -149,7 +146,7 @@ namespace Empiria.Ontology {
 
     #region Public properties
 
-    protected internal DoubleKeyList<TypeAssociationInfo> Associations {
+    protected internal EmpiriaIdAndKeyDictionary<TypeAssociationInfo> Associations {
       get {
         if (associationInfoList == null) {
           lock (this) {
@@ -319,7 +316,7 @@ namespace Empiria.Ontology {
 
     protected internal void Reload() {
       cache.Remove(this.Name);
-      cache.Add(this.Name, MetaModelType.Parse(this.Id));
+      cache.Insert(this.Name, MetaModelType.Parse(this.Id));
     }
 
     public override string ToString() {
@@ -399,11 +396,11 @@ namespace Empiria.Ontology {
       }
 
       DataTable dataTable = OntologyData.GetTypeRelations(this.Name);
-      this.associationInfoList = new DoubleKeyList<TypeAssociationInfo>(0);
+      this.associationInfoList = new EmpiriaIdAndKeyDictionary<TypeAssociationInfo>(0);
       foreach (DataRow dataRow in dataTable.Rows) {
         RelationTypeFamily family = TypeRelationInfo.ParseRelationTypeFamily((string) dataRow["RelationTypeFamily"]);
         TypeAssociationInfo associationInfo = TypeAssociationInfo.Parse(this, dataRow);
-        this.associationInfoList.Add(associationInfo.Name, associationInfo);
+        this.associationInfoList.Insert(associationInfo.Name, associationInfo);
       }
     }
 

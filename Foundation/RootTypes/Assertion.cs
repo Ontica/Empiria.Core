@@ -140,6 +140,7 @@ namespace Empiria {
 
       throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, msg, args);
     }
+
     #endregion Public methods
 
   } //class Assertion

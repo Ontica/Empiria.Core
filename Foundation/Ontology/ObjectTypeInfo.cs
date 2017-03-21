@@ -90,7 +90,7 @@ namespace Empiria.Ontology {
 
     #region Public properties
 
-    public new DoubleKeyList<TypeAssociationInfo> Associations {
+    public new EmpiriaIdAndKeyDictionary<TypeAssociationInfo> Associations {
       get { return base.Associations; }
     }
 

@@ -15,12 +15,17 @@ using Empiria.Collections;
 namespace Empiria.DataTypes {
 
   /// <summary>Defines a list of columns used in a general purpose ValuesTable.</summary>
-  public class ValuesTableColumnCollection : EmpiriaHashList<ValuesTableColumn> {
+  public class ValuesTableColumnCollection {
+
+    #region Fields
+
+    private EmpiriaDictionary<string, ValuesTableColumn> columns = new EmpiriaDictionary<string, ValuesTableColumn>(16);
+
+    #endregion Fields
 
     #region Constructors and parsers
 
-    public ValuesTableColumnCollection()
-      : base(true) {
+    public ValuesTableColumnCollection() {
 
     }
 
@@ -29,25 +34,27 @@ namespace Empiria.DataTypes {
     #region Public methods
 
     public bool Contains(string columName) {
-      return base.ContainsKey(columName);
+      return columns.ContainsKey(columName);
     }
 
     public ValuesTableColumn GetColumn(string columName) {
-      return base[columName];
+      Assertion.AssertObject(columName, "columName");
+
+      return columns[columName];
     }
 
     public ValuesTableColumn[] GetColumnsArray() {
-      ValuesTableColumn[] array = new ValuesTableColumn[base.Count];
+      ValuesTableColumn[] array = new ValuesTableColumn[columns.Count];
 
-      base.Values.CopyTo(array, 0);
+      columns.Values.CopyTo(array, 0);
 
       return array;
     }
 
     public string[] GetColumnsNameArray() {
-      string[] array = new string[base.Count];
+      string[] array = new string[columns.Count];
 
-      base.Keys.CopyTo(array, 0);
+      columns.Keys.CopyTo(array, 0);
 
       return array;
     }
@@ -57,11 +64,11 @@ namespace Empiria.DataTypes {
     #region Internal methods
 
     internal void AddColumn(ValuesTableColumn column) {
-      base.Add(column.Name, column);
+      columns.Insert(column.Name, column);
     }
 
-    internal new void Clear() {
-      base.Clear();
+    internal void Clear() {
+      columns.Clear();
     }
 
     #endregion Internal methods
