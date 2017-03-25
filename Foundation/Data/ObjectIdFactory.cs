@@ -71,7 +71,7 @@ namespace Empiria.Data {
             rule = ObjectIdRule.Parse(sourceName, typeId);
             loadedRules.Insert(hashCode, rule);
           } else {
-            rule = loadedRules[sourceName];
+            rule = loadedRules[hashCode];
           }
           return rule.GetNextId();
         } else {

@@ -248,7 +248,7 @@ namespace Empiria {
         base.Source = unknownExceptionTag;
       }
       try {
-        processId = System.Diagnostics.Process.GetCurrentProcess().Id.ToString();
+        processId = Process.GetCurrentProcess().Id.ToString();
       } catch {
         processId = unknownProcessId;
       }
