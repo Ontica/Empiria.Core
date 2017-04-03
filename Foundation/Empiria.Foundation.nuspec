@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/Ontica/Empiria.Core/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/Ontica/Empiria.Core</projectUrl>
+    <iconUrl>http://www.ontica.org/logo.ontica.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Initial Nuget version</releaseNotes>
+    <copyright>Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.</copyright>
+    <tags>Empiria .NET framework  solid foundations business government backend solutions mexico ontica</tags>
+  </metadata>
+</package>
