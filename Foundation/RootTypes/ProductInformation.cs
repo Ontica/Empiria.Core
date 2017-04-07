@@ -20,13 +20,15 @@ namespace Empiria {
 
     static ProductInformation() {
       Assembly assembly = Assembly.GetExecutingAssembly();
+      var type = typeof(ProductInformation);
 
       ProductInformation.CompilationDate = new System.IO.FileInfo(assembly.Location).CreationTime;
       ProductInformation.Version = assembly.GetName().Version.ToString();
 
-      ProductInformation.Description = ConfigurationData.GetString("Empiria", "System.Description");
-      ProductInformation.Name = ConfigurationData.GetString("Empiria", "System.Name");
-      ProductInformation.Url = ConfigurationData.GetString("Empiria", "System.Url");
+
+      ProductInformation.Description =  ConfigurationData.Get(type, "System.Description", String.Empty);
+      ProductInformation.Name = ConfigurationData.Get(type, "System.Name", String.Empty);
+      ProductInformation.Url = ConfigurationData.Get(type, "System.Url", String.Empty);
     }
 
     #endregion Constructors and parsers
@@ -40,7 +42,7 @@ namespace Empiria {
 
     static public string Copyright {
       get {
-        return "Copyright © 2009-" + DateTime.Today.Year + ". La Vía Óntica SC, Ontica LLC y colaboradores.";
+        return "Copyright " + DateTime.Today.Year + ". La Vía Óntica SC, Ontica LLC y colaboradores.";
       }
     }
 

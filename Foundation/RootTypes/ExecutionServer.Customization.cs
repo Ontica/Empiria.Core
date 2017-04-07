@@ -64,10 +64,12 @@ namespace Empiria {
     private void SetCustomFields() {
       var type = typeof(ExecutionServer);
 
-      this.customerName = ConfigurationData.Get<string>(type, "Customer.Name");
-      this.customerUrl = ConfigurationData.Get<string>(type, "Customer.Url");
+      this.customerName = ConfigurationData.Get<string>(type, "Customer.Name", String.Empty);
+      this.customerUrl = ConfigurationData.Get<string>(type, "Customer.Url", String.Empty);
       this.organizationId = ConfigurationData.Get<int>(type, "Organization.Id");
-      this.serverName = ConfigurationData.Get<string>(type, "Server.Name");
+      this.serverName = ConfigurationData.Get<string>(type, "Server.Name", String.Empty);
+      this.serviceProvider = ConfigurationData.Get<string>(type, "Service.Provider", String.Empty);
+
     }
 
     #endregion Static methods called from the main partial class

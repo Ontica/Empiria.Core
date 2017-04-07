@@ -19,7 +19,7 @@ namespace Empiria {
     #region Fields
 
     static private readonly int cacheSize =
-                                ConfigurationData.GetInteger("Empiria.Ontology", "ObjectCache.Size");
+                                ConfigurationData.Get<int>(typeof(ObjectsCache), "ObjectCache.Size", 1048576);
 
     private Dictionary<string,BaseObject> objects = null;
     private Dictionary<string, BaseObject> namedObjects = null;
