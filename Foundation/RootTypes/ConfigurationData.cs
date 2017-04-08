@@ -192,6 +192,15 @@ namespace Empiria {
           return value;
         }
 
+        // If attempting to get a protected parameter failed,
+        // then try to get the unprotected version of the same parameter
+        if (parameterName.StartsWith("§")) {
+          value = ConfigurationFile.TryGetValue(typeName, parameterName.Substring(1));
+          if (value != null) {
+            return value;
+          }
+        }
+
         Assertion.AssertObject(value, "ReadValue.Value");
 
         return value;
