@@ -61,6 +61,15 @@ namespace Empiria.Json {
 
     }
 
+    static public bool IsValidJson(string json) {
+      try {
+        JsonConvert.DeserializeObject(json);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
     /// <summary>
     /// Merges the items included in the JSON string into a loaded object,
     /// retaining the object property values that are not contained in the JSON string.
