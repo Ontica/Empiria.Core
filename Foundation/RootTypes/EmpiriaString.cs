@@ -12,6 +12,8 @@ using System;
 using System.Collections.Specialized;
 using System.Globalization;
 
+using Empiria.Json;
+
 namespace Empiria {
 
   static public partial class EmpiriaString {
@@ -98,6 +100,30 @@ namespace Empiria {
         }
       }
       return false;
+    }
+
+    static public T ConvertTo<T>(string source) {
+      Assertion.AssertObject(source, "source");
+
+      if (typeof(T) == typeof(string)) {
+        return (T) (object) source;
+
+      } else if (typeof(T) == typeof(object)) {
+        return (T) (object) source;
+
+      } else if (typeof(T).IsPrimitive) {
+        return (T) Convert.ChangeType(source, typeof(T));
+
+      } else if (typeof(T).IsEnum) {
+        return (T) Enum.Parse(typeof(T), source);
+
+      } else if (JsonConverter.IsValidJson(source)) {
+        return Empiria.Json.JsonConverter.ToObject<T>(source);
+
+      } else {
+        throw new EmpiriaStringException(EmpiriaStringException.Msg.CantConvertStringToTypeInstance,
+                                         source, typeof(T).FullName);
+      }
     }
 
     static public string RemoveNoiseStrings(string source) {

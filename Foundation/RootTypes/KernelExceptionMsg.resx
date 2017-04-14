@@ -215,4 +215,7 @@
   <data name="EnvironmentConfigFileNotExists" xml:space="preserve">
     <value>The environment configuration file '{0}' defined inside the app config file (empiria.config or app.config) was not found.</value>
   </data>
+  <data name="CantConvertStringToTypeInstance" xml:space="preserve">
+    <value>There isn't a convertion rule to convert value '{0}' to type '{1}'.</value>
+  </data>
 </root>

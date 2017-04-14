@@ -286,6 +286,7 @@
     <Compile Include="RootTypes\EmpiriaString.Speech.cs" />
     <Compile Include="RootTypes\ExecutionServer.cs" />
     <Compile Include="RootTypes\ExecutionServer.Customization.cs" />
+    <Compile Include="RootTypes\EmpiriaStringException.cs" />
     <Compile Include="RootTypes\ExecutionServerException.cs" />
     <Compile Include="RootTypes\FixedList.cs" />
     <Compile Include="RootTypes\IExtensible.cs" />
