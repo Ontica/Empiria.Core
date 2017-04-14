@@ -8,10 +8,10 @@
 *  Summary   : Provides methods for BaseObject instance creation.                                            *
 *                                                                                                            *
 ********************************* Copyright (c) 2014-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
-using System;
 using System.Collections.Generic;
-
 using System.Data;
+
+using Empiria.Data;
 
 namespace Empiria {
 
@@ -38,10 +38,10 @@ namespace Empiria {
       return metamodel.GetInstance(id);
     }
 
-    public static T ParseEmptyInstance<T>() where T : BaseObjectLite {
+    static public T Parse<T>(DataOperation dataOperation) where T : BaseObjectLite {
       var metamodel = MetaModel<T>.Parse();
 
-      return metamodel.GetInstance(-1);
+      return metamodel.GetInstance(dataOperation);
     }
 
     static public T Parse<T>(string key) where T : BaseObjectLite {
@@ -64,6 +64,12 @@ namespace Empiria {
         list.Add(metamodel.GetInstance(table.Rows[i]));
       }
       return list;
+    }
+
+    public static T ParseEmptyInstance<T>() where T : BaseObjectLite {
+      var metamodel = MetaModel<T>.Parse();
+
+      return metamodel.GetInstance(-1);
     }
 
     static public T ParseWithFilter<T>(string filter) where T : BaseObjectLite {

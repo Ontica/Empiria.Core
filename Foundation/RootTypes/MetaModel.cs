@@ -129,6 +129,16 @@ namespace Empiria {
       return instance;
     }
 
+    internal T GetInstance(DataOperation dataOperation) {
+      DataRow dataRow = this.GetInstanceDataRow(dataOperation);
+
+      T instance = this.InvokeInstanceConstructor((int) dataRow[this.DataSourceIdField]);
+
+      instance.OnLoadObjectData(dataRow);
+
+      return instance;
+    }
+
     internal T GetInstance(DataRow dataRow) {
       int id = (int) dataRow[DataSourceIdField];
 
@@ -229,6 +239,17 @@ namespace Empiria {
         throw new ResourceNotFoundException(UnderlyingType.Name + ".NotFound",
                                             "An object of type '{0}' with Unique ID = '{1}' was not found.",
                                             UnderlyingType.Name, instanceUID);
+      }
+      return dataRow;
+    }
+
+    private DataRow GetInstanceDataRow(DataOperation dataOperation) {
+      DataRow dataRow = DataReader.GetDataRow(dataOperation);
+
+      if (dataRow == null) {
+        throw new ResourceNotFoundException(UnderlyingType.Name + ".NotFound",
+                                            "An object of type '{0}' was not found using data operation '{1}'.",
+                                            UnderlyingType.Name, dataOperation.Name);
       }
       return dataRow;
     }
