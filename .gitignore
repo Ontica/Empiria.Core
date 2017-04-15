@@ -21,6 +21,7 @@ App_Data/
 *.zip
 *.snk
 *.cd
+*.environment.vars.json
 ZZ*.*
 
 # Build results

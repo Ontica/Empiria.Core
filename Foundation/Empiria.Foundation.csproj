@@ -275,6 +275,8 @@
     <Compile Include="RootTypes\BaseObjectLite.cs" />
     <Compile Include="RootTypes\ConfigurationData.cs" />
     <Compile Include="RootTypes\ConfigurationDataException.cs" />
+    <Compile Include="DataTypes\KeyValue.cs" />
+    <Compile Include="RootTypes\EnvironmentVariables.cs" />
     <Compile Include="RootTypes\ConfigurationFile.cs" />
     <Compile Include="RootTypes\ConfigurationSetting.cs" />
     <Compile Include="RootTypes\DataModelAttribute.cs" />

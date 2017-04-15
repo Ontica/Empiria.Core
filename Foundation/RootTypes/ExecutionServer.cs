@@ -192,6 +192,16 @@ namespace Empiria {
 
     #endregion Other public properties
 
+    #region Static methods
+
+    static public string GetFullFileNameFromCurrentExecutionPath(string fileName) {
+      string baseExecutionPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+
+      return System.IO.Path.Combine(baseExecutionPath, fileName);
+    }
+
+    #endregion Static methods
+
     #region Private members
 
     private void ExecuteStart() {

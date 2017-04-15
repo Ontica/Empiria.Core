@@ -38,7 +38,6 @@ namespace Empiria {
     [Theory]
     [InlineData("ApplicationKey")]
     [InlineData("License.Name")]
-    [InlineData("License.IsSpecial")]
     [InlineData("License.Number")]
     [InlineData("License.SerialNumber")]
     public void ShouldHaveMandatoryConfigData(string dataKey) {
@@ -47,6 +46,9 @@ namespace Empiria {
       var value = ConfigurationData.Get<string>(dataKey);
 
       Assert.NotNull(value);
+
+      Assert.DoesNotContain("{{", value);
+      Assert.DoesNotContain("}}", value);
     }
 
 

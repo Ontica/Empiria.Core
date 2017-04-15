@@ -1,17 +1,17 @@
 ﻿{
-  "appName": "Empiria Foundation",
+  "appName": "Empiria Foundation Unit Tests",
   "version": "6.8",
-  "date": "2017-03-20",
+  "date": "2017-04-14",
   "settings": [
     {
       "type": "",
       "key": "ApplicationKey",
-      "value": "vQNLXJeCoRPOtINfussrnSabsNs5jaOCRpdEYg5aXIOehqiBIARTgPUwtbrA940Q"
+      "value": "{{APPLICATION-KEY}}"
     },
     {
       "type": "",
       "key": "GlobalConfigurationFile",
-      "value": "E:\\empiria.files\\config.data\\empiria.land.development.json"
+      "value": "{{GLOBAL-CONFIGURATION-FILE}}"
     },
     {
       "type": "WebApi.Client",
@@ -21,37 +21,12 @@
     {
       "type": "WebApi.Client",
       "key": "WebApiServer.Microservices",
-      "value": "http://localhost/microservices/"
-    },
-    {
-      "type": "WebApi.Client",
-      "key": "WebApiServer.Land",
-      "value": "http://localhost/web.api/"
+      "value": "{{WEBAPISERVER.MICROSERVICES}}"
     },
     {
       "type": "WebApi.Client",
       "key": "ServiceDirectory.Path",
       "value": "v1/system/service-directory"
-    },
-    {
-      "type": "Land.WebApi",
-      "key": "PendingNoteRequest.NotariesArray",
-      "value": "54~71~72~73~74~75~77~79~80~409"
-    },
-    {
-      "type": "Land.WebApi",
-      "key": "PendingNoteRequest.ProjectedActsArray",
-      "value": "2203~2206~2207~2208~2209~2214~2335~2371~2787"
-    },
-    {
-      "type": "Land.WebApp",
-      "key": "CertificatesSystem.Url",
-      "value": "http://localhost/certificates/"
-    },
-    {
-      "type": "Land.WebApp",
-      "key": "LegacyDataViewer.Url",
-      "value": "http://192.168.1.22/anotaciones/Home2015.aspx"
     }
   ]
 }

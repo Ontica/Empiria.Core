@@ -24,6 +24,7 @@ namespace Empiria {
       CantReadParameter,
       CantWriteParameter,
       EnvironmentConfigFileNotExists,
+      FileAlreadyProcessed,
       GlobalConfigFileNotExists,
       InvalidTypeName,
       ParameterNotExists,

@@ -32,12 +32,6 @@ namespace Empiria {
 
     }
 
-    static public string GetFullFileNameFromCurrentExecutionPath(string fileName) {
-      string baseExecutionPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-
-      return Path.Combine(baseExecutionPath, fileName);
-    }
-
     #endregion Constructors and parsers
 
     #region Internal methods
@@ -141,7 +135,8 @@ namespace Empiria {
       foreach (var item in settingsList) {
         string key = this.BuildKey(item.TypeName, item.Key);
         if (!_settingsCache.ContainsKey(key)) {
-          _settingsCache.Add(key, item.Value);
+          string replaceValue = EnvironmentVariables.TryGetValue(item.Value);
+          _settingsCache.Add(key, replaceValue ?? item.Value);
         }
       }
     }
@@ -161,7 +156,7 @@ namespace Empiria {
       }
 
       // If not 'SettingsConfigurationFile' key, then look for a file with name "empiria.config.json"
-      configFileName = GetFullFileNameFromCurrentExecutionPath("empiria.config.json");
+      configFileName = ExecutionServer.GetFullFileNameFromCurrentExecutionPath("empiria.config.json");
       if (ExistsFile(configFileName)) {
         return configFileName;
       }

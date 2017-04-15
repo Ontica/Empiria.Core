@@ -340,7 +340,7 @@ namespace Empiria.Security {
         string path = String.Empty;
 
         if (fileName.StartsWith("~")) {
-          path = ConfigurationFile.GetFullFileNameFromCurrentExecutionPath(fileName.Substring(1));
+          path = ExecutionServer.GetFullFileNameFromCurrentExecutionPath(fileName.Substring(1));
         } else {
           path = fileName;
         }
@@ -399,7 +399,7 @@ namespace Empiria.Security {
         string path = String.Empty;
 
         if (privateKeyFileName.StartsWith("~")) {
-          path = ConfigurationFile.GetFullFileNameFromCurrentExecutionPath(privateKeyFileName.Substring(1));
+          path = ExecutionServer.GetFullFileNameFromCurrentExecutionPath(privateKeyFileName.Substring(1));
         } else {
           path = privateKeyFileName;
         }
