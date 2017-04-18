@@ -39,8 +39,29 @@ namespace Empiria {
 
     #region Constructors and parsers
 
-    static private readonly ExecutionServer _singleton = new ExecutionServer();
+    static private volatile ExecutionServer _instance;
+    static private object _syncRoot = new Object();
     private readonly Exception _startFailedException;
+
+    static private ExecutionServer Instance {
+      get {
+        if (_instance == null) {
+          lock (_syncRoot) {
+            if (_instance == null) {
+              _instance = new ExecutionServer();
+            }
+          }
+        }
+
+        if (_instance._startFailedException == null) {
+          return _instance;
+        } else {
+          throw new ExecutionServerException(ExecutionServerException.Msg.StartFailed,
+                                             _instance._startFailedException);
+        }
+      }
+    }
+
 
     private ExecutionServer() {
       try {
@@ -52,48 +73,37 @@ namespace Empiria {
       }
     }
 
-    static private ExecutionServer Singleton {
-      get {
-        if (_singleton._startFailedException == null) {
-          return _singleton;
-        } else {
-          throw new ExecutionServerException(ExecutionServerException.Msg.StartFailed,
-                                             _singleton._startFailedException);
-        }
-      }
-    }
-
     #endregion Constructors and parsers
 
     #region Public license properties
 
     static public string ApplicationKey {
       get {
-        return Singleton.applicationKey;
+        return Instance.applicationKey;
       }
     }
 
     static public bool IsSpecialLicense {
       get {
-        return Singleton.isSpecialLicense;
+        return Instance.isSpecialLicense;
       }
     }
 
     static public string LicenseName {
       get {
-        return Singleton.licenseName;
+        return Instance.licenseName;
       }
     }
 
     static public string LicenseNumber {
       get {
-        return Singleton.licenseNumber;
+        return Instance.licenseNumber;
       }
     }
 
     static public string LicenseSerialNumber {
       get {
-        return Singleton.licenseSerialNumber;
+        return Instance.licenseSerialNumber;
       }
     }
 
@@ -146,13 +156,13 @@ namespace Empiria {
 
     static public DateTime DateMaxValue {
       get {
-        return Singleton.dateMaxValue;
+        return Instance.dateMaxValue;
       }
     }
 
     static public DateTime DateMinValue {
       get {
-        return Singleton.dateMinValue;
+        return Instance.dateMinValue;
       }
     }
 
@@ -168,25 +178,25 @@ namespace Empiria {
 
     static public bool IsDevelopmentServer {
       get {
-        return Singleton.isDevelopmentServer;
+        return Instance.isDevelopmentServer;
       }
     }
 
     static public bool IsPassThroughServer {
       get {
-        return Singleton.isPassThroughServer;
+        return Instance.isPassThroughServer;
       }
     }
 
     static public int ServerId {
       get {
-        return Singleton.serverId;
+        return Instance.serverId;
       }
     }
 
     static public string SupportUrl {
       get {
-        return Singleton.supportUrl;
+        return Instance.supportUrl;
       }
     }
 

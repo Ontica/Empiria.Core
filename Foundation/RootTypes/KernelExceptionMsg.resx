@@ -221,4 +221,7 @@
   <data name="FileAlreadyProcessed" xml:space="preserve">
     <value>The file {0}  with configuration settings or environment variables was already processed.</value>
   </data>
+  <data name="ConfigurationFileLoadFailed" xml:space="preserve">
+    <value>There was a problem loading configuration settings from empiria.config files.</value>
+  </data>
 </root>

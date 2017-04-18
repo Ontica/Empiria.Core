@@ -52,6 +52,16 @@ namespace Empiria {
     }
 
 
+    [Theory]
+    [InlineData("§DataSource.Default")]
+    public void ShouldReadProtectedSettings(string dataKey) {
+      // Set Ok config file
+
+      var value = ConfigurationData.Get<string>(typeof(Empiria.Data.DataReader), dataKey);
+
+      Assert.NotNull(value);
+    }
+
     [Fact]
     public void MustReturnDefaultValueWhenNoConfigData() {
       DateTime defaultValue = DateTime.Parse("2012-06-25");

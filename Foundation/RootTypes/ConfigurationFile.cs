@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Solution  : Empiria Foundation Framework                     System   : Kernel Types                      *
 *  Namespace : Empiria                                          Assembly : Empiria.Kernel.dll                *
-*  Type      : ConfigurationFile                                Pattern  : Static Class                      *
+*  Type      : ConfigurationFile                                Pattern  : Singleton                         *
 *  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : Gets data items defined in the app.config or in a Json based configuration file.              *
@@ -28,140 +28,98 @@ namespace Empiria {
 
     #region Constructors and parsers
 
-    private ConfigurationFile() {
+    static private volatile ConfigurationFile _instance = null;
+    static private object _syncRoot = new Object();
+    private readonly Exception _loadFailedException;
 
+    static private ConfigurationFile Instance {
+      get {
+        if (_instance == null) {
+          lock (_syncRoot) {
+            if (_instance == null) {
+              _instance = new ConfigurationFile();
+            }
+          }
+        }
+
+        if (_instance._loadFailedException == null) {
+          return _instance;
+        } else {
+          throw new ConfigurationDataException(ConfigurationDataException.Msg.ConfigurationFileLoadFailed,
+                                             _instance._loadFailedException);
+        }
+      }
+    }
+
+
+    private ConfigurationFile() {
+      try {
+        this.Load();
+        _loadFailedException = null;
+
+      } catch (Exception e) {
+        _loadFailedException = e;
+      }
     }
 
     #endregion Constructors and parsers
 
     #region Internal methods
 
-    static private Lazy<ConfigurationFile> _instance = new Lazy<ConfigurationFile>( () => ConfigurationFile.Load() );
-
     static internal string TryGetValue(string typeName, string parameterName) {
-      ConfigurationFile configFile = _instance.Value;
-
-      return configFile.TryGetSetting(typeName, parameterName);
-    }
-
-    static private ConfigurationFile Load() {
-      var configFile = new ConfigurationFile();
-
-      // First, load application settings directly from the app.config or the web.config
-      configFile.LoadSettingsFromAppConfig();
-
-      // Then, try to load application settings defined in empiria.config file, if any
-      string appSettingsFileName = TryGetFileNameFromEmpiriaAppConfig();
-      if (!String.IsNullOrWhiteSpace(appSettingsFileName)) {
-        configFile.LoadSettingsFromJsonFile(appSettingsFileName);
-      }
-
-
-      // Try to load data from the environment configuration file
-      string environmentFileName = configFile.TryGetSetting("Empiria", "EnvironmentConfigurationFile");
-      if (!String.IsNullOrWhiteSpace(environmentFileName)) {
-        if (ExistsFile(environmentFileName)) {
-          configFile.LoadSettingsFromJsonFile(environmentFileName);
-        } else {
-          throw new ConfigurationDataException(ConfigurationDataException.Msg.EnvironmentConfigFileNotExists,
-                                               environmentFileName);
-        }
-      }
-
-
-      // Try to load data from global configuration file
-      string globalFileName = configFile.TryGetSetting("Empiria", "GlobalConfigurationFile");
-      if (!String.IsNullOrWhiteSpace(globalFileName)) {
-        if (ExistsFile(globalFileName)) {
-          configFile.LoadSettingsFromJsonFile(globalFileName);
-        } else {
-          throw new ConfigurationDataException(ConfigurationDataException.Msg.GlobalConfigFileNotExists,
-                                               globalFileName);
-        }
-      }
-
-      return configFile;
+      return Instance.TryGetSetting(typeName, parameterName);
     }
 
     #endregion Internal methods
 
     #region Private methods
 
-    /// <summary>Builds a case-insensitive dictionary key.</summary>
-    private string BuildKey(string typeName, string key) {
-      string temp = String.Empty;
+    private void Load() {
+      // First, load application settings directly from the app.config or the web.config
+      this.LoadSettingsFromAppConfig();
 
-      if (typeName.Length != 0) {
-        temp = typeName + "." + key;
-      } else {
-        temp = key;
+      // Then, try to load application settings defined in empiria.config file, if any
+      string appSettingsFileName = TryGetFileNameFromEmpiriaAppConfig();
+      if (!String.IsNullOrWhiteSpace(appSettingsFileName)) {
+        this.LoadSettingsFromJsonFile(appSettingsFileName);
       }
-      return temp.ToLowerInvariant();
-    }
 
-    static private void EnsureApplicationFileExists(string fileName) {
-      if (!ExistsFile(fileName)) {
-        throw new ConfigurationDataException(ConfigurationDataException.Msg.ApplicationConfigFileNotExists,
-                                             fileName);
+      // Try to load data from the environment configuration file
+      string environmentFileName = this.TryGetSetting("Empiria", "EnvironmentConfigurationFile");
+      if (!String.IsNullOrWhiteSpace(environmentFileName)) {
+        if (ExistsFile(environmentFileName)) {
+          this.LoadSettingsFromJsonFile(environmentFileName);
+        } else {
+          throw new ConfigurationDataException(ConfigurationDataException.Msg.EnvironmentConfigFileNotExists,
+                                               environmentFileName);
+        }
       }
-    }
 
-    /// <summary>Returns true if the given fileName string is a real path to a file.</summary>
-    static private bool ExistsFile(string fileName) {
-      if (String.IsNullOrWhiteSpace(fileName)) {
-        return false;
-      }
-      return File.Exists(fileName);
-    }
-
-    /// <summary>Loads all the application settings from the app.config or web.config file.</summary>
-    private void LoadSettingsFromAppConfig() {
-      var appSettings = System.Configuration.ConfigurationManager.AppSettings;
-
-      foreach (var settingKey in appSettings.AllKeys) {
-        string key = this.BuildKey("", settingKey);
-        if (!_settingsCache.ContainsKey(key)) {
-          _settingsCache.Add(key, appSettings[settingKey]);
+      // Try to load data from global configuration file
+      string globalFileName = this.TryGetSetting("Empiria", "GlobalConfigurationFile");
+      if (!String.IsNullOrWhiteSpace(globalFileName)) {
+        if (ExistsFile(globalFileName)) {
+          this.LoadSettingsFromJsonFile(globalFileName);
+        } else {
+          throw new ConfigurationDataException(ConfigurationDataException.Msg.GlobalConfigFileNotExists,
+                                               globalFileName);
         }
       }
     }
 
-    /// <summary>Loads all settings defined in a JSON file.</summary>
-    private void LoadSettingsFromJsonFile(string fileName) {
-      var json = JsonObject.Parse(File.ReadAllText(fileName));
+    private string ReadConfigurationValue(string typeName, string parameterName) {
+      string key = BuildKey(typeName, parameterName);
 
-      // Load the settings from the JSON config file
-      List<ConfigurationSetting> settingsList = json.GetList<ConfigurationSetting>("settings");
-      foreach (var item in settingsList) {
-        string key = this.BuildKey(item.TypeName, item.Key);
-        if (!_settingsCache.ContainsKey(key)) {
-          string replaceValue = EnvironmentVariables.TryGetValue(item.Value);
-          _settingsCache.Add(key, replaceValue ?? item.Value);
-        }
+      string keyValue = null;
+      if (!_settingsCache.TryGetValue(key, out keyValue)) {
+        keyValue = null;
       }
+      if ((keyValue != null) && parameterName.StartsWith("§")) {
+        keyValue = Cryptographer.Decrypt(keyValue, ExecutionServer.LicenseName);
+      }
+      return keyValue;
     }
 
-    /// <summary>Gets the configuration file name looking for the path string inside
-    ///  the app.config or web.config files, or searching for a file with name
-    ///  empiria.app.config inside the system's execution path. Returns null
-    ///  if no config file was found.</summary>
-    static private string TryGetFileNameFromEmpiriaAppConfig() {
-      var appSettings = System.Configuration.ConfigurationManager.AppSettings;
-
-      // Look the filename under the 'SettingsConfigurationFile' key of the app.config file
-      string configFileName = appSettings["EmpiriaConfigurationFile"];
-      if (configFileName != null) {
-        EnsureApplicationFileExists(configFileName);
-        return configFileName;
-      }
-
-      // If not 'SettingsConfigurationFile' key, then look for a file with name "empiria.config.json"
-      configFileName = ExecutionServer.GetFullFileNameFromCurrentExecutionPath("empiria.config.json");
-      if (ExistsFile(configFileName)) {
-        return configFileName;
-      }
-      return null;
-    }
 
     private string TryGetSetting(string typeName, string parameterName) {
       if (!(typeName.StartsWith("Empiria") || typeName.StartsWith(ExecutionServer.LicenseName))) {
@@ -194,20 +152,87 @@ namespace Empiria {
       }
     }
 
-    private string ReadConfigurationValue(string typeName, string parameterName) {
-      string key = this.BuildKey(typeName, parameterName);
+    #endregion Private methods
 
-      string keyValue = null;
-      if (!_settingsCache.TryGetValue(key, out keyValue)) {
-        keyValue = null;
+    #region Auxiliary methods
+
+    /// <summary>Builds a case-insensitive dictionary key.</summary>
+    static private string BuildKey(string typeName, string key) {
+      string temp = String.Empty;
+
+      if (typeName.Length != 0) {
+        temp = typeName + "." + key;
+      } else {
+        temp = key;
       }
-      if ((keyValue != null) && parameterName.StartsWith("§")) {
-        keyValue = Cryptographer.Decrypt(keyValue, ExecutionServer.LicenseName);
-      }
-      return keyValue;
+      return temp.ToLowerInvariant();
     }
 
-    #endregion Private methods
+    static private void EnsureApplicationFileExists(string fileName) {
+      if (!ExistsFile(fileName)) {
+        throw new ConfigurationDataException(ConfigurationDataException.Msg.ApplicationConfigFileNotExists,
+                                             fileName);
+      }
+    }
+
+    /// <summary>Returns true if the given fileName string is a real path to a file.</summary>
+    static private bool ExistsFile(string fileName) {
+      if (String.IsNullOrWhiteSpace(fileName)) {
+        return false;
+      }
+      return File.Exists(fileName);
+    }
+
+    /// <summary>Loads all the application settings from the app.config or web.config file.</summary>
+    private void LoadSettingsFromAppConfig() {
+      var appSettings = System.Configuration.ConfigurationManager.AppSettings;
+
+      foreach (var settingKey in appSettings.AllKeys) {
+        string key = BuildKey("", settingKey);
+        if (!_settingsCache.ContainsKey(key)) {
+          _settingsCache.Add(key, appSettings[settingKey]);
+        }
+      }
+    }
+
+    /// <summary>Loads all settings defined in a JSON file.</summary>
+    private void LoadSettingsFromJsonFile(string fileName) {
+      var json = JsonObject.Parse(File.ReadAllText(fileName));
+
+      // Load the settings from the JSON config file
+      List<ConfigurationSetting> settingsList = json.GetList<ConfigurationSetting>("settings");
+      foreach (var item in settingsList) {
+        string key = BuildKey(item.TypeName, item.Key);
+        if (!_settingsCache.ContainsKey(key)) {
+          string replaceValue = EnvironmentVariables.TryGetValue(item.Value);
+          _settingsCache.Add(key, replaceValue ?? item.Value);
+        }
+      }
+    }
+
+    /// <summary>Gets the configuration file name looking for the path string inside
+    ///  the app.config or web.config files, or searching for a file with name
+    ///  empiria.app.config inside the system's execution path. Returns null
+    ///  if no config file was found.</summary>
+    static private string TryGetFileNameFromEmpiriaAppConfig() {
+      var appSettings = System.Configuration.ConfigurationManager.AppSettings;
+
+      // Seek for the filename under the 'EmpiriaConfigurationFile' key of the app.config file
+      string configFileName = appSettings["EmpiriaConfigurationFile"];
+      if (configFileName != null) {
+        EnsureApplicationFileExists(configFileName);
+        return configFileName;
+      }
+
+      // If not 'EmpiriaConfigurationFile' key, then look for a file with name "empiria.config.json"
+      configFileName = ExecutionServer.GetFullFileNameFromCurrentExecutionPath("empiria.config.json");
+      if (ExistsFile(configFileName)) {
+        return configFileName;
+      }
+      return null;
+    }
+
+    #endregion Auxiliary methods
 
   } //class ConfigurationFile
 

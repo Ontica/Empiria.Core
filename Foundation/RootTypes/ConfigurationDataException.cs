@@ -6,7 +6,7 @@
 *  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
 *  Summary   : The exception that is thrown when a configuration parameter is not found or when the system   *
-*              can´t  read or access it.                                                                     *
+*              can't read or access it.                                                                      *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
@@ -15,14 +15,15 @@ using System.Reflection;
 namespace Empiria {
 
   /// <summary>The exception that is thrown when a configuration parameter is not found or when the system
-  /// can´t read or access it.</summary>
+  /// can't read or access it.</summary>
   [Serializable]
-  public sealed class ConfigurationDataException : EmpiriaException {
+  public class ConfigurationDataException : EmpiriaException {
 
     public enum Msg {
       ApplicationConfigFileNotExists,
       CantReadParameter,
       CantWriteParameter,
+      ConfigurationFileLoadFailed,
       EnvironmentConfigFileNotExists,
       FileAlreadyProcessed,
       GlobalConfigFileNotExists,

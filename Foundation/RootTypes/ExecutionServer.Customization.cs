@@ -29,31 +29,31 @@ namespace Empiria {
 
     static public string CustomerName {
       get {
-        return Singleton.customerName;
+        return Instance.customerName;
       }
     }
 
     static public string CustomerUrl {
       get {
-        return Singleton.customerUrl;
+        return Instance.customerUrl;
       }
     }
 
     static public int OrganizationId {
       get {
-        return Singleton.organizationId;
+        return Instance.organizationId;
       }
     }
 
     static public string ServerName {
       get {
-        return Singleton.serverName;
+        return Instance.serverName;
       }
     }
 
     static public string ServiceProvider {
       get {
-        return Singleton.serviceProvider;
+        return Instance.serviceProvider;
       }
     }
 
