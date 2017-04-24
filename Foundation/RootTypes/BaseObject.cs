@@ -428,8 +428,10 @@ namespace Empiria {
       Assertion.AssertObject(newType, "newType");
       Assertion.Assert(!this.GetEmpiriaType().Equals(newType),
                        "newType should be distinct to the current one.");
-      Assertion.Assert(this.GetEmpiriaType().UnderlyingSystemType.Equals(newType.UnderlyingSystemType),
-                       "newType underlying system type should be the same to the current one's.");
+      //Assertion.Assert(this.GetEmpiriaType().UnderlyingSystemType.Equals(newType.UnderlyingSystemType),
+      //                 "newType underlying system type should be the same to the current one's.");
+      // Seek for a common ancestor (distinct than ObjectType) between types:
+      // eg: if A is a mammal and B is a bird, should be possible to convert A to B or B to A because both are animals
 
       cache.Remove(this);
       this.objectTypeInfo = newType;
