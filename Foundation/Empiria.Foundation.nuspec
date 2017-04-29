@@ -1,18 +1,17 @@
-<?xml version="1.0"?>
-<package >
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>$id$</id>
     <version>$version$</version>
     <title>$title$</title>
     <authors>$author$</authors>
-    <owners>$author$</owners>
     <licenseUrl>https://github.com/Ontica/Empiria.Core/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/Ontica/Empiria.Core</projectUrl>
     <iconUrl>http://www.ontica.org/logo.ontica.png</iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>Initial Nuget version</releaseNotes>
-    <copyright>Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.</copyright>
-    <tags>Empiria .NET framework  solid foundations business government backend solutions mexico ontica</tags>
+    <copyright>$copyright$</copyright>
+    <tags>data access, orm, ontology, powertypes, base-architecture, software foundation, general purpose backend, government solutions, business solutions</tags>
   </metadata>
 </package>

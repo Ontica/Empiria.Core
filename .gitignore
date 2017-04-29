@@ -87,6 +87,7 @@ publish
 # NuGet Packages Directory and files
 packages
 *.nupkg
+*.nugetreferenceswitcher
 
 # Windows Azure Build Output
 csx
