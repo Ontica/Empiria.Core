@@ -20,12 +20,6 @@ namespace Empiria {
 
     #region Public methods
 
-    static public string GetSection(string source, char delimiter, int sectionIndex) {
-      string[] sections = source.Split(new char[] { delimiter });
-
-      return sections[sectionIndex].Trim();
-    }
-
     static public string BuildKeywords(params string[] words) {
       string temp = temp = String.Join(" ", words).ToLowerInvariant();
       return BuildKeywords(temp, true);
@@ -43,6 +37,21 @@ namespace Empiria {
         words = RemoveAccents(RemovePunctuation(words));
       }
       return words;
+    }
+
+    static public string BuildRandomString(int length) {
+      var temp = String.Empty;
+
+      for (int i = 0; i < length; i++) {
+        string value = EmpiriaMath.GetRandomDigitOrCharacter().ToString();
+        if (EmpiriaMath.GetRandomBoolean()) {
+          value = value.ToLowerInvariant();
+        } else {
+          value = value.ToUpperInvariant();
+        }
+        temp += value;
+      }
+      return temp;
     }
 
     static public bool Contains(string source, string searchWords) {
@@ -222,6 +231,12 @@ namespace Empiria {
       } else {
         return source;
       }
+    }
+
+    static public string GetSection(string source, char delimiter, int sectionIndex) {
+      string[] sections = source.Split(new char[] { delimiter });
+
+      return sections[sectionIndex].Trim();
     }
 
     static public bool IsBoolean(string source) {

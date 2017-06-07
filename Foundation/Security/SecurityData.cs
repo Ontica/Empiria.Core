@@ -25,7 +25,7 @@ namespace Empiria.Security {
     }
 
     static internal void ChangePassword(string username, string password) {
-      if (ConfigurationData.GetBoolean("UseFormerPasswordEncryption")) {
+      if (ConfigurationData.Get("UseFormerPasswordEncryption", false)) {
         ChangePasswordUsingFormerEncryption(username, password);
         return;
       }

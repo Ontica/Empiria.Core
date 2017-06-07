@@ -112,6 +112,12 @@ namespace Empiria {
       return primesArray[position % primesArray.Length];
     }
 
+    static public bool GetRandomBoolean() {
+      int i = random.Next();
+
+      return ((i % 2) == 0);
+    }
+
     static public char GetRandomCharacter(string current = "") {
       const string characters = "ACDEFHJKMNPRTWXYZ";
 
