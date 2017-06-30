@@ -9,6 +9,7 @@
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Data;
@@ -136,6 +137,21 @@ namespace Empiria.Ontology {
       sql = sql.Replace("{TimePeriodEnd}", period.EndTime.ToString("yyyy-MM-dd"));
 
       return DataReader.GetDataTable(DataOperation.Parse(sql));
+    }
+
+    internal static List<T> GetBaseObjectList<T>(string filter, string sort) where T: BaseObject {
+      var typeInfo = ObjectTypeInfo.Parse<T>();
+
+      string typeFilter = String.Empty;
+
+      if (typeInfo.TypeIdFieldName.Length != 0) {
+        typeFilter = typeInfo.TypeIdFieldName + " = " + typeInfo.Id;
+      }
+      filter = GeneralDataOperations.BuildSqlAndFilter(typeFilter, filter);
+
+      var table = GeneralDataOperations.GetEntities(typeInfo.DataSource, filter, sort);
+
+      return BaseObject.ParseList<T>(table);
     }
 
     static internal DataTable GetInverseObjectLinksTable(TypeRelationInfo typeRelation, IStorable target) {

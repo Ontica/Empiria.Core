@@ -33,7 +33,9 @@ namespace Empiria {
       // Required by Empiria Framework.
     }
 
-    static protected FixedList<T> ParseList<T>(string filter = "", string sort = "") where T : BaseObject {
+    /// ToDo: Replace this method by BaseObject.GetList<T>(filter, sort)
+    ///       when that method will be able to return in the list derivated types of <T>.
+    static protected new FixedList<T> GetList<T>(string filter = "", string sort = "") where T : BaseObject {
       ObjectTypeInfo objectTypeInfo = ObjectTypeInfo.Parse<T>();
 
       DataView view = OntologyData.GetSimpleObjects(objectTypeInfo, filter, sort);

@@ -64,6 +64,10 @@ namespace Empiria {
       return item;
     }
 
+    static protected List<T> GetList<T>(string filter = "", string sort = "") where T : BaseObject {
+      return OntologyData.GetBaseObjectList<T>(filter, sort);
+    }
+
     static public T ParseDataRow<T>(DataRow dataRow) where T : BaseObject {
       ObjectTypeInfo baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
       int objectId = (int) dataRow[baseTypeInfo.IdFieldName];

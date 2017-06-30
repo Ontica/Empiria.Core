@@ -353,15 +353,6 @@ namespace Empiria.Ontology {
 
     #endregion Private properties and methods
 
-    //TODO: Review this and maybe move it to other type
-    public Data.DataOperation GetListDataOperation(string filter, string sort) {
-      string typeFilter = this.TypeIdFieldName + " = " + this.Id;
-
-      string sql = "SELECT * FROM " + this.DataSource + " WHERE " + filter + typeFilter;
-
-      return Data.DataOperation.Parse(sql);
-    }
-
   } // class ObjectTypeInfo
 
 } // namespace Empiria.Ontology
