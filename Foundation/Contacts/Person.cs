@@ -33,7 +33,7 @@ namespace Empiria.Contacts {
 
     #region Constructors and parsers
 
-    private Person() {
+    protected Person() {
       // Required by Empiria Framework.
     }
 

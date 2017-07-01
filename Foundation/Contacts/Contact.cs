@@ -28,6 +28,10 @@ namespace Empiria.Contacts {
       return BaseObject.ParseId<Contact>(id);
     }
 
+    static public T Parse<T>(string uid) where T : Contact {
+      return BaseObject.ParseKey<T>(uid);
+    }
+
     static private readonly Contact _empty = BaseObject.ParseEmpty<Contact>();
     static public Contact Empty {
       get {
@@ -42,6 +46,12 @@ namespace Empiria.Contacts {
     #endregion Constructors and parsers
 
     #region Public properties
+
+    [DataField("ContactUID")]
+    public string UID {
+      get;
+      private set;
+    }
 
     [Newtonsoft.Json.JsonIgnore]
     public TempAddress Address {
