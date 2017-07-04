@@ -12,6 +12,7 @@ using System;
 using System.Data;
 
 using Empiria.Contacts;
+using Empiria.DataTypes;
 using Empiria.Json;
 
 namespace Empiria.Security {
@@ -77,6 +78,9 @@ namespace Empiria.Security {
       this.AssignedTo = Contact.Parse(json.Get<Int32>("AssignedToId", -1));
 
       this.Claims = new SecurityClaimList(this);
+
+      this.WebApiAddresses = json.GetList<NameValuePair>("WebApiAddresses").ToFixedList();
+
     }
 
     #endregion Constructors and parsers
@@ -107,6 +111,11 @@ namespace Empiria.Security {
     }
 
     public SecurityClaimList Claims {
+      get;
+      private set;
+    }
+
+    public FixedList<NameValuePair> WebApiAddresses {
       get;
       private set;
     }
