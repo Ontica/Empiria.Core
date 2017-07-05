@@ -282,6 +282,12 @@ namespace Empiria {
       return association.GetLink<T>(this);
     }
 
+    protected T GetLink<T>(string linkName, T defaultValue) where T : BaseObject {
+      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
+
+      return association.GetLink<T>(this, defaultValue);
+    }
+
     protected T GetInverseLink<T>(string linkName) where T : BaseObject {
       var association = TypeAssociationInfo.Parse(linkName);
 
