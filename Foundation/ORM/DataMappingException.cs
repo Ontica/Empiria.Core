@@ -72,8 +72,20 @@ namespace Empiria.ORM {
                                      DataMappingException.GetExecutionData(instance, rule));
     }
 
+    static internal DataMappingException GetDataValueMappingException(object instance, DataObjectMapping rule,
+                                                                      Exception innerException) {
+      throw new DataMappingException(DataMappingException.Msg.CannotMapDataValue, innerException,
+                                     DataMappingException.GetExecutionData(instance, rule));
+    }
+
     static internal DataMappingException GetInitializeObjectException(object instance, DataMapping rule,
                                                                       Exception innerException) {
+      throw new DataMappingException(DataMappingException.Msg.CannotInitializeObject, innerException,
+                                     DataMappingException.GetExecutionData(instance, rule));
+    }
+
+    static internal DataMappingException GetInitializeObjectException(object instance, DataObjectMapping rule,
+                                                                  Exception innerException) {
       throw new DataMappingException(DataMappingException.Msg.CannotInitializeObject, innerException,
                                      DataMappingException.GetExecutionData(instance, rule));
     }
@@ -89,6 +101,13 @@ namespace Empiria.ORM {
       if (instance is IIdentifiable) {
         str += String.Format("Instance Id: {0}\n", ((IIdentifiable) instance).Id);
       }
+      return str;
+    }
+
+    static private string GetExecutionData(object instance, DataObjectMapping rule) {
+      string str = rule.GetExecutionData();
+
+      str += String.Format("Instance Type: {0}\n", instance.GetType().FullName);
       return str;
     }
 

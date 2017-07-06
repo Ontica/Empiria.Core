@@ -27,6 +27,7 @@ namespace Empiria.ORM {
 
     private Type mappedType = null;
     private DataMapping[] dataMappingsArray = null;
+    private DataObjectMapping[] innerDataObjectsMappingsArray = null;
     private List<string> jsonFieldsNames = null;
     private bool dataColumnsAreMapped = false;
 
@@ -37,16 +38,20 @@ namespace Empiria.ORM {
     private DataMappingRules(Type type) {
       this.mappedType = type;
       this.dataMappingsArray = this.GetTypeMappings();
+      this.innerDataObjectsMappingsArray = this.GetTypeInnerDataObjectsMappings();
     }
 
     static internal DataMappingRules Parse(Type type) {
+      Assertion.AssertObject(type, "type");
+
       return new DataMappingRules(type);
     }
 
     static internal bool IsDataBound(Type type) {
       var boundedMembers = DataMappingRules.GetDataboundPropertiesAndFields(type);
+      var boundedObjects = DataMappingRules.GetDataboundInnerObjects(type);
 
-      return (boundedMembers.Length != 0);
+      return ((boundedMembers.Length + boundedObjects.Length) != 0);
     }
 
     #endregion Constructors and parsers
@@ -54,22 +59,20 @@ namespace Empiria.ORM {
     #region Public methods
 
     internal void InitializeObject(object instance) {
-      DataMapping rule = null;
-      try {
-        for (int i = 0; i < dataMappingsArray.Length; i++) {
-          rule = dataMappingsArray[i];
-          if (rule.ApplyOnInitialization) {
-            rule.SetDefaultValue(instance);
-          }
-        }
-      } catch (Exception e) {
-        throw DataMappingException.GetInitializeObjectException(instance, rule, e);
-      }
+      this.InitializeDataMappings(instance);
+      this.InitializeDataObjects(instance);
     }
 
     /// <summary>Binds DataRow data into the instance fields and properties marked
     /// with the DataField attribute.</summary>
     internal void DataBind(object instance, DataRow dataRow) {
+      this.DataBindFieldsAndProperties(instance, dataRow);
+      this.DataBindInnerDataObjects(instance, dataRow);
+    }
+
+    /// <summary>Binds DataRow data into the instance fields and properties marked
+    /// with the DataField attribute.</summary>
+    private void DataBindFieldsAndProperties(object instance, DataRow dataRow) {
       if (!dataColumnsAreMapped) {
         lock (dataMappingsArray) {
           this.MapDataColumns(dataRow.Table.Columns);
@@ -89,6 +92,46 @@ namespace Empiria.ORM {
         }
       } catch (Exception e) {
         throw DataMappingException.GetDataValueMappingException(instance, rule, e);
+      }
+    }
+
+    /// <summary>Binds DataRow data into the instance fields and properties marked
+    /// with the DataField attribute.</summary>
+    private void DataBindInnerDataObjects(object instance, DataRow dataRow) {
+      DataObjectMapping rule = null;
+      try {
+        for (int i = 0; i < innerDataObjectsMappingsArray.Length; i++) {
+          rule = innerDataObjectsMappingsArray[i];
+          rule.DataBind(instance, dataRow);
+        }
+      } catch (Exception e) {
+        throw DataMappingException.GetDataValueMappingException(instance, rule, e);
+      }
+    }
+
+    private void InitializeDataObjects(object instance) {
+      DataObjectMapping rule = null;
+      try {
+        for (int i = 0; i < innerDataObjectsMappingsArray.Length; i++) {
+          rule = innerDataObjectsMappingsArray[i];
+          rule.SetDefaultValue(instance);
+        }
+      } catch (Exception e) {
+        throw DataMappingException.GetInitializeObjectException(instance, rule, e);
+      }
+    }
+
+    private void InitializeDataMappings(object instance) {
+      DataMapping rule = null;
+      try {
+        for (int i = 0; i < dataMappingsArray.Length; i++) {
+          rule = dataMappingsArray[i];
+          if (rule.ApplyOnInitialization) {
+            rule.SetDefaultValue(instance);
+          }
+        }
+      } catch (Exception e) {
+        throw DataMappingException.GetInitializeObjectException(instance, rule, e);
       }
     }
 
@@ -125,6 +168,22 @@ namespace Empiria.ORM {
       return list.ToArray();
     }
 
+    /// <summary>Gets an array with all type's data bounded objects described
+    /// using a DataObject attribute.</summary>
+    static private MemberInfo[] GetDataboundInnerObjects(Type type) {
+      Type searchType = type;
+
+      List<MemberInfo> list = new List<MemberInfo>();
+      while (!searchType.Equals(typeof(object))) {
+        var members = searchType.GetMembers(BindingFlags.DeclaredOnly | BindingFlags.Instance |
+                                            BindingFlags.Public | BindingFlags.NonPublic)
+                                .Where(x => Attribute.IsDefined(x, typeof(DataObjectAttribute))).ToArray();
+        list.AddRange(members);
+        searchType = searchType.BaseType;
+      }
+      return list.ToArray();
+    }
+
     /// <summary>Gets an array of DataMapping objects, derived from those type members
     /// that have a DataField attribute.</summary>
     private DataMapping[] GetTypeMappings() {
@@ -144,6 +203,26 @@ namespace Empiria.ORM {
           }
         }  // for
         return dataMappingsList.ToArray();
+      } catch (Exception e) {
+        throw new DataMappingException(DataMappingException.Msg.TypeMemberMappingFails, e,
+                                       mappedType.FullName, memberInfo.Name);
+      }
+    }
+
+    private DataObjectMapping[] GetTypeInnerDataObjectsMappings() {
+      MemberInfo memberInfo = null;
+      try {
+        var databoundMembers = DataMappingRules.GetDataboundInnerObjects(mappedType);
+
+        var dataObjectMappings = new List<DataObjectMapping>(databoundMembers.Length);
+
+        for (int i = 0; i < databoundMembers.Length; i++) {
+          memberInfo = databoundMembers[i];
+
+          var dataMapping = DataObjectMapping.Parse(mappedType, memberInfo);
+          dataObjectMappings.Add(dataMapping);
+        }  // for
+        return dataObjectMappings.ToArray();
       } catch (Exception e) {
         throw new DataMappingException(DataMappingException.Msg.TypeMemberMappingFails, e,
                                        mappedType.FullName, memberInfo.Name);

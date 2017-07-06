@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Empiria.Foundation.Tests.AssemblyInfo.cs" />
     <Compile Include="RootTypes\LoggingTests.cs" />
+    <Compile Include="RootTypes\ORMTests.cs" />
     <Compile Include="RootTypes\OntologyTests.cs" />
     <Compile Include="RootTypes\ConfigurationDataTests.cs" />
   </ItemGroup>

@@ -255,6 +255,7 @@
     <Compile Include="Logging\LogEntryType.cs" />
     <Compile Include="Logging\LoggingException.cs" />
     <Compile Include="Logging\LogTrail.cs" />
+    <Compile Include="ORM\DataObjectMapping.cs" />
     <Compile Include="ORM\DataFieldMapping.cs" />
     <Compile Include="ORM\DataMapping.cs" />
     <Compile Include="ORM\DataMappingException.cs" />
@@ -276,6 +277,7 @@
     <Compile Include="RootTypes\ConfigurationData.cs" />
     <Compile Include="RootTypes\ConfigurationDataException.cs" />
     <Compile Include="DataTypes\KeyValue.cs" />
+    <Compile Include="RootTypes\DataObjectAttribute.cs" />
     <Compile Include="RootTypes\EnvironmentVariables.cs" />
     <Compile Include="RootTypes\ConfigurationFile.cs" />
     <Compile Include="RootTypes\ConfigurationSetting.cs" />
