@@ -64,8 +64,10 @@ namespace Empiria.Data {
       }
 
       int result = DataWriter.ExecuteInternal(operation);
+      DataWriter.WriteDataLog(operation);
 
       DataWriter.DoPostExecutionTask(operation);
+
 
       DataPublisher.Publish(operation);
 
@@ -85,6 +87,7 @@ namespace Empiria.Data {
       //}
 
       T result = DataWriter.ExecuteInternal<T>(operation);
+      DataWriter.WriteDataLog(operation);
 
       DataWriter.DoPostExecutionTask(operation);
 
@@ -272,6 +275,12 @@ namespace Empiria.Data {
         SingleSignOnToken token = SingleSignOnToken.Create(rule.TargetServer);
         return proxy.Execute(token.ToMessage(), dataOperation.ToMessage());
       }
+    }
+
+    static private void WriteDataLog(DataOperation operation) {
+      var dataLog = new DataLog(operation);
+
+      dataLog.Write();
     }
 
     #endregion Private methods

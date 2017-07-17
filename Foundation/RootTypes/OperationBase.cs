@@ -10,6 +10,8 @@
 ********************************* Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
 
+using Newtonsoft.Json;
+
 using Empiria.Security;
 
 namespace Empiria {
@@ -85,7 +87,15 @@ namespace Empiria {
 
     #region Public methods
 
-    public string ParametersToString() {
+    public string ParametersAsJson() {
+      if (this.Parameters.Length != 0) {
+        return JsonConvert.SerializeObject(this.Parameters);
+      } else {
+        return String.Empty;
+      }
+    }
+
+  public string ParametersToString() {
       string parametersString = String.Empty;
 
       for (int i = 0; i < parameters.Length; i++) {

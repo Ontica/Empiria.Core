@@ -227,6 +227,7 @@
     <Compile Include="DataTypes\YearMonth.cs" />
     <Compile Include="Data\CachedObject.cs" />
     <Compile Include="Data\DataCache.cs" />
+    <Compile Include="Data\DataLog.cs" />
     <Compile Include="Data\DataOperation.cs" />
     <Compile Include="Data\DataOperationList.cs" />
     <Compile Include="Data\DataQuery.cs" />

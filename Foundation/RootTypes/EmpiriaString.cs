@@ -508,6 +508,21 @@ namespace Empiria {
       return (stringA.Equals(stringB));
     }
 
+    static public bool StartsWith(string source, string firstValue, params string[] moreValues) {
+      Assertion.AssertObject(source, "source");
+      Assertion.AssertObject(firstValue, "firstValue");
+
+      if (source.StartsWith(firstValue)) {
+        return true;
+      }
+      for (int i = 0; i < moreValues.Length; i++) {
+        if (source.StartsWith(moreValues[i])) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     static public bool ToBoolean(string source) {
       source = source.ToUpperInvariant();
       if (source == "1" || source == "Y" || source == "T" || source == "S" || source == "V" ||
