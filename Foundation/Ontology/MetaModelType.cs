@@ -361,9 +361,13 @@ namespace Empiria.Ontology {
 
         case MetaModelTypeFamily.PartitionedType:
           type = MetaModelType.GetType(dataRow);
+
           /// Partitioned types return the powertype instance defined with their PartitionedTypeAttribute.
-          var attribute = (PartitionedTypeAttribute)
-                           Attribute.GetCustomAttribute(type, typeof(PartitionedTypeAttribute));
+          var attribute = Attribute.GetCustomAttribute(type, typeof(PartitionedTypeAttribute)) as PartitionedTypeAttribute;
+
+          if (attribute == null) {
+            throw new OntologyException(OntologyException.Msg.PartitionedTypeAttributeMissed, type.FullName);
+          }
 
           powerType = (Powertype) ObjectFactory.CreateObject(attribute.Powertype);
           powerType.typeFamily = MetaModelTypeFamily.PartitionedType;

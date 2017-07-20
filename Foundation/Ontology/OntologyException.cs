@@ -35,6 +35,7 @@ namespace Empiria.Ontology {
       ObjectIdNotFound,
       ObjectNamedKeyNotFound,
       ObjectWithConditionNotFound,
+      PartitionedTypeAttributeMissed,
       RelationMemberNameNotFound,
       TryToParseZeroObjectId,
       TypeAssociationInfoNotFound,

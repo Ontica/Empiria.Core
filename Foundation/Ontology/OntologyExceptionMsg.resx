@@ -194,4 +194,7 @@
   <data name="MultipleLinksFoundForTarget" xml:space="preserve">
     <value>Existen varias relaciones (links) inversas del tipo {3} (id = {2})) del objeto con id {0} del tipo {1}. Se esperaba sólo una.</value>
   </data>
+  <data name="PartitionedTypeAttributeMissed" xml:space="preserve">
+    <value>Partitioned type {0} must have defined a PartitionedTypeAttribute.</value>
+  </data>
 </root>
