@@ -217,6 +217,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="DataTypes\Calendar.cs" />
+    <Compile Include="DataTypes\KeyValueList.cs" />
     <Compile Include="DataTypes\Interest.cs" />
     <Compile Include="DataTypes\Discount.cs" />
     <Compile Include="DataTypes\DiscountType.cs" />
