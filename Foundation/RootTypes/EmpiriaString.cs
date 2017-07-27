@@ -54,6 +54,13 @@ namespace Empiria {
       return temp;
     }
 
+    /// <summary>Trims all excesive whitespaces and removes any control characters.</summary>
+    static internal string Clean(string value) {
+      value = EmpiriaString.TrimControl(value);
+
+      return value = EmpiriaString.TrimAll(value);
+    }
+
     static public bool Contains(string source, string searchWords) {
       searchWords = TrimAll(searchWords);
       if (source.Length == 0 || searchWords.Length == 0) {

@@ -111,6 +111,40 @@ namespace Empiria.Json {
     }
 
 
+    /// <summary>Searches for a string item inside the JsonObject and returns it cleaned
+    /// without any whitespaces or control characters.</summary>
+    /// <param name="itemPath">The item path to search</param>
+    /// <returns>The item relative to the searched path, or an exception if the object
+    /// was not found or if the path is not well-formed.</returns>
+    public string GetClean(string itemPath, string defaultValue = null) {
+      Assertion.AssertObject(itemPath, "itemPath");
+
+      string value = String.Empty;
+      if (defaultValue == null) {
+        value = this.Find<string>(itemPath, true, defaultValue);
+      } else {
+        value = this.Find<string>(itemPath, false, defaultValue);
+      }
+      return EmpiriaString.Clean(value);
+    }
+
+
+    internal bool HasValue(string itemPath) {
+      Assertion.AssertObject(itemPath, "itemPath");
+
+      object value = this.TryGetDictionaryValue(itemPath, false);
+
+      if (value == null) {
+        return false;
+      }
+      if (value is String) {
+        if (String.IsNullOrWhiteSpace(EmpiriaString.Clean((string) value))) {
+          return false;
+        }
+      }
+      return true;
+    }
+
     /// <summary>Adds a new JsonObject from this instance given an itemPath.</summary>
     /// <param name="itemPath">The item path to set.</param>
     /// <param name="value">The value of the item to set.</param>
