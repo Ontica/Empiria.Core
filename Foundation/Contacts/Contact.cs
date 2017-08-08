@@ -28,8 +28,8 @@ namespace Empiria.Contacts {
       return BaseObject.ParseId<Contact>(id);
     }
 
-    static public T Parse<T>(string uid) where T : Contact {
-      return BaseObject.ParseKey<T>(uid);
+    static public Contact Parse(string uid) {
+      return BaseObject.ParseKey<Contact>(uid);
     }
 
     static private readonly Contact _empty = BaseObject.ParseEmpty<Contact>();
