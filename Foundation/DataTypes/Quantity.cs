@@ -134,7 +134,7 @@ namespace Empiria.DataTypes {
     }
 
     public override string ToString() {
-      return amount.ToString("N2") + " " + unit.Abbreviation;
+      return EmpiriaString.TrimAll(amount.ToString("#,#.00#") + " " + unit.Abbr);
     }
 
     #endregion Public methods

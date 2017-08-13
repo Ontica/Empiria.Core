@@ -70,8 +70,8 @@ namespace Empiria.DataTypes {
     }
 
 
-    [DataField(GeneralObject.ExtensionDataFieldName  + ".Abbreviation", IsOptional = true)]
-    public string Abbreviation {
+    [DataField(GeneralObject.ExtensionDataFieldName  + ".Abbr", IsOptional = true)]
+    public string Abbr {
       get;
       private set;
     }
