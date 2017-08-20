@@ -83,17 +83,23 @@ namespace Empiria.Reflection {
 
     static public object EmptyInstance(Type type) {
       try {
-        PropertyInfo property = ObjectFactory.GetEmptyInstanceProperty(type);
+        PropertyInfo property = ObjectFactory.TryGetEmptyInstanceProperty(type);
+
         Assertion.AssertObject(property, "Type {0} doesn't has a static Empty property.", type.FullName);
+
         return property.GetMethod.Invoke(null, null);
+
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
                                       type.FullName);
+
       } catch (TargetInvocationException e) {
         throw e.InnerException ?? e;
+
       } catch (Exception e) {
         throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
                                       type.FullName);
+
       }
     }
 
@@ -103,6 +109,7 @@ namespace Empiria.Reflection {
 
       if (propertyInfo != null) {
         return propertyInfo.GetValue(instance, null);
+
       } else {
         throw new ReflectionException(ReflectionException.Msg.ObjectPropertyNotFound,
                                       propertyName, type.FullName);
@@ -119,21 +126,32 @@ namespace Empiria.Reflection {
     }
 
     static public bool HasEmptyInstance(Type type) {
-      return (ObjectFactory.GetEmptyInstanceProperty(type) != null);
+      return (ObjectFactory.TryGetEmptyInstanceProperty(type) != null);
     }
 
     static public bool HasParseWithIdMethod(Type type) {
-      return (ObjectFactory.GetParseMethod(type) != null);
+      return (ObjectFactory.TryGetParseWithIdMethod(type) != null);
+    }
+
+    static public bool HasParseWithStringMethod(Type type) {
+      return (ObjectFactory.TryGetParseStringMethod(type) != null);
     }
 
     static public bool IsConvertible(Type sourceType, Type targetType) {
       try {
         var instanceOfSourceType = Activator.CreateInstance(sourceType);
+
         System.Convert.ChangeType(instanceOfSourceType, targetType);
+
         return true;
+
       } catch {
         return false;
       }
+    }
+
+    static public bool IsEmpiriaType(Type type) {
+      return type.FullName.StartsWith("Empiria.");
     }
 
     static public bool IsStorable(Type type) {
@@ -159,7 +177,7 @@ namespace Empiria.Reflection {
     }
 
     static public bool HasJsonParser(Type type) {
-      return (ObjectFactory.GetParseJsonMethod(type) != null);
+      return (ObjectFactory.TryGetParseJsonMethod(type) != null);
     }
 
     static public T InvokeParseMethod<T>(int objectId) {
@@ -176,49 +194,64 @@ namespace Empiria.Reflection {
 
     static public object InvokeParseMethod(Type type, int objectId) {
       try {
-        MethodInfo method = ObjectFactory.GetParseMethod(type);
+        MethodInfo method = ObjectFactory.TryGetParseWithIdMethod(type);
+
         Assertion.AssertObject(method, "Type {0} doesn't has static Parse(int) method.", type.FullName);
+
         return method.Invoke(null, new object[] { objectId });
+
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
                                       type.FullName);
+
       } catch (TargetInvocationException e) {
         throw e.InnerException ?? e;
+
       } catch (Exception e) {
         throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
                                       type.FullName + "[ Id = " + objectId + " ]");
+
       }
     }
 
     static public object InvokeParseMethod(Type type, string value) {
       try {
-        MethodInfo method = ObjectFactory.GetParseStringMethod(type);
+        MethodInfo method = ObjectFactory.TryGetParseStringMethod(type);
+
         Assertion.AssertObject(method, "Type {0} doesn't has static Parse(string) method.", type.FullName);
+
         return method.Invoke(null, new object[] { value });
+
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
                                       type.FullName);
+
       } catch (TargetInvocationException e) {
         throw e.InnerException ?? e;
+
       } catch (Exception e) {
         throw e;
-        //throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
-        //                              type.FullName + "[ Value = " + value + " ]");
+
       }
     }
 
     static internal T InvokeParseJsonMethod<T>(Json.JsonObject jsonObject) {
       Type type = typeof(T);
       try {
-        MethodInfo method = GetParseJsonMethod(type);
+        MethodInfo method = TryGetParseJsonMethod(type);
+
         Assertion.AssertObject(method,
                                "Type {0} doesn't has static Parse(JsonObject) method.", type.FullName);
+
         return (T) method.Invoke(null, new object[] { jsonObject });
+
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
                                       type.FullName);
+
       } catch (TargetInvocationException e) {
         throw e.InnerException ?? e;
+
       } catch (Exception e) {
         throw new ReflectionException(ReflectionException.Msg.MethodExecutionFails, e,
                                       type.FullName + "JsonObject =  " + jsonObject.ToString());
@@ -229,14 +262,24 @@ namespace Empiria.Reflection {
 
     #region Private methods
 
-    static public PropertyInfo GetEmptyInstanceProperty(Type type) {
+    static public PropertyInfo TryGetEmptyInstanceProperty(Type type) {
       return type.GetProperty("Empty", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public);
     }
 
-    static public Delegate GetParseMethodDelegate(Type type) {
-      MethodInfo parseMethod = GetParseMethod(type);
+    static public Delegate GetParseWithIdMethodDelegate(Type type) {
+      MethodInfo parseMethod = TryGetParseWithIdMethod(type);
 
       ParameterExpression param = Expression.Parameter(typeof(Int32), "id");
+
+      var body = Expression.Call(parseMethod, param);
+
+      return Expression.Lambda(body, param).Compile();
+    }
+
+    static public Delegate GetParseWithStringMethodDelegate(Type type) {
+      MethodInfo parseMethod = TryGetParseStringMethod(type);
+
+      ParameterExpression param = Expression.Parameter(typeof(string), "value");
 
       var body = Expression.Call(parseMethod, param);
 
@@ -249,20 +292,30 @@ namespace Empiria.Reflection {
       return Expression.Lambda(body).Compile();
     }
 
-    static public MethodInfo GetParseMethod(Type type) {
+    static public MethodInfo TryGetParseWithIdMethod(Type type) {
+      if (!IsEmpiriaType(type)) {
+        return null;
+      }
       return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.FlattenHierarchy |
-                            BindingFlags.Static | BindingFlags.Public,
+                            BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic,
                             null, CallingConventions.Any, new Type[] { typeof(int) }, null);
     }
 
-    static private MethodInfo GetParseJsonMethod(Type type) {
+    static private MethodInfo TryGetParseJsonMethod(Type type) {
+      if (!IsEmpiriaType(type)) {
+        return null;
+      }
       return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static |
                             BindingFlags.Public | BindingFlags.NonPublic,
                             null, CallingConventions.Any, new Type[] { typeof(Json.JsonObject) }, null);
     }
 
-    static private MethodInfo GetParseStringMethod(Type type) {
-      return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public,
+    static public MethodInfo TryGetParseStringMethod(Type type) {
+      if (!IsEmpiriaType(type)) {
+        return null;
+      }
+      return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static |
+                            BindingFlags.Public | BindingFlags.NonPublic,
                             null, CallingConventions.Any, new Type[] { typeof(string) }, null);
     }
 
