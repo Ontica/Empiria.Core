@@ -240,6 +240,7 @@ namespace Empiria.ORM {
         int columnIndex = dataColumns.IndexOf(mapping.DataFieldAttributeName);
         if (columnIndex != -1) {
           mapping.MapDataColumn(dataColumns[columnIndex]);
+
         } else if (mapping.MapToJsonItem) {
           columnIndex = dataColumns.IndexOf(mapping.JsonFieldName);
           if (columnIndex != -1) {
@@ -249,6 +250,7 @@ namespace Empiria.ORM {
                                            mappedType.Name, mapping.MemberInfo.Name,
                                            mapping.JsonFieldName);
           }  // inner if
+
         } else {
           throw new DataMappingException(DataMappingException.Msg.MappingDataColumnNotFound,
                                          mappedType.Name, mapping.MemberInfo.Name,

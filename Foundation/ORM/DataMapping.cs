@@ -153,12 +153,17 @@ namespace Empiria.ORM {
       private set;
     }
 
-    internal bool MapToLazyInstance {
+    internal bool MapToLazyParseWithIdInstance {
       get;
       private set;
     }
 
-    public bool MapToParsableObject {
+    public bool MapToParseWithIdObject {
+      get;
+      private set;
+    }
+
+    public bool MapToParseWithStringObject {
       get;
       private set;
     }
@@ -170,11 +175,11 @@ namespace Empiria.ORM {
     internal string GetExecutionData() {
       string str = String.Empty;
 
-      str = String.Format("Mapped type member: {0}\n", this.MemberInfo.Name);
-      str += String.Format("Mapped data field: {0}\n", this.DataFieldName);
+      str = $"Mapped type member: {this.MemberInfo.Name}.\n" +
+            $"Mapped data field: {this.DataFieldName}.\n";
       if (this.JsonInnerFieldName.Length != 0) {
-        str += String.Format("Mapped Json source field: {0}\n", this.JsonFieldName);
-        str += String.Format("Mapped Json item: {0}\n", this.JsonInnerFieldName);
+        str += $"Mapped Json source field: {this.JsonFieldName}.\n" +
+               $"Mapped Json item: {this.JsonInnerFieldName}.\n";
       }
       return str;
     }
@@ -185,26 +190,31 @@ namespace Empiria.ORM {
       this.DataFieldName = this.DataColumn.ColumnName;
       this.DataFieldType = this.DataColumn.DataType;
 
-      if (this.MapToLazyInstance) {
+      if (this.MapToLazyParseWithIdInstance) {
         Assertion.Assert(this.DataFieldType == typeof(int),
                          "LazyObjects can only be parsed from integer type data columns.");
-      }
-      if (this.MapToParsableObject) {
-        Assertion.Assert(this.DataFieldType == typeof(int),
-                         this.MemberInfo.Name + " can only be parsed from an integer type data column.");
-      }
-
-      if (this.MapToJsonItem) {
+      } else if (this.MapToJsonItem) {
         Assertion.Assert(this.DataFieldType == typeof(string),
                          "Json items can only be parsed from string type data columns.");
-      }
-      if (this.MapToEnumeration) {
+
+      } else if (this.MapToEnumeration) {
         Assertion.Assert(this.DataFieldType == typeof(string) || this.DataFieldType == typeof(char),
                          "Enumeration items can only be parsed from char(1) or string type data columns.");
-      }
-      if (this.MapToChar) {
+
+      } else if (this.MapToChar) {
         Assertion.Assert(this.DataFieldType == typeof(string) || this.DataFieldType == typeof(char),
                          "Char value items can only be parsed from char(1) or string type data columns.");
+
+      }
+
+      if (this.MapToParseWithIdObject && !this.MapToParseWithStringObject) {
+        Assertion.Assert(this.DataFieldType == typeof(int),
+                         this.MemberInfo.Name + " can only be parsed from an integer type data column.");
+
+      } else if (!this.MapToParseWithIdObject && this.MapToParseWithStringObject) {
+        Assertion.Assert(this.DataFieldType == typeof(string),
+                         this.MemberInfo.Name + " can only be parsed from string type data columns.");
+
       }
     }
 
@@ -225,10 +235,14 @@ namespace Empiria.ORM {
 
       if (this.JsonInnerFieldName.Length != 0) {
         object memberValue = this.ExtractJsonInnerFieldValue(jsonObject);
+
         memberValue = this.TransformDataStoredValueBeforeAssignToMember(memberValue);
+
         this.ImplementsSetValue(instance, memberValue);
+
       } else {
         this.ImplementsSetValue(instance, jsonObject);
+
       }
     }
 
@@ -237,6 +251,7 @@ namespace Empiria.ORM {
     internal void SetValue(object instance, object value) {
       //Assert(this.MapToJsonItem == false, "Method for use only when this.MapToJsonItem is false.");
       object memberValue = this.TransformDataStoredValueBeforeAssignToMember(value);
+
       this.ImplementsSetValue(instance, memberValue);
     }
 
@@ -281,9 +296,11 @@ namespace Empiria.ORM {
     private object ExtractJsonInnerFieldValue(JsonObject jsonObject) {
       if (this.DataFieldAttribute.IsOptional) {
         var parameters = new object[] { this.JsonInnerFieldName, this.DefaultValue };
+
         return this.JsonGetItemMethodWithDefault.Invoke(jsonObject, parameters);
       } else {
         var parameter = new object[] { this.JsonInnerFieldName };
+
         return this.JsonGetItemMethod.Invoke(jsonObject, parameter);
       }
     }
@@ -311,12 +328,16 @@ namespace Empiria.ORM {
       if (defaultValueType != this.MemberType && defaultValueType == typeof(string)) {
         //Builds a delegate in order to execute it when this.DefaultValue has been invoked.
         defaultValueDelegate = GetDelegateForDefaultValue();
+
         return defaultValueDelegate.Invoke();
+
       } else if (defaultValueType != this.MemberType && defaultValueType != typeof(string)) {
         //Convert the default value to member type
         return System.Convert.ChangeType(this.DataFieldAttribute.Default, this.MemberType);
+
       } else {
         return this.DataFieldAttribute.Default;
+
       }
     }
 
@@ -332,6 +353,7 @@ namespace Empiria.ORM {
         PropertyInfo propertyInfo = MethodInvoker.GetStaticProperty(type, propertyName);
 
         return MethodInvoker.GetStaticPropertyValueMethodDelegate(propertyInfo);
+
       } catch (Exception e) {
         throw new DataMappingException(DataMappingException.Msg.CannotParsePropertyForDefaultValue, e,
                                        this.MemberInfo.DeclaringType, this.MemberInfo.Name,
@@ -342,19 +364,26 @@ namespace Empiria.ORM {
     static private object GetTypeDefaultValue(Type type) {
       if (type == typeof(string)) {
         return String.Empty;
+
       } else if (type == typeof(int)) {
         return (int) 0;
-      } else if (ObjectFactory.HasEmptyInstance(type)) {
-        return ObjectFactory.EmptyInstance(type);
+
       } else if (type == typeof(DateTime)) {
         return ExecutionServer.DateMaxValue;
+
       } else if (type == typeof(bool)) {
         return false;
+
       } else if (type == typeof(decimal)) {
         return decimal.Zero;
+
+      } else if (ObjectFactory.HasEmptyInstance(type)) {
+        return ObjectFactory.EmptyInstance(type);
+
       } else {
         throw new DataMappingException(DataMappingException.Msg.CannotGetDefaultValueforType,
                                        type.FullName);
+
       }
     }
 
@@ -368,9 +397,10 @@ namespace Empiria.ORM {
       // Set rules
       this.ApplyOnInitialization = (this.MemberInfo is PropertyInfo);
       this.DataFieldAttribute = this.MemberInfo.GetCustomAttribute<DataFieldAttribute>();
-      this.MapToLazyInstance = (this.MemberType.IsGenericType &&
-                                this.MemberType.GetGenericTypeDefinition() == typeof(LazyInstance<>));
-      this.MapToParsableObject = ObjectFactory.HasParseWithIdMethod(this.MemberType);
+      this.MapToLazyParseWithIdInstance = (this.MemberType.IsGenericType &&
+                                  this.MemberType.GetGenericTypeDefinition() == typeof(LazyInstance<>));
+      this.MapToParseWithIdObject = ObjectFactory.HasParseWithIdMethod(this.MemberType);
+      this.MapToParseWithStringObject = ObjectFactory.HasParseWithStringMethod(this.MemberType);
       this.MapToEmptyObject = ObjectFactory.HasEmptyInstance(this.MemberType);
       this.MapToEnumeration = this.MemberType.IsEnum;
       this.MapToChar = (this.MemberType == typeof(char));
@@ -382,7 +412,7 @@ namespace Empiria.ORM {
 
         int indexOfPeriod = dataFieldAttrName.IndexOf('.');
         if (indexOfPeriod != -1) {
-          // [DataField("ContactExtData.Address")] <- returns a a string or Address object
+          // [DataField("ContactExtData.Address")] <- returns a string or Address object
           this.JsonFieldName = dataFieldAttrName.Substring(0, dataFieldAttrName.IndexOf('.'));
           this.JsonInnerFieldName = dataFieldAttrName.Substring(dataFieldAttrName.IndexOf('.') + 1);
         } else {
@@ -395,23 +425,34 @@ namespace Empiria.ORM {
     }
 
     private object TransformDataStoredValueBeforeAssignToMember(object value) {
-      if (this.MapToParsableObject || this.MapToLazyInstance) {
-        int objectId = (int) value;
-        if (objectId == -1 && this.MapToEmptyObject) {
-          return this.GetEmptyInstanceDelegate();   ///ObjectFactory.EmptyInstance(this.MemberType);
-        } else {
-          return this.GetParseInstanceDelegate(objectId);  //ParseMemberTypeDelegate.DynamicInvoke(objectId);
-        }
-      } else if (this.MapToEnumeration) {
+      if (this.MapToEnumeration) {
         if (((string) value).Length == 1) {
           return Enum.ToObject(this.MemberType, Convert.ToChar(value));
         } else {
           return Enum.Parse(this.MemberType, (string) value);
         }
+
       } else if (this.MapToChar) {
         return Convert.ToChar((string) value);
+
+      } else if (this.MapToJsonItem) {
+        return value;
+
+      } else if (value is int && (this.MapToParseWithIdObject || this.MapToLazyParseWithIdInstance)) {
+        int objectId = (int) value;
+
+        if (objectId == -1 && this.MapToEmptyObject) {
+          return this.GetEmptyInstanceDelegate();
+        } else {
+          return this.GetParseWithIdDelegate(objectId);
+        }
+
+      } else if (value is string && this.MapToParseWithStringObject && !this.MapToJsonItem) {
+        return this.GetParseWithStringDelegate((string) value);
+
       } else {
         return value;
+
       }
     }
 
@@ -422,22 +463,36 @@ namespace Empiria.ORM {
         if (_emptyMethodDelegate == null) {
           _emptyMethodDelegate =
               (EmptyMethodDelegate) Delegate.CreateDelegate(typeof(EmptyMethodDelegate),
-                                    ObjectFactory.GetEmptyInstanceProperty(this.MemberType).GetGetMethod());
+                                    ObjectFactory.TryGetEmptyInstanceProperty(this.MemberType).GetGetMethod());
         }
         return _emptyMethodDelegate;
       }
     }
 
-    private delegate object ParseMethodDelegate(int id);
-    ParseMethodDelegate _parseMethodDelegate = null;
-    private ParseMethodDelegate GetParseInstanceDelegate {
+    private delegate object ParseWithIdMethodDelegate(int id);
+    ParseWithIdMethodDelegate _parseWithIdMethodDelegate = null;
+    private ParseWithIdMethodDelegate GetParseWithIdDelegate {
       get {
-        if (_parseMethodDelegate == null) {
-          _parseMethodDelegate =
-              (ParseMethodDelegate) Delegate.CreateDelegate(typeof(ParseMethodDelegate),
-                                                            ObjectFactory.GetParseMethod(this.MemberType));
+        if (_parseWithIdMethodDelegate == null) {
+          _parseWithIdMethodDelegate =
+              (ParseWithIdMethodDelegate) Delegate.CreateDelegate(typeof(ParseWithIdMethodDelegate),
+                                                            ObjectFactory.TryGetParseWithIdMethod(this.MemberType));
         }
-        return _parseMethodDelegate;
+        return _parseWithIdMethodDelegate;
+      }
+    }
+
+
+    private delegate object ParseWithStringMethodDelegate(string value);
+    ParseWithStringMethodDelegate _parseWithStringMethodDelegate = null;
+    private ParseWithStringMethodDelegate GetParseWithStringDelegate {
+      get {
+        if (_parseWithStringMethodDelegate == null) {
+          _parseWithStringMethodDelegate =
+              (ParseWithStringMethodDelegate) Delegate.CreateDelegate(typeof(ParseWithStringMethodDelegate),
+                                                            ObjectFactory.TryGetParseStringMethod(this.MemberType));
+        }
+        return _parseWithStringMethodDelegate;
       }
     }
 
