@@ -39,16 +39,29 @@ namespace Empiria {
       return words;
     }
 
-    static public string BuildRandomString(int length) {
+    static public string BuildRandomString(int minLength, int maxLength = -1) {
+      Assertion.Assert(0 < minLength,
+                      $"Parameter 'minLength' ({minLength}) must be greater than zero.");
+      Assertion.Assert(minLength == -1 || minLength <= maxLength,
+                      $"Parameter 'minLength' ({minLength}) must be less or equal than " +
+                      $"parameter 'maxLength' ({maxLength}).");
+
       var temp = String.Empty;
 
+      int length = minLength;
+      if (maxLength != -1) {
+        length = EmpiriaMath.GetRandom(minLength, maxLength);
+      }
+
       for (int i = 0; i < length; i++) {
-        string value = EmpiriaMath.GetRandomDigitOrCharacter().ToString();
+        string value = EmpiriaMath.GetFullRandomDigitOrCharacter().ToString();
+
         if (EmpiriaMath.GetRandomBoolean()) {
           value = value.ToLowerInvariant();
         } else {
           value = value.ToUpperInvariant();
         }
+
         temp += value;
       }
       return temp;

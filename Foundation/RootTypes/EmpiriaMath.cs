@@ -118,6 +118,10 @@ namespace Empiria {
       return ((i % 2) == 0);
     }
 
+    static public int GetRandom(int minValue, int maxValue) {
+      return random.Next(minValue, maxValue);
+    }
+
     static public char GetRandomCharacter(string current = "") {
       const string characters = "ACDEFHJKMNPRTWXYZ";
 
@@ -132,6 +136,12 @@ namespace Empiria {
 
     static public char GetRandomDigitOrCharacter(string current = "") {
       const string digitsAndCharacters = "AC2D3E4FH7J8K9MLNPRTWXYZ";
+
+      return GetRandomCharacterHelper(digitsAndCharacters, current);
+    }
+
+    static public char GetFullRandomDigitOrCharacter(string current = "") {
+      const string digitsAndCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
       return GetRandomCharacterHelper(digitsAndCharacters, current);
     }
