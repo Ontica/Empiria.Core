@@ -96,7 +96,7 @@ namespace Empiria.Json {
     public T Get<T>(string itemPath) {
       Assertion.AssertObject(itemPath, "itemPath");
 
-      return this.Find<T>(itemPath, true, default(T));
+      return this.Find<T>(itemPath);
     }
 
     /// <summary>Extracts a new JsonObject from this instance given an itemPath.</summary>
@@ -107,7 +107,7 @@ namespace Empiria.Json {
     public T Get<T>(string itemPath, T defaultValue) {
       Assertion.AssertObject(itemPath, "itemPath");
 
-      return this.Find<T>(itemPath, false, defaultValue);
+      return this.Find<T>(itemPath, defaultValue);
     }
 
 
@@ -121,9 +121,9 @@ namespace Empiria.Json {
 
       string value = String.Empty;
       if (defaultValue == null) {
-        value = this.Find<string>(itemPath, true, defaultValue);
+        value = this.Find<string>(itemPath);
       } else {
-        value = this.Find<string>(itemPath, false, defaultValue);
+        value = this.Find<string>(itemPath, defaultValue);
       }
       return EmpiriaString.Clean(value);
     }
@@ -329,13 +329,31 @@ namespace Empiria.Json {
 
     #region Private members
 
-    private T Find<T>(string itemPath, bool required, T defaultValue) {
-      object value = this.TryGetDictionaryValue(itemPath, required);
-      if (value == null && required) {
+    private T Find<T>(string itemPath) {
+      object value = this.TryGetDictionaryValue(itemPath, true);
+      if (value == null) {
         // An exception should be thrown from the this.TryGetDictionaryValue call above.
         Assertion.AssertNoReachThisCode();
       }
+      try {
+        return ObjectFactory.Convert<T>(value);
+      } catch (Exception e) {
+        throw new JsonDataException(JsonDataException.Msg.JsonValueTypeConvertionFails, e,
+                                    itemPath, value.ToString(), value.GetType().ToString(),
+                                    typeof(T).ToString());
+      }
+    }
+
+    private T Find<T>(string itemPath, T defaultValue) {
+      object value = this.TryGetDictionaryValue(itemPath, false);
+
+      // Return defaultValue when retrieved item is null
       if (value == null) {
+        return defaultValue;
+      }
+      // Return defaultValue when retrieved item has an empty value
+      if ((typeof(T) == typeof(string) || value.GetType() == typeof(string)) &&
+          String.IsNullOrWhiteSpace(value as string)) {
         return defaultValue;
       }
       try {

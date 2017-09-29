@@ -696,6 +696,10 @@ namespace Empiria {
     }
 
     static public string TrimControl(string source) {
+      if (String.IsNullOrWhiteSpace(source)) {
+        return String.Empty;
+      }
+
       string temp = source;
 
       for (int i = 0; i < temp.Length; i++) {
