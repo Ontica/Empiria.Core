@@ -195,6 +195,7 @@
     <Compile Include="Collections\MergeResult.cs" />
     <Compile Include="Collections\MergeResultType.cs" />
     <Compile Include="Collections\EmpiriaDictionary.cs" />
+    <Compile Include="Collections\TagsCollection.cs" />
     <Compile Include="Contacts\RoleType.cs" />
     <Compile Include="Data.Handlers\MySqlMethods.cs" />
     <Compile Include="Data.Handlers\MySqlParameterCache.cs" />
@@ -217,6 +218,8 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="DataTypes\Calendar.cs" />
+    <Compile Include="DataTypes\Duration.cs" />
+    <Compile Include="DataTypes\DurationType.cs" />
     <Compile Include="DataTypes\KeyValueList.cs" />
     <Compile Include="DataTypes\Interest.cs" />
     <Compile Include="DataTypes\Discount.cs" />
@@ -225,6 +228,7 @@
     <Compile Include="DataTypes\TempAddress.cs" />
     <Compile Include="Contacts\Organization.cs" />
     <Compile Include="DataTypes\InterestRateType.cs" />
+    <Compile Include="DataTypes\TimeUnit.cs" />
     <Compile Include="DataTypes\YearMonth.cs" />
     <Compile Include="Data\CachedObject.cs" />
     <Compile Include="Data\DataCache.cs" />

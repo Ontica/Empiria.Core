@@ -8,6 +8,7 @@
 *  Summary   : Sealed structure that represents a keyword.                                                   *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+using System;
 
 namespace Empiria.DataTypes {
 

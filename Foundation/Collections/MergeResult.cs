@@ -5,7 +5,7 @@
 *  Type      : MergeResult                                      Pattern  : Standard Class                    *
 *  Version   : 6.8                                              License  : Please read license.txt file      *
 *                                                                                                            *
-*  Summary   : Holds information about two merged objects and the result of their comparision.              *
+*  Summary   : Holds information about two merged objects and the result of their comparision.               *
 *                                                                                                            *
 ********************************* Copyright (c) 2002-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
 using System;
