@@ -74,8 +74,8 @@ namespace Empiria {
 
     [Fact]
     public void ThrowWhenNoDataAndNoDefaultValue() {
-      Assert.Throws(typeof(ConfigurationDataException),
-                    () => ConfigurationData.Get<DateTime>("NotDefinedDateTimeValue"));
+      Assert.Throws<ConfigurationDataException>(() =>
+                                                ConfigurationData.Get<DateTime>("NotDefinedDateTimeValue"));
     }
 
 

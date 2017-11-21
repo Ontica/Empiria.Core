@@ -18,22 +18,31 @@ namespace Empiria.WebApi.Client {
   static internal class WebApiClientFactory {
 
     static private IWebApiClient _defaultWebApiClient = null;
+
     static public IWebApiClient CreateWebApiClient() {
       if (_defaultWebApiClient == null) {
-        Type type = ObjectFactory.GetType("Empiria.WebApi.Client",
-                                          "Empiria.WebApi.Client.WebApiClient");
+        Type type = GetWebApiClientType();
+
+
         _defaultWebApiClient = (IWebApiClient) ObjectFactory.CreateObject(type);
       }
       return _defaultWebApiClient;
     }
 
+
     static public IWebApiClient CreateWebApiClient(string baseAddress) {
       Assertion.AssertObject(baseAddress, "baseAddress");
 
-      Type type = ObjectFactory.GetType("Empiria.WebApi.Client",
-                                        "Empiria.WebApi.Client.WebApiClient");
+      Type type = GetWebApiClientType();
+
       return (IWebApiClient) ObjectFactory.CreateObject(type,
                              new[] { typeof(string) }, new[] { baseAddress });
+    }
+
+
+    static private Type GetWebApiClientType() {
+      return ObjectFactory.GetType("Empiria.WebApi.Client",
+                                    "Empiria.WebApi.Client.WebApiClient");
     }
 
   }  // interface WebApiClientFactory
