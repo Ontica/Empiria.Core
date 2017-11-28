@@ -61,12 +61,25 @@ namespace Empiria.Json {
       }
     }
 
+    #endregion Constructors and parsers
+
+    #region Properties
+
+    /// <summary>Returns true if the json structure contains one ore more items.</summary>
+    public bool HasItems {
+      get {
+        return (this.dictionary.Count != 0);
+      }
+    }
+
+
+    /// <summary>Returns true when the json structure is marked as the empty instance.</summary>
     public bool IsEmptyInstance {
       get;
       private set;
     }
 
-    #endregion Constructors and parsers
+    #endregion Properties
 
     #region Public methods for change structure
 
@@ -74,9 +87,11 @@ namespace Empiria.Json {
       dictionary.Add(item.Key, item.Value);
     }
 
+
     public void Add(string key, JsonObject item) {
       dictionary.Add(key, item.ToDictionary());
     }
+
 
     public void AddIfValue(JsonItem item) {
       if (!HasValue(item.Value)) {
@@ -89,8 +104,34 @@ namespace Empiria.Json {
 
     #region Public methods to get data
 
+    /// <summary>Returns true if the json object has an item path.</summary>
+    /// <param name="itemPath">The item path to search.</param>
+    public bool Contains(string itemPath) {
+      Assertion.AssertObject(itemPath, "itemPath");
+
+      string[] pathMembers = this.SplitItemPath(itemPath);
+
+      IDictionary<string, object> item = dictionary;
+      for (int i = 0; i < pathMembers.Length; i++) {
+        if (!item.ContainsKey(pathMembers[i])) {
+          return false;
+        }
+        if (i == (pathMembers.Length - 1)) {  // The last item is the searched item in the path
+          return true;
+        }
+        if (item[pathMembers[i]] is IDictionary<string, object>) {
+          item = (IDictionary<string, object>) item[pathMembers[i]];
+        } else {   // This item is a scalar (not a subtree), so the next item
+                   // in the path necessarily doesn't exist.
+          return false;
+        }
+      }  // for
+      throw Assertion.AssertNoReachThisCode();
+    }
+
+
     /// <summary>Searches for an item inside the JsonObject.</summary>
-    /// <param name="itemPath">The item path to search</param>
+    /// <param name="itemPath">The item path to search.</param>
     /// <returns>The item relative to the searched path, or an exception if the object
     /// was not found or if the path is not well-formed.</returns>
     public T Get<T>(string itemPath) {
@@ -98,6 +139,7 @@ namespace Empiria.Json {
 
       return this.Find<T>(itemPath);
     }
+
 
     /// <summary>Extracts a new JsonObject from this instance given an itemPath.</summary>
     /// <param name="itemPath">The item path to search.</param>
@@ -129,7 +171,7 @@ namespace Empiria.Json {
     }
 
 
-    internal bool HasValue(string itemPath) {
+    public bool HasValue(string itemPath) {
       Assertion.AssertObject(itemPath, "itemPath");
 
       object value = this.TryGetDictionaryValue(itemPath, false);
