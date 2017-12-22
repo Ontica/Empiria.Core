@@ -8,17 +8,32 @@
 *  Summary   : Static internal class used to read data stored in MySQL Server databases.                     *
 *                                                                                                            *
 ********************************* Copyright (c) 2006-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+/* Empiria Foundation Framework ******************************************************************************
+*                                                                                                            *
+*  Solution : Empiria Foundation Framework                     System  : Data Access Library                 *
+*  Assembly : Empiria.Foundation.dll                           Pattern : Provider                            *
+*  Type     : MySqlMethods                                     License : Please read LICENSE.txt file        *
+*                                                                                                            *
+*  Summary  : Empiria data handler to connect solutions to MySQL databases.                                  *
+*                                                                                                            *
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
 
 namespace Empiria.Data.Handlers {
 
-  static internal class MySqlMethods {
+  /// <summary>Empiria data handler to connect solutions to MySQL databases.</summary>
+  internal class MySqlMethods : IDataHandler {
 
     #region Internal methods
 
-    static internal int CountRows(DataOperation operation) {
+    public int AppendRows(string tableName, DataTable table, string filter) {
+      throw new NotImplementedException();
+    }
+
+
+    public int CountRows(DataOperation operation) {
       var connection = new MySqlConnection(operation.DataSource.Source);
       var command = new MySqlCommand(operation.SourceName, connection);
       var dataTable = new DataTable();
@@ -40,7 +55,8 @@ namespace Empiria.Data.Handlers {
       }
     }
 
-    static internal int Execute(DataOperation operation) {
+
+    public int Execute(DataOperation operation) {
       var connection = new MySqlConnection(operation.DataSource.Source);
       var command = new MySqlCommand(operation.SourceName, connection);
 
@@ -69,7 +85,8 @@ namespace Empiria.Data.Handlers {
       return affectedRows;
     }
 
-    static internal T Execute<T>(DataOperation operation) {
+
+    public T Execute<T>(DataOperation operation) {
       var connection = new MySqlConnection(operation.DataSource.Source);
       var command = new MySqlCommand(operation.SourceName, connection);
 
@@ -98,8 +115,9 @@ namespace Empiria.Data.Handlers {
       return result;
     }
 
-    static internal int Execute(MySqlConnection connection, DataOperation operation) {
-      var command = new MySqlCommand(operation.SourceName, connection);
+
+    public int Execute(IDbConnection connection, DataOperation operation) {
+      var command = new MySqlCommand(operation.SourceName, (MySqlConnection) connection);
 
       int affectedRows = 0;
       try {
@@ -120,8 +138,11 @@ namespace Empiria.Data.Handlers {
       return affectedRows;
     }
 
-    static internal int Execute(MySqlTransaction transaction, DataOperation operation) {
-      var command = new MySqlCommand(operation.SourceName, transaction.Connection, transaction);
+
+    public int Execute(IDbTransaction transaction, DataOperation operation) {
+      var command = new MySqlCommand(operation.SourceName,
+                                     (MySqlConnection) transaction.Connection,
+                                     (MySqlTransaction) transaction);
 
       int affectedRows = 0;
       try {
@@ -142,7 +163,13 @@ namespace Empiria.Data.Handlers {
       return affectedRows;
     }
 
-    static internal MySqlConnection GetConnection(string connectionString) {
+
+    public byte[] GetBinaryFieldValue(DataOperation operation, string fieldName) {
+      throw new NotImplementedException();
+    }
+
+
+    public IDbConnection GetConnection(string connectionString) {
       var connection = new MySqlConnection(connectionString);
       // NOTE: DISTRIBUTED TRANSACTIONS NOT SUPPORTED YET FOR MYSQL
       //if (ContextUtil.IsInTransaction)  {
@@ -151,7 +178,8 @@ namespace Empiria.Data.Handlers {
       return connection;
     }
 
-    static internal IDataReader GetDataReader(DataOperation operation) {
+
+    public IDataReader GetDataReader(DataOperation operation) {
       var connection = new MySqlConnection(operation.DataSource.Source);
       var command = new MySqlCommand(operation.SourceName, connection);
       MySqlDataReader dataReader;
@@ -170,7 +198,8 @@ namespace Empiria.Data.Handlers {
       return dataReader;
     }
 
-    static internal DataRow GetDataRow(DataOperation operation) {
+
+    public DataRow GetDataRow(DataOperation operation) {
       var connection = new MySqlConnection(operation.DataSource.Source);
       var command = new MySqlCommand(operation.SourceName, connection);
       var dataTable = new DataTable(operation.SourceName);
@@ -195,7 +224,8 @@ namespace Empiria.Data.Handlers {
       }
     }
 
-    static internal DataTable GetDataTable(DataOperation operation, string dataTableName) {
+
+    public DataTable GetDataTable(DataOperation operation, string dataTableName) {
       var connection = new MySqlConnection(operation.DataSource.Source);
       var command = new MySqlCommand(operation.SourceName, connection);
       var dataTable = new DataTable(dataTableName);
@@ -216,7 +246,8 @@ namespace Empiria.Data.Handlers {
       return dataTable;
     }
 
-    static internal DataView GetDataView(DataOperation operation, string filter, string sort) {
+
+    public DataView GetDataView(DataOperation operation, string filter, string sort) {
       var connection = new MySqlConnection(operation.DataSource.Source);
       var command = new MySqlCommand(operation.SourceName, connection);
       DataTable dataTable = new DataTable(operation.SourceName);
@@ -238,7 +269,8 @@ namespace Empiria.Data.Handlers {
       }
     }
 
-    static internal object GetFieldValue(DataOperation operation, string fieldName) {
+
+    public object GetFieldValue(DataOperation operation, string fieldName) {
       var connection = new MySqlConnection(operation.DataSource.Source);
       var command = new MySqlCommand(operation.SourceName, connection);
       MySqlDataReader dataReader;
@@ -262,7 +294,8 @@ namespace Empiria.Data.Handlers {
       return fieldValue;
     }
 
-    static internal object GetScalar(DataOperation operation) {
+
+    public object GetScalar(DataOperation operation) {
       var connection = new MySqlConnection(operation.DataSource.Source);
       var command = new MySqlCommand(operation.SourceName, connection);
 

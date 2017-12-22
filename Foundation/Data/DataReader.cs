@@ -1,13 +1,12 @@
 ﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
-*  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
-*  Type      : DataReader                                       Pattern  : Static Class                      *
-*  Version   : 6.8                                              License  : Please read license.txt file      *
+*  Solution : Empiria Foundation Framework                     System  : Data Access Library                 *
+*  Assembly : Empiria.Foundation.dll                           Pattern : Static Class                        *
+*  Type     : DataReader                                       License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary   : Static class with methods that performs data reading operations.                              *
+*  Summary  : Static class with methods that performs data reading operations.                               *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -37,21 +36,9 @@ namespace Empiria.Data {
         return GetExternalCount(operation);
       }
 
-      switch (operation.DataSource.Technology) {
-        case DataTechnology.SqlServer:
-          return SqlMethods.CountRows(operation);
-        case DataTechnology.MySql:
-          return MySqlMethods.CountRows(operation);
-        case DataTechnology.OleDb:
-          return OleDbMethods.CountRows(operation);
-        case DataTechnology.Oracle:
-          return OracleMethods.CountRows(operation);
-        case DataTechnology.PostgreSql:
-          return PostgreSqlMethods.CountRows(operation);
-        default:
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
-                                         operation.DataSource.Technology);
-      }
+      IDataHandler handler = GetDataHander(operation);
+
+      return handler.CountRows(operation);
     }
 
     static public byte[] GetBinaryFieldValue(DataOperation operation, string fieldName) {
@@ -63,13 +50,9 @@ namespace Empiria.Data {
         throw new NotImplementedException();
       }
 
-      switch (operation.DataSource.Technology) {
-        case DataTechnology.SqlServer:
-          return SqlMethods.GetBinaryFieldValue(operation, fieldName);
-        default:
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
-                                         operation.DataSource.Technology);
-      }
+      IDataHandler handler = GetDataHander(operation);
+
+      return handler.GetBinaryFieldValue(operation, fieldName);
     }
 
     /// <summary>Retrives an IDataReader object giving a table name or stored procedure name.</summary>
@@ -81,21 +64,9 @@ namespace Empiria.Data {
         throw new NotImplementedException();
       }
 
-      switch (operation.DataSource.Technology) {
-        case DataTechnology.SqlServer:
-          return SqlMethods.GetDataReader(operation);
-        case DataTechnology.MySql:
-          return MySqlMethods.GetDataReader(operation);
-        case DataTechnology.OleDb:
-          return OleDbMethods.GetDataReader(operation);
-        case DataTechnology.Oracle:
-          return OracleMethods.GetDataReader(operation);
-        case DataTechnology.PostgreSql:
-          return PostgreSqlMethods.GetDataReader(operation);
-        default:
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
-                                         operation.DataSource.Technology);
-      }
+      IDataHandler handler = GetDataHander(operation);
+
+      return handler.GetDataReader(operation);
     }
 
     static public DataRow GetDataRow(DataOperation operation) {
@@ -105,21 +76,9 @@ namespace Empiria.Data {
         return GetExternalDataRow(operation);
       }
 
-      switch (operation.DataSource.Technology) {
-        case DataTechnology.SqlServer:
-          return SqlMethods.GetDataRow(operation);
-        case DataTechnology.MySql:
-          return MySqlMethods.GetDataRow(operation);
-        case DataTechnology.OleDb:
-          return OleDbMethods.GetDataRow(operation);
-        case DataTechnology.Oracle:
-          return OracleMethods.GetDataRow(operation);
-        case DataTechnology.PostgreSql:
-          return PostgreSqlMethods.GetDataRow(operation);
-        default:
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
-                                         operation.DataSource.Technology);
-      }
+      IDataHandler handler = GetDataHander(operation);
+
+      return handler.GetDataRow(operation);
     }
 
     static public DataRowView GetDataRowView(DataOperation operation) {
@@ -172,21 +131,9 @@ namespace Empiria.Data {
         return GetExternalDataView(operation, filter, sort);
       }
 
-      switch (operation.DataSource.Technology) {
-        case DataTechnology.SqlServer:
-          return SqlMethods.GetDataView(operation, filter, sort);
-        case DataTechnology.MySql:
-          return MySqlMethods.GetDataView(operation, filter, sort);
-        case DataTechnology.OleDb:
-          return OleDbMethods.GetDataView(operation, filter, sort);
-        case DataTechnology.Oracle:
-          return OracleMethods.GetDataView(operation, filter, sort);
-        case DataTechnology.PostgreSql:
-          return PostgreSqlMethods.GetDataView(operation, filter, sort);
-        default:
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
-                                         operation.DataSource.Technology);
-      }
+      IDataHandler handler = GetDataHander(operation);
+
+      return handler.GetDataView(operation, filter, sort);
     }
 
     static public dynamic GetDynamicObject(DataRow row, string fieldName) {
@@ -201,21 +148,9 @@ namespace Empiria.Data {
         return GetExternalFieldValue(operation, fieldName);
       }
 
-      switch (operation.DataSource.Technology) {
-        case DataTechnology.SqlServer:
-          return SqlMethods.GetFieldValue(operation, fieldName);
-        case DataTechnology.MySql:
-          return MySqlMethods.GetFieldValue(operation, fieldName);
-        case DataTechnology.OleDb:
-          return OleDbMethods.GetFieldValue(operation, fieldName);
-        case DataTechnology.Oracle:
-          return OracleMethods.GetFieldValue(operation, fieldName);
-        case DataTechnology.PostgreSql:
-          return PostgreSqlMethods.GetFieldValue(operation, fieldName);
-        default:
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
-                                  operation.DataSource.Technology);
-      }
+      IDataHandler handler = GetDataHander(operation);
+
+      return handler.GetFieldValue(operation, fieldName);
     }
 
     static public List<T> GetFieldValues<T>(DataOperation operation,
@@ -264,21 +199,9 @@ namespace Empiria.Data {
         return GetExternalScalar(operation);
       }
 
-      switch (operation.DataSource.Technology) {
-        case DataTechnology.SqlServer:
-          return SqlMethods.GetScalar(operation);
-        case DataTechnology.MySql:
-          return MySqlMethods.GetScalar(operation);
-        case DataTechnology.OleDb:
-          return OleDbMethods.GetScalar(operation);
-        case DataTechnology.Oracle:
-          return OracleMethods.GetScalar(operation);
-        case DataTechnology.PostgreSql:
-          return PostgreSqlMethods.GetScalar(operation);
-        default:
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
-                                  operation.DataSource.Technology);
-      }
+      IDataHandler handler = GetDataHander(operation);
+
+      return handler.GetScalar(operation);
     }
 
     static public bool IsEmpty(DataOperation operation) {
@@ -310,21 +233,9 @@ namespace Empiria.Data {
     #region Internal methods
 
     static internal DataTable GetInternalDataTable(DataOperation operation, string dataTableName) {
-      switch (operation.DataSource.Technology) {
-        case DataTechnology.SqlServer:
-          return SqlMethods.GetDataTable(operation, dataTableName);
-        case DataTechnology.MySql:
-          return MySqlMethods.GetDataTable(operation, dataTableName);
-        case DataTechnology.OleDb:
-          return OleDbMethods.GetDataTable(operation, dataTableName);
-        case DataTechnology.Oracle:
-          return OracleMethods.GetDataTable(operation, dataTableName);
-        case DataTechnology.PostgreSql:
-          return PostgreSqlMethods.GetDataTable(operation, dataTableName);
-        default:
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
-                                         operation.DataSource.Technology);
-      }
+      IDataHandler handler = GetDataHander(operation);
+
+      return handler.GetDataTable(operation, dataTableName);
     }
 
     #endregion Internal methods
@@ -354,6 +265,10 @@ namespace Empiria.Data {
 
     static private object OnReloadData(DataOperation dataOperation, string dataTableName) {
       return LoadDataTableIntoCache(dataOperation, dataTableName);
+    }
+
+    static private IDataHandler GetDataHander(DataOperation operation) {
+      return operation.DataSource.GetDataHandler();
     }
 
     static private int GetExternalCount(DataOperation dataOperation) {

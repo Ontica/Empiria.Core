@@ -1,13 +1,12 @@
 ﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
-*  Namespace : Empiria.Data.Handlers                            Assembly : Empiria.Data.dll                  *
-*  Type      : OleDbMethods                                     Pattern  : Static Class                      *
-*  Version   : 6.8                                              License  : Please read license.txt file      *
+*  Solution : Empiria Foundation Framework                     System  : Data Access Library                 *
+*  Assembly : Empiria.Foundation.dll                           Pattern : Provider                            *
+*  Type     : OleDbMethods                                     License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary   : Static internal class used to read data stored in Microsoft Access and other OleDb databases. *
+*  Summary  : Empiria data handler to connect solutions to OLE DB-based databases.                           *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Data;
 using System.Data.OleDb;
@@ -15,11 +14,17 @@ using System.EnterpriseServices;
 
 namespace Empiria.Data.Handlers {
 
-  static internal class OleDbMethods {
+  /// <summary>Empiria data handler to connect solutions to OLE DB-based databases.</summary>
+  internal class OleDbMethods : IDataHandler {
 
     #region Internal methods
 
-    static internal int CountRows(DataOperation operation) {
+    public int AppendRows(string tableName, DataTable table, string filter) {
+      throw new NotImplementedException();
+    }
+
+
+    public int CountRows(DataOperation operation) {
       OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
       OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
       DataTable dataTable = new DataTable();
@@ -43,7 +48,8 @@ namespace Empiria.Data.Handlers {
       }
     }
 
-    static internal int Execute(DataOperation operation) {
+
+    public int Execute(DataOperation operation) {
       OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
       OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
 
@@ -71,7 +77,8 @@ namespace Empiria.Data.Handlers {
       return affectedRows;
     }
 
-    static internal T Execute<T>(DataOperation operation) {
+
+    public T Execute<T>(DataOperation operation) {
       OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
       OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
 
@@ -99,8 +106,9 @@ namespace Empiria.Data.Handlers {
       return result;
     }
 
-    static internal int Execute(OleDbConnection connection, DataOperation operation) {
-      OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
+
+    public int Execute(IDbConnection connection, DataOperation operation) {
+      OleDbCommand command = new OleDbCommand(operation.SourceName, (OleDbConnection) connection);
 
       int affectedRows = 0;
       try {
@@ -124,8 +132,11 @@ namespace Empiria.Data.Handlers {
       return affectedRows;
     }
 
-    static internal int Execute(OleDbTransaction transaction, DataOperation operation) {
-      OleDbCommand command = new OleDbCommand(operation.SourceName, transaction.Connection, transaction);
+
+    public int Execute(IDbTransaction transaction, DataOperation operation) {
+      OleDbCommand command = new OleDbCommand(operation.SourceName,
+                                              (OleDbConnection) transaction.Connection,
+                                              (OleDbTransaction) transaction);
 
       int affectedRows = 0;
       try {
@@ -149,7 +160,13 @@ namespace Empiria.Data.Handlers {
       return affectedRows;
     }
 
-    static internal OleDbConnection GetConnection(string connectionString) {
+
+    public byte[] GetBinaryFieldValue(DataOperation operation, string fieldName) {
+      throw new NotImplementedException();
+    }
+
+
+    public IDbConnection GetConnection(string connectionString) {
       OleDbConnection connection = new OleDbConnection(connectionString);
       if (ContextUtil.IsInTransaction) {
         connection.EnlistDistributedTransaction((System.EnterpriseServices.ITransaction) ContextUtil.Transaction);
@@ -157,7 +174,7 @@ namespace Empiria.Data.Handlers {
       return connection;
     }
 
-    static internal IDataReader GetDataReader(DataOperation operation) {
+    public IDataReader GetDataReader(DataOperation operation) {
       OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
       OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
       OleDbDataReader dataReader;
@@ -179,7 +196,8 @@ namespace Empiria.Data.Handlers {
       return dataReader;
     }
 
-    static internal DataRow GetDataRow(DataOperation operation) {
+
+    public DataRow GetDataRow(DataOperation operation) {
       OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
       OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
       DataTable dataTable = new DataTable(operation.SourceName);
@@ -207,7 +225,8 @@ namespace Empiria.Data.Handlers {
       }
     }
 
-    static internal DataTable GetDataTable(DataOperation operation, string dataTableName) {
+
+    public DataTable GetDataTable(DataOperation operation, string dataTableName) {
       OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
       OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
       DataTable dataTable = new DataTable(dataTableName);
@@ -231,7 +250,8 @@ namespace Empiria.Data.Handlers {
       return dataTable;
     }
 
-    static internal DataView GetDataView(DataOperation operation, string filter, string sort) {
+
+    public DataView GetDataView(DataOperation operation, string filter, string sort) {
       OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
       OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
       DataTable dataTable = new DataTable(operation.SourceName);
@@ -256,7 +276,8 @@ namespace Empiria.Data.Handlers {
       }
     }
 
-    static internal object GetFieldValue(DataOperation operation, string fieldName) {
+
+    public object GetFieldValue(DataOperation operation, string fieldName) {
       OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
       OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
       OleDbDataReader dataReader;
@@ -283,7 +304,8 @@ namespace Empiria.Data.Handlers {
       return fieldValue;
     }
 
-    static internal object GetScalar(DataOperation operation) {
+
+    public object GetScalar(DataOperation operation) {
       OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
       OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
 

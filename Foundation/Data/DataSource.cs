@@ -1,13 +1,12 @@
 ﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
-*  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
-*  Type      : DataSource                                       Pattern  : Static Class With Objects Cache   *
-*  Version   : 6.8                                              License  : Please read license.txt file      *
+*  Solution : Empiria Foundation Framework                     System  : Data Access Library                 *
+*  Assembly : Empiria.Foundation.dll                           Pattern : Information Holder (with cache)     *
+*  Type     : DataSource                                       License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary   : Represents a data source formed by the source or connection string and the data technology.   *
+*  Summary  : Represents a data source formed by the source or connection string and the data technology.    *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Data;
 
@@ -16,26 +15,14 @@ using Empiria.Data.Handlers;
 
 namespace Empiria.Data {
 
-  #region Enumerations
-
-  public enum DataTechnology {
-    SqlServer = 1,
-    MySql = 2,
-    Oracle = 3,
-    PostgreSql = 4,
-    OleDb = 5,
-    Odbc = 6,
-    MSQueue = 7,
-    XMLFile = 8,
-  }
-
-  #endregion Enumerations
-
+  /// <summary>Represents a data source formed by the source or connection string and
+  /// the data technology.</summary>
   internal struct DataSource {
 
     #region Fields
 
-    static private EmpiriaDictionary<string, DataSource> sourcesCache = new EmpiriaDictionary<string, DataSource>(8);
+    static private EmpiriaDictionary<string, DataSource> sourcesCache =
+                                                                new EmpiriaDictionary<string, DataSource>(8);
 
     private readonly string name;
     private readonly string source;
@@ -61,6 +48,24 @@ namespace Empiria.Data {
       return sourcesCache[dataSourceName];
     }
 
+    internal IDataHandler GetDataHandler() {
+      switch (this.Technology) {
+        case DataTechnology.SqlServer:
+          return new SqlMethods();
+        case DataTechnology.MySql:
+          return new MySqlMethods();
+        case DataTechnology.OleDb:
+          return new OleDbMethods();
+        case DataTechnology.Oracle:
+          return new OracleMethods();
+        case DataTechnology.PostgreSql:
+          return new PostgreSqlMethods();
+        default:
+          throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
+                                         this.Technology);
+      }
+    }
+
     static internal DataSource Default {
       get {
         return DataSource.Parse("Default");
@@ -76,20 +81,9 @@ namespace Empiria.Data {
     }
 
     internal IDbConnection GetConnection() {
-      switch (technology) {
-        case DataTechnology.SqlServer:
-          return SqlMethods.GetConnection(source);
-        case DataTechnology.MySql:
-          return MySqlMethods.GetConnection(source);
-        case DataTechnology.OleDb:
-          return OleDbMethods.GetConnection(source);
-        case DataTechnology.Oracle:
-          return OracleMethods.GetConnection(source);
-        case DataTechnology.PostgreSql:
-          return PostgreSqlMethods.GetConnection(source);
-        default:
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology, technology);
-      }
+      IDataHandler handler = this.GetDataHandler();
+
+      return handler.GetConnection(source);
     }
 
     #endregion Internal methods

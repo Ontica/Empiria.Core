@@ -1,13 +1,13 @@
 ﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
-*  Namespace : Empiria.Data                                     Assembly : Empiria.Data.dll                  *
-*  Type      : DataWriter                                       Pattern  : Static Class                      *
-*  Version   : 6.8                                              License  : Please read license.txt file      *
+*  Solution : Empiria Foundation Framework                     System  : Data Access Library                 *
+*  Assembly : Empiria.Foundation.dll                           Pattern : Static Class                        *
+*  Type     : DataWriter                                       License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary   : Static class with methods that performs data writing operations.                              *
+*  Summary  : Static class with methods that performs data writing operations.                               *
 *                                                                                                            *
-********************************* Copyright (c) 1999-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Data;
 using System.Reflection;
@@ -34,7 +34,9 @@ namespace Empiria.Data {
     #region Public methods
 
     static public int AppendRows(string tableName, DataTable table, string filter) {
-      return SqlMethods.AppendRows(tableName, table, filter);
+      var handler = new SqlMethods();
+
+      return handler.AppendRows(tableName, table, filter);
     }
 
     static public Guid CreateGuid() {
@@ -148,73 +150,27 @@ namespace Empiria.Data {
     #region Internal methods
 
     static internal int Execute(IDbConnection connection, DataOperation operation) {
-      switch (operation.DataSource.Technology) {
-        case DataTechnology.SqlServer:
-          return SqlMethods.Execute((System.Data.SqlClient.SqlConnection) connection, operation);
-        case DataTechnology.MySql:
-          return MySqlMethods.Execute((MySql.Data.MySqlClient.MySqlConnection) connection, operation);
-        case DataTechnology.OleDb:
-          return OleDbMethods.Execute((System.Data.OleDb.OleDbConnection) connection, operation);
-        case DataTechnology.Oracle:
-          return OracleMethods.Execute((System.Data.OracleClient.OracleConnection) connection, operation);
-        case DataTechnology.PostgreSql:
-          return PostgreSqlMethods.Execute((Npgsql.NpgsqlConnection) connection, operation);
-        default:
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
-                                         operation.DataSource.Technology);
-      }
+      IDataHandler handler = GetDataHander(operation);
+
+      return handler.Execute(connection, operation);
     }
 
     static internal int Execute(IDbTransaction transaction, DataOperation operation) {
-      switch (operation.DataSource.Technology) {
-        case DataTechnology.SqlServer:
-          return SqlMethods.Execute((System.Data.SqlClient.SqlTransaction) transaction, operation);
-        case DataTechnology.MySql:
-          return MySqlMethods.Execute((MySql.Data.MySqlClient.MySqlTransaction) transaction, operation);
-        case DataTechnology.OleDb:
-          return OleDbMethods.Execute((System.Data.OleDb.OleDbTransaction) transaction, operation);
-        case DataTechnology.Oracle:
-          return OracleMethods.Execute((System.Data.OracleClient.OracleTransaction) transaction, operation);
-        case DataTechnology.PostgreSql:
-          return PostgreSqlMethods.Execute((Npgsql.NpgsqlTransaction) transaction, operation);
-        default:
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
-                                         operation.DataSource.Technology);
-      }
+      IDataHandler handler = GetDataHander(operation);
+
+      return handler.Execute((System.Data.SqlClient.SqlTransaction) transaction, operation);
     }
 
     static internal int ExecuteInternal(DataOperation operation) {
-      switch (operation.DataSource.Technology) {
-        case DataTechnology.SqlServer:
-          return SqlMethods.Execute(operation);
-        case DataTechnology.MySql:
-          return MySqlMethods.Execute(operation);
-        case DataTechnology.OleDb:
-          return OleDbMethods.Execute(operation);
-        case DataTechnology.Oracle:
-          return OracleMethods.Execute(operation);
-        case DataTechnology.PostgreSql:
-          return PostgreSqlMethods.Execute(operation);
-        default:
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology, operation.DataSource.Technology);
-      }
+      IDataHandler handler = GetDataHander(operation);
+
+      return handler.Execute(operation);
     }
 
     private static T ExecuteInternal<T>(DataOperation operation) {
-      switch (operation.DataSource.Technology) {
-        case DataTechnology.SqlServer:
-          return SqlMethods.Execute<T>(operation);
-        case DataTechnology.MySql:
-          return MySqlMethods.Execute<T>(operation);
-        case DataTechnology.OleDb:
-          return OleDbMethods.Execute<T>(operation);
-        case DataTechnology.Oracle:
-          return OracleMethods.Execute<T>(operation);
-        case DataTechnology.PostgreSql:
-          return PostgreSqlMethods.Execute<T>(operation);
-        default:
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology, operation.DataSource.Technology);
-      }
+      IDataHandler handler = GetDataHander(operation);
+
+      return handler.Execute<T>(operation);
     }
 
     #endregion Internal methods
@@ -237,6 +193,10 @@ namespace Empiria.Data {
       IWebApiClient apiClient = WebApiClientFactory.CreateWebApiClient(targetServer.WebSiteURL);
 
       return await apiClient.GetAsync<int>("Empiria.IdGenerator.NextTableRowId", sourceName);
+    }
+
+    static private IDataHandler GetDataHander(DataOperation operation) {
+      return operation.DataSource.GetDataHandler();
     }
 
     static private void DoPostExecutionTask(DataOperation operation) {

@@ -1,13 +1,13 @@
 ﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
-*  Namespace : Empiria.Data.Handlers                            Assembly : Empiria.Data.dll                  *
-*  Type      : OracleMethods                                    Pattern  : Static Class                      *
-*  Version   : 6.8                                              License  : Please read license.txt file      *
+*  Solution : Empiria Foundation Framework                     System  : Data Access Library                 *
+*  Assembly : Empiria.Foundation.dll                           Pattern : Provider                            *
+*  Type     : OracleMethods                                    License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary   : Static internal class used to read data stored in Oracle databases.                           *
+*  Summary  : Empiria data handler to connect solutions to Oracle databases.                                 *
 *                                                                                                            *
-********************************* Copyright (c) 2001-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Data;
 using System.Data.OracleClient;
@@ -15,11 +15,17 @@ using System.EnterpriseServices;
 
 namespace Empiria.Data.Handlers {
 
-  static internal class OracleMethods {
+  /// <summary>Empiria data handler to connect solutions to Oracle databases.</summary>
+  internal class OracleMethods : IDataHandler {
 
     #region Internal methods
 
-    static internal int CountRows(DataOperation operation) {
+    public int AppendRows(string tableName, DataTable table, string filter) {
+      throw new NotImplementedException();
+    }
+
+
+    public int CountRows(DataOperation operation) {
       OracleConnection connection = new OracleConnection(operation.DataSource.Source);
       OracleCommand command = new OracleCommand(operation.SourceName, connection);
       DataTable dataTable = new DataTable();
@@ -40,7 +46,8 @@ namespace Empiria.Data.Handlers {
       }
     }
 
-    static internal int Execute(DataOperation operation) {
+
+    public int Execute(DataOperation operation) {
       OracleConnection connection = new OracleConnection(operation.DataSource.Source);
       OracleCommand command = new OracleCommand(operation.SourceName, connection);
 
@@ -68,7 +75,8 @@ namespace Empiria.Data.Handlers {
       return affectedRows;
     }
 
-    static internal T Execute<T>(DataOperation operation) {
+
+    public T Execute<T>(DataOperation operation) {
       OracleConnection connection = new OracleConnection(operation.DataSource.Source);
       OracleCommand command = new OracleCommand(operation.SourceName, connection);
 
@@ -96,8 +104,9 @@ namespace Empiria.Data.Handlers {
       return result;
     }
 
-    static internal int Execute(OracleConnection connection, DataOperation operation) {
-      OracleCommand command = new OracleCommand(operation.SourceName, connection);
+
+    public int Execute(IDbConnection connection, DataOperation operation) {
+      OracleCommand command = new OracleCommand(operation.SourceName, (OracleConnection) connection);
 
       int affectedRows = 0;
       try {
@@ -118,8 +127,11 @@ namespace Empiria.Data.Handlers {
       return affectedRows;
     }
 
-    static internal int Execute(OracleTransaction transaction, DataOperation operation) {
-      OracleCommand command = new OracleCommand(operation.SourceName, transaction.Connection, transaction);
+
+    public int Execute(IDbTransaction transaction, DataOperation operation) {
+      OracleCommand command = new OracleCommand(operation.SourceName,
+                                               (OracleConnection) transaction.Connection,
+                                               (OracleTransaction) transaction);
 
       int affectedRows = 0;
       try {
@@ -140,7 +152,13 @@ namespace Empiria.Data.Handlers {
       return affectedRows;
     }
 
-    static internal OracleConnection GetConnection(string connectionString) {
+
+    public byte[] GetBinaryFieldValue(DataOperation operation, string fieldName) {
+      throw new NotImplementedException();
+    }
+
+
+    public IDbConnection GetConnection(string connectionString) {
       OracleConnection connection = new OracleConnection(connectionString);
       if (ContextUtil.IsInTransaction) {
         connection.EnlistDistributedTransaction((System.EnterpriseServices.ITransaction) ContextUtil.Transaction);
@@ -148,7 +166,8 @@ namespace Empiria.Data.Handlers {
       return connection;
     }
 
-    static internal IDataReader GetDataReader(DataOperation operation) {
+
+    public IDataReader GetDataReader(DataOperation operation) {
       OracleConnection connection = new OracleConnection(operation.DataSource.Source);
       OracleCommand command = new OracleCommand(operation.SourceName, connection);
       OracleDataReader dataReader;
@@ -167,7 +186,8 @@ namespace Empiria.Data.Handlers {
       return dataReader;
     }
 
-    static internal DataRow GetDataRow(DataOperation operation) {
+
+    public DataRow GetDataRow(DataOperation operation) {
       OracleConnection connection = new OracleConnection(operation.DataSource.Source);
       OracleCommand command = new OracleCommand(operation.SourceName, connection);
       DataTable dataTable = new DataTable(operation.SourceName);
@@ -192,7 +212,8 @@ namespace Empiria.Data.Handlers {
       }
     }
 
-    static internal DataTable GetDataTable(DataOperation operation, string dataTableName) {
+
+    public DataTable GetDataTable(DataOperation operation, string dataTableName) {
       OracleConnection connection = new OracleConnection(operation.DataSource.Source);
       OracleCommand command = new OracleCommand(operation.SourceName, connection);
       DataTable dataTable = new DataTable(dataTableName);
@@ -213,7 +234,8 @@ namespace Empiria.Data.Handlers {
       return dataTable;
     }
 
-    static internal DataView GetDataView(DataOperation operation, string filter, string sort) {
+
+    public DataView GetDataView(DataOperation operation, string filter, string sort) {
       OracleConnection connection = new OracleConnection(operation.DataSource.Source);
       OracleCommand command = new OracleCommand(operation.SourceName, connection);
       DataTable dataTable = new DataTable(operation.SourceName);
@@ -235,7 +257,8 @@ namespace Empiria.Data.Handlers {
       }
     }
 
-    static internal object GetFieldValue(DataOperation operation, string fieldName) {
+
+    public object GetFieldValue(DataOperation operation, string fieldName) {
       OracleConnection connection = new OracleConnection(operation.DataSource.Source);
       OracleCommand command = new OracleCommand(operation.SourceName, connection);
       OracleDataReader dataReader;
@@ -259,7 +282,8 @@ namespace Empiria.Data.Handlers {
       return fieldValue;
     }
 
-    static internal object GetScalar(DataOperation operation) {
+
+    public object GetScalar(DataOperation operation) {
       OracleConnection connection = new OracleConnection(operation.DataSource.Source);
       OracleCommand command = new OracleCommand(operation.SourceName, connection);
 
