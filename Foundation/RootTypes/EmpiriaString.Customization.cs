@@ -58,14 +58,24 @@ namespace Empiria {
       if (String.IsNullOrWhiteSpace(source)) {
         return String.Empty;
       }
+
       if (source.Length <= maxLength) {
         return source;
       }
-      int parts = (source.Length / maxLength);
+
+      int parts = (source.Length / maxLength) + 1;
+
+      string result = String.Empty;
+
       for (int i = 0; i < parts; i++) {
-        source = source.Insert((i + 1) * maxLength, divisionString);
+        if (i != (parts - 1)) {
+          result += source.Substring(i * maxLength, maxLength) + divisionString;
+        } else {
+          result += source.Substring(i * maxLength);
+        }
       }
-      return source;
+
+      return result;
     }
 
     static public string[] DivideLongString(string source, int maxLength, int suggestedLines) {
