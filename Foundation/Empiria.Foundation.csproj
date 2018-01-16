@@ -153,9 +153,6 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Npgsql, Version=3.2.5.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Npgsql.3.2.5\lib\net451\Npgsql.dll</HintPath>
-    </Reference>
     <Reference Include="System">
       <Name>System</Name>
       <Private>False</Private>
@@ -174,9 +171,6 @@
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Security" />
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.4.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
@@ -200,8 +194,6 @@
     <Compile Include="Data.Handlers\OleDbParameterCache.cs" />
     <Compile Include="Data.Handlers\OracleMethods.cs" />
     <Compile Include="Data.Handlers\OracleParameterCache.cs" />
-    <Compile Include="Data.Handlers\PostgreSqlMethods.cs" />
-    <Compile Include="Data.Handlers\PostgreSqlParameterCache.cs" />
     <Compile Include="Data.Handlers\SqlMethods.cs" />
     <Compile Include="Data.Handlers\SqlParameterCache.cs" />
     <Compile Include="Data.Integration\DataIntegrationEngine.cs" />

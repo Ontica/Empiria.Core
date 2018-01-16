@@ -49,20 +49,23 @@ namespace Empiria.Data {
     }
 
     internal IDataHandler GetDataHandler() {
+      Type type = null;
+
       switch (this.Technology) {
         case DataTechnology.SqlServer:
           return new SqlMethods();
         case DataTechnology.MySql:
-          Type t  = Reflection.ObjectFactory.GetType("Empiria.Data.MySql", "Empiria.Data.Handlers.MySqlMethods");
+          type = Reflection.ObjectFactory.GetType("Empiria.Data.MySql", "Empiria.Data.Handlers.MySqlMethods");
 
-          return (IDataHandler) Reflection.ObjectFactory.CreateObject(t);
-
+          return (IDataHandler) Reflection.ObjectFactory.CreateObject(type);
         case DataTechnology.OleDb:
           return new OleDbMethods();
         case DataTechnology.Oracle:
           return new OracleMethods();
         case DataTechnology.PostgreSql:
-          return new PostgreSqlMethods();
+          type = Reflection.ObjectFactory.GetType("Empiria.Data.PostgreSql", "Empiria.Data.Handlers.PostgreSqlMethods");
+
+          return (IDataHandler) Reflection.ObjectFactory.CreateObject(type);
         default:
           throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
                                          this.Technology);
