@@ -61,7 +61,9 @@ namespace Empiria.Data {
         case DataTechnology.OleDb:
           return new OleDbMethods();
         case DataTechnology.Oracle:
-          return new OracleMethods();
+          type = Reflection.ObjectFactory.GetType("Empiria.Data.Oracle", "Empiria.Data.Handlers.OracleMethods");
+
+          return (IDataHandler) Reflection.ObjectFactory.CreateObject(type);
         case DataTechnology.PostgreSql:
           type = Reflection.ObjectFactory.GetType("Empiria.Data.PostgreSql", "Empiria.Data.Handlers.PostgreSqlMethods");
 

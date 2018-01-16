@@ -123,7 +123,7 @@
     <DebugSymbols>false</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
-    <NoWarn>0618,CS1591,CS1587,CS1573</NoWarn>
+    <NoWarn>CS1591,CS1587,CS1573</NoWarn>
     <Optimize>true</Optimize>
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
@@ -157,7 +157,6 @@
       <Name>System</Name>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -166,10 +165,7 @@
       <Name>System.Data</Name>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Security" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
@@ -192,8 +188,6 @@
     <Compile Include="Data.Handlers\IDataHandler.cs" />
     <Compile Include="Data.Handlers\OleDbMethods.cs" />
     <Compile Include="Data.Handlers\OleDbParameterCache.cs" />
-    <Compile Include="Data.Handlers\OracleMethods.cs" />
-    <Compile Include="Data.Handlers\OracleParameterCache.cs" />
     <Compile Include="Data.Handlers\SqlMethods.cs" />
     <Compile Include="Data.Handlers\SqlParameterCache.cs" />
     <Compile Include="Data.Integration\DataIntegrationEngine.cs" />
