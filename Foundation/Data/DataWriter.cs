@@ -34,9 +34,12 @@ namespace Empiria.Data {
     #region Public methods
 
     static public int AppendRows(string tableName, DataTable table, string filter) {
-      var handler = new SqlMethods();
+      DataSource dataSource = DataSource.Parse(tableName);
 
-      return handler.AppendRows(tableName, table, filter);
+      IDbConnection connection = dataSource.GetConnection();
+      IDataHandler handler = dataSource.GetDataHandler();
+
+      return handler.AppendRows(connection, tableName, table, filter);
     }
 
     static public Guid CreateGuid() {

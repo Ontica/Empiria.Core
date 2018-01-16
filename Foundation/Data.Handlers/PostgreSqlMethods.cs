@@ -1,10 +1,10 @@
-﻿/* Empiria Foundation Framework ******************************************************************************
+﻿/* Empiria Extensions Framework ******************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Foundation Framework                     System  : Data Access Library                 *
-*  Assembly : Empiria.Foundation.dll                           Pattern : Provider                            *
+*  Solution : Empiria Extensions Framework                     System  : Data Access Library                 *
+*  Assembly : Empiria.Data.PostgreSql.dll                      Pattern : Provider                            *
 *  Type     : PostgreSqlMethods                                License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary   : Empiria data handler to connect solutions to PostgreSQL databases.                            *
+*  Summary  : Empiria data handler to connect solutions to PostgreSQL databases.                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -20,17 +20,19 @@ namespace Empiria.Data.Handlers {
 
     #region Internal methods
 
-    public int AppendRows(string tableName, DataTable table, string filter) {
+    public int AppendRows(IDbConnection connection, string tableName, DataTable table, string filter) {
       int result = 0;
       string queryString = "SELECT * FROM " + tableName;
       if (!String.IsNullOrEmpty(filter)) {
         queryString += " WHERE " + filter;
       }
-      using (NpgsqlConnection connection = new NpgsqlConnection(DataSource.Parse(tableName).Source)) {
+      using (connection) {
         connection.Open();
-        NpgsqlTransaction transaction = connection.BeginTransaction();
+        NpgsqlTransaction transaction = ((NpgsqlConnection) connection).BeginTransaction();
         NpgsqlDataAdapter dataAdapter = new NpgsqlDataAdapter();
-        dataAdapter.SelectCommand = new NpgsqlCommand(queryString, connection, transaction);
+        dataAdapter.SelectCommand = new NpgsqlCommand(queryString,
+                                                      (NpgsqlConnection) connection,
+                                                      transaction);
 
         NpgsqlCommandBuilder commandBuilder = new NpgsqlCommandBuilder(dataAdapter);
 

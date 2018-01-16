@@ -15,7 +15,7 @@ namespace Empiria.Data.Handlers {
   /// <summary>Static class with methods that performs data reading operations.</summary>
   public interface IDataHandler {
 
-    int AppendRows(string tableName, DataTable table, string filter);
+    int AppendRows(IDbConnection connection, string tableName, DataTable table, string filter);
 
 
     int CountRows(DataOperation operation);

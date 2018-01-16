@@ -1,19 +1,19 @@
-﻿/* Empiria Foundation Framework ******************************************************************************
+﻿/* Empiria Extensions Framework ******************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
-*  Namespace : Empiria.Data.Handlers                            Assembly : Empiria.Data.dll                  *
-*  Type      : PostgreSqlParameterCache                         Pattern  : Static Class With Objects Cache   *
-*  Version   : 6.8                                              License  : Please read license.txt file      *
+*  Solution : Empiria Extensions Framework                     System  : Data Access Library                 *
+*  Assembly : Empiria.Data.PostgreSql.dll                      Pattern : Information Holder (with cache)     *
+*  Type     : PostgreSqlParameterCache                         License : Please read LICENSE.txt file        *
 *                                                                                                            *
-*  Summary   : This type is a wrapper of a static hash table that contains the loaded SqlParameters.         *
+*  Summary  : Wrapper of a static hash table that contains loaded PostgreSQL functions parameters.           *
 *                                                                                                            *
-********************************* Copyright (c) 2009-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
 using System.Data;
 
 namespace Empiria.Data.Handlers {
 
+  /// <summary>Empiria data handler to connect solutions to PostgreSQL databases.</summary>
   static internal class PostgreSqlParameterCache {
 
     #region Fields

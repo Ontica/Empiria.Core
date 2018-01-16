@@ -20,7 +20,8 @@ namespace Empiria.Data.Handlers {
 
     #region Internal methods
 
-    public int AppendRows(string tableName, DataTable table, string filter) {
+    public int AppendRows(IDbConnection connection, string tableName,
+                          DataTable table, string filter) {
       throw new NotImplementedException();
     }
 

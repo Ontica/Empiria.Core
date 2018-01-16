@@ -19,17 +19,19 @@ namespace Empiria.Data.Handlers {
 
     #region Internal methods
 
-    public int AppendRows(string tableName, DataTable table, string filter) {
+    public int AppendRows(IDbConnection connection, string tableName, DataTable table, string filter) {
       int result = 0;
       string queryString = "SELECT * FROM " + tableName;
       if (!String.IsNullOrEmpty(filter)) {
         queryString += " WHERE " + filter;
       }
-      using (SqlConnection connection = new SqlConnection(DataSource.Parse(tableName).Source)) {
+      using (connection) {
         connection.Open();
-        SqlTransaction transaction = connection.BeginTransaction();
+        SqlTransaction transaction = ((SqlConnection) connection).BeginTransaction();
         SqlDataAdapter dataAdapter = new SqlDataAdapter();
-        dataAdapter.SelectCommand = new SqlCommand(queryString, connection, transaction);
+        dataAdapter.SelectCommand = new SqlCommand(queryString,
+                                                  (SqlConnection) connection,
+                                                  transaction);
         SqlCommandBuilder commandBuilder = new SqlCommandBuilder(dataAdapter);
 
         dataAdapter.InsertCommand = commandBuilder.GetInsertCommand();
