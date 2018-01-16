@@ -173,6 +173,13 @@ namespace Empiria.Data.Handlers {
     }
 
 
+    public IDataParameter[] GetParameters(string connectionString,
+                                          string sourceName,
+                                          object[] parameterValues) {
+      return SqlParameterCache.GetParameters(connectionString, sourceName, parameterValues);
+    }
+
+
     public IDbConnection GetConnection(string connectionString) {
       var connection = new SqlConnection(connectionString);
       if (ContextUtil.IsInTransaction) {

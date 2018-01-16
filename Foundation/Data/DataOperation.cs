@@ -136,24 +136,10 @@ namespace Empiria.Data {
       if (base.Parameters.Length == 0) {
         return;
       }
-      IDataParameter[] pars = null;
-      switch (DataSource.Technology) {
-        case DataTechnology.SqlServer:
-          pars = SqlParameterCache.GetParameters(dataSource.Source, base.Name, base.Parameters);
-          break;
-        case DataTechnology.MySql:
-          pars = MySqlParameterCache.GetParameters(dataSource.Source, base.Name, base.Parameters);
-          break;
-        case DataTechnology.Oracle:
-          pars = OracleParameterCache.GetParameters(dataSource.Source, base.Name, base.Parameters);
-          break;
-        case DataTechnology.PostgreSql:
-          pars = PostgreSqlParameterCache.GetParameters(dataSource.Source, base.Name, base.Parameters);
-          break;
-        default:
-          pars = OleDbParameterCache.GetParameters(dataSource.Source, base.Name, base.Parameters);
-          break;
-      }
+      IDataHandler handler = this.DataSource.GetDataHandler();
+
+      IDataParameter[] pars = handler.GetParameters(dataSource.Source, base.Name, base.Parameters);
+
       if ((pars != null) && (command.CommandType != CommandType.Text)) {
         for (int i = 0, j = pars.Length; i < j; i++) {
           command.Parameters.Add(pars[i]);

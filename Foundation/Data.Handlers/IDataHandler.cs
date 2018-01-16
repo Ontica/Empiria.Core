@@ -33,6 +33,9 @@ namespace Empiria.Data.Handlers {
     T Execute<T>(DataOperation operation);
 
 
+    IDataParameter[] GetParameters(string source, string name, object[] parameters);
+
+
     byte[] GetBinaryFieldValue(DataOperation operation, string fieldName);
 
 

@@ -1,15 +1,5 @@
 ﻿/* Empiria Foundation Framework ******************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                     System   : Data Access Library               *
-*  Namespace : Empiria.Data.Handlers                            Assembly : Empiria.Data.dll                  *
-*  Type      : MySqlMethods                                     Pattern  : Static Class                      *
-*  Version   : 6.8                                              License  : Please read license.txt file      *
-*                                                                                                            *
-*  Summary   : Static internal class used to read data stored in MySQL Server databases.                     *
-*                                                                                                            *
-********************************* Copyright (c) 2006-2017. La Vía Óntica SC, Ontica LLC and contributors.  **/
-/* Empiria Foundation Framework ******************************************************************************
-*                                                                                                            *
 *  Solution : Empiria Foundation Framework                     System  : Data Access Library                 *
 *  Assembly : Empiria.Foundation.dll                           Pattern : Provider                            *
 *  Type     : MySqlMethods                                     License : Please read LICENSE.txt file        *
@@ -161,6 +151,13 @@ namespace Empiria.Data.Handlers {
         command.Parameters.Clear();
       }
       return affectedRows;
+    }
+
+
+    public IDataParameter[] GetParameters(string connectionString,
+                                          string sourceName,
+                                          object[] parameterValues) {
+      return MySqlParameterCache.GetParameters(connectionString, sourceName, parameterValues);
     }
 
 

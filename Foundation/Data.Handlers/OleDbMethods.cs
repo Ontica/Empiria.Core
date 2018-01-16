@@ -161,6 +161,13 @@ namespace Empiria.Data.Handlers {
     }
 
 
+    public IDataParameter[] GetParameters(string connectionString,
+                                          string sourceName,
+                                          object[] parameterValues) {
+      return OleDbParameterCache.GetParameters(connectionString, sourceName, parameterValues);
+    }
+
+
     public byte[] GetBinaryFieldValue(DataOperation operation, string fieldName) {
       throw new NotImplementedException();
     }
