@@ -92,13 +92,13 @@ namespace Empiria.Data {
 
     #region Public properties
 
-    internal CommandType CommandType {
+    public CommandType CommandType {
       get {
         return GetCommandType(base.Name);
       }
     }
 
-    internal DataSource DataSource {
+    public DataSource DataSource {
       get {
         return dataSource;
       }
@@ -132,7 +132,7 @@ namespace Empiria.Data {
       }
     }
 
-    internal void FillParameters(IDbCommand command) {
+    public void FillParameters(IDbCommand command) {
       if (base.Parameters.Length == 0) {
         return;
       }

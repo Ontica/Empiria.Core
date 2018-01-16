@@ -17,7 +17,7 @@ namespace Empiria.Data {
 
   /// <summary>Represents a data source formed by the source or connection string and
   /// the data technology.</summary>
-  internal struct DataSource {
+  public struct DataSource {
 
     #region Fields
 
@@ -53,7 +53,10 @@ namespace Empiria.Data {
         case DataTechnology.SqlServer:
           return new SqlMethods();
         case DataTechnology.MySql:
-          return new MySqlMethods();
+          Type t  = Reflection.ObjectFactory.GetType("Empiria.Data.MySql", "Empiria.Data.Handlers.MySqlMethods");
+
+          return (IDataHandler) Reflection.ObjectFactory.CreateObject(t);
+
         case DataTechnology.OleDb:
           return new OleDbMethods();
         case DataTechnology.Oracle:
@@ -90,15 +93,15 @@ namespace Empiria.Data {
 
     #region Internal properties
 
-    internal string Name {
+    public string Name {
       get { return this.name; }
     }
 
-    internal string Source {
+    public string Source {
       get { return this.source; }
     }
 
-    internal DataTechnology Technology {
+    public DataTechnology Technology {
       get { return this.technology; }
     }
 
