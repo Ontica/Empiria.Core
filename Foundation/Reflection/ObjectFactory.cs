@@ -188,6 +188,10 @@ namespace Empiria.Reflection {
       return (T) ObjectFactory.InvokeParseMethod(typeof(T), value);
     }
 
+    static public T InvokeStaticMethod<T>(string methodName, string value) {
+      return (T) ObjectFactory.InvokeParseMethod(typeof(T), value);
+    }
+
     static public T ParseEnumValue<T>(object value) {
       return (T) Enum.Parse(typeof(T), (string) value);
     }
@@ -234,6 +238,28 @@ namespace Empiria.Reflection {
 
       }
     }
+
+
+    static public T InvokeTryParseMethod<T>(Type type, string value) {
+      try {
+        MethodInfo method = ObjectFactory.TryGetTryParseStringMethod(type);
+
+        Assertion.AssertObject(method, "Type {0} doesn't has static TryParse(string) method.", type.FullName);
+
+        return (T) method.Invoke(null, new object[] { value });
+
+      } catch (TargetException e) {
+        throw new ReflectionException(ReflectionException.Msg.ParseMethodNotDefined, e,
+                                      type.FullName);
+
+      } catch (TargetInvocationException e) {
+        throw e.InnerException ?? e;
+
+      } catch (Exception e) {
+        throw e;
+      }
+    }
+
 
     static internal T InvokeParseJsonMethod<T>(Json.JsonObject jsonObject) {
       Type type = typeof(T);
@@ -315,6 +341,15 @@ namespace Empiria.Reflection {
         return null;
       }
       return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static |
+                            BindingFlags.Public | BindingFlags.NonPublic,
+                            null, CallingConventions.Any, new Type[] { typeof(string) }, null);
+    }
+
+    static public MethodInfo TryGetTryParseStringMethod(Type type) {
+      if (!IsEmpiriaType(type)) {
+        return null;
+      }
+      return type.GetMethod("TryParse", BindingFlags.ExactBinding | BindingFlags.Static |
                             BindingFlags.Public | BindingFlags.NonPublic,
                             null, CallingConventions.Any, new Type[] { typeof(string) }, null);
     }
