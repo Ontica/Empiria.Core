@@ -173,6 +173,18 @@ namespace Empiria.Data {
       return list;
     }
 
+
+    static public FixedList<T> GetFixedList<T>(DataOperation operation) where T : BaseObject {
+      Assertion.AssertObject(operation, "operation");
+
+      DataTable dataTable = DataReader.GetDataTable(operation);
+
+      var list = BaseObject.ParseList<T>(dataTable);
+
+      return list.ToFixedList();
+    }
+
+
     static public List<T> GetList<T>(DataOperation operation, Func<DataTable, List<T>> parser) {
       Assertion.AssertObject(operation, "operation");
       Assertion.AssertObject(parser, "parser");
