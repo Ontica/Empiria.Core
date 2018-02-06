@@ -11,6 +11,7 @@
 using System;
 using System.Data;
 
+using Empiria.Contacts;
 using Empiria.Json;
 
 namespace Empiria.Security {
@@ -206,6 +207,10 @@ namespace Empiria.Security {
       SecurityData.ActivateUser(this);
       this.Claims.RemoveSecure(SecurityClaimType.ActivationToken, activationToken);
       this.IsActive = true;
+    }
+
+    public Contact AsContact() {
+      return Contact.Parse(this.Id);
     }
 
     static public void ChangePassword(string apiKey, string username, string email, string password) {
