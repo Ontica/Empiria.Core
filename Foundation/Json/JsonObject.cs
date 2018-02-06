@@ -251,23 +251,48 @@ namespace Empiria.Json {
       } else {
         objectsList = this.Get<List<object>>(listPath, new List<object>());
       }
+
       if (ObjectFactory.IsStorable(typeof(T))) {
-        return objectsList.ConvertAll<T>((x) =>
-                                         ObjectFactory.InvokeParseMethod<T>(System.Convert.ToInt32(x)));
+
+        if (objectsList.Count == 0) {
+          return new List<T>();
+        }
+
+        if (objectsList.TrueForAll((x) => EmpiriaString.IsInteger(Convert.ToString(x)))) {
+
+          Assertion.Assert(ObjectFactory.HasParseWithIdMethod(typeof(T)),
+                           $"Type {typeof(T).FullName} doesn't have defined a static Parse(int) method.");
+
+          return objectsList.ConvertAll<T>((x) => ObjectFactory.InvokeParseMethod<T>(Convert.ToInt32(x)));
+
+        } else {
+
+          Assertion.Assert(ObjectFactory.HasParseWithStringMethod(typeof(T)),
+                           $"Type {typeof(T).FullName} doesn't have defined a static Parse(string) method.");
+
+          return objectsList.ConvertAll<T>((x) => ObjectFactory.InvokeParseMethod<T>(Convert.ToString(x)));
+        }
+
       } else if (ObjectFactory.IsValueObject(typeof(T))) {
+
         return objectsList.ConvertAll<T>((x) =>
-                                         ObjectFactory.InvokeParseMethod<T>(System.Convert.ToString(x)));
+                                         ObjectFactory.InvokeParseMethod<T>(Convert.ToString(x)));
+
       } else if (ObjectFactory.HasJsonParser(typeof(T))) {
+
         return objectsList.ConvertAll<T>(
                   (x) => ObjectFactory.InvokeParseJsonMethod<T>(new JsonObject((IDictionary<string, Object>) x))
                );
+
       } else {
+
         try {
           return objectsList.ConvertAll<T>((x) => ObjectFactory.Convert<T>(x));
         } catch (Exception e) {
           throw new JsonDataException(JsonDataException.Msg.JsonListTypeConvertionFails, e,
                                       listPath, typeof(T).ToString());
         }
+
       }
     }
 
@@ -314,22 +339,27 @@ namespace Empiria.Json {
 
       if (itemPath.StartsWith("@")) {
         includeitemNameInSlice = true;
-        itemPath = itemPath.Substring(1);   // Remove the special characeter @
+        itemPath = itemPath.Substring(1);   // Remove the special character @
       }
+
       object value = this.TryGetDictionaryValue(itemPath, required);
       if (value == null && required) {
-        // An exception should be thrown from the GetDictionaryValue call above.
+        // An exception should be thrown from the TryGetDictionaryValue call above.
         Assertion.AssertNoReachThisCode();
       }
+
       if (value == null) {
         return JsonObject.Empty;
+
       } else if (value is IDictionary<string, object> && !includeitemNameInSlice) {
         return new JsonObject((IDictionary<string, object>) value);
+
       } else {
         var dictionary = new Dictionary<string, object>(1);
         dictionary.Add(this.GetDictionaryKey(itemPath), value);
 
         return new JsonObject(dictionary);
+
       }
     }
 
@@ -344,6 +374,7 @@ namespace Empiria.Json {
       if (this.dictionary.Count == 0) {
         return String.Empty;
       }
+
       if (indented) {
         return JsonConverter.ToJsonIndented(this.dictionary);
       } else {
@@ -373,16 +404,20 @@ namespace Empiria.Json {
 
     private T Find<T>(string itemPath) {
       object value = this.TryGetDictionaryValue(itemPath, true);
+
       if (value == null) {
         // An exception should be thrown from the this.TryGetDictionaryValue call above.
         Assertion.AssertNoReachThisCode();
       }
+
       try {
         return ObjectFactory.Convert<T>(value);
+
       } catch (Exception e) {
         throw new JsonDataException(JsonDataException.Msg.JsonValueTypeConvertionFails, e,
                                     itemPath, value.ToString(), value.GetType().ToString(),
                                     typeof(T).ToString());
+
       }
     }
 
@@ -393,13 +428,16 @@ namespace Empiria.Json {
       if (value == null) {
         return defaultValue;
       }
+
       // Return defaultValue when retrieved item has an empty value
       if ((typeof(T) == typeof(string) || value.GetType() == typeof(string)) &&
           String.IsNullOrWhiteSpace(value as string)) {
         return defaultValue;
       }
+
       try {
         return ObjectFactory.Convert<T>(value);
+
       } catch (Exception e) {
         throw new JsonDataException(JsonDataException.Msg.JsonValueTypeConvertionFails, e,
                                     itemPath, value.ToString(), value.GetType().ToString(),
@@ -417,18 +455,22 @@ namespace Empiria.Json {
       if (item == null) {
         return false;
       }
+
       if (item is String &&
           String.IsNullOrWhiteSpace((string) item)) {
         return false;
       }
+
       if (item is DateTime &&
           (((DateTime) item) == ExecutionServer.DateMaxValue ||
           ((DateTime) item) == ExecutionServer.DateMinValue)) {
         return false;
       }
+
       if (item is decimal && ((decimal) item == 0)) {
         return false;
       }
+
       return true;
     }
 
