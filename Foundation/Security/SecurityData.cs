@@ -80,10 +80,10 @@ namespace Empiria.Security {
       return BaseObject.ParseDataRow<SecurityClaim>(row);
     }
 
-    static internal int CloseSession(EmpiriaSession o) {
+    static internal void CloseSession(EmpiriaSession o) {
       var op = DataOperation.Parse("doCloseUserSession", o.Token, o.EndTime);
 
-      return DataWriter.Execute(op);
+      DataWriter.Execute(op);
     }
 
     static internal int CreateSession(EmpiriaSession o) {
@@ -181,13 +181,15 @@ namespace Empiria.Security {
                                    o.Timestamp, o.SessionId, o.Event, o.Operation,
                                    o.OperationData.ToString(), o.Request.AppliedToId, o.ResponseCode,
                                    o.ResponseItems, o.ResponseTime, o.ResponseData.ToString());
-      return DataWriter.Execute(op);
+
+      return DataWriter.Execute<long>(op);
     }
 
-    static internal int WriteSecurityClaim(SecurityClaim o) {
+    static internal void WriteSecurityClaim(SecurityClaim o) {
       var op = DataOperation.Parse("writeSecurityClaim", o.Id, o.ClaimType.Id, o.ResourceTypeId,
                                    o.ResourceId, o.Value, (char) o.Status);
-      return DataWriter.Execute(op);
+
+      DataWriter.Execute(op);
     }
 
   } // class SecurityData

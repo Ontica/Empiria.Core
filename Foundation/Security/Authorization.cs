@@ -134,13 +134,13 @@ namespace Empiria.Security {
       return Math.Abs(temp.GetHashCode()).ToString("0000000000");
     }
 
-    private int Write() {
+    private void Write() {
       var o = this;
 
       var operation = DataOperation.Parse("writeAuthorization", o.Guid, o.TypeId, o.ReasonId,
                                           o.ObjectId, o.AuthorizedById, o.SessionToken, o.Code,
                                           o.Observations, o.Date);
-      return DataWriter.Execute(operation);
+      DataWriter.Execute(operation);
     }
 
     #endregion Private methods
