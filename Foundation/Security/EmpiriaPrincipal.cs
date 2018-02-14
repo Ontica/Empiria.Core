@@ -73,7 +73,6 @@ namespace Empiria.Security {
     }
 
     private void RefreshBeforeReturn() {
-      this.ContextItems = new AssortedDictionary();
       this.Session.UpdateEndTime();
     }
 
@@ -190,6 +189,8 @@ namespace Empiria.Security {
       }
       LoadRolesArray(identity.User.Id);
       principalsCache.Insert(this.Session.Token, this);
+
+      this.ContextItems = new AssortedDictionary();
       this.RefreshBeforeReturn();
 
       this.Claims = identity.User.Claims;
