@@ -26,7 +26,7 @@ namespace Empiria {
 
     DateTime Timestamp { get; }
 
-    int Update();
+    void Update();
 
     #endregion Members definition
 

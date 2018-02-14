@@ -112,33 +112,34 @@ namespace Empiria {
 
     #region Public methods
 
-    public int Add(DataOperation operation) {
+    internal void Add(DataOperation operation) {
       dataOperations.Add(operation);
-
-      return 1;
     }
 
-    public int Add(DataOperationList operationList) {
+
+    internal void Add(DataOperationList operationList) {
       dataOperations.Add(operationList);
-
-      return operationList.Count;
     }
 
-    public int Update() {
+
+    public void Update() {
       if (dataOperations.Count == 0) {
-        return 0;
+        return;
       }
-      int operationsCount = 0;
+
       using (DataWriterContext writerContext = DataWriter.CreateContext(this.Name)) {
         ITransaction transaction = writerContext.BeginTransaction();
-        writerContext.Add(dataOperations);
-        writerContext.Update();
-        operationsCount = transaction.Commit();
-      }
-      dataOperations.Clear();
 
-      return operationsCount;
+        writerContext.Add(dataOperations);
+
+        writerContext.Update();
+
+        transaction.Commit();
+      }
+
+      dataOperations.Clear();
     }
+
 
     public void Watch(IStorable instance) {
 

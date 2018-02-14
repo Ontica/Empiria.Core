@@ -26,7 +26,7 @@ namespace Empiria.Data {
 
     #region Delegates
 
-    private delegate int UpdateMethodDelegate();
+    private delegate void UpdateMethodDelegate();
 
     #endregion Delegates
 
@@ -253,9 +253,10 @@ namespace Empiria.Data {
       }
     }
 
-    public int EndUpdate(IAsyncResult asyncResult) {
+    public void EndUpdate(IAsyncResult asyncResult) {
       wasUpdated = false;
-      return updateDelegate.EndInvoke(asyncResult);
+
+      updateDelegate.EndInvoke(asyncResult);
     }
 
     public void RemoveLast(int count) {
@@ -287,24 +288,29 @@ namespace Empiria.Data {
       }
     }
 
-    public int Update() {
+    public void Update() {
       try {
         wasUpdated = true;
+
         if (IsInTransaction && AsynchronousUpdate) {
-          int count = 0;
-          if (TransactionCommitEvent.WaitOne(TimeSpan.FromSeconds(2), false)) { //Waits two seconds for transaction.Commit()
-            count = currentTransaction.PerformCommit();
-            count += UpdateInternalOperations();
+
+          if (TransactionCommitEvent.WaitOne(TimeSpan.FromSeconds(2), false)) { // Waits two seconds for transaction.Commit()
+            currentTransaction.PerformCommit();
+            UpdateInternalOperations();
+
           } else {
             throw new EmpiriaDataException(EmpiriaDataException.Msg.AsynchronousCommitNotCalled);
+
           }
-          return count;
+
         } else {
-          return UpdateInternalOperations();
+          UpdateInternalOperations();
+
         }
       } catch {
         wasUpdated = false;
         throw;
+
       }
     }
 
