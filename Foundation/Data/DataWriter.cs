@@ -57,26 +57,29 @@ namespace Empiria.Data {
       return CreateThisClusterIdAsync(sourceName).Result;
     }
 
-    static public int Execute(DataOperation operation) {
+    static public void Execute(DataOperation operation) {
       Assertion.AssertObject(operation, "operation");
 
       if (StorageContext.IsStorageContextDefined) {
-        return StorageContext.ActiveStorageContext.Add(operation);
+        StorageContext.ActiveStorageContext.Add(operation);
+
+        return;
       }
 
       if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
-        return ExecuteExternal(operation);
+        ExecuteExternal(operation);
+
+        return;
       }
 
-      int result = DataWriter.ExecuteInternal(operation);
+      DataWriter.ExecuteInternal(operation);
+
       DataWriter.WriteDataLog(operation);
 
       DataWriter.DoPostExecutionTask(operation);
 
-
       DataPublisher.Publish(operation);
 
-      return result;
     }
 
 
@@ -101,11 +104,13 @@ namespace Empiria.Data {
       return result;
     }
 
-    static public int Execute(DataOperationList operationList) {
+    static public void Execute(DataOperationList operationList) {
       Assertion.AssertObject(operationList, "operationList");
 
       if (StorageContext.IsStorageContextDefined) {
-        return StorageContext.ActiveStorageContext.Add(operationList);
+        StorageContext.ActiveStorageContext.Add(operationList);
+
+        return;
       }
 
       using (DataWriterContext context = DataWriter.CreateContext(operationList.Name)) {
@@ -113,7 +118,7 @@ namespace Empiria.Data {
 
         context.Add(operationList);
         context.Update();
-        return transaction.Commit();
+        transaction.Commit();
       }
     }
 
