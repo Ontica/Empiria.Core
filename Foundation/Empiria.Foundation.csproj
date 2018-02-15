@@ -1,453 +1,62 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <BaseAddress>285212672</BaseAddress>
-    <Optimize>true</Optimize>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <BaseAddress>285212672</BaseAddress>
-    <Optimize>true</Optimize>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>
-    </DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <BaseAddress>285212672</BaseAddress>
-    <Optimize>true</Optimize>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>
-    </DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{73EA993B-576B-4A5B-ACC5-117DAD0254EE}</ProjectGuid>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>
-    </ApplicationIcon>
-    <AssemblyKeyContainerName>
-    </AssemblyKeyContainerName>
-    <AssemblyName>Empiria.Foundation</AssemblyName>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
-    <DefaultClientScript>JScript</DefaultClientScript>
-    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
-    <DefaultTargetSchema>IE50</DefaultTargetSchema>
-    <DelaySign>true</DelaySign>
-    <OutputType>Library</OutputType>
+    <Company>Ontica</Company>
+    <Product>Empiria OnePoint</Product>
+    <Description>Empiria Ontology, ORM, messaging and other foundation types.</Description>
+    <Copyright>(c) 2002-2018. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
+    <Version>7.0.0</Version>
+    <AssemblyVersion>7.0.0</AssemblyVersion>
+    <FileVersion>7.0.0.0</FileVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageIconUrl>http://www.ontica.org/logo.ontica.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/Ontica/Empiria.Core</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Ontica/Empiria.Core/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageTags>data access, orm, ontology, powertypes, base-architecture, software foundation, general purpose backend, government solutions, business solutions</PackageTags>
+    <RepositoryUrl>https://github.com/Ontica/Empiria.Core</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <TargetFramework>net46</TargetFramework>
+    <NeutralLanguage></NeutralLanguage>
     <RootNamespace>Empiria</RootNamespace>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>
-    </StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <SignAssembly>false</SignAssembly>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\Debug\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
+    <OutputPath>bin\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
-    <FileAlignment>4096</FileAlignment>
-    <NoStdLib>false</NoStdLib>
-    <NoWarn>0618,CS1591,CS1587,CS1573</NoWarn>
-    <Optimize>false</Optimize>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
     <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <NoWarn />
+    <WarningsAsErrors />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>bin\Release\</OutputPath>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
-    <DebugSymbols>false</DebugSymbols>
-    <FileAlignment>4096</FileAlignment>
-    <NoStdLib>false</NoStdLib>
-    <NoWarn>CS1591,CS1587,CS1573</NoWarn>
-    <Optimize>true</Optimize>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
+    <OutputPath>bin\</OutputPath>
     <DebugType>none</DebugType>
-    <ErrorReport>prompt</ErrorReport>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <BaseAddress>285212672</BaseAddress>
     <Optimize>true</Optimize>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <NoWarn />
+    <WarningsAsErrors />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System">
-      <Name>System</Name>
-      <Private>False</Private>
-    </Reference>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Security" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Collections\AssortedDictionary.cs" />
-    <Compile Include="Collections\BaseList.cs" />
-    <Compile Include="Collections\EmpiriaIdAndKeyDictionary.cs" />
-    <Compile Include="Collections\EmpiriaCollection.cs" />
-    <Compile Include="Collections\FixedListComparer.cs" />
-    <Compile Include="Collections\ListException.cs" />
-    <Compile Include="Collections\MergeResult.cs" />
-    <Compile Include="Collections\MergeResultType.cs" />
-    <Compile Include="Collections\EmpiriaDictionary.cs" />
-    <Compile Include="Collections\TagsCollection.cs" />
-    <Compile Include="Contacts\RoleType.cs" />
-    <Compile Include="Data.Handlers\IDataHandler.cs" />
-    <Compile Include="Data.Handlers\OleDbMethods.cs" />
-    <Compile Include="Data.Handlers\OleDbParameterCache.cs" />
-    <Compile Include="Data.Handlers\SqlMethods.cs" />
-    <Compile Include="Data.Handlers\SqlParameterCache.cs" />
-    <Compile Include="Data.Integration\DataIntegrationEngine.cs" />
-    <Compile Include="Data.Integration\DataIntegrationRules.cs" />
-    <Compile Include="Data.Integration\DataIntegratorRule.cs" />
-    <Compile Include="Data.Integration\DataIntegratorWSProxy.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Data.Integration\DataPublisher.cs" />
-    <Compile Include="Data.Integration\WebApplicationWSProxy.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="DataTypes\Calendar.cs" />
-    <Compile Include="DataTypes\Duration.cs" />
-    <Compile Include="DataTypes\DurationType.cs" />
-    <Compile Include="DataTypes\KeyValueList.cs" />
-    <Compile Include="DataTypes\Interest.cs" />
-    <Compile Include="DataTypes\Discount.cs" />
-    <Compile Include="DataTypes\DiscountType.cs" />
-    <Compile Include="DataTypes\Keyword.cs" />
-    <Compile Include="DataTypes\TempAddress.cs" />
-    <Compile Include="Contacts\Organization.cs" />
-    <Compile Include="DataTypes\InterestRateType.cs" />
-    <Compile Include="DataTypes\TimeUnit.cs" />
-    <Compile Include="DataTypes\YearMonth.cs" />
-    <Compile Include="Data\CachedObject.cs" />
-    <Compile Include="Data\DataCache.cs" />
-    <Compile Include="Data\DataLog.cs" />
-    <Compile Include="Data\DataOperation.cs" />
-    <Compile Include="Data\DataOperationList.cs" />
-    <Compile Include="Data\DataQuery.cs" />
-    <Compile Include="Data\DataReader.cs" />
-    <Compile Include="Data\DataTechnology.cs" />
-    <Compile Include="Data\DataSource.cs" />
-    <Compile Include="Data\DataWriter.cs" />
-    <Compile Include="Data\DataWriterContext.cs" />
-    <Compile Include="Data\EmpiriaDataException.cs" />
-    <Compile Include="Data\GeneralDataOperations.cs" />
-    <Compile Include="Data\ObjectIdFactory.cs" />
-    <Compile Include="Data\SqlFilter.cs" />
-    <Compile Include="Data\Transaction.cs" />
-    <Compile Include="Empiria.Foundation.AssemblyInfo.cs" />
-    <Compile Include="Json\DataRowConverter.cs" />
-    <Compile Include="Json\DataViewConverter.cs" />
-    <Compile Include="Json\DateTimeConverter.cs" />
-    <Compile Include="Json\JsonConverter.cs" />
-    <Compile Include="Json\JsonDataException.cs" />
-    <Compile Include="Json\JsonItem.cs" />
-    <Compile Include="Json\JsonObject.cs" />
-    <Compile Include="Json\ValueObjectConverter.cs" />
-    <Compile Include="Logging\EmpiriaLog.cs" />
-    <Compile Include="Logging\ILogEntry.cs" />
-    <Compile Include="Logging\ILogTrail.cs" />
-    <Compile Include="Logging\LogEntryModel.cs" />
-    <Compile Include="Logging\LogEntryType.cs" />
-    <Compile Include="Logging\LoggingException.cs" />
-    <Compile Include="Logging\LogTrail.cs" />
-    <Compile Include="ORM\DataObjectMapping.cs" />
-    <Compile Include="ORM\DataFieldMapping.cs" />
-    <Compile Include="ORM\DataMapping.cs" />
-    <Compile Include="ORM\DataMappingException.cs" />
-    <Compile Include="ORM\DataMappingRules.cs" />
-    <Compile Include="ORM\DataPropertyMapping.cs" />
-    <Compile Include="Reflection\MethodInvoker.cs" />
-    <Compile Include="Reflection\ObjectFactory.cs" />
-    <Compile Include="Reflection\ReflectionException.cs" />
-    <Compile Include="RootTypes\Assertion.cs" />
-    <Compile Include="RootTypes\AssertionFailsException.cs" />
-    <Compile Include="RootTypes\AttributesBag.cs" />
-    <Compile Include="RootTypes\AttributesBagBoxing.cs" />
-    <Compile Include="Ontology\PartitionedTypeAttribute.cs" />
-    <Compile Include="Ontology\PowertypeAttribute.cs" />
-    <Compile Include="Ontology\Powertype.cs" />
-    <Compile Include="DataTypes\NameValuePair.cs" />
-    <Compile Include="RootTypes\BaseObjectFactory.cs" />
-    <Compile Include="RootTypes\BaseObjectLite.cs" />
-    <Compile Include="RootTypes\ConfigurationData.cs" />
-    <Compile Include="RootTypes\ConfigurationDataException.cs" />
-    <Compile Include="DataTypes\KeyValue.cs" />
-    <Compile Include="RootTypes\DataObjectAttribute.cs" />
-    <Compile Include="RootTypes\EnvironmentVariables.cs" />
-    <Compile Include="RootTypes\ConfigurationFile.cs" />
-    <Compile Include="RootTypes\ConfigurationSetting.cs" />
-    <Compile Include="RootTypes\DataModelAttribute.cs" />
-    <Compile Include="RootTypes\EmpiriaException.cs" />
-    <Compile Include="RootTypes\EmpiriaMath.cs" />
-    <Compile Include="RootTypes\EmpiriaString.cs" />
-    <Compile Include="RootTypes\EmpiriaString.Customization.cs" />
-    <Compile Include="RootTypes\EmpiriaString.Distance.cs" />
-    <Compile Include="RootTypes\EmpiriaString.Speech.cs" />
-    <Compile Include="RootTypes\ExecutionServer.cs" />
-    <Compile Include="RootTypes\ExecutionServer.Customization.cs" />
-    <Compile Include="RootTypes\EmpiriaStringException.cs" />
-    <Compile Include="RootTypes\ExecutionServerException.cs" />
-    <Compile Include="RootTypes\FixedList.cs" />
-    <Compile Include="RootTypes\IExtensible.cs" />
-    <Compile Include="RootTypes\IIdentifiable.cs" />
-    <Compile Include="RootTypes\IStorable.cs" />
-    <Compile Include="RootTypes\ITransaction.cs" />
-    <Compile Include="RootTypes\IUnitOfWork.cs" />
-    <Compile Include="RootTypes\IValueObject.cs" />
-    <Compile Include="RootTypes\lFilter.cs" />
-    <Compile Include="RootTypes\MetaModel.cs" />
-    <Compile Include="RootTypes\ObjectsCache.cs" />
-    <Compile Include="RootTypes\LazyInstance.cs" />
-    <Compile Include="RootTypes\ObjectStatus.cs" />
-    <Compile Include="RootTypes\OperationBase.cs" />
-    <Compile Include="RootTypes\PlainTextException.cs" />
-    <Compile Include="RootTypes\ProductInformation.cs" />
-    <Compile Include="RootTypes\ResourceConflictException.cs" />
-    <Compile Include="RootTypes\ResourceNotFoundException.cs" />
-    <Compile Include="RootTypes\StorageChangeItem.cs" />
-    <Compile Include="RootTypes\StorageChangeItemList.cs" />
-    <Compile Include="RootTypes\StorageContext.cs" />
-    <Compile Include="RootTypes\StorageVersion.cs" />
-    <Compile Include="RootTypes\UnauthorizedException.cs" />
-    <Compile Include="RootTypes\Validate.cs" />
-    <Compile Include="RootTypes\ValidationException.cs" />
-    <Compile Include="RootTypes\ValueObject.cs" />
-    <Compile Include="RootTypes\DataFieldAttribute.cs" />
-    <Compile Include="RootTypes\IValueObjectGeneric.cs" />
-    <Compile Include="RootTypes\ValueObjectFactory.cs" />
-    <Compile Include="Security\Cryptographer.cs" />
-    <Compile Include="Security\IntegrityValidator.cs" />
-    <Compile Include="Security\IProtected.cs" />
-    <Compile Include="Security\PasswordStrength.cs" />
-    <Compile Include="Security\SecurityException.cs" />
-    <Compile Include="Security\SingleSignOnToken.cs" />
-    <Compile Include="WebApi.Client\WebApiClientFactory.cs" />
-    <Compile Include="WebApi.Client\IWebApiClient.cs" />
-    <Compile Include="RootTypes\GeneralStatus.cs" />
-    <Compile Include="DataTypes\TimeFrame.cs" />
-    <Compile Include="RootTypes\GeneralList.cs" />
-    <Compile Include="Contacts\ContactsData.cs" />
-    <Compile Include="Contacts\Contact.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Contacts\Person.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DataTypes\Quantity.cs" />
-    <Compile Include="DataTypes\Money.cs" />
-    <Compile Include="DataTypes\Currency.cs" />
-    <Compile Include="DataTypes\ValuesTableColumnCollection.cs" />
-    <Compile Include="DataTypes\Tax.cs" />
-    <Compile Include="DataTypes\Unit.cs" />
-    <Compile Include="DataTypes\ValuesTableReader.cs" />
-    <Compile Include="DataTypes\ValuesTableStucture.cs" />
-    <Compile Include="Ontology\ParameterInfo.cs" />
-    <Compile Include="Ontology\TypeMethodInfo.cs" />
-    <Compile Include="Ontology\StaticTypeInfo.cs" />
-    <Compile Include="Ontology\TypeAssociationInfo.cs" />
-    <Compile Include="Ontology\TypeAttributeInfo.cs" />
-    <Compile Include="Ontology\MetaModelTypeInfo.cs" />
-    <Compile Include="Ontology\RuleTypeInfo.cs" />
-    <Compile Include="Ontology\EventTypeInfo.cs" />
-    <Compile Include="RootTypes\BaseObject.cs" />
-    <Compile Include="RootTypes\GeneralObject.cs" />
-    <Compile Include="Security\AuditTrail.cs" />
-    <Compile Include="Security\AuthorizationType.cs" />
-    <Compile Include="Security\ClientApplication.cs" />
-    <Compile Include="Security\ImpersonationContext.cs" />
-    <Compile Include="Security\IRequest.cs" />
-    <Compile Include="Security\SecurityClaim.cs" />
-    <Compile Include="Security\SecurityClaimList.cs" />
-    <Compile Include="Security\SecurityClaimType.cs" />
-    <Compile Include="Security\WebServer.cs" />
-    <Compile Include="Security\EmpiriaUser.cs" />
-    <Compile Include="RootTypes\SearchExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Security\SecurityData.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Security\Authorization.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Security\EmpiriaIdentity.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Security\EmpiriaPrincipal.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Security\EmpiriaSession.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Ontology\OntologyData.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Ontology\TypeRelationInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Ontology\ObjectTypeInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Ontology\FundamentalTypeInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Ontology\ValueTypeInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Ontology\MetaModelType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Ontology\OntologyException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <EmbeddedResource Include="Data\DataExceptionMsg.resx">
-      <LastGenOutput>DataExceptionMsg.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Ontology\OntologyExceptionMsg.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ORM\DataMappingExceptionMsg.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RootTypes\KernelExceptionMsg.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Security\SecurityExceptionMsg.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config" />
-    <None Include="README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Ontology.Modeler\" />
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="LICENSE.txt" />
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>
