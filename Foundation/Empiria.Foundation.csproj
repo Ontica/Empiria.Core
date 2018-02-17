@@ -7,7 +7,7 @@
     <Version>7.0.0</Version>
     <AssemblyVersion>7.0.0</AssemblyVersion>
     <FileVersion>7.0.0.0</FileVersion>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageIconUrl>http://www.ontica.org/logo.ontica.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/Ontica/Empiria.Core</PackageProjectUrl>
@@ -16,10 +16,12 @@
     <RepositoryUrl>https://github.com/Ontica/Empiria.Core</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <TargetFramework>net46</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <RootNamespace>Empiria</RootNamespace>
+    <Configurations>Debug;Release;Multisolutions</Configurations>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Multisolutions|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -36,6 +38,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <DefineConstants>TRACE</DefineConstants>
