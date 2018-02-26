@@ -63,23 +63,19 @@ namespace Empiria.Data {
       if (StorageContext.IsStorageContextDefined) {
         StorageContext.ActiveStorageContext.Add(operation);
 
-        return;
-      }
-
-      if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
+      } else if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
         ExecuteExternal(operation);
 
-        return;
-      }
+      } else {
+        DataWriter.ExecuteInternal(operation);
 
-      DataWriter.ExecuteInternal(operation);
+      }
 
       DataWriter.WriteDataLog(operation);
 
       DataWriter.DoPostExecutionTask(operation);
 
       DataPublisher.Publish(operation);
-
     }
 
 
