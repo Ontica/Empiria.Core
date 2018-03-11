@@ -15,7 +15,7 @@
     <PackageTags>data access, orm, ontology, powertypes, base-architecture, software foundation, general purpose backend, government solutions, business solutions</PackageTags>
     <RepositoryUrl>https://github.com/Ontica/Empiria.Core</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net471</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <RootNamespace>Empiria</RootNamespace>
