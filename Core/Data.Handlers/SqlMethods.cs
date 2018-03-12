@@ -106,7 +106,6 @@ namespace Empiria.Data.Handlers {
       var connection = new SqlConnection(operation.DataSource.Source);
       var command = new SqlCommand(operation.SourceName, connection);
 
-      T result = default(T);
       try {
         command.CommandType = operation.CommandType;
         if (operation.ExecutionTimeout != 0) {
@@ -117,7 +116,13 @@ namespace Empiria.Data.Handlers {
         if (ContextUtil.IsInTransaction) {
           connection.EnlistDistributedTransaction((System.EnterpriseServices.ITransaction) ContextUtil.Transaction);
         }
-        result = (T) command.ExecuteScalar();
+        object result = command.ExecuteScalar();
+        if (result != null) {
+          return (T) result;
+        } else {
+          throw new EmpiriaDataException(EmpiriaDataException.Msg.ActionQueryDoesntReturnAValue,
+                                         operation.SourceName);
+        }
       } catch (Exception exception) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
                                        operation.SourceName, operation.ParametersToString());
@@ -125,7 +130,6 @@ namespace Empiria.Data.Handlers {
         command.Parameters.Clear();
         connection.Dispose();
       }
-      return result;
     }
 
 

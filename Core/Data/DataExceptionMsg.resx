@@ -209,4 +209,7 @@
   <data name="DataIntegrationWSProxyException" xml:space="preserve">
     <value>There was a problem attempting to execute the data integration operation '{0}' using a proxy to the web services server '{1}'.</value>
   </data>
+  <data name="ActionQueryDoesntReturnAValue" xml:space="preserve">
+    <value>Action query '{0}' does not return a value but one was expected.</value>
+  </data>
 </root>

@@ -19,6 +19,7 @@ namespace Empiria.Data {
 
     public enum Msg {
       AsynchronousCommitNotCalled,
+      ActionQueryDoesntReturnAValue,
       CacheRestoreRemovedObjectCallbackFails,
       CannotCreateDataTask,
       CannotDoPostExecutionTask,
