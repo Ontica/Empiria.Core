@@ -150,7 +150,7 @@
     <value>An attempt was made to parse an object with id equals to zero for type {}. For new objects please use a type constructor instead.</value>
   </data>
   <data name="CannotParseObjectWithDataRow" xml:space="preserve">
-    <value>No pude hacer el parsing del objeto del tipo '{0}' utilizando el dataRow proporcionado.</value>
+    <value>No pude hacer el parsing del objeto del tipo '{0}' e identificador '{1}' utilizando el dataRow proporcionado.</value>
   </data>
   <data name="WrongAssociatedObjectFound" xml:space="preserve">
     <value>El objeto con id {0} del tipo {1} (source) está incorrectamente relacionado con otro objeto usando la relación {2}. Es posible que el tipo de dicho objeto relacionado no sea del tipo que indica el tipo target de la relación, o bien, que no se encuentre en la tabla donde se almacenan los objetos de ese tipo.</value>

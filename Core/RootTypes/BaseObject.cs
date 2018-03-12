@@ -145,11 +145,12 @@ namespace Empiria {
         return new List<T>();
       }
       var baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
+      int objectId = 0;
       try {
         List<T> list = new List<T>(dataTable.Rows.Count);
 
         foreach (DataRow dataRow in dataTable.Rows) {
-          int objectId = (int) dataRow[baseTypeInfo.IdFieldName];
+          objectId = (int) dataRow[baseTypeInfo.IdFieldName];
 
           T item = cache.TryGetItem<T>(baseTypeInfo.Name, objectId);
           if (item != null) {
@@ -163,7 +164,7 @@ namespace Empiria {
         return list;
       } catch (Exception e) {
         var exception = new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
-                                              e, baseTypeInfo.Name);
+                                              e, baseTypeInfo.Name, objectId);
         exception.Publish();
         throw exception;
       }

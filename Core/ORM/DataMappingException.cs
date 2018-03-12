@@ -21,7 +21,6 @@ namespace Empiria.ORM {
       CannotGetUnderlyingSystemType,
       CannotInitializeObject,
       CannotMapDataValue,
-      CannotParseObjectWithDataRow,
       CannotParsePropertyForDefaultValue,
       ConvertionToTargetTypeFails,
       LinkNotFoundForSource,
