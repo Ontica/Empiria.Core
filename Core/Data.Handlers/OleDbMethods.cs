@@ -26,23 +26,28 @@ namespace Empiria.Data.Handlers {
 
 
     public int CountRows(DataOperation operation) {
-      OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
-      OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
-      DataTable dataTable = new DataTable();
+      var connection = new OleDbConnection(operation.DataSource.Source);
+      var command = new OleDbCommand(operation.SourceName, connection);
 
       try {
+        operation.PrepareCommand(command);
+
+        var dataAdapter = new OleDbDataAdapter(command);
+
+        var dataTable = new DataTable();
+
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
-        OleDbDataAdapter dataAdapter = new OleDbDataAdapter(command);
+
         dataAdapter.Fill(dataTable);
         dataAdapter.Dispose();
+
         return dataTable.Rows.Count;
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -51,114 +56,94 @@ namespace Empiria.Data.Handlers {
 
 
     public int Execute(DataOperation operation) {
-      OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
-      OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
+      var connection = new OleDbConnection(operation.DataSource.Source);
+      var command = new OleDbCommand(operation.SourceName, connection);
 
-      int affectedRows = 0;
       try {
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
+        operation.PrepareCommand(command);
+
         connection.Open();
-        affectedRows = command.ExecuteNonQuery();
-        command.Parameters.Clear();
+
+        return command.ExecuteNonQuery();
+
       } catch (Exception exception) {
-        string parametersString = String.Empty;
-        for (int i = 0; i < operation.Parameters.Length; i++) {
-          parametersString += (parametersString.Length != 0 ? ", " : String.Empty) + Convert.ToString(operation.Parameters[i]);
-        }
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
-                                       operation.SourceName, parametersString);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
       }
-      return affectedRows;
     }
 
 
     public T Execute<T>(DataOperation operation) {
-      OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
-      OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
+      var connection = new OleDbConnection(operation.DataSource.Source);
+      var command = new OleDbCommand(operation.SourceName, connection);
 
-      T result = default(T);
       try {
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
+        operation.PrepareCommand(command);
+
         connection.Open();
-        result = (T) command.ExecuteScalar();
-        command.Parameters.Clear();
-      } catch (Exception exception) {
-        string parametersString = String.Empty;
-        for (int i = 0; i < operation.Parameters.Length; i++) {
-          parametersString += (parametersString.Length != 0 ? ", " : String.Empty) + Convert.ToString(operation.Parameters[i]);
+
+        object result = command.ExecuteScalar();
+
+        if (result != null) {
+          return (T) result;
+        } else {
+          throw new EmpiriaDataException(EmpiriaDataException.Msg.ActionQueryDoesntReturnAValue,
+                                         operation.SourceName);
         }
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
-                                       operation.SourceName, parametersString);
+
+      } catch (Exception exception) {
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
       }
-      return result;
     }
 
 
     public int Execute(IDbConnection connection, DataOperation operation) {
-      OleDbCommand command = new OleDbCommand(operation.SourceName, (OleDbConnection) connection);
+      var command = new OleDbCommand(operation.SourceName, (OleDbConnection) connection);
 
-      int affectedRows = 0;
       try {
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
-        affectedRows = command.ExecuteNonQuery();
-        command.Parameters.Clear();
+        operation.PrepareCommand(command);
+
+        return command.ExecuteNonQuery();
+
       } catch (Exception exception) {
-        string parametersString = String.Empty;
-        for (int i = 0; i < operation.Parameters.Length; i++) {
-          parametersString += (parametersString.Length != 0 ? ", " : String.Empty) + Convert.ToString(operation.Parameters[i]);
-        }
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
-                                       operation.SourceName, parametersString);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
       }
-      return affectedRows;
     }
 
 
     public int Execute(IDbTransaction transaction, DataOperation operation) {
-      OleDbCommand command = new OleDbCommand(operation.SourceName,
-                                              (OleDbConnection) transaction.Connection,
-                                              (OleDbTransaction) transaction);
-
-      int affectedRows = 0;
+      var command = new OleDbCommand(operation.SourceName,
+                                     (OleDbConnection) transaction.Connection,
+                                     (OleDbTransaction) transaction);
       try {
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
-        affectedRows = command.ExecuteNonQuery();
-        command.Parameters.Clear();
+        operation.PrepareCommand(command);
+
+        return command.ExecuteNonQuery();
+
       } catch (Exception exception) {
-        string parametersString = String.Empty;
-        for (int i = 0; i < operation.Parameters.Length; i++) {
-          parametersString += (parametersString.Length != 0 ? ", " : String.Empty) + Convert.ToString(operation.Parameters[i]);
-        }
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
-                                       operation.SourceName, parametersString);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
       }
-      return affectedRows;
     }
 
 
@@ -175,58 +160,59 @@ namespace Empiria.Data.Handlers {
 
 
     public IDbConnection GetConnection(string connectionString) {
-      OleDbConnection connection = new OleDbConnection(connectionString);
-      if (ContextUtil.IsInTransaction) {
-        connection.EnlistDistributedTransaction((System.EnterpriseServices.ITransaction) ContextUtil.Transaction);
-      }
-      return connection;
+      return new OleDbConnection(connectionString);
     }
 
     public IDataReader GetDataReader(DataOperation operation) {
-      OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
-      OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
-      OleDbDataReader dataReader;
+      var connection = new OleDbConnection(operation.DataSource.Source);
+      var command = new OleDbCommand(operation.SourceName, connection);
 
       try {
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
+        operation.PrepareCommand(command);
+
         connection.Open();
-        dataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
+
+        return command.ExecuteReader(CommandBehavior.CloseConnection);
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataReader, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataReader,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         //Don't dispose the connection because this method returns a DataReader.
       }
-      return dataReader;
     }
 
 
     public DataRow GetDataRow(DataOperation operation) {
-      OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
-      OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
-      DataTable dataTable = new DataTable(operation.SourceName);
+      var connection = new OleDbConnection(operation.DataSource.Source);
+      var command = new OleDbCommand(operation.SourceName, connection);
 
       try {
+        operation.PrepareCommand(command);
+
+        var dataAdapter = new OleDbDataAdapter(command);
+
+        var dataTable = new DataTable(operation.SourceName);
+
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
-        OleDbDataAdapter dataAdapter = new OleDbDataAdapter(command);
+
         dataAdapter.Fill(dataTable);
         dataAdapter.Dispose();
+
         if (dataTable.Rows.Count != 0) {
           return dataTable.Rows[0];
         } else {
           return null;
         }
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -235,49 +221,59 @@ namespace Empiria.Data.Handlers {
 
 
     public DataTable GetDataTable(DataOperation operation, string dataTableName) {
-      OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
-      OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
-      DataTable dataTable = new DataTable(dataTableName);
+      var connection = new OleDbConnection(operation.DataSource.Source);
+      var command = new OleDbCommand(operation.SourceName, connection);
 
       try {
+        operation.PrepareCommand(command);
+
+        var dataAdapter = new OleDbDataAdapter(command);
+
+        var dataTable = new DataTable(dataTableName);
+
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
-        OleDbDataAdapter dataAdapter = new OleDbDataAdapter(command);
+
         dataAdapter.Fill(dataTable);
         dataAdapter.Dispose();
+
+        return dataTable;
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
       }
-      return dataTable;
     }
 
 
     public DataView GetDataView(DataOperation operation, string filter, string sort) {
-      OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
-      OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
-      DataTable dataTable = new DataTable(operation.SourceName);
+      var connection = new OleDbConnection(operation.DataSource.Source);
+      var command = new OleDbCommand(operation.SourceName, connection);
 
       try {
-        dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
+        operation.PrepareCommand(command);
+
         OleDbDataAdapter dataAdapter = new OleDbDataAdapter(command);
+
+        DataTable dataTable = new DataTable(operation.SourceName);
+
+        dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
+
         dataAdapter.Fill(dataTable);
         dataAdapter.Dispose();
-        return new DataView(dataTable, filter, sort, DataViewRowState.CurrentRows);
+
+        return new DataView(dataTable, filter, sort,
+                            DataViewRowState.CurrentRows);
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataView, exception,
-                                       operation.SourceName, filter, sort);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataView,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -286,47 +282,51 @@ namespace Empiria.Data.Handlers {
 
 
     public object GetFieldValue(DataOperation operation, string fieldName) {
-      OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
-      OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
-      OleDbDataReader dataReader;
-      object fieldValue = null;
+      var connection = new OleDbConnection(operation.DataSource.Source);
+      var command = new OleDbCommand(operation.SourceName, connection);
 
       try {
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
+        operation.PrepareCommand(command);
+
         connection.Open();
-        dataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
+
+        OleDbDataReader dataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
+
         if (dataReader.Read()) {
-          fieldValue = dataReader[fieldName];
+          return dataReader[fieldName];
+        } else {
+          return null;
         }
+
       } catch (Exception exception) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetFieldValue,
-                                       exception, operation.SourceName, fieldName);
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString(),
+                                       fieldName);
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
       }
-      return fieldValue;
     }
 
 
     public object GetScalar(DataOperation operation) {
-      OleDbConnection connection = new OleDbConnection(operation.DataSource.Source);
-      OleDbCommand command = new OleDbCommand(operation.SourceName, connection);
+      var connection = new OleDbConnection(operation.DataSource.Source);
+      var command = new OleDbCommand(operation.SourceName, connection);
 
       try {
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
+        operation.PrepareCommand(command);
+
         connection.Open();
+
         return command.ExecuteScalar();
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetScalar, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetScalar,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();

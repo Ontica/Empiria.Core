@@ -25,27 +25,34 @@ namespace Empiria.Data.Handlers {
       if (!String.IsNullOrEmpty(filter)) {
         queryString += " WHERE " + filter;
       }
+
       using (connection) {
         connection.Open();
         SqlTransaction transaction = ((SqlConnection) connection).BeginTransaction();
-        SqlDataAdapter dataAdapter = new SqlDataAdapter();
+        var dataAdapter = new SqlDataAdapter();
+
         dataAdapter.SelectCommand = new SqlCommand(queryString,
                                                   (SqlConnection) connection,
                                                   transaction);
-        SqlCommandBuilder commandBuilder = new SqlCommandBuilder(dataAdapter);
+
+        var commandBuilder = new SqlCommandBuilder(dataAdapter);
 
         dataAdapter.InsertCommand = commandBuilder.GetInsertCommand();
         dataAdapter.InsertCommand.Transaction = transaction;
+
         DataTable source = DataReader.GetDataTable(DataOperation.Parse(queryString));
         dataAdapter.Fill(source);
+
         for (int i = 0; i < table.Rows.Count; i++) {
           table.Rows[i].SetAdded();
           source.ImportRow(table.Rows[i]);
         }
+
         result = dataAdapter.Update(source);
         transaction.Commit();
         dataAdapter.Dispose();
-      }
+      } // using
+
       return result;
     }
 
@@ -53,21 +60,26 @@ namespace Empiria.Data.Handlers {
     public int CountRows(DataOperation operation) {
       var connection = new SqlConnection(operation.DataSource.Source);
       var command = new SqlCommand(operation.SourceName, connection);
-      var dataTable = new DataTable();
 
       try {
+        operation.PrepareCommand(command);
+
+        var dataAdapter = new SqlDataAdapter(command);
+
+        var dataTable = new DataTable();
+
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
-        SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+
         dataAdapter.Fill(dataTable);
         dataAdapter.Dispose();
+
         return dataTable.Rows.Count;
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -79,26 +91,26 @@ namespace Empiria.Data.Handlers {
       var connection = new SqlConnection(operation.DataSource.Source);
       var command = new SqlCommand(operation.SourceName, connection);
 
-      int affectedRows = 0;
       try {
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
+        operation.PrepareCommand(command);
+
         connection.Open();
+
         if (ContextUtil.IsInTransaction) {
           connection.EnlistDistributedTransaction((System.EnterpriseServices.ITransaction) ContextUtil.Transaction);
         }
-        affectedRows = command.ExecuteNonQuery();
+
+        return command.ExecuteNonQuery();
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery,
+                                       exception,
                                        operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
       }
-      return affectedRows;
     }
 
 
@@ -107,25 +119,28 @@ namespace Empiria.Data.Handlers {
       var command = new SqlCommand(operation.SourceName, connection);
 
       try {
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
+        operation.PrepareCommand(command);
+
         connection.Open();
+
         if (ContextUtil.IsInTransaction) {
           connection.EnlistDistributedTransaction((System.EnterpriseServices.ITransaction) ContextUtil.Transaction);
         }
+
         object result = command.ExecuteScalar();
+
         if (result != null) {
           return (T) result;
         } else {
           throw new EmpiriaDataException(EmpiriaDataException.Msg.ActionQueryDoesntReturnAValue,
                                          operation.SourceName);
         }
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery,
+                                       exception,
                                        operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -136,22 +151,19 @@ namespace Empiria.Data.Handlers {
     public int Execute(IDbConnection connection, DataOperation operation) {
       var command = new SqlCommand(operation.SourceName, (SqlConnection) connection);
 
-      int affectedRows = 0;
       try {
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
-        affectedRows = command.ExecuteNonQuery();
-        command.Parameters.Clear();
+        operation.PrepareCommand(command);
+
+        return command.ExecuteNonQuery();
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery,
+                                       exception,
                                        operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
       }
-      return affectedRows;
     }
 
 
@@ -160,22 +172,19 @@ namespace Empiria.Data.Handlers {
                                   (SqlConnection) transaction.Connection,
                                   (SqlTransaction) transaction);
 
-      int affectedRows = 0;
       try {
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
-        affectedRows = command.ExecuteNonQuery();
-        command.Parameters.Clear();
+        operation.PrepareCommand(command);
+
+        return command.ExecuteNonQuery();
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery, exception,
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery,
+                                       exception,
                                        operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
       }
-      return affectedRows;
     }
 
 
@@ -188,9 +197,11 @@ namespace Empiria.Data.Handlers {
 
     public IDbConnection GetConnection(string connectionString) {
       var connection = new SqlConnection(connectionString);
+
       if (ContextUtil.IsInTransaction) {
         connection.EnlistDistributedTransaction((System.EnterpriseServices.ITransaction) ContextUtil.Transaction);
       }
+
       return connection;
     }
 
@@ -200,9 +211,12 @@ namespace Empiria.Data.Handlers {
 
       if (reader.Read()) {
         System.Data.SqlTypes.SqlBinary blob = reader.GetSqlBinary(reader.GetOrdinal(fieldName));
+
         return blob.Value;
+
       } else {
         return null;
+
       }
     }
 
@@ -210,49 +224,53 @@ namespace Empiria.Data.Handlers {
     public IDataReader GetDataReader(DataOperation operation) {
       var connection = new SqlConnection(operation.DataSource.Source);
       var command = new SqlCommand(operation.SourceName, connection);
-      SqlDataReader dataReader;
 
       try {
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
+        operation.PrepareCommand(command);
+
         connection.Open();
-        dataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
+
+        return command.ExecuteReader(CommandBehavior.CloseConnection);
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataReader, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataReader,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         //Don't dipose the connection because this method returns a DataReader.
       }
-      return dataReader;
     }
 
 
     public DataRow GetDataRow(DataOperation operation) {
       var connection = new SqlConnection(operation.DataSource.Source);
       var command = new SqlCommand(operation.SourceName, connection);
-      var dataTable = new DataTable(operation.SourceName);
 
       try {
+        operation.PrepareCommand(command);
+
+        var dataAdapter = new SqlDataAdapter(command);
+
+        var dataTable = new DataTable(operation.SourceName);
+
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
-        SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+
         dataAdapter.Fill(dataTable);
         dataAdapter.Dispose();
+
         if (dataTable.Rows.Count != 0) {
           return dataTable.Rows[0];
         } else {
           return null;
         }
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.Name,
-                                       operation.ParametersToString());
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -263,47 +281,57 @@ namespace Empiria.Data.Handlers {
     public DataTable GetDataTable(DataOperation operation, string dataTableName) {
       var connection = new SqlConnection(operation.DataSource.Source);
       var command = new SqlCommand(operation.SourceName, connection);
-      var dataTable = new DataTable(dataTableName);
 
       try {
+        operation.PrepareCommand(command);
+
+        var dataAdapter = new SqlDataAdapter(command);
+
+        var dataTable = new DataTable(dataTableName);
+
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
-        SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+
         dataAdapter.Fill(dataTable);
         dataAdapter.Dispose();
+
+        return dataTable;
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable, exception, operation.Name,
-                                       operation.ParametersToString());
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
       }
-      return dataTable;
     }
 
 
     public DataView GetDataView(DataOperation operation, string filter, string sort) {
       var connection = new SqlConnection(operation.DataSource.Source);
       var command = new SqlCommand(operation.SourceName, connection);
-      var dataTable = new DataTable(operation.SourceName);
 
       try {
+        operation.PrepareCommand(command);
+
+        var dataAdapter = new SqlDataAdapter(command);
+
+        var dataTable = new DataTable(operation.SourceName);
+
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
-        SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+
         dataAdapter.Fill(dataTable);
         dataAdapter.Dispose();
-        return new DataView(dataTable, filter, sort, DataViewRowState.CurrentRows);
+
+        return new DataView(dataTable, filter, sort,
+                            DataViewRowState.CurrentRows);
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataView, exception, operation.SourceName, filter, sort);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataView,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
@@ -314,28 +342,30 @@ namespace Empiria.Data.Handlers {
     public object GetFieldValue(DataOperation operation, string fieldName) {
       var connection = new SqlConnection(operation.DataSource.Source);
       var command = new SqlCommand(operation.SourceName, connection);
-      SqlDataReader dataReader;
-      object fieldValue = null;
 
       try {
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
+        operation.PrepareCommand(command);
+
         connection.Open();
-        dataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
+
+        SqlDataReader dataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
+
         if (dataReader.Read()) {
-          fieldValue = dataReader[fieldName];
+          return dataReader[fieldName];
+        } else {
+          return null;
         }
+
       } catch (Exception exception) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetFieldValue,
-                                       exception, operation.SourceName, fieldName);
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString(),
+                                       fieldName);
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
       }
-      return fieldValue;
     }
 
 
@@ -344,15 +374,17 @@ namespace Empiria.Data.Handlers {
       var command = new SqlCommand(operation.SourceName, connection);
 
       try {
-        command.CommandType = operation.CommandType;
-        if (operation.ExecutionTimeout != 0) {
-          command.CommandTimeout = operation.ExecutionTimeout;
-        }
-        operation.FillParameters(command);
+        operation.PrepareCommand(command);
+
         connection.Open();
+
         return command.ExecuteScalar();
+
       } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetScalar, exception, operation.SourceName);
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetScalar,
+                                       exception,
+                                       operation.SourceName, operation.ParametersToString());
+
       } finally {
         command.Parameters.Clear();
         connection.Dispose();

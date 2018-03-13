@@ -131,7 +131,17 @@ namespace Empiria.Data {
       }
     }
 
-    public void FillParameters(IDbCommand command) {
+    public void PrepareCommand(IDbCommand command) {
+      command.CommandType = this.CommandType;
+      if (this.ExecutionTimeout != 0) {
+        command.CommandTimeout = this.ExecutionTimeout;
+      }
+
+      this.FillParameters(command);
+    }
+
+
+    private void FillParameters(IDbCommand command) {
       if (base.Parameters.Length == 0) {
         return;
       }

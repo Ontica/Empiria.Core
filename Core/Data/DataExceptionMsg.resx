@@ -117,10 +117,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CannotGetDataReader" xml:space="preserve">
-    <value>There was a problem loading the DataReader for data source '{0}'.</value>
+    <value>There was a problem loading a DataReader from data source '{0}' using parameters ({1}).</value>
   </data>
   <data name="CannotGetDataTable" xml:space="preserve">
-    <value>There was a problem loading the DataTable for data source '{0}'.</value>
+    <value>There was a problem loading a DataTable from data source '{0}' using parameters ({1}).</value>
   </data>
   <data name="CannotExecuteActionQuery" xml:space="preserve">
     <value>There was a problem executing '{0}'. Data operation parameters were: ({1})</value>
@@ -129,13 +129,13 @@
     <value>There was a problem retrieving the object Id returned by '{0}' from the database.</value>
   </data>
   <data name="CannotGetScalar" xml:space="preserve">
-    <value>There was a problem reading the value returned by '{0}'.</value>
+    <value>There was a problem reading the value returned from data source '{0}' using parameters ({1}).</value>
   </data>
   <data name="CannotGetDataView" xml:space="preserve">
-    <value>There was a problem loading the DataView for data source '{0}'.</value>
+    <value>There was a problem loading a DataView from data source '{0}' using parameters ({1}).</value>
   </data>
   <data name="CannotGetFieldValue" xml:space="preserve">
-    <value>There was a problem retrieving the field value '{1}' of the data source '{0}'.</value>
+    <value>There was a problem retrieving the field value '{2}' from the data source '{0}' using parameters ({1}).</value>
   </data>
   <data name="CacheRestoreRemovedObjectCallbackFails" xml:space="preserve">
     <value>There was a problem executing the callback of the async method that updates the data cache.</value>
