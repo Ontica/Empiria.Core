@@ -63,7 +63,7 @@ namespace Empiria {
       return item;
     }
 
-    static protected List<T> GetList<T>(string filter = "", string sort = "") where T : BaseObject {
+    static public List<T> GetList<T>(string filter = "", string sort = "") where T : BaseObject {
       return OntologyData.GetBaseObjectList<T>(filter, sort);
     }
 
