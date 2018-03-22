@@ -200,7 +200,7 @@ namespace Empiria {
           }
         }
 
-        Assertion.AssertObject(value, "ReadValue.Value");
+        Assertion.AssertObject(value, parameterName);
 
         return value;
       } catch (Exception innerException) {
