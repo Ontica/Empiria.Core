@@ -12,21 +12,6 @@
       "type": "",
       "key": "GlobalConfigurationFile",
       "value": "{{GLOBAL-CONFIGURATION-FILE}}"
-    },
-    {
-      "type": "WebApi.Client",
-      "key": "Default.WebApiServer",
-      "value": "Microservices"
-    },
-    {
-      "type": "WebApi.Client",
-      "key": "WebApiServer.Microservices",
-      "value": "{{WEBAPISERVER.MICROSERVICES}}"
-    },
-    {
-      "type": "WebApi.Client",
-      "key": "ServiceDirectory.Path",
-      "value": "v1/system/service-directory"
     }
   ]
 }
