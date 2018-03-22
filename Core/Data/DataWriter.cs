@@ -17,7 +17,7 @@ using Empiria.Data.Handlers;
 using Empiria.Data.Integration;
 using Empiria.Reflection;
 using Empiria.Security;
-using Empiria.WebApi.Client;
+using Empiria.WebApi;
 
 namespace Empiria.Data {
 

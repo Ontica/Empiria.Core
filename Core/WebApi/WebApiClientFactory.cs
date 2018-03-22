@@ -1,17 +1,17 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                   System   : Empiria Web API Services            *
-*  Namespace : Empiria.WebApi.Client                          Assembly : Empiria.Core.dll                    *
-*  Type      : WebApiClientFactory                            Pattern  : Factory class                       *
+*  Module   : Empiria Core                                 Component : Web Api Services                      *
+*  Assembly : Empiria.Core.dll                             Pattern   : Factory                               *
+*  Type     : WebApiClientFactory                          License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Methods to create WebApiClient instances which are included in a separated component.         *
+*  Summary  : Methods to create WebApiClient instances which are included in a separated component.          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 using Empiria.Reflection;
 
-namespace Empiria.WebApi.Client {
+namespace Empiria.WebApi {
 
   /// <summary>Methods to create WebApiClient instances which are included in a separated component.</summary>
   static internal class WebApiClientFactory {
@@ -41,9 +41,9 @@ namespace Empiria.WebApi.Client {
 
     static private Type GetWebApiClientType() {
       return ObjectFactory.GetType("Empiria.WebApi.Client",
-                                    "Empiria.WebApi.Client.WebApiClient");
+                                   "Empiria.WebApi.Client.WebApiClient");
     }
 
   }  // interface WebApiClientFactory
 
-}  // namespace Empiria.WebApi.Client
+}  // namespace Empiria.WebApi
