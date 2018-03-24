@@ -52,9 +52,13 @@ namespace Empiria.Data {
 
     static public int CreateId(string sourceName) {
       if (DataIntegrationRules.HasExternalClusterCreateIdRule(sourceName)) {
-        return CreateExternalClusterIdAsync(sourceName).Result;
+        return CreateExternalClusterIdAsync(sourceName).GetAwaiter()
+                                                       .GetResult();
+
+      } else {
+        return CreateThisClusterIdAsync(sourceName).GetAwaiter()
+                                                   .GetResult();
       }
-      return CreateThisClusterIdAsync(sourceName).Result;
     }
 
     static public void Execute(DataOperation operation) {
@@ -187,7 +191,8 @@ namespace Empiria.Data {
       } else {
         IWebApiClient apiClient = WebApiClientFactory.CreateWebApiClient();
 
-        return await apiClient.GetAsync<int>("Empiria.IdGenerator.NextTableRowId", sourceName);
+        return await apiClient.GetAsync<int>("Empiria.IdGenerator.NextTableRowId", sourceName)
+                              .ConfigureAwait(false);
       }
     }
 
@@ -196,7 +201,8 @@ namespace Empiria.Data {
 
       IWebApiClient apiClient = WebApiClientFactory.CreateWebApiClient(targetServer.WebSiteURL);
 
-      return await apiClient.GetAsync<int>("Empiria.IdGenerator.NextTableRowId", sourceName);
+      return await apiClient.GetAsync<int>("Empiria.IdGenerator.NextTableRowId", sourceName)
+                            .ConfigureAwait(false);
     }
 
     static private IDataHandler GetDataHander(DataOperation operation) {
