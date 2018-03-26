@@ -9,8 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Security;
-
 namespace Empiria.DataTypes {
 
   public class Discount {
@@ -21,30 +19,24 @@ namespace Empiria.DataTypes {
       this.DiscountType = DiscountType.Empty;
       this.Currency = Currency.Default;
       this.Amount = decimal.Zero;
-      this.Authorization = Authorization.Empty;
     }
 
     static public Discount Parse(DiscountType discountType, decimal amount) {
-      var discount = new Discount();
-      discount.DiscountType = discountType;
-      discount.Amount = amount;
+      var discount = new Discount() {
+        DiscountType = discountType,
+        Amount = amount
+      };
 
       return discount;
     }
 
-    static public Discount Parse(DiscountType discountType, decimal amount, int authorizationId) {
-      var discount = new Discount();
-      discount.DiscountType = discountType;
-      discount.Amount = amount;
-      discount.Authorization = Authorization.Parse(authorizationId, discount);
-      return discount;
-    }
-
-    static public Discount Parse(DiscountType discountType, Currency currency, decimal amount) {
-      var discount = new Discount();
-      discount.DiscountType = discountType;
-      discount.Currency = currency;
-      discount.Amount = amount;
+    static public Discount Parse(DiscountType discountType,
+                                 Currency currency, decimal amount) {
+      var discount = new Discount() {
+        DiscountType = discountType,
+        Currency = currency,
+        Amount = amount
+      };
 
       return discount;
     }
@@ -61,20 +53,15 @@ namespace Empiria.DataTypes {
 
     public DiscountType DiscountType {
       get;
-      set;
+      private set;
     }
 
     public decimal Amount {
       get;
-      set;
+      private set;
     }
 
     public Currency Currency {
-      get;
-      set;
-    }
-
-    public Authorization Authorization {
       get;
       private set;
     }
@@ -94,14 +81,6 @@ namespace Empiria.DataTypes {
     }
 
     #endregion Operators overloading
-
-    #region Public methods
-
-    public Authorization Authorize() {
-      throw new NotImplementedException();
-    }
-
-    #endregion Public methods
 
   } // class Discount
 
