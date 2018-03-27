@@ -1,10 +1,10 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Security Services                 *
-*  Namespace : Empiria.Security                                 License  : Please read LICENSE.txt file      *
-*  Type      : ClientApplication                                Pattern  : Standard Class                    *
+*  Module   : Security                                     Component : Authentication Services               *
+*  Assembly : Empiria.Core.dll                             Pattern   : Domain entity                         *
+*  Type     : ClientApplication                            License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Represents a client application that uses the backend framework.                              *
+*  Summary  : Represents a client application of Empiria Framework.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -16,6 +16,7 @@ using Empiria.Json;
 
 namespace Empiria.Security {
 
+  /// <summary>Represents a client application of Empiria Framework.</summary>
   public class ClientApplication : BaseObject, IClaimsSubject {
 
     #region Constructors and parsers
@@ -28,6 +29,7 @@ namespace Empiria.Security {
     static internal ClientApplication Parse(int id) {
       return BaseObject.ParseId<ClientApplication>(id);
     }
+
 
     static public ClientApplication ParseActive(string clientAppKey) {
       Assertion.AssertObject(clientAppKey, "clientAppKey");
@@ -68,6 +70,7 @@ namespace Empiria.Security {
       }
     }
 
+
     internal protected override void OnLoadObjectData(DataRow row) {
       this.Key = (string) row["ObjectKey"];
       this.Description = (string) row["ObjectName"];
@@ -75,8 +78,6 @@ namespace Empiria.Security {
 
       var json = JsonObject.Parse((string) row["ObjectExtData"]);
       this.AssignedTo = Contact.Parse(json.Get<Int32>("AssignedToId", -1));
-
-      this.Claims = new SecurityClaimList(this);
 
       this.WebApiAddresses = json.GetList<NameValuePair>("WebApiAddresses").ToFixedList();
 
@@ -91,11 +92,13 @@ namespace Empiria.Security {
       private set;
     }
 
+
     [DataField("ObjectKey")]
     public string Key {
       get;
       private set;
     }
+
 
     [DataField("ObjectName")]
     public string Description {
@@ -103,21 +106,19 @@ namespace Empiria.Security {
       private set;
     }
 
+
     [DataField("ObjectStatus", Default = ObjectStatus.Active)]
     public ObjectStatus Status {
       get;
       private set;
     }
 
-    public SecurityClaimList Claims {
-      get;
-      private set;
-    }
 
     public FixedList<NameValuePair> WebApiAddresses {
       get;
       private set;
     }
+
 
     string IClaimsSubject.ClaimsToken {
       get {
@@ -128,26 +129,6 @@ namespace Empiria.Security {
     #endregion Properties
 
     #region Methods
-
-    public void AssertClaim(SecurityClaimType claimType, string claimValue,
-                            string assertionFailMsg = null) {
-      Assertion.AssertObject(claimValue, "claimValue");
-
-      if (this.Claims.Contains(claimType, claimValue)) {
-        return;
-      }
-
-      if (String.IsNullOrWhiteSpace(assertionFailMsg)) {
-        assertionFailMsg = this.BuildAssertionClaimFailMsg(claimType, claimValue);
-      }
-      throw new SecurityException(SecurityException.Msg.ClientApplicationClaimNotFound, assertionFailMsg);
-    }
-
-    private string BuildAssertionClaimFailMsg(SecurityClaimType claimType, string claimValue) {
-      return String.Format("Client application '{0}' doesn't have a security claim " +
-                           "with value '{1}' of type '{2}'.",
-                           this.Description, claimValue, claimType.Key);
-    }
 
     void IClaimsSubject.OnClaimsSubjectRegistered(string claimsToken) {
       throw new NotImplementedException();

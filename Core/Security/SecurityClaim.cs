@@ -1,10 +1,10 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Security Services                 *
-*  Namespace : Empiria.Security                                 License  : Please read LICENSE.txt file      *
-*  Type      : SecurityClaim                                    Pattern  : Standard Class                    *
+*  Module   : Security                                     Component : Security Claims                       *
+*  Assembly : Empiria.Core.dll                             Pattern   : Domain service class                  *
+*  Type     : SecurityClaim                                License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Represents a security claim.                                                                  *
+*  Summary  : Represents a security claim.                                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,6 +13,7 @@ using Empiria.Json;
 
 namespace Empiria.Security {
 
+  /// <summary>Represents a security claim.</summary>
   public sealed class SecurityClaim : BaseObject {
 
     #region Constructors and parsers

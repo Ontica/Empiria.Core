@@ -194,19 +194,13 @@
   <data name="NotActiveClientAppKey" xml:space="preserve">
     <value>The application key '{0}' is not active.</value>
   </data>
-  <data name="ClientApplicationClaimNotFound" xml:space="preserve">
-    <value>{0}</value>
-  </data>
-  <data name="PrincipalClaimNotFound" xml:space="preserve">
-    <value>{0}</value>
-  </data>
   <data name="CantExecuteOperationOnOtherUser" xml:space="preserve">
     <value>Operation '{0}' for user '{1}' failed: This operation can be executed only over the same user that is authenticated.</value>
   </data>
-  <data name="ResourceClaimTypeIsMultiValue" xml:space="preserve">
+  <data name="SubjectClaimTypeIsMultiValue" xml:space="preserve">
     <value>Security claim type '{0}' has multiple value instances, so is not possible to retrieve their values using this method.</value>
   </data>
-  <data name="ResourceClaimTypeNotFound" xml:space="preserve">
+  <data name="SubjectClaimTypeNotFound" xml:space="preserve">
     <value>Resource with id {1} has not defined any security claim of type '{0}'.</value>
   </data>
   <data name="UserWithEMailNotFound" xml:space="preserve">
@@ -215,7 +209,7 @@
   <data name="InvalidActivationToken" xml:space="preserve">
     <value>User's activation token is invalid: '{0}'.</value>
   </data>
-  <data name="ResourceClaimNotFound" xml:space="preserve">
+  <data name="SubjectClaimNotFound" xml:space="preserve">
     <value>Resource with id {1} has not defined any security claim of type '{0}' and value '{2}'</value>
   </data>
   <data name="InvalidResetPasswordToken" xml:space="preserve">
@@ -229,5 +223,8 @@
   </data>
   <data name="UserNotInRole" xml:space="preserve">
     <value>To execute this operation the current user must belong to at least one of the following roles: {0}.</value>
+  </data>
+  <data name="EnsureClaimFailed" xml:space="preserve">
+    <value>{0}</value>
   </data>
 </root>

@@ -118,27 +118,9 @@ namespace Empiria.Security {
       private set;
     }
 
-    public SecurityClaimList Claims {
-      get;
-      private set;
-    }
-
     #endregion Public properties
 
     #region Public methods
-
-    public void AssertClaim(SecurityClaimType claimType, string claimValue, string assertionFailMsg = null) {
-      Assertion.AssertObject(claimValue, "claimValue");
-
-      if (this.Claims.Contains(claimType, claimValue)) {
-        return;
-      }
-
-      if (String.IsNullOrWhiteSpace(assertionFailMsg)) {
-        assertionFailMsg = this.BuildAssertionClaimFailMsg(claimType, claimValue);
-      }
-      throw new SecurityException(SecurityException.Msg.PrincipalClaimNotFound, assertionFailMsg);
-    }
 
     public void CloseSession() {
       try {
@@ -168,11 +150,6 @@ namespace Empiria.Security {
 
     #region Private methods
 
-    private string BuildAssertionClaimFailMsg(SecurityClaimType claimType, string claimValue) {
-      return String.Format("Principal '{0}' doesn't have a security claim with value '{1}' of type '{2}'.",
-                            this.Identity.User.UserName, claimValue, claimType.Key);
-    }
-
     private void Initialize(EmpiriaIdentity identity, ClientApplication clientApp = null,
                             EmpiriaSession session = null, int contextId = -1) {
       this.Identity = identity;
@@ -190,13 +167,11 @@ namespace Empiria.Security {
       principalsCache.Insert(this.Session.Token, this);
 
       this.ContextItems = new AssortedDictionary();
-      this.RefreshBeforeReturn();
 
-      this.Claims = identity.User.Claims;
+      this.RefreshBeforeReturn();
     }
 
     private void LoadRolesArray(int participantId) {
-      //identity.User.GetRoles();
       rolesArray = new string[0];
     }
 

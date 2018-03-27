@@ -1,35 +1,41 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Security Services                 *
-*  Namespace : Empiria.Security                                 License  : Please read LICENSE.txt file      *
-*  Type      : SecurityClaimList                                Pattern  : Standard Class                    *
+*  Module   : Security                                     Component : Security Claims                       *
+*  Assembly : Empiria.Core.dll                             Pattern   : Domain service class                  *
+*  Type     : SecurityClaimList                            License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Holds the full collection of security claims for a given resource.                            *
+*  Summary  : Holds the full collection of security claims for a given subject.                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
 
 using Empiria.Collections;
+using System.Collections.Generic;
 
 namespace Empiria.Security {
 
   /// <summary>Holds the full collection of security claims for a given resource.</summary>
-  public sealed class SecurityClaimList {
+  internal sealed class SecurityClaimList {
 
     #region Fields
 
-    private EmpiriaDictionary<string, List<SecurityClaim>> internalList = new EmpiriaDictionary<string, List<SecurityClaim>>();
+    private EmpiriaDictionary<string, List<SecurityClaim>> internalList =
+                                            new EmpiriaDictionary<string, List<SecurityClaim>>();
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    public SecurityClaimList(IClaimsSubject subject) {
+    private SecurityClaimList(IClaimsSubject subject) {
+      this.Subject = subject;
+
+      this.LoadClaimList();
+    }
+
+    static public SecurityClaimList ParseFor(IClaimsSubject subject) {
       Assertion.AssertObject(subject, "subject");
 
-      this.Subject = subject;
-      this.LoadClaimList();
+      return new SecurityClaimList(subject);
     }
 
     #endregion Constructors and parsers
@@ -40,6 +46,7 @@ namespace Empiria.Security {
       get;
       private set;
     }
+
 
     public IClaimsSubject Subject {
       get;
@@ -75,9 +82,11 @@ namespace Empiria.Security {
       this.RemoveSecure(activationClaimType, activationValue);
     }
 
+
     public SecurityClaim Append(SecurityClaimType claimType, string claimValue) {
       return this.AppendUtil(claimType, claimValue, ObjectStatus.Active);
     }
+
 
     public SecurityClaim AppendSecure(SecurityClaimType claimType, string claimValue,
                                       ObjectStatus status = ObjectStatus.Active) {
@@ -91,6 +100,7 @@ namespace Empiria.Security {
       return this.AppendUtil(claimType, encryptedValue, status);
     }
 
+
     public bool Contains(SecurityClaimType claimType) {
       Assertion.AssertObject(claimType, "claimType");
 
@@ -98,6 +108,7 @@ namespace Empiria.Security {
 
       return internalList.ContainsKey(cacheKey);
     }
+
 
     public bool Contains(SecurityClaimType claimType, string claimValue) {
       Assertion.AssertObject(claimType, "claimType");
@@ -108,6 +119,7 @@ namespace Empiria.Security {
       return (internalList.ContainsKey(cacheKey) &&
               internalList[cacheKey].Exists( (x) => x.Value.ToLowerInvariant().Equals(claimValue.ToLowerInvariant())) );
     }
+
 
     public bool ContainsSecure(SecurityClaimType claimType, string claimValue) {
       Assertion.AssertObject(claimType, "claimType");
@@ -120,20 +132,22 @@ namespace Empiria.Security {
       return this.Contains(claimType, encryptedValue);
     }
 
+
     public SecurityClaim GetItem(SecurityClaimType claimType) {
       Assertion.AssertObject(claimType, "claimType");
 
       string cacheKey = SecurityClaim.BuildUniqueKey(claimType, this.Subject);
 
       if (!internalList.ContainsKey(cacheKey)) {
-        throw new SecurityException(SecurityException.Msg.ResourceClaimTypeNotFound,
+        throw new SecurityException(SecurityException.Msg.SubjectClaimTypeNotFound,
                                     claimType.Type, Subject.ClaimsToken);
       } else if (internalList[cacheKey].Count != 1) {
-        throw new SecurityException(SecurityException.Msg.ResourceClaimTypeIsMultiValue, claimType.Type);
+        throw new SecurityException(SecurityException.Msg.SubjectClaimTypeIsMultiValue, claimType.Type);
       } else {
         return internalList[cacheKey][0];
       }
     }
+
 
     internal SecurityClaim GetItem(SecurityClaimType claimType, string claimValue) {
       Assertion.AssertObject(claimType, "claimType");
@@ -142,18 +156,21 @@ namespace Empiria.Security {
       string cacheKey = SecurityClaim.BuildUniqueKey(claimType, this.Subject);
 
       if (!internalList.ContainsKey(cacheKey)) {
-        throw new SecurityException(SecurityException.Msg.ResourceClaimTypeNotFound,
+        throw new SecurityException(SecurityException.Msg.SubjectClaimTypeNotFound,
                                     claimType.Type, Subject.ClaimsToken);
       }
-      SecurityClaim claim = internalList[cacheKey].Find((x) => x.Value.ToLowerInvariant().Equals(claimValue.ToLowerInvariant()));
+
+      SecurityClaim claim = internalList[cacheKey].Find((x) => x.Value.ToLowerInvariant()
+                                                                .Equals(claimValue.ToLowerInvariant()));
 
       if (claim != null) {
         return claim;
       } else {
-        throw new SecurityException(SecurityException.Msg.ResourceClaimNotFound,
+        throw new SecurityException(SecurityException.Msg.SubjectClaimNotFound,
                                     claimType.Type, Subject.ClaimsToken, claimValue);
       }
     }
+
 
     internal void RemoveSecure(SecurityClaimType claimType, string claimValue) {
       Assertion.AssertObject(claimType, "claimType");
@@ -161,7 +178,8 @@ namespace Empiria.Security {
 
       string cacheKey = SecurityClaim.BuildUniqueKey(claimType, this.Subject);
 
-      var encryptedValue = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, claimValue, cacheKey);
+      var encryptedValue = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode,
+                                                 claimValue, cacheKey);
 
       SecurityClaim claim = this.GetItem(claimType, encryptedValue);
 
@@ -169,6 +187,7 @@ namespace Empiria.Security {
 
       internalList[cacheKey].Remove(claim);
     }
+
 
     public void ReplaceSecure(SecurityClaimType claimType, string newClaimValue) {
       Assertion.AssertObject(claimType, "claimType");
@@ -181,20 +200,23 @@ namespace Empiria.Security {
       this.AppendSecure(claimType, newClaimValue);
     }
 
-    public void ReplaceSecure(SecurityClaimType claimType, string oldClaimValue, string newClaimValue) {
+
+    public void ReplaceSecure(SecurityClaimType claimType,
+                              string oldClaimValue, string newClaimValue) {
       if (!this.ContainsSecure(claimType, oldClaimValue)) {
-        throw new SecurityException(SecurityException.Msg.ResourceClaimNotFound, claimType.Type,
-                                    Subject.ClaimsToken, oldClaimValue);
+        throw new SecurityException(SecurityException.Msg.SubjectClaimNotFound,
+                                    claimType.Type, Subject.ClaimsToken, oldClaimValue);
       }
       this.RemoveSecure(claimType, oldClaimValue);
       this.AppendSecure(claimType, newClaimValue);
     }
 
+
     public void ReplaceSecureWithToken(SecurityClaimType claimType, SecurityClaimType activationClaimType,
                                        string activationValue, string newClaimValue) {
       if (!this.ContainsSecure(activationClaimType, activationValue)) {
-        throw new SecurityException(SecurityException.Msg.ResourceClaimNotFound, claimType.Type,
-                                    Subject.ClaimsToken, activationValue);
+        throw new SecurityException(SecurityException.Msg.SubjectClaimNotFound,
+                                    claimType.Type, Subject.ClaimsToken, activationValue);
       }
       this.AppendSecure(claimType, newClaimValue);
       this.RemoveSecure(activationClaimType, activationValue);
@@ -220,6 +242,7 @@ namespace Empiria.Security {
 
       return claim;
     }
+
 
     private void LoadClaimList() {
       List<SecurityClaim> fullList = SecurityData.GetSecurityClaims(this.Subject);

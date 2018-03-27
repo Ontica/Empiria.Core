@@ -11,10 +11,8 @@ using System;
 
 namespace Empiria.Security {
 
-  public interface IT {
-  }
-    /// <summary>Represents a set of attributes that describe a user or some other securable entity.</summary>
-    public interface IClaimsSubject {
+  /// <summary>Represents a set of attributes that describe a user or some other securable entity.</summary>
+  public interface IClaimsSubject {
 
     string ClaimsToken {
       get;

@@ -70,7 +70,7 @@ namespace Empiria.Security {
       DataRow row = DataReader.GetDataRow(DataOperation.Parse(sql));
 
       if (row == null) {
-        throw new SecurityException(SecurityException.Msg.ResourceClaimNotFound,
+        throw new SecurityException(SecurityException.Msg.SubjectClaimNotFound,
                                     claimType.Type, subject.ClaimsToken, "?");
       }
 
@@ -108,10 +108,6 @@ namespace Empiria.Security {
       return DataWriter.CreateId("Contacts");
     }
 
-    static internal int GetNextSessionId() {
-      return DataWriter.CreateId("UserSessions");
-    }
-
     static internal List<SecurityClaim> GetSecurityClaims(IClaimsSubject subject) {
       Assertion.AssertObject(subject, "subject");
 
@@ -136,7 +132,9 @@ namespace Empiria.Security {
     }
 
     static internal DataRow GetUserWithCredentials(string userName, string password, string entropy = "") {
-      var dataRow = DataReader.GetDataRow(DataOperation.Parse("getContactWithUserName", userName));
+      var operation = DataOperation.Parse("getContactWithUserName", userName);
+
+      var dataRow = DataReader.GetDataRow(operation);
 
       //No user/password found
       if (dataRow == null) {

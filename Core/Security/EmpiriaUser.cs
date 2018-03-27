@@ -162,11 +162,6 @@ namespace Empiria.Security {
       private set;
     }
 
-    public SecurityClaimList Claims {
-      get;
-      private set;
-    }
-
     string IClaimsSubject.ClaimsToken {
       get {
         return this.AsContact().UID;
@@ -237,7 +232,6 @@ namespace Empiria.Security {
       var json = Json.JsonObject.Parse((string) row["ContactExtData"]);
       this.FillExtendedData(json);
 
-      this.Claims = new SecurityClaimList(this);
     }
 
     void IClaimsSubject.OnClaimsSubjectRegistered(string claimsToken) {
