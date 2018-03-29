@@ -14,6 +14,8 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 
+using Empiria.Security.Claims;
+
 namespace Empiria.Security {
 
   public enum EncryptionMode {
@@ -35,40 +37,27 @@ namespace Empiria.Security {
 
     #region Public methods
 
-    static private string ConvertToString(byte[] data) {
-      StringBuilder sBuilder = new StringBuilder();
+    static public SecureString ConvertToSecureString(string source) {
+      Assertion.AssertObject(source, "source");
 
-      for (int i = 0; i < data.Length; i++) {
-        sBuilder.AppendFormat("{0:x2}", data[i]);
+      var securedString = new SecureString();
+
+      for (int i = 0; i < source.Length; i++) {
+        securedString.AppendChar(source[i]);
       }
-      return sBuilder.ToString();
+
+      return securedString;
     }
 
-    static public string CreateDigitalSign(string text) {
-      return CreateDigitalSign(text, String.Empty);
-    }
-
-    static public string CreateDigitalSign(string text, string entropy) {
-      Assertion.AssertObject(text, "text");
-
-      RSACryptoServiceProvider rsa = CryptoServices.GetRSACryptoServiceProvider();
-      SHA256Managed hasher = new SHA256Managed();
-
-      StartEngine();
-
-      byte[] data = Encoding.UTF8.GetBytes(text + ExecutionServer.LicenseNumber +
-                                           ConstructKey(ExecutionServer.LicenseNumber + entropy));
-      byte[] array = rsa.SignData(data, hasher);
-
-      return Convert.ToBase64String(array);
-    }
 
     static public string CreateHashCode(string text) {
       return CreateHashCode(text, String.Empty);
     }
 
+
     static public string CreateHashCode(string text, string entropy) {
       Assertion.AssertObject(text, "text");
+      entropy = entropy ?? String.Empty;
 
       StartEngine();
 
@@ -80,6 +69,7 @@ namespace Empiria.Security {
 
       return ConvertToString(sha.ComputeHash(data));
     }
+
 
     static public string CreateHashCode(byte[] bytesArray, string entropy) {
       Assertion.AssertObject(bytesArray, "bytesArray");
@@ -96,6 +86,7 @@ namespace Empiria.Security {
       return ConvertToString(sha.ComputeHash(bytesArray));
     }
 
+
     /// <summary>Takes a ciphertext string and decrypts it.</summary>
     /// <param name="cipherText">Text string to be decrypted.</param>
     static public string Decrypt(string cipherText) {
@@ -103,6 +94,7 @@ namespace Empiria.Security {
 
       return DecryptString(cipherText, ExecutionServer.LicenseNumber);
     }
+
 
     /// <summary>Takes a ciphertext string and decrypts it using the giving public key.</summary>
     /// <param name="cipherText">Text string to be decrypted.</param>
@@ -113,6 +105,7 @@ namespace Empiria.Security {
 
       return DecryptString(cipherText, entropy + ExecutionServer.LicenseNumber);
     }
+
 
     /// <summary>Takes a plaintext string and encrypts it.</summary>
     /// <param name="plainText">Text string to be encrypted.</param>
@@ -125,6 +118,7 @@ namespace Empiria.Security {
         throw new SecurityException(SecurityException.Msg.InvalidProtectionMode, protectionMode.ToString());
       }
     }
+
 
     /// <summary>Takes a plaintext string and encrypts it with the giving public key.</summary>
     /// <param name="plainText">Text string to be encrypted.</param>
@@ -155,6 +149,7 @@ namespace Empiria.Security {
       }
     }
 
+
     static public string GetMD5HashCode(string source) {
       MD5 md5 = MD5.Create();
       byte[] inputBytes = Encoding.ASCII.GetBytes(source);
@@ -167,6 +162,50 @@ namespace Empiria.Security {
       }
       return sb.ToString().ToLower();
     }
+
+
+    static public string SignText(string text, SecureString password) {
+      Assertion.AssertObject(text, "text");
+
+      var privateKeyFilePath =
+                    ClaimsService.GetClaimValue<string>(EmpiriaUser.Current,
+                                                        ClaimType.ElectronicSignPrivateKeyFilePath);
+
+      RSACryptoServiceProvider rsa = CryptoServices.GetRSACryptoServiceProvider(privateKeyFilePath,
+                                                                                password);
+
+      /// SHA256CryptoServiceProvider uses FIPS 140-2 (Federal Information Processing Standard)
+      /// validated Crypto Service Provider.
+      var hasher = new SHA256CryptoServiceProvider();
+
+      byte[] textAsByteArray = Encoding.UTF8.GetBytes(text);
+
+      byte[] signAsArray = rsa.SignData(textAsByteArray, hasher);
+
+      return Convert.ToBase64String(signAsArray);
+    }
+
+
+    static public string SignTextWithSystemCredentials(string text) {
+      Assertion.AssertObject(text, "text");
+
+      RSACryptoServiceProvider rsa =
+                                CryptoServices.GetRSACryptoServiceProviderForSignWithSystemCredentials();
+
+      /// SHA256CryptoServiceProvider uses FIPS 140-2 (Federal Information Processing Standard)
+      /// validated Crypto Service Provider.
+      var hasher = new SHA256CryptoServiceProvider();
+
+      StartEngine();
+
+      byte[] data = Encoding.UTF8.GetBytes(text + ExecutionServer.LicenseNumber +
+                                           ConstructKey(ExecutionServer.LicenseNumber));
+
+      byte[] array = rsa.SignData(data, hasher);
+
+      return Convert.ToBase64String(array);
+    }
+
 
     #endregion Public methods
 
@@ -219,6 +258,17 @@ namespace Empiria.Security {
       }
       return result;
     }
+
+
+    static private string ConvertToString(byte[] data) {
+      var sBuilder = new StringBuilder();
+
+      for (int i = 0; i < data.Length; i++) {
+        sBuilder.AppendFormat("{0:x2}", data[i]);
+      }
+      return sBuilder.ToString();
+    }
+
 
     static private string DecryptString(string cipherText, string entropy) {
       UTF8Encoding textConverter = new UTF8Encoding();
@@ -393,22 +443,32 @@ namespace Empiria.Security {
 
     static private class CryptoServices {
 
-      static internal RSACryptoServiceProvider GetRSACryptoServiceProvider() {
-        string privateKeyFileName = ConfigurationData.GetString("§RSACryptoFile");
-        string path = String.Empty;
+      #region Public methods
 
-        if (privateKeyFileName.StartsWith("~")) {
-          path = ExecutionServer.GetFullFileNameFromCurrentExecutionPath(privateKeyFileName.Substring(1));
-        } else {
-          path = privateKeyFileName;
-        }
-        Byte[] bytes = System.IO.File.ReadAllBytes(path);
+      static internal RSACryptoServiceProvider GetRSACryptoServiceProviderForSignWithSystemCredentials() {
+        string privateKeyFilePath = GetSystemPrivateKeyFilePath();
 
-        return CryptoServices.DecodeEncryptedPrivateKeyInfo(bytes);
+        SecureString privateKeyFilePassword = GetSystemPrivateKeyFilePassword();
+
+        return CryptoServices.GetRSACryptoServiceProvider(privateKeyFilePath,
+                                                          privateKeyFilePassword);
       }
 
+
+      static internal RSACryptoServiceProvider GetRSACryptoServiceProvider(string privateKeyFilePath,
+                                                                           SecureString password) {
+        Byte[] privateKeyFile = System.IO.File.ReadAllBytes(privateKeyFilePath);
+
+        return CryptoServices.DecodeEncryptedPrivateKeyInfo(privateKeyFile, password);
+      }
+
+      #endregion Public methods
+
+      #region Private methods
+
       //------- Parses binary asn.1 EncryptedPrivateKeyInfo; returns RSACryptoServiceProvider ---
-      static private RSACryptoServiceProvider DecodeEncryptedPrivateKeyInfo(byte[] encpkcs8) {
+      static private RSACryptoServiceProvider DecodeEncryptedPrivateKeyInfo(byte[] encpkcs8,
+                                                                            SecureString password) {
         // encoded OID sequence for  PKCS #1 rsaEncryption szOID_RSA_RSA = "1.2.840.113549.1.1.1"
         // this byte[] includes the sequence byte and terminal encoded null
         byte[] OIDpkcs5PBES2 = { 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x05, 0x0D };
@@ -535,8 +595,7 @@ namespace Empiria.Security {
 
           encryptedpkcs8 = binr.ReadBytes(encblobsize);
 
-          SecureString secpswd = GetSecPswd();
-          pkcs8 = DecryptPBDK2(encryptedpkcs8, salt, IV, secpswd, iterations);
+          pkcs8 = DecryptPBDK2(encryptedpkcs8, salt, IV, password, iterations);
           if (pkcs8 == null) {          // probably a bad pswd entered.
             return null;
           }
@@ -566,8 +625,8 @@ namespace Empiria.Security {
       }
 
       //  ------  Uses PBKD2 to derive a 3DES key and decrypts data --------
-      static public byte[] DecryptPBDK2(byte[] edata, byte[] salt, byte[] IV,
-                                        SecureString secpswd, int iterations) {
+      static private byte[] DecryptPBDK2(byte[] edata, byte[] salt, byte[] IV,
+                                         SecureString secpswd, int iterations) {
         CryptoStream decrypt = null;
 
         IntPtr unmanagedPswd = IntPtr.Zero;
@@ -594,7 +653,7 @@ namespace Empiria.Security {
       }
 
       //------- Parses binary asn.1 PKCS #8 PrivateKeyInfo; returns RSACryptoServiceProvider ---
-      static public RSACryptoServiceProvider DecodePrivateKeyInfo(byte[] pkcs8) {
+      static private RSACryptoServiceProvider DecodePrivateKeyInfo(byte[] pkcs8) {
         // encoded OID sequence for  PKCS #1 rsaEncryption szOID_RSA_RSA = "1.2.840.113549.1.1.1"
         // this byte[] includes the sequence byte and terminal encoded null
         byte[] SeqOID = { 0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x01, 0x05, 0x00 };
@@ -655,7 +714,7 @@ namespace Empiria.Security {
       }
 
       //------- Parses binary ans.1 RSA private key; returns RSACryptoServiceProvider  ---
-      static public RSACryptoServiceProvider DecodeRSAPrivateKey(byte[] privkey) {
+      static private RSACryptoServiceProvider DecodeRSAPrivateKey(byte[] privkey) {
         byte[] MODULUS, E, D, P, Q, DP, DQ, IQ;
 
         // ---------  Set up stream to decode the asn.1 encoded RSA private key  ------
@@ -757,15 +816,24 @@ namespace Empiria.Security {
         return count;
       }
 
-      static private SecureString GetSecPswd() {
-        SecureString password = new SecureString();
+
+      static private SecureString GetSystemPrivateKeyFilePassword() {
         string s = ConfigurationData.GetString("§RSACryptoFilePwd");
 
-        for (int i = 0; i < s.Length; i++) {
-          password.AppendChar(s[i]);
-        }
-        return password;
+        return Cryptographer.ConvertToSecureString(s);
       }
+
+
+      static private string GetSystemPrivateKeyFilePath() {
+        string privateKeyFilePath = ConfigurationData.GetString("§RSACryptoFile");
+
+        if (privateKeyFilePath.StartsWith("~")) {
+          privateKeyFilePath = ExecutionServer.GetFullFileNameFromCurrentExecutionPath(privateKeyFilePath.Substring(1));
+        }
+        return privateKeyFilePath;
+      }
+
+      #endregion Private methods
 
     } // inner class CryptoServices
 
