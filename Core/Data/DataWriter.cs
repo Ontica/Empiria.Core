@@ -7,7 +7,6 @@
 *  Summary  : Static class with methods that performs data writing operations.                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-
 using System;
 using System.Data;
 using System.Reflection;
@@ -66,7 +65,6 @@ namespace Empiria.Data {
 
       if (StorageContext.IsStorageContextDefined) {
         StorageContext.ActiveStorageContext.Add(operation);
-
       } else if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
         ExecuteExternal(operation);
 
@@ -86,15 +84,8 @@ namespace Empiria.Data {
     static public T Execute<T>(DataOperation operation) {
       Assertion.AssertObject(operation, "operation");
 
-      //if (StorageContext.IsStorageContextDefined) {
-      //  return StorageContext.ActiveStorageContext.Add(operation);
-      //}
-
-      //if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
-      //  return ExecuteExternal(operation);
-      //}
-
       T result = DataWriter.ExecuteInternal<T>(operation);
+
       DataWriter.WriteDataLog(operation);
 
       DataWriter.DoPostExecutionTask(operation);
@@ -103,6 +94,7 @@ namespace Empiria.Data {
 
       return result;
     }
+
 
     static public void Execute(DataOperationList operationList) {
       Assertion.AssertObject(operationList, "operationList");
@@ -113,14 +105,9 @@ namespace Empiria.Data {
         return;
       }
 
-      using (DataWriterContext context = DataWriter.CreateContext(operationList.Name)) {
-        ITransaction transaction = context.BeginTransaction();
-
-        context.Add(operationList);
-        context.Update();
-        transaction.Commit();
-      }
+      ExecuteInternal(operationList);
     }
+
 
     static public int Execute(SingleSignOnToken token, DataOperation operation) {
       Assertion.AssertObject(token, "token");
@@ -138,6 +125,7 @@ namespace Empiria.Data {
 
       return result;
     }
+
 
     static public int Execute(SingleSignOnToken token, DataOperationList operationList) {
       Assertion.AssertObject(token, "token");
@@ -163,11 +151,13 @@ namespace Empiria.Data {
       return handler.Execute(connection, operation);
     }
 
+
     static internal int Execute(IDbTransaction transaction, DataOperation operation) {
       IDataHandler handler = GetDataHander(operation);
 
       return handler.Execute((System.Data.SqlClient.SqlTransaction) transaction, operation);
     }
+
 
     static internal int ExecuteInternal(DataOperation operation) {
       IDataHandler handler = GetDataHander(operation);
@@ -175,10 +165,30 @@ namespace Empiria.Data {
       return handler.Execute(operation);
     }
 
-    private static T ExecuteInternal<T>(DataOperation operation) {
+
+    static private T ExecuteInternal<T>(DataOperation operation) {
       IDataHandler handler = GetDataHander(operation);
 
       return handler.Execute<T>(operation);
+    }
+
+    static internal void ExecuteInternal(DataOperationList operationList) {
+      if (operationList.Count == 0) {
+        return;
+      }
+
+      if (operationList.Count == 1) {
+        ExecuteInternal(operationList[0]);
+        return;
+      }
+
+      using (DataWriterContext context = DataWriter.CreateContext(operationList.Name)) {
+        ITransaction transaction = context.BeginTransaction();
+
+        context.Add(operationList);
+        context.Update();
+        transaction.Commit();
+      }
     }
 
     #endregion Internal methods

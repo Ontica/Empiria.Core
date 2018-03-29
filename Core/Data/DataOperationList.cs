@@ -7,6 +7,8 @@
 *  Summary   : Represents a synchronized and serializable list of Operation type objects.                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
+using System.Collections.Generic;
 using Empiria.Collections;
 
 namespace Empiria.Data {
@@ -57,6 +59,12 @@ namespace Empiria.Data {
         for (int i = 0, j = operationList.Count; i < j; i++) {
           base.Add(operationList[i]);
         }
+      }
+    }
+
+    internal void Add(IEnumerable<DataOperation> items) {
+      foreach (var item in items) {
+        base.Add(item);
       }
     }
 

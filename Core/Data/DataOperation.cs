@@ -118,6 +118,18 @@ namespace Empiria.Data {
       }
     }
 
+    public bool IsSystemOperation {
+      get {
+        if (EmpiriaString.IsInList(this.Name,
+                                   "apdDataLog", "apdAuditTrail", "apdLogEntry",
+                                   "apdUserSession", "doCloseUserSession",
+                                   "doOptimization")) {
+          return true;
+        }
+        return false;
+      }
+    }
+
     #endregion Public properties
 
     #region Public methods

@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Linq;
 
 using Empiria.Data;
 
@@ -144,13 +145,9 @@ namespace Empiria {
 
     }
 
-    public void Close() {
+    public void Dispose() {
       Dispose(true);
       GC.SuppressFinalize(this);
-    }
-
-    public void Dispose() {
-      Close();
     }
 
     #endregion Public methods
@@ -159,12 +156,33 @@ namespace Empiria {
 
     private bool _disposed = false;
     private void Dispose(bool disposing) {
-      if (!_disposed) {
-        _disposed = true;
-        if (disposing) {
-          // no-op
-        }
+      if (_disposed) {
+        return;
       }
+      if (disposing) {
+        TryDumpPendingSystemDataOperations();
+      }
+
+      // Free unmanaged
+      _disposed = true;
+    }
+
+    private void TryDumpPendingSystemDataOperations() {
+      if (dataOperations.Count == 0) {
+        return;
+      }
+      var systemOperations = dataOperations.Where((x) => x.IsSystemOperation)
+                                           .ToList();
+
+      if (systemOperations == null || systemOperations.Count == 0) {
+        return;
+      }
+
+      var dumpedList = new DataOperationList("DumpedSystemOperations");
+
+      dumpedList.Add(systemOperations);
+
+      DataWriter.ExecuteInternal(dumpedList);
     }
 
     #endregion Private methods

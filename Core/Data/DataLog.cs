@@ -63,10 +63,7 @@ namespace Empiria.Data {
     #region Methods
 
     internal void Write() {
-      if (EmpiriaString.IsInList(this.DataOperation.Name,
-                                 "apdDataLog", "apdAuditTrail", "apdLogEntry",
-                                 "apdUserSession", "doCloseUserSession",
-                                 "doOptimization")) {
+      if (this.DataOperation.IsSystemOperation) {
         return;
       }
 
