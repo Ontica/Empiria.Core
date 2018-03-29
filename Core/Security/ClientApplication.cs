@@ -14,6 +14,8 @@ using Empiria.Contacts;
 using Empiria.DataTypes;
 using Empiria.Json;
 
+using Empiria.Security.Claims;
+
 namespace Empiria.Security {
 
   /// <summary>Represents a client application of Empiria Framework.</summary>

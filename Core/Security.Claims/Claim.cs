@@ -11,44 +11,44 @@ using System;
 
 using Empiria.Json;
 
-namespace Empiria.Security {
+namespace Empiria.Security.Claims {
 
   /// <summary>Represents a security claim.</summary>
-  public sealed class SecurityClaim : BaseObject {
+  public sealed class Claim : BaseObject {
 
     #region Constructors and parsers
 
-    private SecurityClaim() {
+    private Claim() {
       // Required by Empiria Framework
     }
 
 
-    static public SecurityClaim Parse(int id) {
-      return BaseObject.ParseId<SecurityClaim>(id);
+    static public Claim Parse(int id) {
+      return BaseObject.ParseId<Claim>(id);
     }
 
 
-    static public SecurityClaim Parse(string uid) {
-      return BaseObject.ParseKey<SecurityClaim>(uid);
+    static public Claim Parse(string uid) {
+      return BaseObject.ParseKey<Claim>(uid);
     }
 
 
-    static internal SecurityClaim Create(SecurityClaimType claimType,
-                                         IClaimsSubject subject, string claimValue,
-                                         ObjectStatus status) {
-      var newClaim = new SecurityClaim();
+    static internal Claim Create(ClaimType claimType,
+                                 IClaimsSubject subject, string claimValue,
+                                 ObjectStatus status) {
+      var newClaim = new Claim();
 
       newClaim.ClaimType = claimType;
       newClaim.Subject = subject;
       newClaim.Value = claimValue;
       newClaim.Status = status;
 
-      SecurityData.WriteSecurityClaim(newClaim);
+      ClaimsData.WriteSecurityClaim(newClaim);
 
       return newClaim;
     }
 
-    static internal string BuildUniqueKey(SecurityClaimType claimType,
+    static internal string BuildUniqueKey(ClaimType claimType,
                                           IClaimsSubject subject) {
       string temp = $"{claimType.Id}~{subject.ClaimsToken}";
 
@@ -86,7 +86,7 @@ namespace Empiria.Security {
     }
 
 
-    public SecurityClaimType ClaimType {
+    public ClaimType ClaimType {
       //get {
       //  return (SecurityClaimType) base.GetEmpiriaType();
       //}
@@ -103,6 +103,6 @@ namespace Empiria.Security {
 
     #endregion Properties
 
-  } // class SecurityClaim
+  } // class Claim
 
-} // namespace Empiria.Security
+} // namespace Empiria.Security.Claims

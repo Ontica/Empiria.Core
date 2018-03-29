@@ -1,8 +1,8 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
 *  Module   : Security                                     Component : Security Claims                       *
-*  Assembly : Empiria.Core.dll                             Pattern   : Domain service class                  *
-*  Type     : SecurityClaimList                            License   : Please read LICENSE.txt file          *
+*  Assembly : Empiria.Core.dll                             Pattern   : Information holder                    *
+*  Type     : ClaimList                                    License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Holds the full collection of security claims for a given subject.                              *
 *                                                                                                            *
@@ -12,30 +12,30 @@ using System;
 using Empiria.Collections;
 using System.Collections.Generic;
 
-namespace Empiria.Security {
+namespace Empiria.Security.Claims {
 
   /// <summary>Holds the full collection of security claims for a given resource.</summary>
-  internal sealed class SecurityClaimList {
+  internal sealed class ClaimList {
 
     #region Fields
 
-    private EmpiriaDictionary<string, List<SecurityClaim>> internalList =
-                                            new EmpiriaDictionary<string, List<SecurityClaim>>();
+    private EmpiriaDictionary<string, List<Claim>> internalList =
+                                            new EmpiriaDictionary<string, List<Claim>>();
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    private SecurityClaimList(IClaimsSubject subject) {
+    private ClaimList(IClaimsSubject subject) {
       this.Subject = subject;
 
       this.LoadClaimList();
     }
 
-    static public SecurityClaimList ParseFor(IClaimsSubject subject) {
+    static public ClaimList ParseFor(IClaimsSubject subject) {
       Assertion.AssertObject(subject, "subject");
 
-      return new SecurityClaimList(subject);
+      return new ClaimList(subject);
     }
 
     #endregion Constructors and parsers
@@ -57,24 +57,24 @@ namespace Empiria.Security {
 
     #region Public methods
 
-    public void ActivateSecure(SecurityClaimType claimType,
-                               SecurityClaimType activationClaimType, string activationValue) {
+    public void ActivateSecure(ClaimType claimType,
+                               ClaimType activationClaimType, string activationValue) {
       // 1) Assert that the resource has the activation token
       if (!this.ContainsSecure(activationClaimType, activationValue)) {
         throw new SecurityException(SecurityException.Msg.InvalidActivationToken, activationValue);
       }
 
       // 2) Get the claim attached to the resource
-      var claim = SecurityData.GetPendingSecurityClaim(claimType, this.Subject);
+      var claim = ClaimsData.GetPendingSecurityClaim(claimType, this.Subject);
 
       // 3) Activate the claim
       claim.Status = ObjectStatus.Active;
-      SecurityData.WriteSecurityClaim(claim);
+      ClaimsData.WriteSecurityClaim(claim);
 
       // 4) Load the activated claim into the list
-      string cacheKey = SecurityClaim.BuildUniqueKey(claimType, this.Subject);
+      string cacheKey = Claim.BuildUniqueKey(claimType, this.Subject);
       if (!internalList.ContainsKey(cacheKey)) {
-        internalList.Insert(cacheKey, new List<SecurityClaim>());
+        internalList.Insert(cacheKey, new List<Claim>());
       }
       internalList[cacheKey].Add(claim);
 
@@ -83,17 +83,17 @@ namespace Empiria.Security {
     }
 
 
-    public SecurityClaim Append(SecurityClaimType claimType, string claimValue) {
+    public Claim Append(ClaimType claimType, string claimValue) {
       return this.AppendUtil(claimType, claimValue, ObjectStatus.Active);
     }
 
 
-    public SecurityClaim AppendSecure(SecurityClaimType claimType, string claimValue,
-                                      ObjectStatus status = ObjectStatus.Active) {
+    public Claim AppendSecure(ClaimType claimType, string claimValue,
+                              ObjectStatus status = ObjectStatus.Active) {
       Assertion.AssertObject(claimType, "claimType");
       Assertion.AssertObject(claimValue, "claimValue");
 
-      string cacheKey = SecurityClaim.BuildUniqueKey(claimType, this.Subject);
+      string cacheKey = Claim.BuildUniqueKey(claimType, this.Subject);
 
       var encryptedValue = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, claimValue, cacheKey);
 
@@ -101,31 +101,31 @@ namespace Empiria.Security {
     }
 
 
-    public bool Contains(SecurityClaimType claimType) {
+    public bool Contains(ClaimType claimType) {
       Assertion.AssertObject(claimType, "claimType");
 
-      string cacheKey = SecurityClaim.BuildUniqueKey(claimType, this.Subject);
+      string cacheKey = Claim.BuildUniqueKey(claimType, this.Subject);
 
       return internalList.ContainsKey(cacheKey);
     }
 
 
-    public bool Contains(SecurityClaimType claimType, string claimValue) {
+    public bool Contains(ClaimType claimType, string claimValue) {
       Assertion.AssertObject(claimType, "claimType");
       Assertion.AssertObject(claimValue, "claimValue");
 
-      string cacheKey = SecurityClaim.BuildUniqueKey(claimType, this.Subject);
+      string cacheKey = Claim.BuildUniqueKey(claimType, this.Subject);
 
       return (internalList.ContainsKey(cacheKey) &&
               internalList[cacheKey].Exists( (x) => x.Value.ToLowerInvariant().Equals(claimValue.ToLowerInvariant())) );
     }
 
 
-    public bool ContainsSecure(SecurityClaimType claimType, string claimValue) {
+    public bool ContainsSecure(ClaimType claimType, string claimValue) {
       Assertion.AssertObject(claimType, "claimType");
       Assertion.AssertObject(claimValue, "claimValue");
 
-      string cacheKey = SecurityClaim.BuildUniqueKey(claimType, this.Subject);
+      string cacheKey = Claim.BuildUniqueKey(claimType, this.Subject);
 
       var encryptedValue = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, claimValue, cacheKey);
 
@@ -133,10 +133,10 @@ namespace Empiria.Security {
     }
 
 
-    public SecurityClaim GetItem(SecurityClaimType claimType) {
+    public Claim GetItem(ClaimType claimType) {
       Assertion.AssertObject(claimType, "claimType");
 
-      string cacheKey = SecurityClaim.BuildUniqueKey(claimType, this.Subject);
+      string cacheKey = Claim.BuildUniqueKey(claimType, this.Subject);
 
       if (!internalList.ContainsKey(cacheKey)) {
         throw new SecurityException(SecurityException.Msg.SubjectClaimTypeNotFound,
@@ -149,18 +149,18 @@ namespace Empiria.Security {
     }
 
 
-    internal SecurityClaim GetItem(SecurityClaimType claimType, string claimValue) {
+    internal Claim GetItem(ClaimType claimType, string claimValue) {
       Assertion.AssertObject(claimType, "claimType");
       Assertion.AssertObject(claimValue, "claimValue");
 
-      string cacheKey = SecurityClaim.BuildUniqueKey(claimType, this.Subject);
+      string cacheKey = Claim.BuildUniqueKey(claimType, this.Subject);
 
       if (!internalList.ContainsKey(cacheKey)) {
         throw new SecurityException(SecurityException.Msg.SubjectClaimTypeNotFound,
                                     claimType.Type, Subject.ClaimsToken);
       }
 
-      SecurityClaim claim = internalList[cacheKey].Find((x) => x.Value.ToLowerInvariant()
+      Claim claim = internalList[cacheKey].Find((x) => x.Value.ToLowerInvariant()
                                                                 .Equals(claimValue.ToLowerInvariant()));
 
       if (claim != null) {
@@ -172,36 +172,36 @@ namespace Empiria.Security {
     }
 
 
-    internal void RemoveSecure(SecurityClaimType claimType, string claimValue) {
+    internal void RemoveSecure(ClaimType claimType, string claimValue) {
       Assertion.AssertObject(claimType, "claimType");
       Assertion.AssertObject(claimValue, "claimValue");
 
-      string cacheKey = SecurityClaim.BuildUniqueKey(claimType, this.Subject);
+      string cacheKey = Claim.BuildUniqueKey(claimType, this.Subject);
 
       var encryptedValue = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode,
                                                  claimValue, cacheKey);
 
-      SecurityClaim claim = this.GetItem(claimType, encryptedValue);
+      Claim claim = this.GetItem(claimType, encryptedValue);
 
-      SecurityData.RemoveClaim(claim);
+      ClaimsData.RemoveClaim(claim);
 
       internalList[cacheKey].Remove(claim);
     }
 
 
-    public void ReplaceSecure(SecurityClaimType claimType, string newClaimValue) {
+    public void ReplaceSecure(ClaimType claimType, string newClaimValue) {
       Assertion.AssertObject(claimType, "claimType");
       Assertion.AssertObject(newClaimValue, "newClaimValue");
 
-      SecurityClaim claim = this.GetItem(claimType);
+      Claim claim = this.GetItem(claimType);
 
-      SecurityData.RemoveClaim(claim);
+      ClaimsData.RemoveClaim(claim);
 
       this.AppendSecure(claimType, newClaimValue);
     }
 
 
-    public void ReplaceSecure(SecurityClaimType claimType,
+    public void ReplaceSecure(ClaimType claimType,
                               string oldClaimValue, string newClaimValue) {
       if (!this.ContainsSecure(claimType, oldClaimValue)) {
         throw new SecurityException(SecurityException.Msg.SubjectClaimNotFound,
@@ -212,7 +212,7 @@ namespace Empiria.Security {
     }
 
 
-    public void ReplaceSecureWithToken(SecurityClaimType claimType, SecurityClaimType activationClaimType,
+    public void ReplaceSecureWithToken(ClaimType claimType, ClaimType activationClaimType,
                                        string activationValue, string newClaimValue) {
       if (!this.ContainsSecure(activationClaimType, activationValue)) {
         throw new SecurityException(SecurityException.Msg.SubjectClaimNotFound,
@@ -226,17 +226,17 @@ namespace Empiria.Security {
 
     #region Private methods
 
-    private SecurityClaim AppendUtil(SecurityClaimType claimType,
-                                     string claimValue, ObjectStatus status) {
+    private Claim AppendUtil(ClaimType claimType,
+                             string claimValue, ObjectStatus status) {
       Assertion.AssertObject(claimType, "claimType");
       Assertion.AssertObject(claimValue, "claimValue");
 
-      string cacheKey = SecurityClaim.BuildUniqueKey(claimType, this.Subject);
+      string cacheKey = Claim.BuildUniqueKey(claimType, this.Subject);
 
       if (!internalList.ContainsKey(cacheKey)) {
-        internalList.Insert(cacheKey, new List<SecurityClaim>());
+        internalList.Insert(cacheKey, new List<Claim>());
       }
-      SecurityClaim claim = SecurityClaim.Create(claimType, this.Subject,
+      Claim claim = Claim.Create(claimType, this.Subject,
                                                  claimValue, status);
       internalList[cacheKey].Add(claim);
 
@@ -245,11 +245,11 @@ namespace Empiria.Security {
 
 
     private void LoadClaimList() {
-      List<SecurityClaim> fullList = SecurityData.GetSecurityClaims(this.Subject);
+      List<Claim> fullList = ClaimsData.GetSecurityClaims(this.Subject);
 
-      foreach (SecurityClaim claim in fullList) {
+      foreach (Claim claim in fullList) {
         if (!internalList.ContainsKey(claim.UID)) {
-          internalList.Insert(claim.UID, new List<SecurityClaim>());
+          internalList.Insert(claim.UID, new List<Claim>());
         }
         internalList[claim.UID].Add(claim);
       }
@@ -257,6 +257,6 @@ namespace Empiria.Security {
 
     #endregion Private methods
 
-  } // class SecurityClaimList
+  } // class ClaimList
 
-} // namespace Empiria.Security
+} // namespace Empiria.Security.Claims

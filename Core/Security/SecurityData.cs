@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Data;
@@ -62,20 +61,6 @@ namespace Empiria.Security {
       DataWriter.Execute(DataOperation.Parse(String.Format(sql, password, username)));
     }
 
-    static internal SecurityClaim GetPendingSecurityClaim(SecurityClaimType claimType,
-                                                          IClaimsSubject subject) {
-      string sql = $"SELECT * FROM SecurityClaims WHERE SecurityClaimTypeId = {claimType.Id} AND " +
-                   $"SubjectToken = '{subject.ClaimsToken}' AND ClaimStatus = 'P'";
-
-      DataRow row = DataReader.GetDataRow(DataOperation.Parse(sql));
-
-      if (row == null) {
-        throw new SecurityException(SecurityException.Msg.SubjectClaimNotFound,
-                                    claimType.Type, subject.ClaimsToken, "?");
-      }
-
-      return BaseObject.ParseDataRow<SecurityClaim>(row);
-    }
 
     static internal void CloseSession(EmpiriaSession o) {
       var op = DataOperation.Parse("doCloseUserSession", o.Token, o.EndTime);
@@ -108,15 +93,6 @@ namespace Empiria.Security {
       return DataWriter.CreateId("Contacts");
     }
 
-    static internal List<SecurityClaim> GetSecurityClaims(IClaimsSubject subject) {
-      Assertion.AssertObject(subject, "subject");
-
-      var op = DataOperation.Parse("qryResourceSecurityClaims", subject.ClaimsToken);
-
-      var dataTable = DataReader.GetDataTable(op);
-
-      return BaseObject.ParseList<SecurityClaim>(dataTable);
-    }
 
     static internal DataRow GetSessionData(string sessionToken) {
       var dataRow = DataReader.GetDataRow(DataOperation.Parse("getUserSession", sessionToken));
@@ -126,10 +102,12 @@ namespace Empiria.Security {
       }
       return dataRow;
     }
+    
 
     internal static string[] GetUsersInRole(string role) {
       return ConfigurationData.GetString("User.Operation.Tag." + role).Split('|');
     }
+  
 
     static internal DataRow GetUserWithCredentials(string userName, string password, string entropy = "") {
       var operation = DataOperation.Parse("getContactWithUserName", userName);
@@ -156,11 +134,6 @@ namespace Empiria.Security {
       return dataRow;
     }
 
-    internal static void RemoveClaim(SecurityClaim claim) {
-      string sql = "UPDATE SecurityClaims SET ClaimStatus = 'X' WHERE SecurityClaimId = " + claim.Id;
-
-      DataWriter.Execute(DataOperation.Parse(sql));
-    }
 
     static internal EmpiriaUser TryGetUserWithUserName(string userName) {
       var dataRow = DataReader.GetDataRow(DataOperation.Parse("getContactWithUserName", userName));
@@ -181,13 +154,6 @@ namespace Empiria.Security {
       return DataWriter.Execute<long>(op);
     }
 
-    static internal void WriteSecurityClaim(SecurityClaim o) {
-      var op = DataOperation.Parse("writeSecurityClaim", o.Id, o.ClaimType.Id, o.UID,
-                                   o.Subject.ClaimsToken, o.ExtensionData.ToString(),
-                                   o.Value, (char) o.Status);
-
-      DataWriter.Execute(op);
-    }
 
   } // class SecurityData
 

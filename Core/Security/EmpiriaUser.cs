@@ -13,6 +13,8 @@ using System.Data;
 using Empiria.Contacts;
 using Empiria.Json;
 
+using Empiria.Security.Claims;
+
 namespace Empiria.Security {
 
   /// <summary>Represents a system's user.</summary>

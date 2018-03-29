@@ -1,15 +1,15 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Core                                 System  : Security Services                       *
-*  Assembly : Empiria.Security.dll                         Pattern : Interface                               *
-*  Type     : IClaimsSubject                               License : Please read LICENSE.txt file            *
+*  Module   : Security                                     Component : Security Claims                       *
+*  Assembly : Empiria.Core.dll                             Pattern   : Interface                             *
+*  Type     : IClaimsSubject                               License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Represents a set of attributes that describe a user or some other securable entity.            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.Security {
+namespace Empiria.Security.Claims {
 
   /// <summary>Represents a set of attributes that describe a user or some other securable entity.</summary>
   public interface IClaimsSubject {
@@ -22,4 +22,4 @@ namespace Empiria.Security {
 
   }  // interface IClaimsSubject
 
-}  // namespace Empiria.Security
+}  // namespace Empiria.Security.Claims

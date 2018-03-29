@@ -1,33 +1,34 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Security Services                 *
-*  Namespace : Empiria.Security                                 License  : Please read LICENSE.txt file      *
-*  Type      : SecurityClaimType                                Pattern  : Standard Class                    *
+*  Module   : Security                                     Component : Security Claims                       *
+*  Assembly : Empiria.Core.dll                             Pattern   : Powertype                             *
+*  Type     : ClaimType                                    License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Represents a security claim type.                                                             *
+*  Summary  : Powertype used to describe a security claim.                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Data;
 
-namespace Empiria.Security {
+namespace Empiria.Security.Claims {
 
-  public class SecurityClaimType : BaseObject {
+  /// <summary>Powertype used to describe a security claim.</summary>
+  public class ClaimType : BaseObject {
 
     #region Constructors and parsers
 
-    private SecurityClaimType() {
+    private ClaimType() {
       // Required by Empiria Framework
     }
 
-    static public SecurityClaimType Parse(int id) {
-      return BaseObject.ParseId<SecurityClaimType>(id);
+    static public ClaimType Parse(int id) {
+      return BaseObject.ParseId<ClaimType>(id);
     }
 
-    static public SecurityClaimType Parse(string securityClaimTypeName) {
+    static public ClaimType Parse(string securityClaimTypeName) {
       Assertion.AssertObject(securityClaimTypeName, "securityClaimTypeName");
 
-      return BaseObject.ParseKey<SecurityClaimType>(securityClaimTypeName);
+      return BaseObject.ParseKey<ClaimType>(securityClaimTypeName);
     }
 
     internal protected override void OnLoadObjectData(DataRow row) {
@@ -37,45 +38,51 @@ namespace Empiria.Security {
       this.Status = (ObjectStatus) Convert.ToChar((string) row["ObjectStatus"]);
     }
 
-    static public SecurityClaimType ActivationToken {
+    static public ClaimType ActivationToken {
       get {
-        return SecurityClaimType.Parse("ActivationToken");
+        return ClaimType.Parse("ActivationToken");
       }
     }
 
-    static public SecurityClaimType ElectronicSign {
+    static public ClaimType ElectronicSign {
       get {
-        return SecurityClaimType.Parse("ElectronicSign");
+        return ClaimType.Parse("ElectronicSign");
       }
     }
 
-    static public SecurityClaimType ResetPasswordToken {
+    static public ClaimType ElectronicSignPrivateKeyFilePath {
       get {
-        return SecurityClaimType.Parse("ResetPasswordToken");
+        return ClaimType.Parse("ElectronicSignPrivateKeyFilePath");
       }
     }
 
-    static public SecurityClaimType UserPassword {
+    static public ClaimType ResetPasswordToken {
       get {
-        return SecurityClaimType.Parse("UserPassword");
+        return ClaimType.Parse("ResetPasswordToken");
       }
     }
 
-    static public SecurityClaimType UserRole {
+    static public ClaimType UserPassword {
       get {
-        return SecurityClaimType.Parse("UserRole");
+        return ClaimType.Parse("UserPassword");
       }
     }
 
-    static public SecurityClaimType WebApiController {
+    static public ClaimType UserRole {
       get {
-        return SecurityClaimType.Parse("WebApiController");
+        return ClaimType.Parse("UserRole");
       }
     }
 
-    static public SecurityClaimType WebApiMethod {
+    static public ClaimType WebApiController {
       get {
-        return SecurityClaimType.Parse("WebApiMethod");
+        return ClaimType.Parse("WebApiController");
+      }
+    }
+
+    static public ClaimType WebApiMethod {
+      get {
+        return ClaimType.Parse("WebApiMethod");
       }
     }
 
@@ -109,6 +116,6 @@ namespace Empiria.Security {
 
     #endregion Properties
 
-  } // class SecurityClaimType
+  } // class ClaimType
 
-} // namespace Empiria.Security
+} // namespace Empiria.Security.Claims
