@@ -197,4 +197,10 @@
   <data name="PartitionedTypeAttributeMissed" xml:space="preserve">
     <value>Partitioned type {0} must have defined a PartitionedTypeAttribute.</value>
   </data>
+  <data name="DefaultConstructorNotFound" xml:space="preserve">
+    <value>Type '{0}' doesn't has defined a default constructor. Please review the code.</value>
+  </data>
+  <data name="PartitionedTypeConstructorNotFound" xml:space="preserve">
+    <value>Partitioned type '{0}' doesn't has defined constructor with its related power type as argument. Please review the code.</value>
+  </data>
 </root>

@@ -26,6 +26,7 @@ namespace Empiria.Ontology {
       CannotParseObjectWithDataRow,
       CannotParsePropertyForDefaultValue,
       ConvertionToTargetTypeFails,
+      DefaultConstructorNotFound,
       LinkNotFoundForSource,
       LinkNotFoundForTarget,
       MappingDataColumnNotFound,
@@ -34,6 +35,7 @@ namespace Empiria.Ontology {
       ObjectNamedKeyNotFound,
       ObjectWithConditionNotFound,
       PartitionedTypeAttributeMissed,
+      PartitionedTypeConstructorNotFound,
       RelationMemberNameNotFound,
       TryToParseZeroObjectId,
       TypeAssociationInfoNotFound,
@@ -45,7 +47,7 @@ namespace Empiria.Ontology {
       UndefinedTypeInfoFamily,
       UnderlyingTypeNotFound,
       WrongAssociatedObjectFound,
-      WrongDefaultValueType,
+      WrongDefaultValueType
     }
 
     static private string resourceBaseName = "Empiria.Ontology.OntologyExceptionMsg";

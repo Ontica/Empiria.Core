@@ -319,6 +319,11 @@ namespace Empiria.Ontology {
                                                                              null, CallingConventions.HasThis,
                                                                              new Type[0], null);
 
+      if (constructor == null) {
+        throw new OntologyException(OntologyException.Msg.DefaultConstructorNotFound,
+                                    this.UnderlyingSystemType.FullName);
+      }
+
       var dynMethod = new DynamicMethod(this.UnderlyingSystemType.Name + "Ctor",
                                         this.UnderlyingSystemType, null,
                                         constructor.Module, true);
@@ -337,6 +342,10 @@ namespace Empiria.Ontology {
                                                                  null, CallingConventions.HasThis,
                                                                  new Type[] { this.GetType() }, null);
 
+      if (constructor == null) {
+        throw new OntologyException(OntologyException.Msg.PartitionedTypeConstructorNotFound,
+                                    this.UnderlyingSystemType.FullName);
+      }
       var dynMethod = new DynamicMethod(this.UnderlyingSystemType.Name + "Ctor",
                                         this.UnderlyingSystemType, new Type[] { typeof(ObjectTypeInfo) },
                                         constructor.Module, true);
