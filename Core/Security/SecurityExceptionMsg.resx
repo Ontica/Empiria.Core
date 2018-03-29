@@ -227,4 +227,13 @@
   <data name="EnsureClaimFailed" xml:space="preserve">
     <value>{0}</value>
   </data>
+  <data name="CantDecodeEncryptedPrivateKey" xml:space="preserve">
+    <value>El archivo con la llave privada para la operación de firmado de documentos o cifrado de información tiene un problema que impide su uso. Posiblemente no cumple con la especificación del algoritmo RSA: {0}</value>
+  </data>
+  <data name="InvalidPrivateKeyFilePassword" xml:space="preserve">
+    <value>La contraseña para ejecutar la operación de firmado de documentos o cifrado de información no es correcta.</value>
+  </data>
+  <data name="PrivateKeyFileNotExists" xml:space="preserve">
+    <value>El archivo con la llave privada para la operación de firmado de documentos o cifrado de información no existe. Compruebe que la ruta sea correcta: {0}.</value>
+  </data>
 </root>

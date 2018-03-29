@@ -166,6 +166,7 @@ namespace Empiria.Security {
 
     static public string SignText(string text, SecureString password) {
       Assertion.AssertObject(text, "text");
+      Assertion.AssertObject(password, "password");
 
       var privateKeyFilePath =
                     ClaimsService.GetClaimValue<string>(EmpiriaUser.Current,
@@ -198,12 +199,12 @@ namespace Empiria.Security {
 
       StartEngine();
 
-      byte[] data = Encoding.UTF8.GetBytes(text + ExecutionServer.LicenseNumber +
-                                           ConstructKey(ExecutionServer.LicenseNumber));
+      byte[] textAsByteArray = Encoding.UTF8.GetBytes(text + ExecutionServer.LicenseNumber +
+                                                      ConstructKey(ExecutionServer.LicenseNumber));
 
-      byte[] array = rsa.SignData(data, hasher);
+      byte[] signAsArray = rsa.SignData(textAsByteArray, hasher);
 
-      return Convert.ToBase64String(array);
+      return Convert.ToBase64String(signAsArray);
     }
 
 
@@ -457,9 +458,22 @@ namespace Empiria.Security {
 
       static internal RSACryptoServiceProvider GetRSACryptoServiceProvider(string privateKeyFilePath,
                                                                            SecureString password) {
-        Byte[] privateKeyFile = System.IO.File.ReadAllBytes(privateKeyFilePath);
+        if (!File.Exists(privateKeyFilePath)) {
+          throw new SecurityException(SecurityException.Msg.PrivateKeyFileNotExists,
+                                      privateKeyFilePath);
+        }
 
-        return CryptoServices.DecodeEncryptedPrivateKeyInfo(privateKeyFile, password);
+        Byte[] privateKeyFile = File.ReadAllBytes(privateKeyFilePath);
+
+        RSACryptoServiceProvider rsa = CryptoServices.TryDecodeEncryptedPrivateKeyInfo(privateKeyFile,
+                                                                                       password);
+
+        if (rsa == null) {
+          throw new SecurityException(SecurityException.Msg.CantDecodeEncryptedPrivateKey,
+                                      privateKeyFilePath);
+        }
+
+        return rsa;
       }
 
       #endregion Public methods
@@ -467,8 +481,8 @@ namespace Empiria.Security {
       #region Private methods
 
       //------- Parses binary asn.1 EncryptedPrivateKeyInfo; returns RSACryptoServiceProvider ---
-      static private RSACryptoServiceProvider DecodeEncryptedPrivateKeyInfo(byte[] encpkcs8,
-                                                                            SecureString password) {
+      static private RSACryptoServiceProvider TryDecodeEncryptedPrivateKeyInfo(byte[] encpkcs8,
+                                                                               SecureString password) {
         // encoded OID sequence for  PKCS #1 rsaEncryption szOID_RSA_RSA = "1.2.840.113549.1.1.1"
         // this byte[] includes the sequence byte and terminal encoded null
         byte[] OIDpkcs5PBES2 = { 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x05, 0x0D };
@@ -491,7 +505,6 @@ namespace Empiria.Security {
         ushort twobytes = 0;
 
         try {
-
           twobytes = binr.ReadUInt16();
           if (twobytes == 0x8130) { //data read as little endian order (actual data order for Sequence is 30 81)
             binr.ReadByte();  //advance 1 byte
@@ -595,16 +608,20 @@ namespace Empiria.Security {
 
           encryptedpkcs8 = binr.ReadBytes(encblobsize);
 
-          pkcs8 = DecryptPBDK2(encryptedpkcs8, salt, IV, password, iterations);
+          pkcs8 = TryDecryptPBDK2(encryptedpkcs8, salt, IV, password, iterations);
           if (pkcs8 == null) {          // probably a bad pswd entered.
-            return null;
+            throw new SecurityException(SecurityException.Msg.InvalidPrivateKeyFilePassword);
           }
 
           //----- With a decrypted pkcs #8 PrivateKeyInfo blob, decode it to an RSA ---
-          RSACryptoServiceProvider rsa = DecodePrivateKeyInfo(pkcs8);
-          return rsa;
+          return DecodePrivateKeyInfo(pkcs8);
+
+        } catch (SecurityException) {
+          throw;
+
         } catch (Exception) {
           return null;
+
         } finally {
           binr.Close();
         }
@@ -625,17 +642,17 @@ namespace Empiria.Security {
       }
 
       //  ------  Uses PBKD2 to derive a 3DES key and decrypts data --------
-      static private byte[] DecryptPBDK2(byte[] edata, byte[] salt, byte[] IV,
-                                         SecureString secpswd, int iterations) {
+      static private byte[] TryDecryptPBDK2(byte[] edata, byte[] salt, byte[] IV,
+                                            SecureString secpswd, int iterations) {
         CryptoStream decrypt = null;
 
-        IntPtr unmanagedPswd = IntPtr.Zero;
-        byte[] psbytes = new byte[secpswd.Length];
-        unmanagedPswd = Marshal.SecureStringToGlobalAllocAnsi(secpswd);
-        Marshal.Copy(unmanagedPswd, psbytes, 0, psbytes.Length);
-        Marshal.ZeroFreeGlobalAllocAnsi(unmanagedPswd);
-
         try {
+          IntPtr unmanagedPswd = IntPtr.Zero;
+          byte[] psbytes = new byte[secpswd.Length];
+          unmanagedPswd = Marshal.SecureStringToGlobalAllocAnsi(secpswd);
+          Marshal.Copy(unmanagedPswd, psbytes, 0, psbytes.Length);
+          Marshal.ZeroFreeGlobalAllocAnsi(unmanagedPswd);
+
           Rfc2898DeriveBytes kd = new Rfc2898DeriveBytes(psbytes, salt, iterations);
           TripleDES decAlg = TripleDES.Create();
           decAlg.Key = kd.GetBytes(24);
@@ -645,10 +662,12 @@ namespace Empiria.Security {
           decrypt.Write(edata, 0, edata.Length);
           decrypt.Flush();
           decrypt.Close();  // this is REQUIRED.
+
           byte[] cleartext = memstr.ToArray();
+
           return cleartext;
-        } catch (Exception e) {
-          throw new SecurityException(SecurityException.Msg.CantDecryptString, e.Message);
+        } catch {
+          return null;
         }
       }
 
@@ -707,7 +726,7 @@ namespace Empiria.Security {
           byte[] rsaprivkey = binr.ReadBytes((int) (lenstream - mem.Position));
           RSACryptoServiceProvider rsacsp = DecodeRSAPrivateKey(rsaprivkey);
           return rsacsp;
-        } catch (Exception) {
+        } catch {
           return null;
         } finally { binr.Close(); }
 
