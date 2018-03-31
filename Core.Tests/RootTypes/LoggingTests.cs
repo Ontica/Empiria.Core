@@ -1,10 +1,18 @@
-﻿using System;
+﻿/* Empiria Core  *********************************************************************************************
+*                                                                                                            *
+*  Module   : Tests                                        Component : Logging Services                      *
+*  Assembly : Empiria.Core.Tests.dll                       Pattern   : Test class                            *
+*  Type     : LoggingTests                                 License   : Please read LICENSE.txt file          *
+*                                                                                                            *
+*  Summary  : Logging service tests.                                                                         *
+*                                                                                                            *
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
 using Xunit;
 
-using Empiria.Ontology;
+namespace Empiria.Tests {
 
-namespace Empiria {
-
+  /// <summary>Logging service tests.</summary>
   public class LoggingTests {
 
     [Fact]
@@ -18,4 +26,4 @@ namespace Empiria {
 
   }  // LoggingTests
 
-}  // namespace Empiria
+}  // namespace Empiria.Tests

@@ -1,27 +1,19 @@
-﻿using System;
+﻿/* Empiria Core  *********************************************************************************************
+*                                                                                                            *
+*  Module   : Tests                                        Component : Configuration Services                *
+*  Assembly : Empiria.Core.Tests.dll                       Pattern   : Test class                            *
+*  Type     : ConfigurationDataTests                       License   : Please read LICENSE.txt file          *
+*                                                                                                            *
+*  Summary  : Configuration data tests.                                                                      *
+*                                                                                                            *
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
 using Xunit;
 
-namespace Empiria {
+namespace Empiria.Tests {
 
+  /// <summary>Configuration data tests.</summary>
   public class ConfigurationDataTests {
-
-    //[Fact]
-    //public void MustThrowAnErrorEveryTimeIfExecutionServerStartFailed() {
-    //  // Remove ApplicationKey value from config file
-
-    //  Assert.Throws(typeof(ExecutionServerException),
-    //                () => ExecutionServer.DateMaxValue);
-
-    //  Assert.Throws(typeof(ExecutionServerException),
-    //                () => ExecutionServer.LicenseName);
-
-    //  Assert.Throws(typeof(ExecutionServerException),
-    //          () => ExecutionServer.LicenseSerialNumber);
-
-    //  Assert.Throws(typeof(ExecutionServerException),
-    //                () => ExecutionServer.DateMinValue);
-    //}
-
 
     [Fact]
     public void ShouldGetConfigDataValueFromExecutionServer() {
@@ -53,11 +45,11 @@ namespace Empiria {
 
 
     [Theory]
-    [InlineData("§DataSource.Default")]
+    [InlineData("§RSACryptoFile")]
     public void ShouldReadProtectedSettings(string dataKey) {
       // Set Ok config file
 
-      var value = ConfigurationData.Get<string>(typeof(Empiria.Data.DataReader), dataKey);
+      var value = ConfigurationData.Get<string>(typeof(Empiria.Security.ClientApplication), dataKey);
 
       Assert.NotNull(value);
     }
@@ -81,4 +73,4 @@ namespace Empiria {
 
   }  // ConfigurationDataTests
 
-}  // namespace Empiria
+}  // namespace Empiria.Tests
