@@ -74,6 +74,7 @@ namespace Empiria.Ontology {
 
     static internal int GetNextObjectId(ObjectTypeInfo objectTypeInfo) {
       int id = DataWriter.CreateId(objectTypeInfo.DataSource);
+
       Assertion.Assert(id != 0,
                        "Generated Id value can't be zero. Please review DbRules table for type {0}.",
                        objectTypeInfo.Name);
@@ -138,20 +139,24 @@ namespace Empiria.Ontology {
       return DataReader.GetDataTable(DataOperation.Parse(sql));
     }
 
-    internal static List<T> GetBaseObjectList<T>(string filter, string sort) where T: BaseObject {
+
+    internal static List<T> GetBaseObjectList<T>(string filter = "", string sort = "") where T: BaseObject {
       var typeInfo = ObjectTypeInfo.Parse<T>();
 
-      string typeFilter = String.Empty;
+      string fullFilter = String.Empty;
 
       if (typeInfo.TypeIdFieldName.Length != 0) {
-        typeFilter = typeInfo.TypeIdFieldName + " = " + typeInfo.Id;
+        fullFilter = $"{typeInfo.TypeIdFieldName} IN ({typeInfo.GetSubclassesFilter()})";
       }
-      filter = GeneralDataOperations.BuildSqlAndFilter(typeFilter, filter);
+      if (filter.Length != 0) {
+        fullFilter = GeneralDataOperations.BuildSqlAndFilter(fullFilter, filter);
+      }
 
-      var table = GeneralDataOperations.GetEntities(typeInfo.DataSource, filter, sort);
+      var table = GeneralDataOperations.GetEntities(typeInfo.DataSource, fullFilter, sort);
 
       return BaseObject.ParseList<T>(table);
     }
+
 
     static internal DataTable GetInverseObjectLinksTable(TypeRelationInfo typeRelation, IStorable target) {
       string sql = "SELECT [{SOURCE.TYPE.TABLE}].* FROM [{SOURCE.TYPE.TABLE}] INNER JOIN [{LINKS.TABLE}] " +
