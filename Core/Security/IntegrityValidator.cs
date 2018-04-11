@@ -52,7 +52,7 @@ namespace Empiria.Security {
     private string GetDIFHashCode(int version) {
       string data = this.GetDIFString(version);
 
-      return Cryptographer.CreateHashCode(data, version.ToString("X") + "." + resourceTypeName);
+      return FormerCryptographer.CreateHashCode(data, version.ToString("X") + "." + resourceTypeName);
     }
 
     private string GetDIFString(int version) {

@@ -156,7 +156,7 @@ namespace Empiria.Security {
       string token = "|" + UserId.ToString() + "|" + ServerId.ToString() + "|" +
                      StartTime.ToString("yyyy-MM-dd_HH:mm:ss") + "|" + ExtendedData + "|";
 
-      return Guid.NewGuid().ToString() + "-" + Cryptographer.CreateHashCode(token);
+      return Guid.NewGuid().ToString() + "-" + FormerCryptographer.CreateHashCode(token);
     }
 
     private void Initialize() {

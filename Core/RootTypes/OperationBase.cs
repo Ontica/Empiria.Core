@@ -66,7 +66,7 @@ namespace Empiria {
     static protected void ExtractFromMessageProtected(string message, out string name, out object[] parameters) {
       Assertion.AssertObject(message, "message");
 
-      message = Cryptographer.Decrypt(message);
+      message = FormerCryptographer.Decrypt(message);
       ExtractFromMessage(message, out name, out parameters);
     }
 
@@ -105,7 +105,7 @@ namespace Empiria {
     }
 
     public string ParametersToStringProtected() {
-      return Cryptographer.Encrypt(EncryptionMode.Standard, this.ParametersToString());
+      return FormerCryptographer.Encrypt(EncryptionMode.Standard, this.ParametersToString());
     }
 
     public string ToMessage() {
@@ -113,7 +113,7 @@ namespace Empiria {
     }
 
     public string ToMessageProtected() {
-      return Cryptographer.Encrypt(EncryptionMode.Standard, this.ToMessage());
+      return FormerCryptographer.Encrypt(EncryptionMode.Standard, this.ToMessage());
     }
 
     #endregion Public methods
