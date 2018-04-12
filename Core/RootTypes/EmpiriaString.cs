@@ -174,6 +174,18 @@ namespace Empiria {
       }
     }
 
+
+    static public string Duplicate(string source, int times) {
+      string temp = String.Empty;
+
+      for (int i = 0; i < times; i++) {
+        temp += source;
+      }
+
+      return temp;
+    }
+
+
     public static string EncodeAsUrlIdentifier(string identifier) {
       Assertion.AssertObject(identifier, "identifier");
       Assertion.Assert(!identifier.Contains("¯") &&
@@ -252,11 +264,24 @@ namespace Empiria {
       }
     }
 
+
     static public string GetSection(string source, char delimiter, int sectionIndex) {
       string[] sections = source.Split(new char[] { delimiter });
 
       return sections[sectionIndex].Trim();
     }
+
+
+    static public string IncrementCounter(string source, string prefix = "") {
+      string counterPart = source.Replace(prefix, String.Empty);
+
+      int counter = EmpiriaString.ToInteger(counterPart);
+
+      counter++;
+
+      return prefix + counter.ToString(Duplicate("0", counterPart.Length));
+    }
+
 
     static public bool IsBoolean(string source) {
       try {
