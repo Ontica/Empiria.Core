@@ -87,9 +87,10 @@ namespace Empiria.Data {
 
     public override string ToString() {
       var json = new JsonObject();
-      json.AddIfValue(new JsonItem("Select", this.Select));
-      json.AddIfValue(new JsonItem("Filter", this.Filter));
-      json.AddIfValue(new JsonItem("OrderBy", this.OrderBy));
+
+      json.AddIfValue("Select", this.Select);
+      json.AddIfValue("Filter", this.Filter);
+      json.AddIfValue("OrderBy", this.OrderBy);
 
       return json.ToString();
     }

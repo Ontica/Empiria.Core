@@ -61,10 +61,12 @@ namespace Empiria {
     }
 
     static public JsonObject ToJson(Exception exception) {
-      return new JsonObject() {
-        new JsonItem("source", exception.Source == null ? "N/A" : exception.Source),
-        new JsonItem("message", exception.Message),
-      };
+      var json = new JsonObject();
+
+      json.Add("source", exception.Source == null ? "N/A" : exception.Source);
+      json.Add("message", exception.Message);
+
+      return json;
     }
 
     #endregion Constructors and parsers

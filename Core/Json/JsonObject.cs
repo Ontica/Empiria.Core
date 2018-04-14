@@ -7,6 +7,15 @@
 *  Summary   : Allows data reading and parsing of JSON strings.                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+/* Empiria Core  *********************************************************************************************
+*                                                                                                            *
+*  Module   : Json services                                Component : Json provider                         *
+*  Assembly : Empiria.Core.dll                             Pattern   : Methods library                       *
+*  Type     : JsonObject                                   License   : Please read LICENSE.txt file          *
+*                                                                                                            *
+*  Summary  : Allows data reading and parsing of JSON strings.                                               *
+*                                                                                                            *
+************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -82,13 +91,16 @@ namespace Empiria.Json {
 
     #region Public methods
 
+
     /// <summary>Adds a new json item to the root of this json object.</summary>
-    public void Add(JsonItem item) {
-      Assertion.AssertObject(item, "item");
+    /// <param name="key">The key or name of the item to add.</param>
+    /// <param name="value">The value of the added object.</param>
+    public void Add(string key, object value) {
+      Assertion.AssertObject(key, "key");
+      Assertion.AssertObject(value, "value");
 
-      dictionary.Add(item.Key, item.Value);
+      dictionary.Add(key, value);
     }
-
 
     /// <summary>Adds a new json object to the json tree structure.</summary>
     /// <param name="key">The item key that describes the json object</param>
@@ -101,18 +113,20 @@ namespace Empiria.Json {
     }
 
 
-    /// <summary>Adds a new json item to the root of this json object, just in the case
-    /// that item.Value is not an empty or null value.</summary>
-    /// </summary>
-    public void AddIfValue(JsonItem item) {
-      Assertion.AssertObject(item, "item");
+    /// <summary>Adds a new json item to the root of this json object, in the case
+    /// that value is not an empty value or null instance.</summary>
+    /// <param name="key">The key or name of the item to add.</param>
+    /// <param name="value">The value of the object added</param>
+    public void AddIfValue(string key, object value) {
+      Assertion.AssertObject(key, "key");
 
-      if (HasEmptyOrNullValue(item.Value)) {
+      if (HasEmptyOrNullValue(value)) {
         return;
       }
 
-      dictionary.Add(item.Key, item.Value);
+      dictionary.Add(key, value);
     }
+
 
     /// <summary>Cleans the json object removing all empty objects from the given itemPath.</summary>
     /// <param name="itemPath">The item path to clean.</param>
