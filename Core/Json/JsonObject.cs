@@ -80,51 +80,128 @@ namespace Empiria.Json {
 
     #endregion Properties
 
-    #region Public methods for change structure
+    #region Public methods
 
+    /// <summary>Adds a new json item to the root of this json object.</summary>
     public void Add(JsonItem item) {
+      Assertion.AssertObject(item, "item");
+
       dictionary.Add(item.Key, item.Value);
     }
 
 
-    public void Add(string key, JsonObject item) {
-      dictionary.Add(key, item.ToDictionary());
+    /// <summary>Adds a new json object to the json tree structure.</summary>
+    /// <param name="key">The item key that describes the json object</param>
+    /// <param name="jsonObject">The json object to add.</param>
+    public void Add(string key, JsonObject jsonObject) {
+      Assertion.AssertObject(key, "key");
+      Assertion.AssertObject(jsonObject, "jsonObject");
+
+      dictionary.Add(key, jsonObject.ToDictionary());
     }
 
 
+    /// <summary>Adds a new json item to the root of this json object, just in the case
+    /// that item.Value is not an empty or null value.</summary>
+    /// </summary>
     public void AddIfValue(JsonItem item) {
-      if (!HasValue(item.Value)) {
+      Assertion.AssertObject(item, "item");
+
+      if (HasEmptyOrNullValue(item.Value)) {
         return;
       }
+
       dictionary.Add(item.Key, item.Value);
     }
 
-    #endregion Public methods for change structure
+    /// <summary>Cleans the json object removing all empty objects from the given itemPath.</summary>
+    /// <param name="itemPath">The item path to clean.</param>
+    public void Clean(string itemPath) {
+      Assertion.AssertObject(itemPath, "itemPath");
 
-    #region Public methods to get data
+      if (RemoveIfEmptyOrNull(dictionary, itemPath)) {
+        return;
+      }
+
+      if (dictionary.ContainsKey(itemPath) &&
+          HasEmptyOrNullValue(itemPath)) {     // Fast-track case
+
+        dictionary.Remove(itemPath);
+
+
+      }
+
+      string traversingPath = itemPath;
+
+      while (true) {
+
+        (string parentPath, string childKey) = GetParentChild(traversingPath);
+
+        if (IsRoot(parentPath) && childKey.Length != 0) {
+
+          RemoveIfEmptyOrNull(dictionary, childKey);
+
+          if (dictionary.ContainsKey(childKey) &&
+              HasEmptyOrNullValue(dictionary[childKey])) {
+
+            dictionary.Remove(childKey);
+
+          }
+          return;
+
+        } else if (IsRoot(parentPath) && childKey.Length == 0) {
+
+          return;
+
+        } else if (!IsRoot(parentPath)) {
+
+          var parentNode = TryGetDictionaryValue(parentPath, false);
+
+          if (parentNode != null) {
+            var temp = (IDictionary<string, object>) parentNode;
+
+            RemoveIfEmptyOrNull(temp, childKey);
+
+          }
+
+        }  // if
+
+        traversingPath = parentPath;
+
+      }   // while
+
+    }
+
 
     /// <summary>Returns true if the json object has an item path.</summary>
     /// <param name="itemPath">The item path to search.</param>
     public bool Contains(string itemPath) {
       Assertion.AssertObject(itemPath, "itemPath");
 
-      string[] pathMembers = this.SplitItemPath(itemPath);
+      string[] pathMembers = SplitItemPath(itemPath);
 
       IDictionary<string, object> item = dictionary;
+
       for (int i = 0; i < pathMembers.Length; i++) {
+
         if (!item.ContainsKey(pathMembers[i])) {
           return false;
         }
+
         if (i == (pathMembers.Length - 1)) {  // The last item is the searched item in the path
           return true;
         }
+
         if (item[pathMembers[i]] is IDictionary<string, object>) {
           item = (IDictionary<string, object>) item[pathMembers[i]];
-        } else {   // This item is a scalar (not a subtree), so the next item
-                   // in the path necessarily doesn't exist.
-          return false;
+
+        } else {            // This item is a scalar (not a subtree), so the next item
+          return false;     // in the path necessarily doesn't exist.
+
         }
+
       }  // for
+
       throw Assertion.AssertNoReachThisCode();
     }
 
@@ -161,67 +238,21 @@ namespace Empiria.Json {
       Assertion.AssertObject(itemPath, "itemPath");
 
       string value = String.Empty;
+
       if (defaultValue == null) {
         value = this.Find<string>(itemPath);
       } else {
         value = this.Find<string>(itemPath, defaultValue);
       }
+
       return EmpiriaString.Clean(value);
     }
 
 
-    public bool HasValue(string itemPath) {
-      Assertion.AssertObject(itemPath, "itemPath");
-
-      object value = this.TryGetDictionaryValue(itemPath, false);
-
-      if (value == null) {
-        return false;
-      }
-      if (value is String) {
-        if (String.IsNullOrWhiteSpace(EmpiriaString.Clean((string) value))) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    /// <summary>Adds a new JsonObject from this instance given an itemPath.</summary>
-    /// <param name="itemPath">The item path to set.</param>
-    /// <param name="value">The value of the item to set.</param>
-    public void Set<T>(string itemPath, T value) {
-      Assertion.AssertObject(itemPath, "itemPath");
-
-      if (!dictionary.ContainsKey(itemPath)) {
-        dictionary.Add(itemPath, value);
-      } else {
-        dictionary[itemPath] = value;
-      }
-    }
-
-    /// <summary>Adds a new JsonObject from this instance given an itemPath.</summary>
-    /// <param name="itemPath">The item path to set.</param>
-    /// <param name="value">The value of the item to set.</param>
-    public void SetIfValue<T>(string itemPath, T value) {
-      Assertion.AssertObject(itemPath, "itemPath");
-
-      if (!HasValue(value)) {
-        if (dictionary.ContainsKey(itemPath)) {
-          dictionary.Remove(itemPath);
-        }
-        return;
-      }
-
-      if (!dictionary.ContainsKey(itemPath)) {
-        dictionary.Add(itemPath, value);
-      } else {
-        dictionary[itemPath] = value;
-      }
-    }
-
     IEnumerator IEnumerable.GetEnumerator() {
       return dictionary.GetEnumerator();
     }
+
 
     /// <summary>Searches for a list of objects inside the JsonObject.</summary>
     /// <typeparam name="T">The type of the list elements.</typeparam>
@@ -295,6 +326,142 @@ namespace Empiria.Json {
       }
     }
 
+
+    /// <summary>Checks if there is an item in the json path with a none empty or null value.</summary>
+    /// <param name="itemPath">The json path to the object to ckeck its value.</param>
+    /// <returns>True if the Json structure has an object with a non empty
+    /// or null value. False otherwise.</returns>
+    public bool HasValue(string itemPath) {
+      Assertion.AssertObject(itemPath, "itemPath");
+
+      object value = this.TryGetDictionaryValue(itemPath, false);
+
+      if (value == null) {
+        return false;
+      }
+
+      return !HasEmptyOrNullValue(value);
+    }
+
+
+    /// <summary>Removes the item pointed by the itemPath.</summary>
+    /// <param name="itemPath">The item path of the object to remove.</param>
+    /// <returns>True if the object was located and removed, false otherwise.</returns>
+    public bool Remove(string itemPath) {
+
+      if (dictionary.ContainsKey(itemPath)) {     // Fast-track case
+        dictionary.Remove(itemPath);
+
+        return true;
+      }
+
+      string[] pathMembers = SplitItemPath(itemPath);
+
+      IDictionary<string, object> item = dictionary;
+
+      for (int i = 0; i < pathMembers.Length; i++) {
+
+        if (!item.ContainsKey(pathMembers[i])) {
+
+          return false;  // The item or the path to it do not exist, so there is nothing to remove
+
+        } else {
+
+          if (i == (pathMembers.Length - 1)) {  // Remove the last path item and finish
+
+            item.Remove(pathMembers[i]);
+
+            return true;
+
+          } else {    // Do nothing. Just continue processing the next path item
+
+            item = (IDictionary<string, object>) item[pathMembers[i]];
+
+          }
+
+        }
+
+      }  // for
+
+      return false;
+    }
+
+
+    /// <summary>Updates or adds a new JsonObject from this instance given an itemPath.</summary>
+    /// <param name="itemPath">The item path to set (e.g. '/parent/child/item' or just 'item').</param>
+    /// <param name="value">The value of the item to set.</param>
+    public void Set(string itemPath, object value) {
+      Assertion.AssertObject(itemPath, "itemPath");
+
+      if (dictionary.ContainsKey(itemPath)) {   // Fast-track case
+        dictionary[itemPath] = value;
+
+        return;
+      }
+
+      string[] pathMembers = SplitItemPath(itemPath);
+
+      IDictionary<string, object> node = dictionary;
+
+      for (int i = 0; i < pathMembers.Length; i++) {
+
+        if (!node.ContainsKey(pathMembers[i])) {
+
+          if (i == (pathMembers.Length - 1)) {  // Add the item in the path with its value and finish
+
+            node.Add(pathMembers[i], value);
+
+            return;
+
+          } else {    // Add a new Json node and continue processing the next path section
+
+            var newNode = new JsonObject().ToDictionary();
+
+            node.Add(pathMembers[i], newNode);
+
+            node = newNode;
+          }
+
+        } else {    // Node contains pathMembers[i]
+
+          if (i == (pathMembers.Length - 1)) {  // Replace the last path item with its value and finish
+
+            node[pathMembers[i]] = value;
+
+            return;
+
+          } else {    // Do nothing. Just continue processing the next path item
+
+            node = (IDictionary<string, object>) node[pathMembers[i]];
+          }
+
+        }
+
+      }  // for
+
+      throw Assertion.AssertNoReachThisCode();    // Code must exit from above code
+    }
+
+
+    /// <summary>Updates or adds a new JsonObject from this instance given an itemPath.
+    /// If value has no value (null or empty), removes it from the structure if already exists.</summary>
+    /// <param name="itemPath">The item path to set (e.g. like '/parent/child/item' or just 'item').</param>
+    /// <param name="value">The value of the item to set.</param>
+    public void SetIfValue(string itemPath, object value) {
+      Assertion.AssertObject(itemPath, "itemPath");
+
+      if (HasEmptyOrNullValue(value)) {  // Remove the item and clean up the path against empty objects
+
+        this.Remove(itemPath);
+        this.Clean(itemPath);
+
+      } else {                           // If has value, just add or update it.
+
+        this.Set(itemPath, value);
+      }
+    }
+
+
     /// <summary>Extracts a new JsonObject from this instance given an itemPath.</summary>
     /// <param name="itemPath">The item path to search. If starts with '@' then the object name
     /// is also included in the returned object, else only the item path contents.</param>
@@ -306,6 +473,7 @@ namespace Empiria.Json {
       return this.Slice(itemPath, false);
     }
 
+
     /// <summary>Generates a new JsonObject from multiple itemPaths of this instance.</summary>
     /// <param name="itemPaths">Array with the item paths to include in the new JsonObject.
     /// If any of those paths start with '@', then that path's object name is also included in the
@@ -316,14 +484,19 @@ namespace Empiria.Json {
       Assertion.AssertObject(itemPaths, "itemPaths");
 
       var root = new Dictionary<string, object>(itemPaths.Length);
+
       for (int i = 0; i < itemPaths.Length; i++) {
         var json = this.Slice(itemPaths[i]);
+
         foreach (var item in json.dictionary) {
           root.Add(item.Key, item.Value);
         }
+
       }
+
       return new JsonObject(root);
     }
+
 
     /// <summary>Extracts a new JsonObject from this instance given an itemPath.</summary>
     /// <param name="itemPath">The item path to search. If starts with '@' then the object name
@@ -342,6 +515,7 @@ namespace Empiria.Json {
       }
 
       object value = this.TryGetDictionaryValue(itemPath, required);
+
       if (value == null && required) {
         // An exception should be thrown from the TryGetDictionaryValue call above.
         Assertion.AssertNoReachThisCode();
@@ -350,22 +524,27 @@ namespace Empiria.Json {
       if (value == null) {
         return JsonObject.Empty;
 
-      } else if (value is IDictionary<string, object> && !includeitemNameInSlice) {
+      } else if (value is IDictionary<string, object> &&
+                 !includeitemNameInSlice) {
         return new JsonObject((IDictionary<string, object>) value);
 
       } else {
+
         var dictionary = new Dictionary<string, object>(1);
-        dictionary.Add(this.GetDictionaryKey(itemPath), value);
+
+        dictionary.Add(GetChildKey(itemPath), value);
 
         return new JsonObject(dictionary);
 
       }
     }
 
+
     /// <summary>Returns this Json object as a Json string.</summary>
     public override string ToString() {
       return this.ToString(false);
     }
+
 
     /// <summary>Returns this Json object as a Json string.</summary>
     /// <param name="indented">If true, returns the Json string in indented format. Default false.</param>
@@ -386,20 +565,25 @@ namespace Empiria.Json {
       return this.ToDictionary();
     }
 
+
     public IDictionary<string, object> ToDictionary() {
       var copy = new Dictionary<string, object>(this.dictionary);
 
       foreach (var item in this.dictionary) {
+
         if (item.Value is JsonObject) {
           copy[item.Key] = ((JsonObject) item.Value).ToDictionary();
         }
+
       }
+
       return copy;
     }
 
-    #endregion Public methods to get data
 
-    #region Private members
+    #endregion Public methods
+
+    #region Private methods
 
     private T Find<T>(string itemPath) {
       object value = this.TryGetDictionaryValue(itemPath, true);
@@ -420,17 +604,12 @@ namespace Empiria.Json {
       }
     }
 
+
     private T Find<T>(string itemPath, T defaultValue) {
       object value = this.TryGetDictionaryValue(itemPath, false);
 
       // Return defaultValue when retrieved item is null
       if (value == null) {
-        return defaultValue;
-      }
-
-      // Return defaultValue when retrieved item has an empty value
-      if ((typeof(T) == typeof(string) || value.GetType() == typeof(string)) &&
-          String.IsNullOrWhiteSpace(value as string)) {
         return defaultValue;
       }
 
@@ -444,36 +623,137 @@ namespace Empiria.Json {
       }
     }
 
-    private string GetDictionaryKey(string itemPath) {
-      string[] pathMembers = this.SplitItemPath(itemPath);
+
+    private object TryGetDictionaryValue(string itemPath, bool required) {
+      string[] pathMembers = SplitItemPath(itemPath);
+
+      IDictionary<string, object> item = dictionary;
+      for (int i = 0; i < pathMembers.Length; i++) {
+
+        if (!item.ContainsKey(pathMembers[i])) {
+
+          if (!required) {
+            return null;
+
+          } else {
+            throw new JsonDataException(JsonDataException.Msg.JsonPathItemNotFound,
+                                        itemPath, pathMembers[i]);
+          }
+        }
+
+        if (i == (pathMembers.Length - 1)) {  // The last item is the searched item in the path
+          return item[pathMembers[i]];
+        }
+
+        if (item[pathMembers[i]] is IDictionary<string, object>) {
+          item = (IDictionary<string, object>) item[pathMembers[i]];
+
+        } else {   // This item is a scalar (not a subtree), so the next item
+                   // in the path necessarily doesn't exist.
+          throw new JsonDataException(JsonDataException.Msg.JsonPathItemNotFound,
+                                      itemPath, pathMembers[i + 1]);
+        }
+
+      }  // for
+
+      throw Assertion.AssertNoReachThisCode();
+    }
+
+    #endregion Private methods
+
+    #region Utility methods
+
+    static private string GetChildKey(string itemPath) {
+      string[] pathMembers = SplitItemPath(itemPath);
 
       return pathMembers[pathMembers.Length - 1];
     }
 
-    private bool HasValue(object item) {
+
+    static private (string parentPath, string childKey) GetParentChild(string childPath) {
+      string[] pathMembers = SplitItemPath(childPath);
+
+      if (pathMembers.Length > 1) {
+
+        string temp = "";
+
+        for (int i = 0; i < pathMembers.Length - 1; i++) {
+          temp += "/" + pathMembers[i];
+        }
+
+        return (temp, pathMembers[pathMembers.Length - 1]);
+
+      } else if (pathMembers.Length == 1) {
+        return ("/", pathMembers[0]);
+
+      } else if (pathMembers.Length == 0) {
+        return ("/", String.Empty);
+
+      } else {
+        throw Assertion.AssertNoReachThisCode();
+
+      }
+
+    }
+
+
+    static private bool HasEmptyOrNullValue(object item) {
       if (item == null) {
-        return false;
+        return true;
       }
 
       if (item is String &&
           String.IsNullOrWhiteSpace((string) item)) {
-        return false;
+        return true;
       }
 
       if (item is DateTime &&
           (((DateTime) item) == ExecutionServer.DateMaxValue ||
           ((DateTime) item) == ExecutionServer.DateMinValue)) {
-        return false;
+        return true;
       }
 
-      if (item is decimal && ((decimal) item == 0)) {
-        return false;
+      if (item is decimal &&
+          ((decimal) item == 0)) {
+        return true;
       }
 
-      return true;
+      if (item is IDictionary<string, object> &&
+          ((IDictionary<string, object>) item).Count == 0) {
+        return true;
+      }
+
+      if (item is Array &&
+         ((Array) item).Length == 0) {
+        return true;
+      }
+
+      return false;
     }
 
-    private string[] SplitItemPath(string itemPath) {
+
+    static private bool IsRoot(string itemPath) {
+      Assertion.AssertObject(itemPath, "itemPath");
+
+      return (itemPath == "/");
+    }
+
+
+    static private bool RemoveIfEmptyOrNull(IDictionary<string, object> node,
+                                            string childKey) {
+      if (node.ContainsKey(childKey) &&
+          HasEmptyOrNullValue(node[childKey])) {
+
+        node.Remove(childKey);
+
+        return true;
+      }
+
+      return false;
+    }
+
+
+    static private string[] SplitItemPath(string itemPath) {
       itemPath = itemPath.Trim(' ');
       itemPath = itemPath.Replace("//", "/");
       itemPath = itemPath.Replace("/", ".");
@@ -482,34 +762,8 @@ namespace Empiria.Json {
       return itemPath.Split('.');
     }
 
-    private object TryGetDictionaryValue(string itemPath, bool required) {
-      string[] pathMembers = this.SplitItemPath(itemPath);
 
-      IDictionary<string, object> item = dictionary;
-      for (int i = 0; i < pathMembers.Length; i++) {
-        if (!item.ContainsKey(pathMembers[i])) {
-          if (!required) {
-            return null;
-          } else {
-            throw new JsonDataException(JsonDataException.Msg.JsonPathItemNotFound,
-                                        itemPath, pathMembers[i]);
-          }
-        }
-        if (i == (pathMembers.Length - 1)) {  // The last item is the searched item in the path
-          return item[pathMembers[i]];
-        }
-        if (item[pathMembers[i]] is IDictionary<string, object>) {
-          item = (IDictionary<string, object>) item[pathMembers[i]];
-        } else {   // This item is a scalar (not a subtree), so the next item
-                   // in the path necessarily doesn't exist.
-          throw new JsonDataException(JsonDataException.Msg.JsonPathItemNotFound,
-                                      itemPath, pathMembers[i + 1]);
-        }
-      }  // for
-      throw Assertion.AssertNoReachThisCode();
-    }
-
-    #endregion Private members
+    #endregion Utility methods
 
   }  // class JsonObject
 
