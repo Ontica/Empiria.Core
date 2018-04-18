@@ -12,6 +12,7 @@ using System;
 
 using Empiria.DataTypes;
 using Empiria.Json;
+using Empiria.StateEnums;
 
 namespace Empiria.Contacts {
 
@@ -113,8 +114,8 @@ namespace Empiria.Contacts {
     }
 
     [Newtonsoft.Json.JsonIgnore]
-    [DataField("ContactStatus", Default = GeneralObjectStatus.Active)]
-    public GeneralObjectStatus Status {
+    [DataField("ContactStatus", Default = EntityStatus.Active)]
+    public EntityStatus Status {
       get;
       protected set;
     }

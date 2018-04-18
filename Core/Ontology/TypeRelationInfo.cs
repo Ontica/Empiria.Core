@@ -11,6 +11,7 @@ using System;
 using System.Data;
 
 using Empiria.Security;
+using Empiria.StateEnums;
 
 namespace Empiria.Ontology {
 
@@ -53,7 +54,7 @@ namespace Empiria.Ontology {
     private string targetIdFieldName = String.Empty;
     private string typeRelationIdFieldName = String.Empty;
     private bool isInherited = false;
-    private GeneralObjectStatus status = GeneralObjectStatus.Active;
+    private EntityStatus status = EntityStatus.Active;
 
     #endregion Fields
 
@@ -159,7 +160,7 @@ namespace Empiria.Ontology {
       get { return relationTypeFamily; }
     }
 
-    public GeneralObjectStatus Status {
+    public EntityStatus Status {
       get { return status; }
       set { status = value; }
     }
@@ -216,7 +217,7 @@ namespace Empiria.Ontology {
       this.sourceIdFieldName = (string) row["SourceIdFieldName"];
       this.targetIdFieldName = (string) row["TargetIdFieldName"];
       this.typeRelationIdFieldName = (string) row["TypeRelationIdFieldName"];
-      this.status = (GeneralObjectStatus) char.Parse((string) row["TypeRelationStatus"]);
+      this.status = (EntityStatus) char.Parse((string) row["TypeRelationStatus"]);
       isInherited = (sourceType.Id != (int) row["SourceTypeId"]);
 
       //defaultValue = this.Convert(row["DefaultValue"]);

@@ -11,6 +11,7 @@ using System;
 using System.Data;
 
 using Empiria.Reflection;
+using Empiria.StateEnums;
 
 namespace Empiria.Ontology {
 
@@ -40,7 +41,7 @@ namespace Empiria.Ontology {
     private AuditTrailMode auditTrailMode = AuditTrailMode.None;
     private string sourceCode = String.Empty;
     private int postedById = 0;
-    private GeneralObjectStatus storageStatus = GeneralObjectStatus.Active;
+    private EntityStatus storageStatus = EntityStatus.Active;
     private DateTime startDate = DateTime.Today;
     private DateTime endDate = ExecutionServer.DateMaxValue;
 
@@ -177,7 +178,7 @@ namespace Empiria.Ontology {
       set { startDate = value; }
     }
 
-    public GeneralObjectStatus StorageStatus {
+    public EntityStatus StorageStatus {
       get { return storageStatus; }
       set { storageStatus = value; }
     }
@@ -228,7 +229,7 @@ namespace Empiria.Ontology {
       this.sourceCode = (string) dataRow["SourceCode"];
       this.auditTrailMode = (AuditTrailMode) Convert.ToChar(dataRow["AuditTrailMode"]);
       this.postedById = (int) dataRow["PostedById"];
-      this.storageStatus = (GeneralObjectStatus) Convert.ToChar(dataRow["StorageStatus"]);
+      this.storageStatus = (EntityStatus) Convert.ToChar(dataRow["StorageStatus"]);
       this.startDate = (DateTime) dataRow["StartDate"];
       this.endDate = (DateTime) dataRow["EndDate"];
     }

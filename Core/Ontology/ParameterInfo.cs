@@ -10,7 +10,7 @@
 using System;
 using System.Data;
 
-using Empiria.Data;
+using Empiria.StateEnums;
 
 namespace Empiria.Ontology {
 
@@ -31,7 +31,7 @@ namespace Empiria.Ontology {
     private bool isOptional = false;
     private object defaultValue = null;
     private int postedById = 0;
-    private GeneralObjectStatus storageStatus = GeneralObjectStatus.Active;
+    private EntityStatus storageStatus = EntityStatus.Active;
     private DateTime startDate = DateTime.Today;
     private DateTime endDate = ExecutionServer.DateMaxValue;
 
@@ -116,7 +116,7 @@ namespace Empiria.Ontology {
       set { startDate = value; }
     }
 
-    public GeneralObjectStatus StorageStatus {
+    public EntityStatus StorageStatus {
       get { return storageStatus; }
       set { storageStatus = value; }
     }
@@ -159,7 +159,7 @@ namespace Empiria.Ontology {
       isOptional = (bool) dataRow["IsOptional"];
       defaultValue = (string) dataRow["DefaultValue"];
       postedById = (int) dataRow["PostedById"];
-      storageStatus = (GeneralObjectStatus) Convert.ToChar(dataRow["StorageStatus"]);
+      storageStatus = (EntityStatus) Convert.ToChar(dataRow["StorageStatus"]);
       startDate = (DateTime) dataRow["StartDate"];
       endDate = (DateTime) dataRow["EndDate"];
     }

@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Ontology;
+using Empiria.StateEnums;
 
 namespace Empiria {
 
@@ -74,9 +75,9 @@ namespace Empiria {
       set;
     }
 
-    [DataField("ObjectStatus", Default = GeneralObjectStatus.Active)]
+    [DataField("ObjectStatus", Default = EntityStatus.Active)]
     [Newtonsoft.Json.JsonIgnore]
-    public GeneralObjectStatus Status {
+    public EntityStatus Status {
       get;
       protected set;
     }
@@ -85,14 +86,24 @@ namespace Empiria {
     public string StatusName {
       get {
         switch (this.Status) {
-          case GeneralObjectStatus.Active:
+          case EntityStatus.Active:
             return "Activo";
-          case GeneralObjectStatus.Deleted:
+
+          case EntityStatus.Deleted:
             return "Eliminado";
-          case GeneralObjectStatus.Pending:
+
+          case EntityStatus.Discontinued:
+            return "Descontinuado";
+
+          case EntityStatus.OnReview:
+            return "En revisión";
+
+          case EntityStatus.Pending:
             return "Pendiente";
-          case GeneralObjectStatus.Suspended:
+
+          case EntityStatus.Suspended:
             return "Suspendido";
+
           default:
             return "No determinado";
         }

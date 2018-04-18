@@ -2,26 +2,31 @@
 *                                                                                                            *
 *  Module   : Base types                                   Component : Entity control enumerations           *
 *  Assembly : Empiria.Core.dll                             Pattern   : Enumeration                           *
-*  Type     : AccessMode                                   License   : Please read LICENSE.txt file          *
+*  Type     : ActivityStatus                               License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Describes the access level permissions of a single entity.                                     *
+*  Summary  : Describes the status of an entity that can be tracked in the time, as a task or activity.      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria {
+namespace Empiria.StateEnums {
 
-  /// <summary>Describes the access level permissions of a single entity.</summary>
-  public enum AccessMode {
+  /// <summary>Describes the status of an entity that can be tracked
+  ///in the time, as a task or activity.</summary>
+  public enum ActivityStatus {
 
-    Empty = 'E',
+    Pending = 'P',
 
-    Public = 'P',
+    Active = 'A',
 
-    Internal = 'I',
+    Suspended = 'S',
 
-    Private = 'R',
+    Completed = 'C',
 
-  }  // enum AccessMode
+    Canceled = 'L',
 
-}  // namespace Empiria
+    Deleted = 'X',
+
+  } // enum ActivityStatus
+
+} // namespace Empiria.StateEnums

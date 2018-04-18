@@ -2,33 +2,30 @@
 *                                                                                                            *
 *  Module   : Base types                                   Component : Entity control enumerations           *
 *  Assembly : Empiria.Core.dll                             Pattern   : Enumeration                           *
-*  Type     : ObjectStatus                                 License   : Please read LICENSE.txt file          *
+*  Type     : EntityStatus                                 License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : General purpose enumeration that serves to describe the status of an object.                  *
+*  Summary  : Describes the status of an entity that can be reviewed, activated or discontinued.             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria {
+namespace Empiria.StateEnums {
 
-  #region Enumerations
-
-  /// <summary>General purpose enumeration that serves to describe the status of an object.</summary>
-  public enum ObjectStatus {
+  /// <summary>Describes the status of an entity that can be reviewed, activated or discontinued.</summary>
+  public enum EntityStatus {
 
     Pending = 'P',
 
     Active = 'A',
 
-    Closed = 'C',
+    OnReview = 'R',
 
     Suspended = 'S',
 
-    Obsolete = 'O',
+    Discontinued = 'D',
 
     Deleted = 'X',
-  }
 
-  #endregion Enumerations
+  } // EntityStatus
 
-} // namespace Empiria
+} // namespace Empiria.StateEnums

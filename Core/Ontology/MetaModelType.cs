@@ -14,6 +14,7 @@ using System.Linq;
 
 using Empiria.Collections;
 using Empiria.Reflection;
+using Empiria.StateEnums;
 
 namespace Empiria.Ontology {
 
@@ -61,7 +62,7 @@ namespace Empiria.Ontology {
     private bool isAbstract = false;
     private bool isSealed = false;
     private bool isHistorizable = false;
-    private GeneralObjectStatus status = GeneralObjectStatus.Active;
+    private EntityStatus status = EntityStatus.Active;
 
     private Type underlyingSystemType = null;
     private EmpiriaIdAndKeyDictionary<TypeAssociationInfo> associationInfoList = null;
@@ -239,7 +240,7 @@ namespace Empiria.Ontology {
       set { namedIdFieldName = EmpiriaString.TrimAll(value); }
     }
 
-    protected GeneralObjectStatus Status {
+    protected EntityStatus Status {
       get { return status; }
       set { status = value; }
     }
@@ -433,7 +434,7 @@ namespace Empiria.Ontology {
       this.isAbstract = (bool) dataRow["IsAbstract"];
       this.isSealed = (bool) dataRow["IsSealed"];
       this.isHistorizable = (bool) dataRow["IsHistorizable"];
-      this.status = (GeneralObjectStatus) char.Parse((string) dataRow["TypeStatus"]);
+      this.status = (EntityStatus) char.Parse((string) dataRow["TypeStatus"]);
     }
 
     private void LoadMethods() {
