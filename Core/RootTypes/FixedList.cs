@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Collections;
+using Empiria.Contacts;
 
 namespace Empiria {
 
@@ -36,6 +37,12 @@ namespace Empiria {
 
     public FixedList(int capacity) : base(capacity) {
       // no-op
+    }
+
+    public FixedList(IEnumerable<T> list) : base() {
+      foreach (var item in list) {
+        this.Add(item);
+      }
     }
 
     public FixedList(List<T> list) : base(list) {
@@ -94,9 +101,20 @@ namespace Empiria {
       base.Reverse();
     }
 
+    public FixedList<T> Remove(IEnumerable<T> items) {
+      var copy = new FixedList<T>(this);
+
+      foreach (var item in items) {
+        copy.Remove(item);
+      }
+
+      return copy;
+    }
+
     public new void Sort(Comparison<T> comparison) {
       base.Sort(comparison);
     }
+
 
     #endregion Public methods
 
