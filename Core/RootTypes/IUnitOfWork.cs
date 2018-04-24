@@ -24,7 +24,9 @@ namespace Empiria {
 
     DateTime Timestamp { get; }
 
-    void Update();
+    void Commit();
+
+    void Rollback();
 
     #endregion Members definition
 

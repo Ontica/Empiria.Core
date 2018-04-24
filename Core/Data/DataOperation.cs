@@ -103,6 +103,11 @@ namespace Empiria.Data {
       }
     }
 
+    public bool DeferExecution {
+      get;
+      private set;
+    }
+
     public int ExecutionTimeout {
       get { return executionTimeout; }
       set { executionTimeout = value; }
@@ -152,6 +157,20 @@ namespace Empiria.Data {
       this.FillParameters(command);
     }
 
+    #endregion Public methods
+
+    #region Private methods
+
+
+    internal void DeferExecutionUntilSaveRootEvent(IAggregateRoot rootInstance) {
+      this.DeferExecution = true;
+
+      rootInstance.SaveAllCalled += (object sender, EventArgs e) => {
+        this.DeferExecution = false;
+        EmpiriaLog.Debug("SaveAll called was triggered.");
+      };
+    }
+
 
     private void FillParameters(IDbCommand command) {
       if (base.Parameters.Length == 0) {
@@ -170,9 +189,6 @@ namespace Empiria.Data {
       }
     }
 
-    #endregion Public methods
-
-    #region Private methods
 
     static private CommandType GetCommandType(string sourceName) {
       if (sourceName.StartsWith("@") || sourceName.IndexOf(' ') != -1) {

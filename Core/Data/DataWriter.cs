@@ -41,58 +41,53 @@ namespace Empiria.Data {
       return handler.AppendRows(connection, tableName, table, filter);
     }
 
+
     static public Guid CreateGuid() {
       return Guid.NewGuid();
     }
+
 
     static public DataWriterContext CreateContext(string contextName) {
       return new DataWriterContext(contextName);
     }
 
+
     static public int CreateId(string sourceName) {
       if (DataIntegrationRules.HasExternalClusterCreateIdRule(sourceName)) {
+
         return CreateExternalClusterIdAsync(sourceName).GetAwaiter()
                                                        .GetResult();
 
       } else {
+
         return CreateThisClusterIdAsync(sourceName).GetAwaiter()
                                                    .GetResult();
       }
     }
 
+
     static public void Execute(DataOperation operation) {
       Assertion.AssertObject(operation, "operation");
 
       if (StorageContext.IsStorageContextDefined) {
+
         StorageContext.ActiveStorageContext.Add(operation);
-      } else if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
-        ExecuteExternal(operation);
 
-      } else {
-        DataWriter.ExecuteInternal(operation);
-
+        return;
       }
 
-      DataWriter.WriteDataLog(operation);
+      if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
+        ExecuteExternal(operation);
+      } else {
+        ExecuteInternal(operation);
+      }
 
-      DataWriter.DoPostExecutionTask(operation);
+      WriteDataLog(operation);
 
-      DataPublisher.Publish(operation);
-    }
-
-
-    static public T Execute<T>(DataOperation operation) {
-      Assertion.AssertObject(operation, "operation");
-
-      T result = DataWriter.ExecuteInternal<T>(operation);
-
-      DataWriter.WriteDataLog(operation);
-
-      DataWriter.DoPostExecutionTask(operation);
+      DoPostExecutionTask(operation);
 
       DataPublisher.Publish(operation);
 
-      return result;
     }
 
 
@@ -109,7 +104,57 @@ namespace Empiria.Data {
     }
 
 
-    static public int Execute(SingleSignOnToken token, DataOperation operation) {
+    static public void ExecuteWhenRootSaved(DataOperation operation,
+                                            IAggregateRoot root) {
+      Assertion.AssertObject(operation, "operation");
+      Assertion.AssertObject(root, "root");
+
+      StorageContext.EnsureIsStorageContextDefined();
+
+      operation.DeferExecutionUntilSaveRootEvent(root);
+
+      StorageContext.ActiveStorageContext.Add(operation);
+
+    }
+
+    #endregion Public methods
+
+    #region Internal methods
+
+    static internal T Execute<T>(DataOperation operation) {
+      EnsureNoDeferedExecution(operation);
+
+      T result = DataWriter.ExecuteInternal<T>(operation);
+
+      WriteDataLog(operation);
+
+      DoPostExecutionTask(operation);
+
+      DataPublisher.Publish(operation);
+
+      return result;
+    }
+
+
+    static internal int Execute(IDbConnection connection, DataOperation operation) {
+      EnsureNoDeferedExecution(operation);
+
+      IDataHandler handler = GetDataHander(operation);
+
+      return handler.Execute(connection, operation);
+    }
+
+
+    static internal int Execute(IDbTransaction transaction, DataOperation operation) {
+      EnsureNoDeferedExecution(operation);
+
+      IDataHandler handler = GetDataHander(operation);
+
+      return handler.Execute((System.Data.SqlClient.SqlTransaction) transaction, operation);
+    }
+
+
+    static internal int Execute(SingleSignOnToken token, DataOperation operation) {
       Assertion.AssertObject(token, "token");
       Assertion.AssertObject(operation, "operation");
 
@@ -127,58 +172,53 @@ namespace Empiria.Data {
     }
 
 
-    static public int Execute(SingleSignOnToken token, DataOperationList operationList) {
+    static internal int Execute(SingleSignOnToken token, DataOperationList operationList) {
       Assertion.AssertObject(token, "token");
       Assertion.AssertObject(operationList, "operationList");
 
       using (DataWriterContext context = DataWriter.CreateContext(operationList.Name)) {
+
         ITransaction transaction = context.BeginTransaction();
 
         context.Add(token, operationList);
-        context.Update();
+        context.Commit();
 
         return transaction.Commit();
       }
     }
 
-    #endregion Public methods
-
-    #region Internal methods
-
-    static internal int Execute(IDbConnection connection, DataOperation operation) {
-      IDataHandler handler = GetDataHander(operation);
-
-      return handler.Execute(connection, operation);
-    }
-
-
-    static internal int Execute(IDbTransaction transaction, DataOperation operation) {
-      IDataHandler handler = GetDataHander(operation);
-
-      return handler.Execute((System.Data.SqlClient.SqlTransaction) transaction, operation);
-    }
-
 
     static internal int ExecuteInternal(DataOperation operation) {
+      EnsureNoDeferedExecution(operation);
+
       IDataHandler handler = GetDataHander(operation);
 
       return handler.Execute(operation);
     }
 
 
+
     static private T ExecuteInternal<T>(DataOperation operation) {
+      EnsureNoDeferedExecution(operation);
+
       IDataHandler handler = GetDataHander(operation);
 
       return handler.Execute<T>(operation);
     }
 
+
     static internal void ExecuteInternal(DataOperationList operationList) {
+      Assertion.Assert(operationList.CountAll((x) => x.DeferExecution) == 0,
+                      $"operationList has one or more operations marked as DeferExecution.");
+
       if (operationList.Count == 0) {
         return;
       }
 
       if (operationList.Count == 1) {
+
         ExecuteInternal(operationList[0]);
+
         return;
       }
 
@@ -186,18 +226,23 @@ namespace Empiria.Data {
         ITransaction transaction = context.BeginTransaction();
 
         context.Add(operationList);
-        context.Update();
+
+        context.Commit();
+
         transaction.Commit();
       }
     }
+
 
     #endregion Internal methods
 
     #region Private methods
 
     static private async Task<int> CreateThisClusterIdAsync(string sourceName) {
+
       if (DataWriter.IsObjectIdGeneratorServer) {
         return ObjectIdFactory.Instance.GetNextId(sourceName, 0);
+
       } else {
         IWebApiClient apiClient = WebApiClientFactory.CreateWebApiClient();
 
@@ -205,6 +250,7 @@ namespace Empiria.Data {
                               .ConfigureAwait(false);
       }
     }
+
 
     static private async Task<int> CreateExternalClusterIdAsync(string sourceName) {
       WebServer targetServer = DataIntegrationRules.GetObjectIdServer(sourceName);
@@ -215,9 +261,27 @@ namespace Empiria.Data {
                             .ConfigureAwait(false);
     }
 
-    static private IDataHandler GetDataHander(DataOperation operation) {
-      return operation.DataSource.GetDataHandler();
+
+    static private void EnsureNoDeferedExecution(DataOperation operation) {
+      Assertion.AssertObject(operation, "operation");
+
+      Assertion.Assert(!operation.DeferExecution,
+                      $"{operation.Name} can't be executed because is marked with DeferExecution flag.");
     }
+
+
+    static private int ExecuteExternal(DataOperation dataOperation) {
+      DataIntegrationRule rule = DataIntegrationRules.GetWriteRule(dataOperation.SourceName);
+
+      using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(rule.TargetServer)) {
+
+        SingleSignOnToken token = SingleSignOnToken.Create(rule.TargetServer);
+
+        return proxy.Execute(token.ToMessage(), dataOperation.ToMessage());
+
+      }
+    }
+
 
     static private void DoPostExecutionTask(DataOperation operation) {
       if (!DataIntegrationRules.HasPostExecutionTask(operation.SourceName)) {
@@ -226,36 +290,39 @@ namespace Empiria.Data {
 
       DataIntegrationRule postExecutionRule = null;
       try {
+
         postExecutionRule = DataIntegrationRules.GetPostExecutionRule(operation.SourceName);
+
         string assemblyName = postExecutionRule.Condition.Split('|')[0];
         string typeName = postExecutionRule.Condition.Split('|')[1];
         string methodName = postExecutionRule.Condition.Split('|')[2];
 
         Type type = ObjectFactory.GetType(assemblyName, typeName);
 
-        MethodInfo method = type.GetMethod(methodName, BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic,
+        MethodInfo method = type.GetMethod(methodName, BindingFlags.ExactBinding | BindingFlags.Static |
+                                           BindingFlags.Public | BindingFlags.NonPublic,
                                            null, CallingConventions.Any, new Type[] { typeof(DataOperation) }, null);
 
         method.Invoke(null, new object[] { operation });
 
       } catch (Exception innerException) {
+
         DataPublisher.Publish(postExecutionRule, operation, innerException);
+
         Exception exception = new EmpiriaDataException(EmpiriaDataException.Msg.CannotDoPostExecutionTask, innerException,
                                                        operation.SourceName, operation.Parameters.ToString());
+
         if (postExecutionRule.Priority == DataIntegrationRulePriority.Chained) {
           throw exception;
         }
       }
     }
 
-    static private int ExecuteExternal(DataOperation dataOperation) {
-      DataIntegrationRule rule = DataIntegrationRules.GetWriteRule(dataOperation.SourceName);
 
-      using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(rule.TargetServer)) {
-        SingleSignOnToken token = SingleSignOnToken.Create(rule.TargetServer);
-        return proxy.Execute(token.ToMessage(), dataOperation.ToMessage());
-      }
+    static private IDataHandler GetDataHander(DataOperation operation) {
+      return operation.DataSource.GetDataHandler();
     }
+
 
     static private void WriteDataLog(DataOperation operation) {
       var dataLog = new DataLog(operation);

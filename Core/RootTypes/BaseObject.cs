@@ -19,7 +19,7 @@ namespace Empiria {
 
   /// <summary>BaseObject is the root type of the object type hierarchy in Empiria Framework.
   /// All object types that uses the framework must be descendants of this abstract type.</summary>
-  public abstract class BaseObject : IStorable {
+  public abstract class BaseObject : IIdentifiable {
 
     #region Fields
 
@@ -29,8 +29,6 @@ namespace Empiria {
     private int objectId = 0;
     private bool isDirtyFlag = true;
     private bool isNewFlag = true;
-
-    public event EventHandler SaveEvent;
 
     #endregion Fields
 
@@ -418,7 +416,6 @@ namespace Empiria {
 
       this.OnBeforeSave();
       this.OnSave();
-      this.DispatchSaveEvent(EventArgs.Empty);
 
       this.isNewFlag = false;
       this.isDirtyFlag = false;
@@ -432,15 +429,6 @@ namespace Empiria {
 
     private void DataBind(DataRow row) {
       this.GetEmpiriaType().DataBind(this, row);
-    }
-
-
-    private void DispatchSaveEvent(EventArgs e) {
-      EventHandler saveRoot = this.SaveEvent;
-
-      if (saveRoot != null) {
-        saveRoot.Invoke(this, e);
-      }
     }
 
 

@@ -14,28 +14,18 @@ using Empiria.Data;
 
 namespace Empiria {
 
-  #region Enumerations
-
-  public enum StorageContextOperation {
-    Save = 'S',
-    Delete = 'X'
-  }
-
-  #endregion Enumerations
-
   [Serializable]
   public sealed class StorageContext : IUnitOfWork {
 
     #region Fields
 
-    private static readonly string storageContextKey = "Empiria.DataWriter.StorageContext";
+    private static readonly string STORAGE_CONTEXT_KEY = "Empiria.DataWriter.StorageContext";
 
     private Guid guid = DataWriter.CreateGuid();
     private DateTime timestamp = DateTime.Now;
     private string name = String.Empty;
 
     DataOperationList dataOperations = null;
-    DataWriterContext dataWriterContext = null;
 
     #endregion Fields
 
@@ -44,43 +34,43 @@ namespace Empiria {
     private StorageContext() {
       // Instances of this class are created using one of the static StorageContext.Open() methods.
       this.name = "Context " + guid.ToString().Substring(24);
-      this.dataWriterContext = DataWriter.CreateContext(this.name);
+
       this.dataOperations = new DataOperationList(this.name);
     }
 
     private StorageContext(string contextName) {
       // Instances of this class are created using one of the static StorageContext.Open() methods.
       this.name = contextName;
-      this.dataWriterContext = DataWriter.CreateContext(this.name);
+
       this.dataOperations = new DataOperationList(this.name);
     }
 
     internal static StorageContext ActiveStorageContext {
       get {
-        return ExecutionServer.ContextItems.GetItem<StorageContext>(storageContextKey);
+        return ExecutionServer.ContextItems.GetItem<StorageContext>(STORAGE_CONTEXT_KEY);
       }
     }
 
     internal static bool IsStorageContextDefined {
       get {
         return ExecutionServer.IsAuthenticated &&
-               ExecutionServer.ContextItems.ContainsKey(storageContextKey);
+               ExecutionServer.ContextItems.ContainsKey(STORAGE_CONTEXT_KEY);
       }
     }
 
     static public StorageContext Open() {
-      if (!ExecutionServer.ContextItems.ContainsKey(storageContextKey)) {
-        ExecutionServer.ContextItems.SetItem(storageContextKey, new StorageContext());
+      if (!IsStorageContextDefined) {
+        ExecutionServer.ContextItems.SetItem(STORAGE_CONTEXT_KEY, new StorageContext());
       }
-      return ExecutionServer.ContextItems.GetItem<StorageContext>(storageContextKey);
+      return ExecutionServer.ContextItems.GetItem<StorageContext>(STORAGE_CONTEXT_KEY);
     }
 
-    static public StorageContext Open(string contextName) {
-      if (!IsStorageContextDefined) {
-        ExecutionServer.ContextItems.SetItem(storageContextKey, new StorageContext(contextName));
-      }
-      return ExecutionServer.ContextItems.GetItem<StorageContext>(storageContextKey);
-    }
+    //static public StorageContext Open(string contextName) {
+    //  if (!IsStorageContextDefined) {
+    //    ExecutionServer.ContextItems.SetItem(STORAGE_CONTEXT_KEY, new StorageContext(contextName));
+    //  }
+    //  return ExecutionServer.ContextItems.GetItem<StorageContext>(STORAGE_CONTEXT_KEY);
+    //}
 
     ~StorageContext() {
       Dispose(false);
@@ -122,7 +112,13 @@ namespace Empiria {
     }
 
 
-    public void Update() {
+    internal static void EnsureIsStorageContextDefined() {
+      Assertion.Assert(StorageContext.IsStorageContextDefined,
+                       new Exception("Programming Error: An opened StorageContext is required."));
+    }
+
+
+    public void Commit() {
       if (dataOperations.Count == 0) {
         return;
       }
@@ -130,20 +126,37 @@ namespace Empiria {
       using (DataWriterContext writerContext = DataWriter.CreateContext(this.Name)) {
         ITransaction transaction = writerContext.BeginTransaction();
 
-        writerContext.Add(dataOperations);
+        var operationsToExecute = new DataOperationList(this.Name);
 
-        writerContext.Update();
+        operationsToExecute.Add(dataOperations.Where((x) => x.DeferExecution == false));
 
-        transaction.Commit();
+        writerContext.Add(operationsToExecute);
+
+        writerContext.Commit();
+
+        try {
+          transaction.Commit();
+
+          this.dataOperations.RemoveAll( (x) => operationsToExecute.Contains(x) );
+
+        } catch {
+          transaction.Rollback();
+
+          throw;
+        }
       }
+    }
 
+
+    public void Rollback() {
       dataOperations.Clear();
     }
 
 
-    public void Watch(IStorable instance) {
+    public void Watch(IIdentifiable instance) {
 
     }
+
 
     public void Dispose() {
       Dispose(true);
@@ -171,7 +184,7 @@ namespace Empiria {
       if (dataOperations.Count == 0) {
         return;
       }
-      var systemOperations = dataOperations.Where((x) => x.IsSystemOperation)
+      var systemOperations = dataOperations.Where((x) => x.IsSystemOperation && x.DeferExecution == false)
                                            .ToList();
 
       if (systemOperations == null || systemOperations.Count == 0) {
