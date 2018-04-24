@@ -32,7 +32,7 @@ namespace Empiria.Ontology {
     ValueType,
   }
 
-  public abstract class MetaModelType : IStorable {
+  public abstract class MetaModelType : IIdentifiable {
 
     #region Fields
 

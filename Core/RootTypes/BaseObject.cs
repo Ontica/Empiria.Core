@@ -1,11 +1,11 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Ontology                          *
-*  Namespace : Empiria                                          License  : Please read LICENSE.txt file      *
-*  Type      : BaseObject                                       Pattern  : Layer Supertype                   *
+*  Module   : Base Types                                   Component : Ontology                              *
+*  Assembly : Empiria.Core.dll                             Pattern   : Layer supertype                       *
+*  Type     : BaseObject                                   License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : BaseObject is the root type of the object type hierarchy in Empiria Framework.                *
-*              All object types that uses the framework must be descendants of this abstract type.           *
+*  Summary  : BaseObject is the root type of the object type hierarchy in Empiria Framework.                 *
+*             All object types that uses the framework must be descendants of this abstract type.            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -14,14 +14,11 @@ using System.Data;
 
 using Empiria.DataTypes;
 using Empiria.Ontology;
-using Empiria.Reflection;
 
 namespace Empiria {
 
-  /// <summary>
-  /// BaseObject is the root type of the object type hierarchy in Empiria Framework.
-  /// All object types that uses the framework must be descendants of this abstract type.
-  /// </summary>
+  /// <summary>BaseObject is the root type of the object type hierarchy in Empiria Framework.
+  /// All object types that uses the framework must be descendants of this abstract type.</summary>
   public abstract class BaseObject : IStorable {
 
     #region Fields
@@ -30,8 +27,10 @@ namespace Empiria {
 
     private ObjectTypeInfo objectTypeInfo = null;
     private int objectId = 0;
-    private bool isDirty = true;
+    private bool isDirtyFlag = true;
     private bool isNewFlag = true;
+
+    public event EventHandler SaveEvent;
 
     #endregion Fields
 
@@ -46,6 +45,7 @@ namespace Empiria {
       this.OnInitialize();
     }
 
+
     protected BaseObject(ObjectTypeInfo powertype) {
       objectTypeInfo = powertype;
       if (objectTypeInfo.IsDataBound) {
@@ -55,6 +55,7 @@ namespace Empiria {
       this.OnInitialize();
     }
 
+
     //TODO: Review usage
     static protected T Create<T>(ObjectTypeInfo typeInfo) where T : BaseObject {
       T item = typeInfo.CreateObject<T>();
@@ -63,9 +64,11 @@ namespace Empiria {
       return item;
     }
 
+
     static public List<T> GetList<T>(string filter = "", string sort = "") where T : BaseObject {
       return OntologyData.GetBaseObjectList<T>(filter, sort);
     }
+
 
     static public T ParseDataRow<T>(DataRow dataRow) where T : BaseObject {
       ObjectTypeInfo baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
@@ -80,6 +83,7 @@ namespace Empiria {
       return BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow);
     }
 
+
     static public T ParseDataRowFull<T>(DataRow dataRow) where T : BaseObject {
       var baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
@@ -88,17 +92,20 @@ namespace Empiria {
       return BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow);
     }
 
+
     static protected T ParseEmpty<T>() where T : BaseObject {
       var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       return objectTypeInfo.GetEmptyInstance<T>().Clone<T>();
     }
 
+
     static protected T ParseFull<T>(int id) where T : BaseObject {
       var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       return BaseObject.ParseIdInternal<T>(objectTypeInfo, id, true);
     }
+
 
     static protected internal T ParseId<T>(int id) where T : BaseObject {
       var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
@@ -111,6 +118,7 @@ namespace Empiria {
       }
       return BaseObject.ParseIdInternal<T>(objectTypeInfo, id, false);
     }
+
 
     static internal T ParseIdInternal<T>(ObjectTypeInfo typeInfo,
                                          int id, bool parseFull) where T : BaseObject {
@@ -128,6 +136,7 @@ namespace Empiria {
       return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
     }
 
+
     static protected T ParseKey<T>(string namedKey) where T : BaseObject {
       var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
@@ -139,6 +148,7 @@ namespace Empiria {
 
       return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
     }
+
 
     static public List<T> ParseList<T>(DataTable dataTable) where T : BaseObject {
       if (dataTable == null || dataTable.Rows.Count == 0) {
@@ -170,17 +180,20 @@ namespace Empiria {
       }
     }
 
+
     static protected T ParseUnknown<T>() where T : BaseObject {
       var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       return objectTypeInfo.GetUnknownInstance<T>().Clone<T>();
     }
 
+
     protected static T TryParse<T>(string condition) where T : BaseObject {
       var sqlFilter = Empiria.Data.SqlFilter.Parse(condition);
 
       return TryParse<T>(sqlFilter);
     }
+
 
     protected static T TryParse<T>(IFilter condition) where T : BaseObject {
       var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
@@ -209,6 +222,7 @@ namespace Empiria {
       private set;
     }
 
+
     public int Id {
       get { return this.objectId; }
       internal set {
@@ -216,9 +230,11 @@ namespace Empiria {
       }
     }
 
+
     protected bool IsDirty {
-      get { return this.isDirty; }
+      get { return this.isDirtyFlag || this.IsNew; }
     }
+
 
     [Newtonsoft.Json.JsonIgnore]
     public bool IsEmptyInstance {
@@ -227,10 +243,12 @@ namespace Empiria {
       }
     }
 
+
     [Newtonsoft.Json.JsonIgnore]
     public bool IsNew {
       get { return (this.objectId == 0 || isNewFlag == true); }
     }
+
 
     protected internal bool IsSpecialCase {
       get {
@@ -238,6 +256,7 @@ namespace Empiria {
                 this.objectId == ObjectTypeInfo.UnknownInstanceId);
       }
     }
+
 
     protected bool IsUnknownInstance {
       get {
@@ -254,12 +273,14 @@ namespace Empiria {
       return (T) this.MemberwiseClone();
     }
 
+
     public override bool Equals(object obj) {
       if (obj == null || this.GetType() != obj.GetType()) {
         return false;
       }
       return base.Equals(obj) && (this.Id == ((BaseObject) obj).Id);
     }
+
 
     public bool Equals(BaseObject obj) {
       if (obj == null) {
@@ -268,13 +289,16 @@ namespace Empiria {
       return objectTypeInfo.Equals(obj.objectTypeInfo) && (this.Id == obj.Id);
     }
 
+
     public ObjectTypeInfo GetEmpiriaType() {
       return this.objectTypeInfo;
     }
 
+
     public override int GetHashCode() {
       return (this.objectTypeInfo.GetHashCode() ^ this.Id);
     }
+
 
     protected T GetLink<T>(string linkName) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
@@ -282,11 +306,13 @@ namespace Empiria {
       return association.GetLink<T>(this);
     }
 
+
     protected T GetLink<T>(string linkName, T defaultValue) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetLink<T>(this, defaultValue);
     }
+
 
     protected T GetInverseLink<T>(string linkName) where T : BaseObject {
       var association = TypeAssociationInfo.Parse(linkName);
@@ -294,17 +320,20 @@ namespace Empiria {
       return association.GetInverseLink<T>(this);
     }
 
+
     protected T GetInverseLink<T>(string linkName, T defaultValue) where T : BaseObject {
       var association = TypeAssociationInfo.Parse(linkName);
 
       return association.GetInverseLink<T>(this, defaultValue);
     }
 
+
     protected FixedList<T> GetLinks<T>(string linkName) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetLinks<T>(this);
     }
+
 
     protected FixedList<T> GetLinks<T>(string linkName, Comparison<T> sort) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
@@ -315,11 +344,13 @@ namespace Empiria {
       return list;
     }
 
+
     protected FixedList<T> GetLinks<T>(string linkName, TimeFrame period) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
 
       return association.GetLinks<T>(this, period);
     }
+
 
     protected FixedList<T> GetLinks<T>(string linkName, TimeFrame period,
                                        Comparison<T> sort) where T : BaseObject {
@@ -330,6 +361,7 @@ namespace Empiria {
 
       return list;
     }
+
 
     protected FixedList<T> GetLinks<T>(string linkName, Predicate<T> predicate) where T : BaseObject {
       TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
@@ -342,11 +374,18 @@ namespace Empiria {
       this.AttributesBag = new AttributesBag(this, row);
     }
 
+
+    protected void MarkAsDirty() {
+      this.isDirtyFlag = true;
+    }
+
+
     /// <summary>Raised for new and stored instances, after object creation and before
     /// databinding if their type is marked as IsDatabounded.</summary>
     protected virtual void OnInitialize() {
 
     }
+
 
     /// <summary>Raised after initialization and after databinding if their type is
     /// marked as IsDatabounded.</summary>
@@ -354,27 +393,36 @@ namespace Empiria {
 
     }
 
+
     /// <summary>Raised before Save() method is called and before objectId is created.</summary>
     protected virtual void OnBeforeSave() {
 
     }
+
 
     /// <summary>Raised when Save() method is called and after objectId is created.</summary>
     protected virtual void OnSave() {
       throw new NotImplementedException();
     }
 
+
     public void Save() {
       // Never save special case instances (e.g. Empty or Unknown)
       if (this.IsSpecialCase) {
         return;
       }
+
       if (this.objectId == 0) {
         this.objectId = OntologyData.GetNextObjectId(this.GetEmpiriaType());
       }
+
       this.OnBeforeSave();
       this.OnSave();
+      this.DispatchSaveEvent(EventArgs.Empty);
+
       this.isNewFlag = false;
+      this.isDirtyFlag = false;
+
       cache.Insert(this);
     }
 
@@ -386,6 +434,16 @@ namespace Empiria {
       this.GetEmpiriaType().DataBind(this, row);
     }
 
+
+    private void DispatchSaveEvent(EventArgs e) {
+      EventHandler saveRoot = this.SaveEvent;
+
+      if (saveRoot != null) {
+        saveRoot.Invoke(this, e);
+      }
+    }
+
+
     static private T ParseEmpiriaObject<T>(ObjectTypeInfo typeInfo, DataRow dataRow) where T : BaseObject {
       T item = typeInfo.CreateObject<T>();
       item.objectTypeInfo = typeInfo;
@@ -395,6 +453,7 @@ namespace Empiria {
       }
       item.OnLoadObjectData(dataRow);
       item.isNewFlag = false;
+      item.isDirtyFlag = false;
 
       if (typeInfo.UsesNamedKey) {
         cache.Insert(item, (string) dataRow[typeInfo.NamedIdFieldName]);
@@ -405,34 +464,6 @@ namespace Empiria {
     }
 
     #endregion Private methods
-
-    protected void AssociateOne(IStorable instance) {
-      throw new NotImplementedException();
-    }
-
-    protected void AssociateOne(IStorable instance, string associationName) {
-      throw new NotImplementedException();
-    }
-
-    protected void AssociateWith(IStorable instance) {
-      throw new NotImplementedException();
-    }
-
-    protected void AssociateWith(IStorable instance, string associationName) {
-      throw new NotImplementedException();
-    }
-
-    protected FixedList<T> GetAssociations<T>() where T : IStorable {
-      throw new NotImplementedException();
-    }
-
-    protected FixedList<T> GetAssociations<T>(string associationName) where T : IStorable {
-      throw new NotImplementedException();
-    }
-
-    protected FixedList<T> GetAssociations<T>(Predicate<T> predicate) where T : IStorable {
-      throw new NotImplementedException();
-    }
 
     protected void ReclassifyAs(ObjectTypeInfo newType) {
       Assertion.AssertObject(newType, "newType");

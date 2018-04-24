@@ -1,14 +1,5 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : JSON Data Services                *
-*  Namespace : Empiria.Json                                     License  : Please read LICENSE.txt file      *
-*  Type      : JsonObject                                       Pattern  : Standard Class                    *
-*                                                                                                            *
-*  Summary   : Allows data reading and parsing of JSON strings.                                              *
-*                                                                                                            *
-************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-/* Empiria Core  *********************************************************************************************
-*                                                                                                            *
 *  Module   : Json services                                Component : Json provider                         *
 *  Assembly : Empiria.Core.dll                             Pattern   : Methods library                       *
 *  Type     : JsonObject                                   License   : Please read LICENSE.txt file          *
@@ -296,7 +287,7 @@ namespace Empiria.Json {
         objectsList = this.Get<List<object>>(listPath, new List<object>());
       }
 
-      if (ObjectFactory.IsStorable(typeof(T))) {
+      if (ObjectFactory.IsIdentifiable(typeof(T))) {
 
         if (objectsList.Count == 0) {
           return new List<T>();

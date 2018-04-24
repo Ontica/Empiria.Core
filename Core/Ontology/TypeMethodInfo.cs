@@ -19,7 +19,7 @@ namespace Empiria.Ontology {
     None = 0,
   }
 
-  public sealed class TypeMethodInfo : IStorable {
+  public sealed class TypeMethodInfo : IIdentifiable {
 
     #region Fields
 

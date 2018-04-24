@@ -14,7 +14,7 @@ using Empiria.StateEnums;
 
 namespace Empiria.Ontology {
 
-  public sealed class ParameterInfo : IStorable {
+  public sealed class ParameterInfo : IIdentifiable {
 
     #region Fields
 

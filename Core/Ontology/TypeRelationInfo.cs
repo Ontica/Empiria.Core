@@ -24,7 +24,7 @@ namespace Empiria.Ontology {
   }
 
   /// <summary>Sealed class that represents an ontology type relation definition.</summary>
-  public abstract class TypeRelationInfo : IStorable {
+  public abstract class TypeRelationInfo : IIdentifiable {
 
     #region Abstract members
 
@@ -219,15 +219,6 @@ namespace Empiria.Ontology {
       this.typeRelationIdFieldName = (string) row["TypeRelationIdFieldName"];
       this.status = (EntityStatus) char.Parse((string) row["TypeRelationStatus"]);
       isInherited = (sourceType.Id != (int) row["SourceTypeId"]);
-
-      //defaultValue = this.Convert(row["DefaultValue"]);
-
-      //this.isSealed = (bool) row["IsSealed"];
-      //this.isRuleBased = (bool) row["IsRuleBased"];
-      //this.isReadOnly = (bool) row["IsReadOnly"];
-      //this.isHistorizable = (bool) row["IsHistorizable"];
-      //this.isKeyword = (bool) row["IsKeyword"];
-      //this.protectionMode = (EncryptionMode) row["ProtectionMode"];
     }
 
     #endregion Private methods

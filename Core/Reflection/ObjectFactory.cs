@@ -25,31 +25,43 @@ namespace Empiria.Reflection {
 
       if (convertToType == typeof(string)) {
         return (T) (object) System.Convert.ToString(value);
+
       } else if (convertToType == typeof(int)) {
         return (T) (object) System.Convert.ToInt32(value);
+
       } else if (convertToType == typeof(bool)) {
         return (T) (object) System.Convert.ToBoolean(value);
+
       } else if (convertToType == typeof(DateTime)) {
         return (T) (object) System.Convert.ToDateTime(value);
+
       } else if (convertToType == typeof(decimal)) {
         return (T) (object) System.Convert.ToDecimal(value);
+
       }
 
       if (convertToType == value.GetType()) {
         return (T) value;
+
       } else if (convertToType == typeof(object)) {
         return (T) value;
-      } else if (ObjectFactory.IsStorable(convertToType)) {
+
+      } else if (ObjectFactory.IsIdentifiable(convertToType)) {
+
         if (EmpiriaString.IsInteger(value.ToString())) {
           return ObjectFactory.InvokeParseMethod<T>(System.Convert.ToInt32(value));
         } else {
           return ObjectFactory.InvokeParseMethod<T>((string) value);
         }
+
       } else if (convertToType.IsEnum) {
         return ObjectFactory.ParseEnumValue<T>(value);
+
       } else if (convertToType == typeof(string) && value is IDictionary<string, object>) {
         object o = JsonObject.Parse((IDictionary<string, object>) value).ToString();
+
         return (T) o;
+
       } else {
         return (T) System.Convert.ChangeType(value, convertToType);
       }
@@ -153,8 +165,8 @@ namespace Empiria.Reflection {
       return type.FullName.StartsWith("Empiria.");
     }
 
-    static public bool IsStorable(Type type) {
-      return (type.GetInterface("Empiria.IStorable") != null);
+    static public bool IsIdentifiable(Type type) {
+      return (type.GetInterface("Empiria.IIdentifiable") != null);
     }
 
     static public bool IsValueObject(Type type) {

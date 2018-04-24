@@ -85,7 +85,7 @@ namespace Empiria.Ontology {
       return DataWriter.CreateId(typeRelationInfo.DataSource);
     }
 
-    static internal DataRow GetObjectLinkDataRow(TypeRelationInfo typeRelation, IStorable source) {
+    static internal DataRow GetObjectLinkDataRow(TypeRelationInfo typeRelation, IIdentifiable source) {
       DataTable table = GetObjectLinksTable(typeRelation, source);
 
       if (table.Rows.Count != 0) {
@@ -94,7 +94,7 @@ namespace Empiria.Ontology {
       return null;
     }
 
-    static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IStorable source) {
+    static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IIdentifiable source) {
       string sql = "SELECT [{TARGET.TYPE.TABLE}].* FROM [{TARGET.TYPE.TABLE}] INNER JOIN [{LINKS.TABLE}] " +
                    "ON [{TARGET.TYPE.TABLE}].[{TargetTableIdField}] = [{LINKS.TABLE}].[{TargetIdField}] " +
                    "WHERE [{LINKS.TABLE}].[{TypeRelationIdField}] = {TypeRelationId} AND " +
@@ -114,7 +114,7 @@ namespace Empiria.Ontology {
       return DataReader.GetDataTable(DataOperation.Parse(sql));
     }
 
-    static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IStorable source,
+    static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IIdentifiable source,
                                                   TimeFrame period) {
       string sql = "SELECT [{TARGET.TYPE.TABLE}].* FROM [{TARGET.TYPE.TABLE}] INNER JOIN [{LINKS.TABLE}] " +
                    "ON [{TARGET.TYPE.TABLE}].[{TargetTableIdField}] = [{LINKS.TABLE}].[{TargetIdField}] " +
@@ -158,7 +158,7 @@ namespace Empiria.Ontology {
     }
 
 
-    static internal DataTable GetInverseObjectLinksTable(TypeRelationInfo typeRelation, IStorable target) {
+    static internal DataTable GetInverseObjectLinksTable(TypeRelationInfo typeRelation, IIdentifiable target) {
       string sql = "SELECT [{SOURCE.TYPE.TABLE}].* FROM [{SOURCE.TYPE.TABLE}] INNER JOIN [{LINKS.TABLE}] " +
              "ON [{SOURCE.TYPE.TABLE}].[{SourceTableIdField}] = [{LINKS.TABLE}].[{SourceIdField}] " +
              "WHERE [{LINKS.TABLE}].[{TypeRelationIdField}] = {TypeRelationId} AND " +
@@ -253,7 +253,7 @@ namespace Empiria.Ontology {
       return null;
     }
 
-    static internal void WriteLink(TypeAssociationInfo assocationInfo, IStorable source, IStorable target) {
+    static internal void WriteLink(TypeAssociationInfo assocationInfo, IIdentifiable source, IIdentifiable target) {
       DataOperation operation = DataOperation.Parse("writeObjectLink", GetNextRelationId(assocationInfo),
                                                     assocationInfo.Id, source.Id, target.Id, 0, String.Empty, String.Empty,
                                                     ExecutionServer.CurrentUserId, "A", DateTime.Today,
