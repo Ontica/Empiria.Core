@@ -12,9 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.EnterpriseServices;
-using System.Threading;
 
-using Empiria.Data.Integration;
 using Empiria.Security;
 
 namespace Empiria.Data {
@@ -23,23 +21,12 @@ namespace Empiria.Data {
   /// or asynchronous mode. Instances are returned by the DataWriter.CreateContext() method. </summary>
   public sealed class DataWriterContext : IUnitOfWork {
 
-    #region Delegates
-
-    private delegate void UpdateMethodDelegate();
-
-    #endregion Delegates
-
     #region Fields
-
-    private ManualResetEvent transactionCommitEvent = new ManualResetEvent(false);
-    private UpdateMethodDelegate updateDelegate = null;
-    private IAsyncResult asyncResult = null;
 
     private DataOperationList internalOp = null;
     private DataOperationList transactionalOp = null;
+
     private Transaction currentTransaction = null;
-    private bool wasUpdated = false;
-    private bool disposed = false;
 
     #endregion Fields
 
@@ -66,12 +53,27 @@ namespace Empiria.Data {
 
     public int Count {
       get {
-        int count = 0;
+        int count = internalOp.Count;
+
         if (IsInTransaction) {
-          count = transactionalOp.Count;
+          count += transactionalOp.Count;
         }
-        count += internalOp.Count;
+
         return count;
+      }
+    }
+
+
+    public bool IsInTransaction {
+      get {
+        return (currentTransaction != null);
+      }
+    }
+
+
+    internal bool IsInOSTransaction {
+      get {
+        return ContextUtil.IsInTransaction;
       }
     }
 
@@ -86,35 +88,15 @@ namespace Empiria.Data {
     }
 
 
+    internal ITransaction OSTransaction {
+      get {
+        return (ITransaction) ContextUtil.Transaction;
+      }
+    }
+
+
     public DateTime Timestamp {
       get;
-    }
-
-
-    public bool IsInTransaction {
-      get { return (currentTransaction != null); }
-    }
-
-    #endregion Public properties
-
-    #region Internal properties
-
-    internal bool AsynchronousUpdate {
-      get {
-        return (asyncResult != null);
-      }
-    }
-
-
-    internal bool IsInOSTransaction {
-      get {
-        return ContextUtil.IsInTransaction;
-      }
-    }
-
-
-    internal ITransaction OSTransaction {
-      get { return (ITransaction) ContextUtil.Transaction; }
     }
 
 
@@ -124,21 +106,7 @@ namespace Empiria.Data {
       }
     }
 
-
-    internal ManualResetEvent TransactionCommitEvent {
-      get {
-        return transactionCommitEvent;
-      }
-    }
-
-
-    internal bool WasUpdated {
-      get {
-        return wasUpdated;
-      }
-    }
-
-    #endregion Internal properties
+    #endregion Public properties
 
     #region Public methods
 
@@ -146,22 +114,13 @@ namespace Empiria.Data {
       if (operation == null) {
         return;
       }
+
       if (IsInTransaction) {
         transactionalOp.Add(operation);
-
-        if (DataIntegrationRules.HasPublishRule(operation.SourceName)) {
-          transactionalOp.Add(DataPublisher.GetPublishOperations(this, operation));
-        }
-
       } else {
-
         internalOp.Add(operation);
-
-        if (DataIntegrationRules.HasPublishRule(operation.SourceName)) {
-          internalOp.Add(DataPublisher.GetPublishOperations(this, operation));
-        }
-
       }
+
     }
 
 
@@ -174,22 +133,12 @@ namespace Empiria.Data {
 
         foreach (DataOperation operation in operationList) {
           transactionalOp.Add(operation);
-
-          if (DataIntegrationRules.HasPublishRule(operation.SourceName)) {
-            internalOp.Add(DataPublisher.GetPublishOperations(this, operation));
-          }
-
         }
 
       } else {
 
         foreach (DataOperation operation in operationList) {
-
           internalOp.Add(operation);
-
-          if (DataIntegrationRules.HasPublishRule(operation.SourceName)) {
-            internalOp.Add(DataPublisher.GetPublishOperations(this, operation));
-          }
         }
 
       } // if
@@ -205,21 +154,12 @@ namespace Empiria.Data {
 
         foreach (DataOperation operation in operationList) {
           transactionalOp.Add(operation);
-
-          if (DataIntegrationRules.HasPublishRule(operation.SourceName)) {
-            internalOp.Add(DataPublisher.GetPublishOperations(token, this, operation));
-          }
-
         }
 
       } else {
 
         foreach (DataOperation operation in operationList) {
           internalOp.Add(operation);
-
-          if (DataIntegrationRules.HasPublishRule(operation.SourceName)) {
-            internalOp.Add(DataPublisher.GetPublishOperations(token, this, operation));
-          }
         }
 
       }  // if
@@ -233,9 +173,8 @@ namespace Empiria.Data {
 
     public Transaction BeginTransaction(IsolationLevel isolationLevel) {
       if (IsInTransaction) {
-        currentTransaction.Dispose();
-
-        wasUpdated = false;
+        throw new Exception("Another transaction was started." +
+                            "DataWriterContext can't handle nested transactions.");
       }
 
       Transaction transaction = new Transaction(this, isolationLevel);
@@ -246,17 +185,6 @@ namespace Empiria.Data {
     }
 
 
-    public IAsyncResult BeginUpdate(AsyncCallback callback, object state) {
-      updateDelegate = new UpdateMethodDelegate(this.Commit);
-
-      wasUpdated = true;
-
-      asyncResult = updateDelegate.BeginInvoke(callback, state);
-
-      return asyncResult;
-    }
-
-
     public void Close() {
       Dispose(true);
 
@@ -264,35 +192,40 @@ namespace Empiria.Data {
     }
 
 
-    public void Commit() {
+    public void Update() {
+      var connections = new Dictionary<string, IDbConnection>();
+
       try {
-        wasUpdated = true;
 
-        if (IsInTransaction && AsynchronousUpdate) {
+        CreateConnections(connections);
 
-          if (TransactionCommitEvent.WaitOne(TimeSpan.FromSeconds(2), false)) { // Waits two seconds for transaction.Commit()
+        IDbConnection connection = null;
 
-            currentTransaction.PerformCommit();
+        string lastSource = String.Empty;
 
-            UpdateInternalOperations();
+        foreach (var operation in internalOp) {
 
-          } else {
-            throw new EmpiriaDataException(EmpiriaDataException.Msg.AsynchronousCommitNotCalled);
+          if (lastSource != operation.DataSource.Source) {
 
+            lastSource = operation.DataSource.Source;
+
+            connection = connections[lastSource];
           }
 
-        } else {
+          DataWriter.Execute(connection, operation);
 
-          UpdateInternalOperations();
-
+          internalOp.Remove(operation);
         }
+
+        internalOp.Clear();
 
       } catch {
 
-        wasUpdated = false;
-
         throw;
 
+      } finally {
+
+        CloseConnections(connections);
       }
     }
 
@@ -302,27 +235,16 @@ namespace Empiria.Data {
 
 
     public void EndTransaction() {
-      if (IsInTransaction) {
-        transactionalOp.Clear();
+      Assertion.Assert(IsInTransaction,
+                       new EmpiriaDataException(EmpiriaDataException.Msg.DataContextOutOfTransaction));
 
-        currentTransaction.Dispose();
+      transactionalOp.Clear();
 
-      } else {
-
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.DataContextOutOfTransaction);
-
-      }
+      currentTransaction.Dispose();
     }
 
 
-    public void EndUpdate(IAsyncResult asyncResult) {
-      wasUpdated = false;
-
-      updateDelegate.EndInvoke(asyncResult);
-    }
-
-
-    public void Rollback() {
+    public void Clear() {
       if (IsInTransaction) {
         transactionalOp.Clear();
       }
@@ -373,30 +295,22 @@ namespace Empiria.Data {
     }
 
 
+    private bool _disposed = false;
+
     private void Dispose(bool disposing) {
-      if (disposed) {
+      if (_disposed) {
         return;
       }
 
-      disposed = true;
+      _disposed = true;
 
       try {
-
-        if (IsInTransaction && AsynchronousUpdate) {
-          while (!asyncResult.IsCompleted) {
-            // wait until transaction ends
-          }
-        }
-
         if (!disposing) {
 
           if (IsInTransaction) {
             transactionalOp.Clear();
 
             currentTransaction.Dispose();
-
-            TransactionCommitEvent.Close();
-
           }
 
           internalOp.Clear();
@@ -407,51 +321,6 @@ namespace Empiria.Data {
         // no-op
 
       }
-    }
-
-
-    private int UpdateInternalOperations() {
-      Dictionary<string, IDbConnection> connections = new Dictionary<string, IDbConnection>();
-      string lastSource = String.Empty;
-      int counter = 0;
-
-      try {
-
-        CreateConnections(connections);
-
-        IDbConnection connection = null;
-
-        for (int i = 0, count = internalOp.Count; i < count; i++) {
-
-          DataOperation operation = internalOp[i];
-
-          if (operation.DeferExecution == true) {
-            continue;
-          }
-
-          if (lastSource != operation.DataSource.Source) {
-
-            lastSource = operation.DataSource.Source;
-
-            connection = connections[lastSource];
-          }
-
-          counter += DataWriter.Execute(connection, operation);
-          internalOp.Remove(operation);
-        }
-
-        internalOp.Clear();
-
-      } catch {
-
-        throw;
-
-      } finally {
-
-        CloseConnections(connections);
-      }
-
-      return counter;
     }
 
     #endregion Private methods

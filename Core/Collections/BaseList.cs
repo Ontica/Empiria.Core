@@ -259,6 +259,16 @@ namespace Empiria.Collections {
       }
     }
 
+    protected int RemoveAll(Predicate<T> match) {
+      if (isSynchronized) {
+        lock (items) {
+          return items.RemoveAll(match);
+        }
+      } else {
+        return items.RemoveAll(match);
+      }
+    }
+
     protected T RemoveAt(int index) {
       if (isSynchronized) {
         lock (items) {
@@ -300,16 +310,6 @@ namespace Empiria.Collections {
         }
       } else {
         items.Reverse();
-      }
-    }
-
-    protected int RemoveAll(Predicate<T> match) {
-      if (isSynchronized) {
-        lock (items) {
-          return items.RemoveAll(match);
-        }
-      } else {
-        return items.RemoveAll(match);
       }
     }
 

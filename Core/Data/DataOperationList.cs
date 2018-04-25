@@ -4,7 +4,7 @@
 *  Namespace : Empiria.Data                                     License  : Please read LICENSE.txt file      *
 *  Type      : DataOperationList                                Pattern  : List Class                        *
 *                                                                                                            *
-*  Summary   : Represents a synchronized and serializable list of Operation type objects.                    *
+*  Summary   : Represents a list of DataOperation objects.                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,6 +13,7 @@ using Empiria.Collections;
 
 namespace Empiria.Data {
 
+  /// <summary>Represents a list of DataOperation objects.</summary>
   public sealed class DataOperationList : BaseList<DataOperation> {
 
     #region Constructors and parsers
@@ -36,12 +37,14 @@ namespace Empiria.Data {
     #region Public properties
 
     public new DataOperation this[int index] {
-      get { return (DataOperation) base[index]; }
+      get {
+        return base[index];
+      }
     }
+
 
     public string Name {
       get;
-      private set;
     }
 
     #endregion Public properties
@@ -49,18 +52,24 @@ namespace Empiria.Data {
     #region Public methods
 
     public new void Add(DataOperation operation) {
-      if (operation != null) {
-        base.Add(operation);
+      if (operation == null) {
+        return;
+      }
+
+      base.Add(operation);
+    }
+
+
+    public void Add(DataOperationList operationList) {
+      if (operationList == null) {
+        return;
+      }
+
+      for (int i = 0, j = operationList.Count; i < j; i++) {
+        base.Add(operationList[i]);
       }
     }
 
-    public void Add(DataOperationList operationList) {
-      if (operationList != null) {
-        for (int i = 0, j = operationList.Count; i < j; i++) {
-          base.Add(operationList[i]);
-        }
-      }
-    }
 
     internal void Add(IEnumerable<DataOperation> items) {
       foreach (var item in items) {
@@ -68,43 +77,31 @@ namespace Empiria.Data {
       }
     }
 
+
     public new void Clear() {
       base.Clear();
     }
 
-    public void Execute(string contextName) {
-      using (DataWriterContext context = new DataWriterContext(contextName)) {
-        if (this.Count > 1) {
-          ITransaction transaction = context.BeginTransaction();
-          context.Add(this);
-          context.Update();
-          transaction.Commit();
-        } else if (this.Count == 1) {
-          context.Add(this);
-          context.Update();
-        }
-      }
+
+    public new void Remove(DataOperation operation) {
+      base.Remove(operation);
     }
 
-    public new void RemoveLast(int count) {
-      base.RemoveLast(count);
+
+    internal new int RemoveAll(Predicate<DataOperation> match) {
+      return base.RemoveAll(match);
     }
 
-    public new void RemoveRange(int index, int count) {
-      base.RemoveRange(index, count);
-    }
-
-    public new void Reverse() {
-      base.Reverse();
-    }
 
     public string[] ToMessagesArray() {
       string[] messages = new string[this.Count + 1];
 
       messages[0] = this.Name;
+
       for (int i = 1; i < this.Count; i++) {
         messages[i] = this[i].ToMessage();
       }
+
       return messages;
     }
 

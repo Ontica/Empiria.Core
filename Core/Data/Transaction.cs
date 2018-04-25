@@ -29,7 +29,6 @@ namespace Empiria.Data {
     private bool wasCommited = false;
     private bool wasRolledBack = false;
     private bool disposed = false;
-    private bool working = false;
 
     #endregion Fields
 
@@ -65,33 +64,45 @@ namespace Empiria.Data {
 
     #region Public methods
 
+
     public int Commit() {
+      if (wasCommited == true) {
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.TransactionAlreadyCommited);
+      }
+
+      int counter = 0;
 
       try {
-        if (context.AsynchronousUpdate) {
+        operations = context.TransactionalOperations;
 
-          context.TransactionCommitEvent.Set();
+        counter = PrepareTransactions();
 
-          return 0;
+        CommitTransactions();
 
-        } else {
-          return PerformCommit();
-        }
+        operations.Clear();
+
+        wasCommited = true;
+
+        return counter;
 
       } catch (Exception exception) {
-        exception = exception.GetBaseException();
+        wasCommited = false;
 
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CommitFails,
                                        exception, exception.Message);
 
+      } finally {
+        CleanResources();
       }
     }
+
 
     public void Dispose() {
       Dispose(true);
 
       GC.SuppressFinalize(this);
     }
+
 
     public void Rollback() {
       try {
@@ -137,51 +148,6 @@ namespace Empiria.Data {
     }
 
     #endregion Public methods
-
-    #region Internal methods
-
-    internal int PerformCommit() {
-      if (wasCommited == true) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.TransactionAlreadyCommited);
-      }
-
-      int counter = 0;
-
-      if (!context.WasUpdated) {
-        return 0;
-      }
-
-      try {
-        working = true;
-
-        operations = context.TransactionalOperations;
-
-        counter = PrepareTransactions();
-
-        CommitTransactions();
-
-        operations.Clear();
-
-        wasCommited = true;
-        wasRolledBack = false;
-
-        return counter;
-
-      } catch (Exception innerException) {
-        wasCommited = false;
-        wasRolledBack = false;
-
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CommitFails,
-                                       innerException, innerException.Source);
-
-      } finally {
-        CleanResources();
-
-        working = false;
-      }
-    }
-
-    #endregion Internal methods
 
     #region Private methods
 
@@ -296,17 +262,8 @@ namespace Empiria.Data {
 
       try {
 
-        if (context.AsynchronousUpdate) {
-          while (working) {
-            // waiting
-          }
-        }
-
         CleanResources();
-
-        if (disposing) {
-          operations.Clear();
-        }
+        operations.Clear();
 
       } catch (Exception innerException) {
         EmpiriaLog.Error(innerException);
@@ -328,10 +285,6 @@ namespace Empiria.Data {
         for (int i = 0, count = operations.Count; i < count; i++) {
           DataOperation operation = operations[i];
 
-          if (operation.DeferExecution == true) {
-            continue;
-          }
-
           if (lastSource != operation.DataSource.Source) {
             lastSource = operation.DataSource.Source;
 
@@ -349,10 +302,6 @@ namespace Empiria.Data {
 
         for (int i = 0, count = operations.Count; i < count; i++) {
           DataOperation operation = operations[i];
-
-          if (operation.DeferExecution == true) {
-            continue;
-          }
 
           if (lastSource != operation.DataSource.Source) {
             lastSource = operation.DataSource.Source;

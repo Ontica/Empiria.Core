@@ -65,12 +65,6 @@ namespace Empiria {
       return ExecutionServer.ContextItems.GetItem<StorageContext>(STORAGE_CONTEXT_KEY);
     }
 
-    //static public StorageContext Open(string contextName) {
-    //  if (!IsStorageContextDefined) {
-    //    ExecutionServer.ContextItems.SetItem(STORAGE_CONTEXT_KEY, new StorageContext(contextName));
-    //  }
-    //  return ExecutionServer.ContextItems.GetItem<StorageContext>(STORAGE_CONTEXT_KEY);
-    //}
 
     ~StorageContext() {
       Dispose(false);
@@ -112,46 +106,45 @@ namespace Empiria {
     }
 
 
+    public void Close() {
+      if (IsStorageContextDefined) {
+        ExecutionServer.ContextItems.Remove(STORAGE_CONTEXT_KEY);
+      }
+    }
+
+
     internal static void EnsureIsStorageContextDefined() {
       Assertion.Assert(StorageContext.IsStorageContextDefined,
                        new Exception("Programming Error: An opened StorageContext is required."));
     }
 
 
-    public void Commit() {
-      if (dataOperations.Count == 0) {
+    public void Update() {
+      if (this.dataOperations.Count == 0) {
         return;
       }
 
       using (DataWriterContext writerContext = DataWriter.CreateContext(this.Name)) {
         ITransaction transaction = writerContext.BeginTransaction();
 
-        var operationsToExecute = new DataOperationList(this.Name);
+        writerContext.Add(this.dataOperations);
 
-        operationsToExecute.Add(dataOperations.Where((x) => x.DeferExecution == false));
-
-        writerContext.Add(operationsToExecute);
-
-        writerContext.Commit();
+        writerContext.Update();
 
         try {
           transaction.Commit();
-
-          this.dataOperations.RemoveAll( (x) => operationsToExecute.Contains(x) );
 
         } catch {
           transaction.Rollback();
 
           throw;
+
+        } finally {
+
+          this.dataOperations.Clear();
         }
       }
     }
-
-
-    public void Rollback() {
-      dataOperations.Clear();
-    }
-
 
     public void Watch(IIdentifiable instance) {
 
@@ -163,20 +156,22 @@ namespace Empiria {
       GC.SuppressFinalize(this);
     }
 
+
     #endregion Public methods
 
     #region Private methods
 
     private bool _disposed = false;
     private void Dispose(bool disposing) {
+
       if (_disposed) {
         return;
       }
-      if (disposing) {
-        TryDumpPendingSystemDataOperations();
-      }
 
-      // Free unmanaged
+      this.TryDumpPendingSystemDataOperations();
+      this.dataOperations.Clear();
+      this.Close();
+
       _disposed = true;
     }
 
@@ -184,7 +179,8 @@ namespace Empiria {
       if (dataOperations.Count == 0) {
         return;
       }
-      var systemOperations = dataOperations.Where((x) => x.IsSystemOperation && x.DeferExecution == false)
+
+      var systemOperations = dataOperations.Where((x) => x.IsSystemOperation)
                                            .ToList();
 
       if (systemOperations == null || systemOperations.Count == 0) {

@@ -69,16 +69,16 @@ namespace Empiria.Data {
     static public void Execute(DataOperation operation) {
       Assertion.AssertObject(operation, "operation");
 
-      if (StorageContext.IsStorageContextDefined) {
+      if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
+
+        ExecuteExternal(operation);
+
+      } else if (StorageContext.IsStorageContextDefined) {
 
         StorageContext.ActiveStorageContext.Add(operation);
 
-        return;
-      }
-
-      if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
-        ExecuteExternal(operation);
       } else {
+
         ExecuteInternal(operation);
       }
 
@@ -94,36 +94,18 @@ namespace Empiria.Data {
     static public void Execute(DataOperationList operationList) {
       Assertion.AssertObject(operationList, "operationList");
 
-      if (StorageContext.IsStorageContextDefined) {
-        StorageContext.ActiveStorageContext.Add(operationList);
-
-        return;
+      foreach (var operation in operationList) {
+        Execute(operation);
       }
 
-      ExecuteInternal(operationList);
     }
 
-
-    static public void ExecuteWhenRootSaved(DataOperation operation,
-                                            IAggregateRoot root) {
-      Assertion.AssertObject(operation, "operation");
-      Assertion.AssertObject(root, "root");
-
-      StorageContext.EnsureIsStorageContextDefined();
-
-      operation.DeferExecutionUntilSaveRootEvent(root);
-
-      StorageContext.ActiveStorageContext.Add(operation);
-
-    }
 
     #endregion Public methods
 
     #region Internal methods
 
     static internal T Execute<T>(DataOperation operation) {
-      EnsureNoDeferedExecution(operation);
-
       T result = DataWriter.ExecuteInternal<T>(operation);
 
       WriteDataLog(operation);
@@ -137,8 +119,6 @@ namespace Empiria.Data {
 
 
     static internal int Execute(IDbConnection connection, DataOperation operation) {
-      EnsureNoDeferedExecution(operation);
-
       IDataHandler handler = GetDataHander(operation);
 
       return handler.Execute(connection, operation);
@@ -146,8 +126,6 @@ namespace Empiria.Data {
 
 
     static internal int Execute(IDbTransaction transaction, DataOperation operation) {
-      EnsureNoDeferedExecution(operation);
-
       IDataHandler handler = GetDataHander(operation);
 
       return handler.Execute((System.Data.SqlClient.SqlTransaction) transaction, operation);
@@ -181,7 +159,7 @@ namespace Empiria.Data {
         ITransaction transaction = context.BeginTransaction();
 
         context.Add(token, operationList);
-        context.Commit();
+        context.Update();
 
         return transaction.Commit();
       }
@@ -189,8 +167,6 @@ namespace Empiria.Data {
 
 
     static internal int ExecuteInternal(DataOperation operation) {
-      EnsureNoDeferedExecution(operation);
-
       IDataHandler handler = GetDataHander(operation);
 
       return handler.Execute(operation);
@@ -199,8 +175,6 @@ namespace Empiria.Data {
 
 
     static private T ExecuteInternal<T>(DataOperation operation) {
-      EnsureNoDeferedExecution(operation);
-
       IDataHandler handler = GetDataHander(operation);
 
       return handler.Execute<T>(operation);
@@ -208,9 +182,6 @@ namespace Empiria.Data {
 
 
     static internal void ExecuteInternal(DataOperationList operationList) {
-      Assertion.Assert(operationList.CountAll((x) => x.DeferExecution) == 0,
-                      $"operationList has one or more operations marked as DeferExecution.");
-
       if (operationList.Count == 0) {
         return;
       }
@@ -226,8 +197,6 @@ namespace Empiria.Data {
         ITransaction transaction = context.BeginTransaction();
 
         context.Add(operationList);
-
-        context.Commit();
 
         transaction.Commit();
       }
@@ -259,14 +228,6 @@ namespace Empiria.Data {
 
       return await apiClient.GetAsync<int>("Empiria.IdGenerator.NextTableRowId", sourceName)
                             .ConfigureAwait(false);
-    }
-
-
-    static private void EnsureNoDeferedExecution(DataOperation operation) {
-      Assertion.AssertObject(operation, "operation");
-
-      Assertion.Assert(!operation.DeferExecution,
-                      $"{operation.Name} can't be executed because is marked with DeferExecution flag.");
     }
 
 

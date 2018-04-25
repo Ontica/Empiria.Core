@@ -30,8 +30,7 @@ namespace Empiria.Data {
 
     #region Constructors and parsers
 
-    private DataOperation(DataSource dataSource, string sourceName)
-      : base(sourceName) {
+    private DataOperation(DataSource dataSource, string sourceName) : base(sourceName) {
       this.dataSource = dataSource;
       this.sourceText = GetSourceText(sourceName);
     }
@@ -103,15 +102,12 @@ namespace Empiria.Data {
       }
     }
 
-    public bool DeferExecution {
-      get;
-      private set;
-    }
 
     public int ExecutionTimeout {
       get { return executionTimeout; }
       set { executionTimeout = value; }
     }
+
 
     public string SourceName {
       get {
@@ -160,16 +156,6 @@ namespace Empiria.Data {
     #endregion Public methods
 
     #region Private methods
-
-
-    internal void DeferExecutionUntilSaveRootEvent(IAggregateRoot rootInstance) {
-      this.DeferExecution = true;
-
-      rootInstance.SaveAllCalled += (object sender, EventArgs e) => {
-        this.DeferExecution = false;
-        EmpiriaLog.Debug("SaveAll called was triggered.");
-      };
-    }
 
 
     private void FillParameters(IDbCommand command) {
