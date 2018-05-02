@@ -35,18 +35,31 @@ namespace Empiria.DataTypes {
     }
 
     static public Duration Parse(string value) {
+      if (String.IsNullOrWhiteSpace(value)) {
+        return Duration.Empty;
+      }
+
       return new Duration(value);
     }
 
     static public Duration Empty {
       get {
-        return new Duration(String.Empty);
+        var emptyDuration = new Duration(String.Empty);
+
+        emptyDuration.IsEmptyInstance = true;
+
+        return emptyDuration;
       }
     }
 
     #endregion Constructors and parsers
 
     #region Properties
+
+    public bool IsEmptyInstance {
+      get;
+      private set;
+    } = false;
 
     public DurationType DurationType {
       get;
