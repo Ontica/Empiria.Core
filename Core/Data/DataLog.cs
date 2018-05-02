@@ -67,11 +67,11 @@ namespace Empiria.Data {
         return;
       }
 
-      if (!EmpiriaString.StartsWith(this.DataOperation.Name, "write", "apd", "do")) {
+      if (!EmpiriaString.StartsWith(this.DataOperation.Name, "write", "apd", "do", "set")) {
         return;
       }
 
-      var op = Data.DataOperation.Parse("apdDataLog", this.SessionId, this.Timestamp,
+      var op = DataOperation.Parse("apdDataLog", this.SessionId, this.Timestamp,
                                    this.DataOperation.DataSource.Name, this.DataOperation.Name,
                                    this.DataOperation.ParametersAsJson(), this.ObjectId);
 
