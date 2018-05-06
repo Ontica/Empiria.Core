@@ -76,27 +76,28 @@ namespace Empiria.DataTypes {
 
     #region Methods
 
-    private DurationType GetDurationType(string duration) {
-      duration = duration.ToLowerInvariant();
+    private DurationType GetDurationType(string durationType) {
+      durationType = durationType.ToLowerInvariant();
 
-      if (duration == "hours" || duration == "hour") {
+      if (durationType == "hours" || durationType == "hour") {
         return DurationType.Hours;
 
-      } else if (duration == "days" || duration == "day") {
+      } else if (durationType == "days" || durationType == "day") {
         return DurationType.Days;
 
-      } else if (duration == "work-days" || duration == "work-day" ||
-                 duration == "working-days" || duration == "working-day") {
+      } else if (durationType == "work-days" || durationType == "work-day" ||
+        durationType == "working-days" || durationType == "working-day") {
         return DurationType.WorkingDays;
 
-      } else if (duration == "months" || duration == "month") {
+
+      } else if (durationType == "months" || durationType == "month") {
         return DurationType.Months;
 
-      } else if (duration == "years" || duration == "year") {
+      } else if (durationType == "years" || durationType == "year") {
         return DurationType.Years;
 
       } else {
-        throw Assertion.AssertNoReachThisCode();
+        throw Assertion.AssertNoReachThisCode($"Unrecognized duration type '{durationType}'.");
 
       }
     }
