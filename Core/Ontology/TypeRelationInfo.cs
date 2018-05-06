@@ -120,6 +120,12 @@ namespace Empiria.Ontology {
       get { return id; }
     }
 
+    string IIdentifiable.UID {
+      get {
+        return this.Name;
+      }
+    }
+
     public bool IsHistorizable {
       get { return isHistorizable; }
     }

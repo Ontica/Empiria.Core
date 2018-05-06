@@ -67,6 +67,13 @@ namespace Empiria.Security {
       private set;
     }
 
+
+    string IIdentifiable.UID {
+      get {
+        return this.Token;
+      }
+    }
+
     public string RefreshToken {
       get;
       private set;

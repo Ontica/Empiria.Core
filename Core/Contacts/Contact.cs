@@ -47,12 +47,6 @@ namespace Empiria.Contacts {
 
     #region Public properties
 
-    [DataField("ContactUID")]
-    public string UID {
-      get;
-      private set;
-    }
-
     [Newtonsoft.Json.JsonIgnore]
     public TempAddress Address {
       get {

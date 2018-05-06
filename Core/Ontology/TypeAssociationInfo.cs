@@ -136,7 +136,7 @@ namespace Empiria.Ontology {
       }
     }
 
-    internal T GetLink<T>(BaseObject source) where T : BaseObject {
+    public T GetLink<T>(BaseObject source) where T : BaseObject {
       DataRow row = OntologyData.GetObjectLinkDataRow(this, source);
 
       if (row != null) {
@@ -147,7 +147,7 @@ namespace Empiria.Ontology {
       }
     }
 
-    internal T GetLink<T>(BaseObject source, T defaultValue) where T : BaseObject {
+    public T GetLink<T>(BaseObject source, T defaultValue) where T : BaseObject {
       DataRow row = OntologyData.GetObjectLinkDataRow(this, source);
 
       if (row != null) {
@@ -158,7 +158,7 @@ namespace Empiria.Ontology {
     }
 
     // Object 1..* Object relation
-    internal FixedList<T> GetLinks<T>(BaseObject source) where T : BaseObject {
+    public FixedList<T> GetLinks<T>(BaseObject source) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
       List<T> list = BaseObject.ParseList<T>(table);
@@ -167,7 +167,7 @@ namespace Empiria.Ontology {
     }
 
     // Object 1..* Object relation (in time period)
-    internal FixedList<T> GetLinks<T>(BaseObject source, TimeFrame period) where T : BaseObject {
+    public FixedList<T> GetLinks<T>(BaseObject source, TimeFrame period) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source, period);
 
       List<T> list = BaseObject.ParseList<T>(table);
@@ -176,7 +176,7 @@ namespace Empiria.Ontology {
     }
 
     // Object 1..* Object relation (filtered by predicate)
-    internal FixedList<T> GetLinks<T>(BaseObject source, Predicate<T> predicate) where T : BaseObject {
+    public FixedList<T> GetLinks<T>(BaseObject source, Predicate<T> predicate) where T : BaseObject {
       DataTable table = OntologyData.GetObjectLinksTable(this, source);
 
       List<T> list = new List<T>(table.Rows.Count);

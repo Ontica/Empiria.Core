@@ -91,6 +91,12 @@ namespace Empiria.Ontology {
       get { return id; }
     }
 
+    string IIdentifiable.UID {
+      get {
+        return this.Name;
+      }
+    }
+
     public bool IsArray {
       get { return isArray; }
       set { isArray = value; }

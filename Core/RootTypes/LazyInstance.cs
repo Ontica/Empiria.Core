@@ -10,12 +10,11 @@
 using System;
 
 using Empiria.Ontology;
-using Empiria.Reflection;
 
 namespace Empiria {
 
   /// <summary>Performs lazy loading of BaseObject instances of types.</summary>
-  public class LazyInstance<T> : IIdentifiable where T : BaseObject {
+  public class LazyInstance<T> where T : BaseObject {
 
     #region Fields
 

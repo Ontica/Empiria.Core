@@ -223,10 +223,15 @@ namespace Empiria {
 
     public int Id {
       get { return this.objectId; }
-      internal set {
+      private set {
         this.objectId = value;
       }
     }
+
+    public virtual string UID {
+      get;
+      private set;
+    } = String.Empty;
 
 
     protected bool IsDirty {
@@ -411,16 +416,30 @@ namespace Empiria {
       }
 
       if (this.objectId == 0) {
-        this.objectId = OntologyData.GetNextObjectId(this.GetEmpiriaType());
+        this.objectId = OntologyData.GetNextObjectId(this.objectTypeInfo);
       }
 
       this.OnBeforeSave();
+
+      if (String.IsNullOrWhiteSpace(this.UID)) {
+        if (this.objectTypeInfo.UsesNamedKey) {
+          this.UID = Guid.NewGuid().ToString();
+        } else {
+          this.UID = this.objectId.ToString();
+        }
+      }
+
       this.OnSave();
 
       this.isNewFlag = false;
       this.isDirtyFlag = false;
 
-      cache.Insert(this);
+
+      if (this.objectTypeInfo.UsesNamedKey) {
+        cache.Insert(this, this.UID);
+      } else {
+        cache.Insert(this);
+      }
     }
 
     #endregion Public methods
@@ -436,15 +455,19 @@ namespace Empiria {
       T item = typeInfo.CreateObject<T>();
       item.objectTypeInfo = typeInfo;
       item.objectId = (int) dataRow[typeInfo.IdFieldName];
+      if (typeInfo.UsesNamedKey) {
+        item.UID = (string) dataRow[typeInfo.NamedIdFieldName];
+      }
+
       if (typeInfo.IsDataBound) {
         item.DataBind(dataRow);
       }
-      item.OnLoadObjectData(dataRow);
       item.isNewFlag = false;
+      item.OnLoadObjectData(dataRow);
       item.isDirtyFlag = false;
 
       if (typeInfo.UsesNamedKey) {
-        cache.Insert(item, (string) dataRow[typeInfo.NamedIdFieldName]);
+        cache.Insert(item, item.UID);
       } else {
         cache.Insert(item);
       }
@@ -463,8 +486,14 @@ namespace Empiria {
       // eg: if A is a mammal and B is a bird, should be possible to convert A to B or B to A because both are animals
 
       cache.Remove(this);
+
       this.objectTypeInfo = newType;
-      cache.Insert(this);
+
+      if (newType.UsesNamedKey) {
+        cache.Insert(this, this.UID);
+      } else {
+        cache.Insert(this);
+      }
     }
 
     //protected void Link(TypeAssociationInfo assocationInfo, IStorable value) {

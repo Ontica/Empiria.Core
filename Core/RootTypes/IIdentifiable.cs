@@ -16,7 +16,13 @@ namespace Empiria {
 
     #region Members definition
 
-    int Id { get; }
+    int Id {
+      get;
+    }
+
+    string UID {
+      get;
+    }
 
     #endregion Members definition
 

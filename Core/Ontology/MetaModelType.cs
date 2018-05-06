@@ -195,6 +195,12 @@ namespace Empiria.Ontology {
       get { return id; }
     }
 
+    string IIdentifiable.UID {
+      get {
+        return this.Name;
+      }
+    }
+
     internal string IdFieldName {
       get { return idFieldName; }
       set { idFieldName = EmpiriaString.TrimAll(value); }

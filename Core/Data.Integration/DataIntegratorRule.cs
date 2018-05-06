@@ -27,7 +27,7 @@ namespace Empiria.Data.Integration {
   #endregion Enumerations
 
   /// <summary>Represents a data integration rule.</summary>
-  internal class DataIntegrationRule : IIdentifiable {
+  internal class DataIntegrationRule {
 
     #region Fields
 

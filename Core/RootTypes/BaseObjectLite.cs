@@ -30,6 +30,11 @@ namespace Empiria {
       protected internal set;
     }
 
+    public virtual string UID {
+      get;
+      protected internal set;
+    }
+
     [Newtonsoft.Json.JsonIgnore]
     public bool IsEmptyInstance {
       get {

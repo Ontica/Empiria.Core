@@ -72,7 +72,7 @@ namespace Empiria.WebApi {
     #region Properties
 
     /// <summary>Unique ID string for the Http Endpoint.</summary>
-    public string UID {
+    public override string UID {
       get {
         return base.NamedKey;
       }
