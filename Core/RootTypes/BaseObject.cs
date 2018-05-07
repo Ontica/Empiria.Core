@@ -397,13 +397,13 @@ namespace Empiria {
     }
 
 
-    /// <summary>Raised before Save() method is called and before objectId is created.</summary>
+    /// <summary>Raised before Save() method is called and before object.Id and object.uid created.</summary>
     protected virtual void OnBeforeSave() {
 
     }
 
 
-    /// <summary>Raised when Save() method is called and after objectId is created.</summary>
+    /// <summary>Raised when Save() method is called and after objectId and object.uid generated.</summary>
     protected virtual void OnSave() {
       throw new NotImplementedException();
     }
@@ -415,11 +415,11 @@ namespace Empiria {
         return;
       }
 
+      this.OnBeforeSave();
+
       if (this.objectId == 0) {
         this.objectId = OntologyData.GetNextObjectId(this.objectTypeInfo);
       }
-
-      this.OnBeforeSave();
 
       if (String.IsNullOrWhiteSpace(this.UID)) {
         if (this.objectTypeInfo.UsesNamedKey) {
@@ -453,8 +453,11 @@ namespace Empiria {
 
     static private T ParseEmpiriaObject<T>(ObjectTypeInfo typeInfo, DataRow dataRow) where T : BaseObject {
       T item = typeInfo.CreateObject<T>();
+
       item.objectTypeInfo = typeInfo;
+
       item.objectId = (int) dataRow[typeInfo.IdFieldName];
+
       if (typeInfo.UsesNamedKey) {
         item.UID = (string) dataRow[typeInfo.NamedIdFieldName];
       }
@@ -462,6 +465,7 @@ namespace Empiria {
       if (typeInfo.IsDataBound) {
         item.DataBind(dataRow);
       }
+
       item.isNewFlag = false;
       item.OnLoadObjectData(dataRow);
       item.isDirtyFlag = false;
@@ -471,6 +475,7 @@ namespace Empiria {
       } else {
         cache.Insert(item);
       }
+
       return item;
     }
 
