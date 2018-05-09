@@ -36,9 +36,30 @@ namespace Empiria.Security.Claims {
       throw new SecurityException(SecurityException.Msg.EnsureClaimFailed, assertionFailMsg);
     }
 
+    static public T GetClaimValue<T>(IClaimsSubject subject,
+                                     ClaimType claimType) {
+
+      var claimsList = ClaimList.ParseFor(subject);
+
+      if (claimsList.Contains(claimType)) {
+        return (T) (object) claimsList.GetItem(claimType).Value;
+      }
+
+      string msg = BuildClaimNotFoundMsg(subject, claimType);
+
+      throw new SecurityException(SecurityException.Msg.EnsureClaimFailed, msg);
+    }
+
     #endregion Services
 
     #region Private methods
+
+    static private string BuildClaimNotFoundMsg(IClaimsSubject subject,
+                                                ClaimType claimType) {
+      return $"Subject of type {subject.GetType().FullName}' " +
+             $"with token = {subject.ClaimsToken}, doesn't have a security claim " +
+             $"of type '{claimType}'.";
+    }
 
     static private string BuildClaimNotFoundMsg(IClaimsSubject subject,
                                                 ClaimType claimType,
@@ -46,12 +67,6 @@ namespace Empiria.Security.Claims {
       return $"Subject of type {subject.GetType().FullName}' " +
              $"with token = {subject.ClaimsToken}, doesn't have a security claim " +
              $"with value '{claimValue}' of type '{claimType}'.";
-    }
-
-
-    internal static T GetClaimValue<T>(IClaimsSubject subject,
-                                       ClaimType claimType) {
-      return (T) (object) @"E:\empiria.files\digital.certificates\prueba1.key";
     }
 
     #endregion Private methods

@@ -19,7 +19,7 @@ namespace Empiria.Security.Claims {
   static internal class ClaimsData {
 
     static internal Claim GetPendingSecurityClaim(ClaimType claimType,
-                                                          IClaimsSubject subject) {
+                                                  IClaimsSubject subject) {
       string sql = $"SELECT * FROM SecurityClaims WHERE SecurityClaimTypeId = {claimType.Id} AND " +
                    $"SubjectToken = '{subject.ClaimsToken}' AND ClaimStatus = 'P'";
 
@@ -27,21 +27,19 @@ namespace Empiria.Security.Claims {
 
       if (row == null) {
         throw new SecurityException(SecurityException.Msg.SubjectClaimNotFound,
-                                    claimType.Type, subject.ClaimsToken, "?");
+                                    claimType.DisplayName, subject.ClaimsToken, "?");
       }
 
       return BaseObject.ParseDataRow<Claim>(row);
     }
 
 
-    static internal List<Claim> GetSecurityClaims(IClaimsSubject subject) {
+    static internal FixedList<Claim> GetSecurityClaims(IClaimsSubject subject) {
       Assertion.AssertObject(subject, "subject");
 
       var op = DataOperation.Parse("qryResourceSecurityClaims", subject.ClaimsToken);
 
-      var dataTable = DataReader.GetDataTable(op);
-
-      return BaseObject.ParseList<Claim>(dataTable);
+      return DataReader.GetFixedList<Claim>(op);
     }
 
 

@@ -8,113 +8,95 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Data;
+
+using Empiria.Ontology;
 
 namespace Empiria.Security.Claims {
 
   /// <summary>Powertype used to describe a security claim.</summary>
-  public class ClaimType : BaseObject {
+  [Powertype(typeof(Claim))]
+  public class ClaimType : Powertype {
 
     #region Constructors and parsers
 
     private ClaimType() {
-      // Required by Empiria Framework
+      // Empiria power types always have this constructor.
     }
 
-    static public ClaimType Parse(int id) {
-      return BaseObject.ParseId<ClaimType>(id);
+    static public new ClaimType Parse(int typeId) {
+      return ObjectTypeInfo.Parse<ClaimType>(typeId);
     }
 
-    static public ClaimType Parse(string securityClaimTypeName) {
-      Assertion.AssertObject(securityClaimTypeName, "securityClaimTypeName");
 
-      return BaseObject.ParseKey<ClaimType>(securityClaimTypeName);
+    static internal new ClaimType Parse(string typeName) {
+      return ObjectTypeInfo.Parse<ClaimType>(typeName);
     }
 
-    internal protected override void OnLoadObjectData(DataRow row) {
-      this.Type = (string) row["ObjectType"];
-      this.Key = (string) row["ObjectKey"];
-      this.Description = (string) row["ObjectName"];
-      this.Status = (ObjectStatus) Convert.ToChar((string) row["ObjectStatus"]);
-    }
+
+    //static public ClaimType Empty {
+    //  get {
+    //    return ClaimType.Parse("ObjectType.SecurityClaim");
+    //  }
+    //}
+
 
     static public ClaimType ActivationToken {
       get {
-        return ClaimType.Parse("ActivationToken");
+        return ClaimType.Parse("ObjectType.Claim.ActivationToken");
       }
     }
 
     static public ClaimType ElectronicSign {
       get {
-        return ClaimType.Parse("ElectronicSign");
+        return ClaimType.Parse("ObjectType.Claim.ElectronicSign");
       }
     }
 
     static public ClaimType ElectronicSignPrivateKeyFilePath {
       get {
-        return ClaimType.Parse("ElectronicSignPrivateKeyFilePath");
+        return ClaimType.Parse("ObjectType.Claim.ElectronicSignPrivateKeyFilePath");
       }
     }
 
     static public ClaimType ResetPasswordToken {
       get {
-        return ClaimType.Parse("ResetPasswordToken");
+        return ClaimType.Parse("ObjectType.Claim.ResetPasswordToken");
       }
     }
 
+
+    static public ClaimType UserID {
+      get {
+        return ClaimType.Parse("ObjectType.Claim.UserID");
+      }
+    }
+
+
     static public ClaimType UserPassword {
       get {
-        return ClaimType.Parse("UserPassword");
+        return ClaimType.Parse("ObjectType.Claim.UserPassword");
       }
     }
 
     static public ClaimType UserRole {
       get {
-        return ClaimType.Parse("UserRole");
+        return ClaimType.Parse("ObjectType.Claim.UserRole");
       }
     }
 
     static public ClaimType WebApiController {
       get {
-        return ClaimType.Parse("WebApiController");
+        return ClaimType.Parse("ObjectType.Claim.WebApiController");
       }
     }
 
     static public ClaimType WebApiMethod {
       get {
-        return ClaimType.Parse("WebApiMethod");
+        return ClaimType.Parse("ObjectType.Claim.WebApiMethod");
       }
     }
 
     #endregion Constructors and parsers
-
-    #region Properties
-
-    [DataField("ObjectType")]
-    public string Type {
-      get;
-      private set;
-    }
-
-    [DataField("ObjectKey")]
-    public string Key {
-      get;
-      private set;
-    }
-
-    [DataField("ObjectName")]
-    public string Description {
-      get;
-      private set;
-    }
-
-    [DataField("ObjectStatus", Default = ObjectStatus.Active)]
-    protected ObjectStatus Status {
-      get;
-      private set;
-    }
-
-    #endregion Properties
 
   } // class ClaimType
 

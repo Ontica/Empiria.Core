@@ -13,6 +13,7 @@ using System.Data;
 using Empiria.Contacts;
 using Empiria.DataTypes;
 using Empiria.Json;
+using Empiria.StateEnums;
 
 using Empiria.Security.Claims;
 
@@ -42,7 +43,7 @@ namespace Empiria.Security {
       if (application == null) {
         throw new SecurityException(SecurityException.Msg.InvalidClientAppKey, clientAppKey);
       }
-      if (application.Status != ObjectStatus.Active) {
+      if (application.Status != EntityStatus.Active) {
         throw new SecurityException(SecurityException.Msg.NotActiveClientAppKey, clientAppKey);
       }
       return application;
@@ -76,7 +77,7 @@ namespace Empiria.Security {
     internal protected override void OnLoadObjectData(DataRow row) {
       this.Key = (string) row["ObjectKey"];
       this.Description = (string) row["ObjectName"];
-      this.Status = (ObjectStatus) Convert.ToChar((string) row["ObjectStatus"]);
+      this.Status = (EntityStatus) Convert.ToChar((string) row["ObjectStatus"]);
 
       var json = JsonObject.Parse((string) row["ObjectExtData"]);
       this.AssignedTo = Contact.Parse(json.Get<Int32>("AssignedToId", -1));
@@ -109,8 +110,8 @@ namespace Empiria.Security {
     }
 
 
-    [DataField("ObjectStatus", Default = ObjectStatus.Active)]
-    public ObjectStatus Status {
+    [DataField("ObjectStatus", Default = EntityStatus.Active)]
+    public EntityStatus Status {
       get;
       private set;
     }
@@ -129,14 +130,6 @@ namespace Empiria.Security {
     }
 
     #endregion Properties
-
-    #region Methods
-
-    void IClaimsSubject.OnClaimsSubjectRegistered(string claimsToken) {
-      throw new NotImplementedException();
-    }
-
-    #endregion Methods
 
   }  // class ClientApplication
 

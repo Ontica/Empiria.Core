@@ -18,8 +18,6 @@ namespace Empiria.Security.Claims {
       get;
     }
 
-    void OnClaimsSubjectRegistered(string claimsToken);
-
   }  // interface IClaimsSubject
 
 }  // namespace Empiria.Security.Claims

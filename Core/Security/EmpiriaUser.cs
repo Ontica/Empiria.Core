@@ -12,6 +12,7 @@ using System.Data;
 
 using Empiria.Contacts;
 using Empiria.Json;
+using Empiria.StateEnums;
 
 using Empiria.Security.Claims;
 
@@ -179,12 +180,13 @@ namespace Empiria.Security {
     }
 
     internal JsonObject GetExtendedData() {
-      var json = new JsonObject() {
-        new JsonItem("FirstName", this.FirstName),
-        new JsonItem("LastName", this.LastName),
-        new JsonItem("OfficePhone", this.OfficePhone),
-        new JsonItem("MobilePhone", this.MobilePhone),
-      };
+      var json = new JsonObject();
+
+      json.Add("FirstName", this.FirstName);
+      json.Add("LastName", this.LastName);
+      json.Add("OfficePhone", this.OfficePhone);
+      json.Add("MobilePhone", this.MobilePhone);
+
       return json;
     }
 
@@ -226,7 +228,7 @@ namespace Empiria.Security {
     internal protected override void OnLoadObjectData(DataRow row) {
       this.UserName = (string) row["UserName"];
       this.IsAuthenticated = false;
-      this.IsActive = ((ObjectStatus) Convert.ToChar((string) row["ContactStatus"]) == ObjectStatus.Active);
+      this.IsActive = ((EntityStatus) Convert.ToChar((string) row["ContactStatus"]) == EntityStatus.Active);
       this.PasswordExpired = false;
       this.EMail = (string) row["ContactEmail"];
       this.FullName = (string) row["ContactFullName"];
@@ -234,10 +236,6 @@ namespace Empiria.Security {
       var json = Json.JsonObject.Parse((string) row["ContactExtData"]);
       this.FillExtendedData(json);
 
-    }
-
-    void IClaimsSubject.OnClaimsSubjectRegistered(string claimsToken) {
-      throw new NotImplementedException();
     }
 
     #endregion Private methods

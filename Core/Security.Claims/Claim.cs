@@ -10,16 +10,19 @@
 using System;
 
 using Empiria.Json;
+using Empiria.Ontology;
+using Empiria.StateEnums;
 
 namespace Empiria.Security.Claims {
 
-  /// <summary>Represents a security claim.</summary>
+  /// <summary>Represents a security claim. Claims are partitioned types of ClaimType.</summary>
+  [PartitionedType(typeof(ClaimType))]
   public sealed class Claim : BaseObject {
 
     #region Constructors and parsers
 
-    private Claim() {
-      // Required by Empiria Framework
+    private Claim(ClaimType powerType) : base(powerType) {
+      // Required by Empiria Framework for all partitioned types.
     }
 
 
@@ -33,12 +36,11 @@ namespace Empiria.Security.Claims {
     }
 
 
-    static internal Claim Create(ClaimType claimType,
-                                 IClaimsSubject subject, string claimValue,
-                                 ObjectStatus status) {
-      var newClaim = new Claim();
+    static internal Claim Create(ClaimType claimType, IClaimsSubject subject,
+                                 string claimValue, EntityStatus status) {
 
-      newClaim.ClaimType = claimType;
+      var newClaim = claimType.CreateObject<Claim>();
+
       newClaim.Subject = subject;
       newClaim.Value = claimValue;
       newClaim.Status = status;
@@ -48,23 +50,16 @@ namespace Empiria.Security.Claims {
       return newClaim;
     }
 
-    static internal string BuildUniqueKey(ClaimType claimType,
-                                          IClaimsSubject subject) {
-      string temp = $"{claimType.Id}~{subject.ClaimsToken}";
-
-      return temp.ToLowerInvariant();
-    }
 
     #endregion Constructors and parsers
 
     #region Properties
 
-    [DataField("UID")]
-    public string UID {
-      get;
-      private set;
+    public ClaimType ClaimType {
+      get {
+        return (ClaimType) base.GetEmpiriaType();
+      }
     }
-
 
     public IClaimsSubject Subject {
       get;
@@ -86,17 +81,8 @@ namespace Empiria.Security.Claims {
     }
 
 
-    public ClaimType ClaimType {
-      //get {
-      //  return (SecurityClaimType) base.GetEmpiriaType();
-      //}
-      get;
-      private set;
-    }
-
-
-    [DataField("ClaimStatus", Default = ObjectStatus.Active)]
-    public ObjectStatus Status {
+    [DataField("ClaimStatus", Default = EntityStatus.Active)]
+    public EntityStatus Status {
       get;
       internal set;
     }
