@@ -618,6 +618,15 @@ namespace Empiria.Json {
         return defaultValue;
       }
 
+      // Return defaultValue for empty strings values of some types;
+      if (value is string && ((string) value).Length == 0) {
+        var convertToType = typeof(T);
+
+        if (convertToType == typeof(DateTime)) {
+          return defaultValue;
+        }
+      }
+
       try {
         return ObjectFactory.Convert<T>(value);
 
