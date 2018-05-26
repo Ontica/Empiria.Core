@@ -18,7 +18,7 @@ namespace Empiria.StateEnums {
 
     Red = 'R',
 
-    Ambar = 'A',
+    Amber = 'A',
 
     Green = 'G',
 
