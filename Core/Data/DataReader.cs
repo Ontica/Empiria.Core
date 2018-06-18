@@ -194,6 +194,16 @@ namespace Empiria.Data {
       return parser.Invoke(dataTable);
     }
 
+
+    static public T GetObject<T>(DataOperation operation) where T : BaseObject {
+      Assertion.AssertObject(operation, "operation");
+
+      DataRow dataRow = DataReader.GetDataRow(operation);
+
+      return BaseObject.ParseDataRow<T>(dataRow);
+    }
+
+
     static public T GetScalar<T>(DataOperation operation, T defaultValue = default(T)) {
       object scalar = GetScalar(operation);
 
