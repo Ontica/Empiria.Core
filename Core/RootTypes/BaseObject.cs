@@ -36,21 +36,25 @@ namespace Empiria {
 
     protected BaseObject() {
       objectTypeInfo = ObjectTypeInfo.Parse(this.GetType());
+
+      this.OnInitialize();
+
       if (objectTypeInfo.IsDataBound) {
         // Should call InitializeObject only when is not called through BaseObject.ParseEmpiriaObject.
         objectTypeInfo.InitializeObject(this);
       }
-      this.OnInitialize();
     }
 
 
     protected BaseObject(ObjectTypeInfo powertype) {
       objectTypeInfo = powertype;
+
+      this.OnInitialize();
+
       if (objectTypeInfo.IsDataBound) {
         // Should call InitializeObject only when is not called through BaseObject.ParseEmpiriaObject.
         objectTypeInfo.InitializeObject(this);
       }
-      this.OnInitialize();
     }
 
 
