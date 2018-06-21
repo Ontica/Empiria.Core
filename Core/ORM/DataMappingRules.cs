@@ -95,7 +95,7 @@ namespace Empiria.ORM {
     }
 
     /// <summary>Binds DataRow data into the instance fields and properties marked
-    /// with the DataField attribute.</summary>
+    /// with the DataObject attribute.</summary>
     private void DataBindInnerDataObjects(object instance, DataRow dataRow) {
       DataObjectMapping rule = null;
       try {

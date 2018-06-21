@@ -1,10 +1,11 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Object-relational mapping         *
-*  Namespace : Empiria.ORM                                      License  : Please read LICENSE.txt file      *
-*  Type      : DataFieldMapping                                 Pattern  : Standard class                    *
+*  Module   : Object-relational mapping                    Component : DataObject mapping                    *
+*  Assembly : Empiria.Core.dll                             Pattern   : Standard class                        *
+*  Type     : DataObjectMapping                            License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Mapping rule between a type field and a data source element.                                  *
+*  Summary  : Holds mapping rules for a member marked with a DataObject attribute, which usually are         *
+*             separated entities or data holders of a root entity derivated from BaseObject.                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -15,7 +16,8 @@ using Empiria.Reflection;
 
 namespace Empiria.ORM {
 
-  /// <summary>Mapping rule between a type property and a data source element.</summary>
+  /// <summary>Holds mapping rules for a member marked with a DataObject attribute,
+  ///  separated entities or data holders of a root entity derivated from BaseObject.</summary>
   internal class DataObjectMapping {
 
     #region Fields
@@ -85,7 +87,11 @@ namespace Empiria.ORM {
     #region Public methods
 
     internal void DataBind(object instance, DataRow dataRow) {
-      var value = ObjectFactory.CreateObject(memberType);
+      object value = this.ImplementsGetValue(instance);
+
+      if (value == null) {
+        value = ObjectFactory.CreateObject(memberType);
+      }
 
       dataMappingRules.DataBind(value, dataRow);
 
@@ -98,9 +104,13 @@ namespace Empiria.ORM {
 
     /// <summary>Set instance member value according to implicit or explicit default values rules.</summary>
     internal void SetDefaultValue(object instance) {
-      var defaultValue = ObjectFactory.CreateObject(memberType);
+      object defaultValue = this.ImplementsGetValue(instance);
 
-      this.ImplementsSetValue(instance, defaultValue);
+      if (defaultValue == null) {
+        defaultValue = ObjectFactory.CreateObject(memberType);
+
+        this.ImplementsSetValue(instance, defaultValue);
+      }
     }
 
     protected object ImplementsGetValue(object instance) {
