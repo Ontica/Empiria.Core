@@ -108,9 +108,14 @@ namespace Empiria.ORM {
 
       if (defaultValue == null) {
         defaultValue = ObjectFactory.CreateObject(memberType);
-
-        this.ImplementsSetValue(instance, defaultValue);
       }
+
+      // Initialize all DataObject instance members.
+      // ToDo: DataMappingRules.Parse() must be called once and then cache rules to improve performance
+      var innerMappingRules = DataMappingRules.Parse(defaultValue.GetType());
+      innerMappingRules.InitializeObject(defaultValue);
+
+      this.ImplementsSetValue(instance, defaultValue);
     }
 
     protected object ImplementsGetValue(object instance) {
