@@ -89,10 +89,12 @@ namespace Empiria.Ontology {
 
     #region Public properties
 
+    [Newtonsoft.Json.JsonIgnore]
     public new EmpiriaIdAndKeyDictionary<TypeAssociationInfo> Associations {
       get { return base.Associations; }
     }
 
+    [Newtonsoft.Json.JsonIgnore]
     public new ObjectTypeInfo BaseType {
       get { return (ObjectTypeInfo) base.BaseType; }
     }

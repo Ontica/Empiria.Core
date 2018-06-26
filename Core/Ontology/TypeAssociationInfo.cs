@@ -62,6 +62,7 @@ namespace Empiria.Ontology {
 
     #region Public properties
 
+    [Newtonsoft.Json.JsonIgnore]
     public ObjectTypeInfo AssociationType {
       get {
         if (associationType == null) {
