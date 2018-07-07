@@ -72,22 +72,16 @@ namespace Empiria {
     }
 
 
-    static public T ParseDataRow<T>(DataRow dataRow) where T : BaseObject {
+    static public T ParseDataRow<T>(DataRow dataRow, bool reload = false) where T : BaseObject {
       ObjectTypeInfo baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
-      int objectId = (int) dataRow[baseTypeInfo.IdFieldName];
 
-      T item = cache.TryGetItem<T>(baseTypeInfo.Name, objectId);
-      if (item != null) {
-        return item;    // Only use dataRow when item is not in cache
+      if (!reload) {
+        int objectId = (int) dataRow[baseTypeInfo.IdFieldName];
+        T item = cache.TryGetItem<T>(baseTypeInfo.Name, objectId);
+        if (item != null) {
+          return item;    // Only use dataRow when item is not in cache
+        }
       }
-      ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
-
-      return BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow);
-    }
-
-
-    static public T ParseDataRowFull<T>(DataRow dataRow) where T : BaseObject {
-      var baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
 
@@ -102,14 +96,7 @@ namespace Empiria {
     }
 
 
-    static protected T ParseFull<T>(int id) where T : BaseObject {
-      var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
-
-      return BaseObject.ParseIdInternal<T>(objectTypeInfo, id, true);
-    }
-
-
-    static protected internal T ParseId<T>(int id) where T : BaseObject {
+    static protected internal T ParseId<T>(int id, bool reload = false) where T : BaseObject {
       var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       if (id == ObjectTypeInfo.EmptyInstanceId) {
@@ -118,16 +105,17 @@ namespace Empiria {
       if (id == ObjectTypeInfo.UnknownInstanceId) {
         return objectTypeInfo.GetUnknownInstance<T>().Clone<T>();
       }
-      return BaseObject.ParseIdInternal<T>(objectTypeInfo, id, false);
+
+      return BaseObject.ParseIdInternal<T>(objectTypeInfo, id, reload);
     }
 
 
     static internal T ParseIdInternal<T>(ObjectTypeInfo typeInfo,
-                                         int id, bool parseFull) where T : BaseObject {
+                                         int id, bool reload) where T : BaseObject {
       if (id == 0) {
         throw new OntologyException(OntologyException.Msg.TryToParseZeroObjectId, typeInfo.Name);
       }
-      if (!parseFull) {
+      if (!reload) {
         T item = cache.TryGetItem<T>(typeInfo.Name, id);
         if (item != null) {
           return item;
@@ -139,12 +127,14 @@ namespace Empiria {
     }
 
 
-    static protected T ParseKey<T>(string namedKey) where T : BaseObject {
+    static protected T ParseKey<T>(string namedKey, bool reload = false) where T : BaseObject {
       var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-      T item = cache.TryGetItem<T>(objectTypeInfo.Name, namedKey);
-      if (item != null) {
-        return item;
+      if (!reload) {
+        T item = cache.TryGetItem<T>(objectTypeInfo.Name, namedKey);
+        if (item != null) {
+          return item;
+        }
       }
       Tuple<ObjectTypeInfo, DataRow> objectData = objectTypeInfo.GetObjectTypeAndDataRow(namedKey);
 
@@ -190,14 +180,15 @@ namespace Empiria {
     }
 
 
-    protected static T TryParse<T>(string condition) where T : BaseObject {
+    static protected T TryParse<T>(string condition, bool reload = false) where T : BaseObject {
       var sqlFilter = Empiria.Data.SqlFilter.Parse(condition);
 
-      return TryParse<T>(sqlFilter);
+      return TryParse<T>(sqlFilter, reload);
     }
 
 
-    protected static T TryParse<T>(IFilter condition) where T : BaseObject {
+    static protected T TryParse<T>(IFilter condition,
+                                   bool reload = false) where T : BaseObject {
       var objectTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       Tuple<ObjectTypeInfo, DataRow> objectData = objectTypeInfo.TryGetObjectTypeAndDataRow(condition);
@@ -208,9 +199,11 @@ namespace Empiria {
 
       int objectId = (int) objectData.Item2[objectTypeInfo.IdFieldName];
 
-      T item = cache.TryGetItem<T>(objectTypeInfo.Name, objectId);
-      if (item != null) {
-        return item;    // Only use dataRow when item is not in cache
+      if (!reload) {
+        T item = cache.TryGetItem<T>(objectTypeInfo.Name, objectId);
+        if (item != null) {
+          return item;    // Only use dataRow when item is not in cache
+        }
       }
       return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
     }
