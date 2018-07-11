@@ -414,7 +414,7 @@ namespace Empiria.Security {
       static private SecureString GetSystemPrivateKeyFilePassword() {
         string s = ConfigurationData.GetString("§RSACryptoFilePwd");
 
-        return FormerCryptographer.ConvertToSecureString(s);
+        return Cryptographer.ConvertToSecureString(s);
       }
 
 

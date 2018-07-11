@@ -14,12 +14,12 @@ namespace Empiria.Security {
   /// <summary>Helper class that verifies a password strength.</summary>
   public class PasswordStrength {
 
-    #region Fields;
+    #region Fields
 
     private readonly EmpiriaUser user;
     private readonly string password;
 
-    #endregion Fields;
+    #endregion Fields
 
     #region Constructors and parsers
 

@@ -2,21 +2,24 @@
 *                                                                                                            *
 *  Module   : Security                                     Component : Security Services                     *
 *  Assembly : Empiria.Core.dll                             Pattern   : Methods library                       *
-*  Type     : FormerCryptographer                          License   : Please read LICENSE.txt file          *
+*  Type     : Cryptographer                                License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Former cryptographic services for strings, objects and files.                                  *
+*  Summary  : Encryption, hashing and signing services.                                                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.IO;
 
+using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 
+using Empiria.Security.Claims;
+
 namespace Empiria.Security {
 
-  /// <summary>Former cryptographic services for strings, objects and files.</summary>
-  static public class FormerCryptographer {
+  /// <summary>Encryption, hashing and signing services.</summary>
+  static public class Cryptographer {
 
     #region Fields
 
@@ -26,59 +29,55 @@ namespace Empiria.Security {
 
     #region Public methods
 
+    static public SecureString ConvertToSecureString(string source) {
+      Assertion.AssertObject(source, "source");
 
-    static public string CreateHashCode(string text) {
-      return CreateHashCode(text, String.Empty);
+      var securedString = new SecureString();
+
+      for (int i = 0; i < source.Length; i++) {
+        securedString.AppendChar(source[i]);
+      }
+
+      return securedString;
     }
 
 
-    static public string CreateHashCode(string text, string entropy) {
+    static public string CreateHashCode(string text, string salt = "") {
       Assertion.AssertObject(text, "text");
-      entropy = entropy ?? String.Empty;
+      salt = salt ?? String.Empty;
 
       StartEngine();
 
-      byte[] data = Encoding.UTF8.GetBytes(text + ExecutionServer.LicenseNumber +
-                                           ConstructKey(ExecutionServer.LicenseNumber + entropy));
+      byte[] data = Encoding.UTF8.GetBytes(salt + text + ExecutionServer.LicenseNumber +
+                                           ConstructKey(salt + ExecutionServer.LicenseNumber));
 
-
-      SHA256 sha = SHA256.Create();
+      SHA512 sha = SHA512Cng.Create();
 
       return ConvertToString(sha.ComputeHash(data));
     }
 
 
-    static public string CreateHashCode(byte[] bytesArray, string entropy) {
+    static public string CreateHashCode(byte[] bytesArray, string salt = "") {
       Assertion.AssertObject(bytesArray, "bytesArray");
+      salt = salt ?? String.Empty;
 
       StartEngine();
 
-      if (String.IsNullOrWhiteSpace(entropy)) {
-        bytesArray = Encoding.UTF8.GetBytes(bytesArray + entropy + ExecutionServer.LicenseNumber +
-                                            ConstructKey(ExecutionServer.LicenseNumber + entropy));
-      }
+      bytesArray = Encoding.UTF8.GetBytes(salt + bytesArray + ExecutionServer.LicenseNumber +
+                                          ConstructKey(salt + ExecutionServer.LicenseNumber));
 
-      SHA256 sha = SHA256.Create();
+      SHA512 sha = SHA512Cng.Create();
 
       return ConvertToString(sha.ComputeHash(bytesArray));
     }
 
 
-    /// <summary>Takes a ciphertext string and decrypts it.</summary>
-    /// <param name="cipherText">Text string to be decrypted.</param>
-    static public string Decrypt(string cipherText) {
-      Assertion.AssertObject(cipherText, "cipherText");
-
-      return DecryptString(cipherText, ExecutionServer.LicenseNumber);
-    }
-
-
     /// <summary>Takes a ciphertext string and decrypts it using the giving public key.</summary>
     /// <param name="cipherText">Text string to be decrypted.</param>
-    /// <param name="entropy">The public key used to decrypt the text string.</param>
-    static public string Decrypt(string cipherText, string entropy) {
+    /// <param name="entropy">The entropy or salt string used to decrypt the text string.</param>
+    static public string Decrypt(string cipherText, string entropy = "") {
       Assertion.AssertObject(cipherText, "cipherText");
-      Assertion.AssertObject(entropy, "entropy");
+      entropy = entropy ?? "";
 
       return DecryptString(cipherText, entropy + ExecutionServer.LicenseNumber);
     }
@@ -86,22 +85,32 @@ namespace Empiria.Security {
 
     /// <summary>Takes a plaintext string and encrypts it.</summary>
     /// <param name="plainText">Text string to be encrypted.</param>
-    static public string Encrypt(EncryptionMode protectionMode, string plainText) {
+    /// <param name="salt">Optional string to use as encryption salt.</param>
+    static public string Encrypt(string plainText, string salt = "") {
       Assertion.AssertObject(plainText, "plainText");
 
-      if (protectionMode == EncryptionMode.Standard || protectionMode == EncryptionMode.HashCode) {
-        return Encrypt(protectionMode, plainText, String.Empty);
-      } else {
-        throw new SecurityException(SecurityException.Msg.InvalidProtectionMode, protectionMode.ToString());
-      }
+      throw new NotImplementedException();
+
+      //if (protectionMode == EncryptionMode.Standard || protectionMode == EncryptionMode.HashCode) {
+      //  return Encrypt(protectionMode, plainText, String.Empty);
+      //} else {
+      //  throw new SecurityException(SecurityException.Msg.InvalidProtectionMode, protectionMode.ToString());
+      //}
     }
 
 
     /// <summary>Takes a plaintext string and encrypts it with the giving public key.</summary>
     /// <param name="plainText">Text string to be encrypted.</param>
     /// <param name="entropy">The entropy string used to encrypt the text string.</param>
-    static public string Encrypt(EncryptionMode protectionMode, string plainText, string entropy) {
+    static public string Encrypt(EncryptionMode protectionMode,
+                                 string plainText, string entropy = "") {
       Assertion.AssertObject(plainText, "plainText");
+      entropy = entropy ?? "";
+
+      if (entropy.Length != 0 &&
+         protectionMode != EncryptionMode.Standard && protectionMode != EncryptionMode.HashCode) {
+        throw new SecurityException(SecurityException.Msg.InvalidProtectionMode, protectionMode.ToString());
+      }
 
       string s = String.Empty;
 
@@ -111,7 +120,6 @@ namespace Empiria.Security {
 
         case EncryptionMode.HashCode:
           s = EncryptString(plainText, ExecutionServer.LicenseNumber);
-          s = CreateHashCode(s);
 
           return EncryptString(s, ExecutionServer.LicenseNumber);
 
@@ -134,18 +142,47 @@ namespace Empiria.Security {
     }
 
 
-    static public string GetMD5HashCode(string source) {
-      MD5 md5 = MD5.Create();
-      byte[] inputBytes = Encoding.ASCII.GetBytes(source);
-      byte[] hash = md5.ComputeHash(inputBytes);
+    static public string SignText(string text, SecureString password) {
+      Assertion.AssertObject(text, "text");
+      Assertion.AssertObject(password, "password");
 
+      var privateKeyFilePath =
+                    ClaimsService.GetClaimValue<string>(EmpiriaUser.Current,
+                                                        ClaimType.ElectronicSignPrivateKeyFilePath);
 
-      StringBuilder sb = new StringBuilder();
-      for (int i = 0; i < hash.Length; i++) {
-        sb.Append(hash[i].ToString("X2"));
-      }
-      return sb.ToString().ToLower();
+      RSACryptoServiceProvider rsa = RSAProvider.GetProvider(privateKeyFilePath, password);
+
+      /// SHA256CryptoServiceProvider uses FIPS 140-2 (Federal Information Processing Standard)
+      /// validated Crypto Service Provider.
+      var hasher = new SHA256CryptoServiceProvider();
+
+      byte[] textAsByteArray = Encoding.UTF8.GetBytes(text);
+
+      byte[] signAsArray = rsa.SignData(textAsByteArray, hasher);
+
+      return Convert.ToBase64String(signAsArray);
     }
+
+
+    static public string SignTextWithSystemCredentials(string text) {
+      Assertion.AssertObject(text, "text");
+
+      RSACryptoServiceProvider rsa = RSAProvider.GetSystemProvider();
+
+      /// SHA256CryptoServiceProvider uses FIPS 140-2 (Federal Information Processing Standard)
+      /// validated Crypto Service Provider.
+      var hasher = new SHA256CryptoServiceProvider();
+
+      StartEngine();
+
+      byte[] textAsByteArray = Encoding.UTF8.GetBytes(text + ExecutionServer.LicenseNumber +
+                                                      ConstructKey(ExecutionServer.LicenseNumber));
+
+      byte[] signAsArray = rsa.SignData(textAsByteArray, hasher);
+
+      return Convert.ToBase64String(signAsArray);
+    }
+
 
     #endregion Public methods
 
@@ -158,20 +195,23 @@ namespace Empiria.Security {
       byte[] license = licenseKey;
 
       int x = 0;
-      unchecked {
-        for (int i = 1; i < license.Length; i++) {
-          x += (key[i] * ((license[license.Length - i - 1] % 7) + 1)) -
-               (license[i] * ((key[key.Length - i - 1] % 13) + 1));
-        }
-        result[0] = (byte) (Math.Abs((x * 11) - 23) % 255);
-        for (int i = 1; i < key.Length / 2; i++) {
-          result[i] = (byte) ((((x + 53) * result[i - 1]) + key[i]) + (x * key[key.Length - i - 1]) % 255);
-          x += Math.Abs((license[i] * key[key.Length - i - 1]) - result[i]);
-        }
+
+      for (int i = 1; i < license.Length; i++) {
+        x += (key[i] * ((license[license.Length - i - 1] % 7) + 1)) -
+              (license[i] * ((key[key.Length - i - 1] % 13) + 1));
       }
+      result[0] = (byte) (Math.Abs((x * 11) - 23) % 256);
+
+      for (int i = 1; i < key.Length / 2; i++) {
+        result[i] = (byte) (Math.Abs(( ((x + 53) * result[i - 1]) + key[i]) + (x * key[key.Length - i - 1])) % 256);
+
+        x += Math.Abs((license[i] * key[key.Length - i - 1]) - result[i]);
+      }
+
       if (entropy != null) {
-        result = ParseEntropyKey(entropy, result);
+        result = MergeSalt(result, entropy);
       }
+
       return result;
     }
 
@@ -181,21 +221,25 @@ namespace Empiria.Security {
 
       byte[] license = licenseKey;
 
-      int x = 0;
-      unchecked {
-        for (int i = 1; i < license.Length; i++) {
-          x += (key[i] * ((license[license.Length - i - 1] % 7) + 1)) -
-            (license[i] * ((key[key.Length - i - 1] % 13) + 1));
-        }
-        result[0] = (byte) (Math.Abs((x * 3) - 11) % 255);
-        for (int i = 1; i < key.Length / 2; i++) {
-          result[i] = (byte) ((((x + 43) * result[i - 1]) + key[i]) + ((x + 5) * key[key.Length - i - 1]) % 255);
-          x += Math.Abs((license[i] * key[key.Length - i - 1]) - result[i]);
-        }
+      long x = 0;
+
+      for (int i = 1; i < license.Length; i++) {
+        x += (key[i] * ((license[license.Length - i - 1] % 7) + 1)) -
+             (license[i] * ((key[key.Length - i - 1] %
+             13) + 1));
       }
+      result[0] = (byte) (Math.Abs((x * 3) - 11) % 256);
+
+      for (int i = 1; i < key.Length / 2; i++) {
+        result[i] = (byte) (Math.Abs(((x + 43) * result[i - 1] + key[i]) + ((x + 5) * key[key.Length - i - 1])) % 256);
+
+        x += Math.Abs((license[i] * key[key.Length - i - 1]) - result[i]);
+      }
+
       if (entropy != null) {
-        result = ParseEntropyKey(entropy, result);
+        result = MergeSalt(result, entropy);
       }
+
       return result;
     }
 
@@ -211,17 +255,19 @@ namespace Empiria.Security {
 
 
     static private string DecryptString(string cipherText, string entropy) {
-      UTF8Encoding textConverter = new UTF8Encoding();
-      RijndaelManaged rijndael = new RijndaelManaged();
+      var textConverter = new UTF8Encoding();
+      var rijndael = new RijndaelManaged();
 
       StartEngine();
+
       rijndael.Padding = PaddingMode.Zeros;
       rijndael.Key = ConstructKey(entropy);
       rijndael.IV = ConstructIV(entropy);
 
       ICryptoTransform decryptor = rijndael.CreateDecryptor();
-      MemoryStream memoryStream = new MemoryStream(Convert.FromBase64String(cipherText));
-      CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
+
+      var memoryStream = new MemoryStream(Convert.FromBase64String(cipherText));
+      var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
 
       byte[] cipherTextArray = new byte[cipherText.Length];
       cryptoStream.Read(cipherTextArray, 0, cipherTextArray.Length);
@@ -229,18 +275,23 @@ namespace Empiria.Security {
       return textConverter.GetString(cipherTextArray).Trim('\0');
     }
 
-    static private string EncryptString(string plainText, string entropy) {
-      UTF8Encoding textConverter = new UTF8Encoding();
-      RijndaelManaged rijndael = new RijndaelManaged();
+    static private string EncryptString(string plainText, string salt) {
+      var textConverter = new UTF8Encoding();
+      var rijndael = new RijndaelManaged();
+
       StartEngine();
+
       rijndael.Padding = PaddingMode.Zeros;
-      rijndael.Key = ConstructKey(entropy);
-      rijndael.IV = ConstructIV(entropy);
+      rijndael.Key = ConstructKey(salt);
+      rijndael.IV = ConstructIV(salt);
+
       ICryptoTransform encryptor = rijndael.CreateEncryptor();
-      MemoryStream memoryStream = new MemoryStream();
-      CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
+
+      var memoryStream = new MemoryStream();
+      var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
 
       byte[] plainTextArray = textConverter.GetBytes(plainText);
+
       cryptoStream.Write(plainTextArray, 0, plainTextArray.Length);
       cryptoStream.FlushFinalBlock();
 
@@ -252,6 +303,7 @@ namespace Empiria.Security {
       string hashCode = String.Empty;
 
       int x = licenseArray[0] * 3;
+
       for (int i = 1; i < licenseArray.Length; i++) {
         switch (i % 3) {
           case 0:
@@ -264,7 +316,8 @@ namespace Empiria.Security {
             }
             x += licenseArray[i] * 3;
             break;
-          case 1:
+
+            case 1:
             x += licenseArray[i] * 5;
             break;
           case 2:
@@ -272,6 +325,7 @@ namespace Empiria.Security {
             break;
         } // switch
       }  // for
+
       if ((x % 3) != 2) {
         x = 65 + (x % 26);
         hashCode += Convert.ToChar(x);
@@ -286,17 +340,13 @@ namespace Empiria.Security {
       return ExecutionServer.LicenseSerialNumber;
     }
 
-    static private byte[] ParseEntropyKey(string publicKey, byte[] byteArray) {
+    static private byte[] MergeSalt(byte[] byteArray, string salt) {
       byte[] result = new byte[byteArray.Length];
 
-      if (publicKey.IndexOf('.') != -1) {
-        publicKey = publicKey.Substring(0, publicKey.IndexOf('.'));
+      for (int i = 0; i < byteArray.Length; i++) {
+        result[i] = (byte) ((byteArray[i] + salt[i % salt.Length]) % 255);
       }
-      unchecked {
-        for (int i = 0; i < byteArray.Length; i++) {
-          result[i] = (byte) (byteArray[i] + publicKey[i % publicKey.Length] % 255);
-        }
-      }
+
       return result;
     }
 
@@ -308,6 +358,7 @@ namespace Empiria.Security {
       for (int i = 0; i < temp.Length; i++) {
         bytes[i] = byte.Parse(temp[i].Trim());
       }
+
       return bytes;
     }
 
@@ -344,18 +395,20 @@ namespace Empiria.Security {
       string license = ExecutionServer.LicenseNumber;
 
       int x = 0;
-      unchecked {
-        for (int i = 1; i < license.Length; i++) {
-          x += licenseName[i % licenseName.Length] +
-               (key[i] * ((license[license.Length - i - 1] % 5) + 1)) -
-               (license[i] * ((key[key.Length - i - 1] % 3) + 1));
-        }
-        result[0] = (byte) (Math.Abs(x) % 255);
-        for (int i = 1; i < key.Length / 2; i++) {
-          result[i] = (byte) (((x * result[i - 1]) + key[i]) + (x * key[key.Length - i - 1]) % 255);
-          x += license[i] + license[license.Length - i - 1];
-        }
+
+      for (int i = 1; i < license.Length; i++) {
+        x += licenseName[i % licenseName.Length] +
+              (key[i] * ((license[license.Length - i - 1] % 5) + 1)) -
+              (license[i] * ((key[key.Length - i - 1] % 3) + 1));
       }
+
+      result[0] = (byte) (Math.Abs(x) % 255);
+
+      for (int i = 1; i < key.Length / 2; i++) {
+        result[i] = (byte) ((((x * result[i - 1]) + key[i]) + (x * key[key.Length - i - 1])) % 255);
+        x += license[i] + license[license.Length - i - 1];
+      }
+
       licenseKey = result;
     }
 
@@ -363,21 +416,26 @@ namespace Empiria.Security {
       if (licenseKey != null) {
         return;
       }
+
       string license = ExecutionServer.LicenseNumber.Replace("-", String.Empty);
+
       if (license.Length != 32) {
         throw new ExecutionServerException(ExecutionServerException.Msg.InvalidLicense);
       }
+
       if (GetLicenseHashCode(license.Substring(8)) != license.Substring(0, 8)) {
         throw new ExecutionServerException(ExecutionServerException.Msg.InvalidLicense);
       }
+
       if (GetSerialNumber() != ExecutionServer.LicenseSerialNumber) {
         throw new ExecutionServerException(ExecutionServerException.Msg.InvalidLicense);
       }
+
       SetLicenseKey();
     }
 
     #endregion Private methods
 
-   } //class FormerCryptographer
+  } //class Cryptographer
 
 } //namespace Empiria.Security

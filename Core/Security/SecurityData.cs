@@ -11,6 +11,7 @@ using System;
 using System.Data;
 
 using Empiria.Data;
+using Empiria.StateEnums;
 
 namespace Empiria.Security {
 
@@ -33,9 +34,11 @@ namespace Empiria.Security {
         throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
       }
 
-      string p = FormerCryptographer.Encrypt(EncryptionMode.EntropyKey,
-                                       FormerCryptographer.CreateHashCode(password, username));
+      //string p = FormerCryptographer.Encrypt(EncryptionMode.EntropyKey,
+      //                                       FormerCryptographer.CreateHashCode(password, username));
 
+      string p = FormerCryptographer.Encrypt(EncryptionMode.EntropyKey,
+                                             FormerCryptographer.GetMD5HashCode(password), username);
       string sql = "UPDATE Contacts SET UserPassword = '{0}' WHERE UserName = '{1}'";
 
       DataWriter.Execute(DataOperation.Parse(String.Format(sql, p, username)));
@@ -76,12 +79,12 @@ namespace Empiria.Security {
       return DataWriter.Execute<int>(op);
     }
 
-    static internal void CreateUser(EmpiriaUser o, string password, ObjectStatus status) {
+    static internal void CreateUser(EmpiriaUser o, string password, EntityStatus status) {
       Assertion.Assert(o.Id != 0, "User.Id was not assigned.");
       Assertion.AssertObject(password, "Password can't be null.");
 
       string p = FormerCryptographer.Encrypt(EncryptionMode.EntropyKey,
-                                       FormerCryptographer.GetMD5HashCode(password), o.UserName);
+                                             FormerCryptographer.GetMD5HashCode(password), o.UserName);
 
       var op = DataOperation.Parse("writeContact", o.Id, o.FullName, o.UserName,
                                    p, o.EMail, o.GetExtendedData().ToString(), (char) status);
