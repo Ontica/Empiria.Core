@@ -62,6 +62,11 @@ namespace Empiria.Reflection {
 
         return (T) o;
 
+      } else if (convertToType != typeof(string) && value is IDictionary<string, object>) {
+        object o = JsonObject.Parse((IDictionary<string, object>) value);
+
+        return JsonConverter.ToObject<T>(o.ToString());
+
       } else {
         return (T) System.Convert.ChangeType(value, convertToType);
       }
