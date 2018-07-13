@@ -181,9 +181,12 @@ namespace Empiria.Data.Integration {
                                     int dataTaskIndex, DataOperation operation) {
       try {
         DataOperation publishOperation = GetPublishDataOperation(token, publishRule.Id, Guid.Empty, "Null",
-                                                             operation, dataTaskIndex);
+                                                                 operation, dataTaskIndex);
+
         DataWriter.ExecuteInternal(publishOperation);
+
       } catch (Exception exception) {
+
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotCreateDataTask, exception,
                                        ExecutionServer.ServerId, publishRule.TargetServerId,
                                        operation.SourceName, operation.ParametersToString());

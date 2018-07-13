@@ -11,7 +11,7 @@ using System;
 
 namespace Empiria.Security {
 
-  /// <summary>Provides methods to manage users, such as user activation 
+  /// <summary>Provides methods to manage users, such as user activation
   /// and credentials management.</summary>
   static public class UserManagementService {
 
@@ -24,6 +24,7 @@ namespace Empiria.Security {
       EmpiriaUser user = EmpiriaUser.Parse(username, email);
 
       VerifyPasswordStrengthRules(user, password);
+
       SecurityData.ChangePassword(username, password);
     }
 

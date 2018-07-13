@@ -10,7 +10,6 @@
 using System;
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Empiria.Json {
 
@@ -36,12 +35,15 @@ namespace Empiria.Json {
 
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
       DateTime date = (DateTime) value;
+
       if (date != ExecutionServer.DateMinValue &&
           date != ExecutionServer.DateMaxValue) {
+
         serializer.Serialize(writer, date.ToString(serializer.DateFormatString));
+
       } else {
-        // Write empty strings for Empiria Date special values
-        serializer.Serialize(writer, String.Empty);
+        serializer.Serialize(writer, String.Empty);   // Write empty strings for Empiria Date special values
+
       }
     }
 

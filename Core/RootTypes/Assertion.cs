@@ -32,7 +32,10 @@ namespace Empiria {
     /// <param name="onFailsException">The exception to throw if the assertion fails.</param>
     static public void Assert(bool assertion, Exception onFailsException) {
       if (!assertion) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, onFailsException);
+
+        EmpiriaLog.Error(onFailsException);
+
+        throw onFailsException;
       }
     }
 

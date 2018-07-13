@@ -77,6 +77,7 @@ namespace Empiria.Logging {
 
 
     private void WriteLogEntry(ILogEntry o) {
+
       var dataOperation = GetDataOperation(o);
 
       DataWriter.Execute(dataOperation);

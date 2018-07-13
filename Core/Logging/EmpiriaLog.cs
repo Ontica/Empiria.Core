@@ -106,6 +106,7 @@ namespace Empiria {
           var logEntry = CreateLogEntry(type, data);
 
           logTrail.Write(logEntry);
+
         } catch (Exception innerException) {
           throw new LoggingException(LoggingException.Msg.LoggingIssue, innerException);
         } finally {

@@ -146,6 +146,7 @@ namespace Empiria.Ontology {
 
     #region Public properties
 
+
     protected internal EmpiriaIdAndKeyDictionary<TypeAssociationInfo> Associations {
       get {
         if (associationInfoList == null) {

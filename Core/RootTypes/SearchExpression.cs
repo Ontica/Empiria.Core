@@ -1,6 +1,6 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Data processing services                     Component : Searching and filtering services      *
+*  Module   : Data processing services                     Component : Searching and filtering               *
 *  Assembly : Empiria.Core.dll                             Pattern   : Utility class                         *
 *  Type     : SearchExpression                             License   : Please read LICENSE.txt file          *
 *                                                                                                            *

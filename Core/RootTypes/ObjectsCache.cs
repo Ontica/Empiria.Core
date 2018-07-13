@@ -20,7 +20,7 @@ namespace Empiria {
     static private readonly int cacheSize =
                                 ConfigurationData.Get<int>(typeof(ObjectsCache), "ObjectCache.Size", 1048576);
 
-    private Dictionary<string,BaseObject> objects = null;
+    private Dictionary<string, BaseObject> objects = null;
     private Dictionary<string, BaseObject> namedObjects = null;
     private Dictionary<string, long> lastAccess = null;
 
