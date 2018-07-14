@@ -142,7 +142,7 @@ namespace Empiria {
     }
 
 
-    static public List<T> ParseList<T>(DataTable dataTable) where T : BaseObject {
+    static public List<T> ParseList<T>(DataTable dataTable, bool reload = false) where T : BaseObject {
       if (dataTable == null || dataTable.Rows.Count == 0) {
         return new List<T>();
       }
@@ -154,9 +154,15 @@ namespace Empiria {
         foreach (DataRow dataRow in dataTable.Rows) {
           objectId = (int) dataRow[baseTypeInfo.IdFieldName];
 
-          T item = cache.TryGetItem<T>(baseTypeInfo.Name, objectId);
-          if (item != null) {
-            list.Add(item);    // Only use dataRow when item is not in cache
+          if (!reload) {
+            T item = cache.TryGetItem<T>(baseTypeInfo.Name, objectId);
+            if (item != null) {
+              list.Add(item);    // Only use dataRow when item is not in cache
+            } else {
+              ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
+
+              list.Add(BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow));
+            }
           } else {
             ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
 
@@ -164,6 +170,7 @@ namespace Empiria {
           }
         }
         return list;
+
       } catch (Exception e) {
         var exception = new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
                                               e, baseTypeInfo.Name, objectId);
