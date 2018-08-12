@@ -305,7 +305,8 @@ namespace Empiria.Reflection {
     #region Private methods
 
     static public PropertyInfo TryGetEmptyInstanceProperty(Type type) {
-      return type.GetProperty("Empty", BindingFlags.ExactBinding | BindingFlags.Static | BindingFlags.Public);
+      return type.GetProperty("Empty", BindingFlags.ExactBinding | BindingFlags.Static |
+                                       BindingFlags.Public | BindingFlags.NonPublic);
     }
 
     static public Delegate GetParseWithIdMethodDelegate(Type type) {
