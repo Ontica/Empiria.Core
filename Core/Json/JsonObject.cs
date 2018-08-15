@@ -105,6 +105,26 @@ namespace Empiria.Json {
 
 
     /// <summary>Adds a new json item to the root of this json object, in the case
+    /// that condition is true and value is not null or empty.</summary>
+    /// <param name="key">The key or name of the item to add.</param>
+    /// <param name="value">The value of the object added</param>
+    public void AddIf(string key, object value, bool condition) {
+      Assertion.AssertObject(key, "key");
+      if (!condition) {
+        return;
+      }
+
+      Assertion.AssertObject(value, "value");
+
+      if (HasEmptyOrNullValue(value)) {
+        return;
+      }
+
+      dictionary.Add(key, value);
+    }
+
+
+    /// <summary>Adds a new json item to the root of this json object, in the case
     /// that value is not an empty value or null instance.</summary>
     /// <param name="key">The key or name of the item to add.</param>
     /// <param name="value">The value of the object added</param>
