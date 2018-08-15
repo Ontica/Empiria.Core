@@ -23,8 +23,11 @@ namespace Empiria.Reflection {
     static public T Convert<T>(object value) {
       var convertToType = typeof(T);
 
-      if (convertToType == typeof(string)) {
-        return (T) (object) System.Convert.ToString(value);
+      if (convertToType == value.GetType()) {
+        return (T) value;
+
+      } else if (convertToType == typeof(object)) {
+        return (T) value;
 
       } else if (convertToType == typeof(int)) {
         return (T) (object) System.Convert.ToInt32(value);
@@ -40,13 +43,8 @@ namespace Empiria.Reflection {
 
       }
 
-      if (convertToType == value.GetType()) {
-        return (T) value;
 
-      } else if (convertToType == typeof(object)) {
-        return (T) value;
-
-      } else if (ObjectFactory.IsIdentifiable(convertToType)) {
+      if (ObjectFactory.IsIdentifiable(convertToType)) {
 
         if (EmpiriaString.IsInteger(value.ToString())) {
           return ObjectFactory.InvokeParseMethod<T>(System.Convert.ToInt32(value));
@@ -66,6 +64,9 @@ namespace Empiria.Reflection {
         object o = JsonObject.Parse((IDictionary<string, object>) value);
 
         return JsonConverter.ToObject<T>(o.ToString());
+
+      } else if (convertToType == typeof(string)) {
+        return (T) (object) System.Convert.ToString(value);
 
       } else {
         return (T) System.Convert.ChangeType(value, convertToType);
