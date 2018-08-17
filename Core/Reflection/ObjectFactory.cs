@@ -65,10 +65,13 @@ namespace Empiria.Reflection {
 
 
       } else if (convertToType != typeof(string) && value is IDictionary<string, object>) {
-        object o = JsonObject.Parse((IDictionary<string, object>) value);
+        var jsonObject = JsonObject.Parse((IDictionary<string, object>) value);
 
-        return JsonConverter.ToObject<T>(o.ToString());
-
+        if (HasJsonParser(convertToType)) {
+          return InvokeParseJsonMethod<T>(jsonObject);
+        } else {
+          return JsonConverter.ToObject<T>(jsonObject.ToString());
+        }
       } else if (convertToType == typeof(string)) {
         return (T) (object) System.Convert.ToString(value);
 
