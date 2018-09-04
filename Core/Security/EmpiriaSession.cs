@@ -27,7 +27,6 @@ namespace Empiria.Security {
       this.ServerId = ExecutionServer.ServerId;
       this.ClientAppId = principal.ClientApp.Id;
       this.UserId = principal.Identity.User.Id;
-      this.ContextId = principal.ContextId;
       if (contextData != null) {
         this.ExtendedData = contextData;
       }
@@ -95,10 +94,6 @@ namespace Empiria.Security {
       private set;
     }
 
-    public int ContextId {
-      get;
-      private set;
-    }
 
     public DateTime EndTime {
       get;

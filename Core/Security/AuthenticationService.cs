@@ -34,7 +34,7 @@ namespace Empiria.Security {
 
 
     static public EmpiriaPrincipal Authenticate(string clientAppKey, string username, string password,
-                                                string entropy = "", int contextId = -1) {
+                                                string entropy = "", Json.JsonObject contextData = null) {
       Assertion.AssertObject(clientAppKey, "clientAppKey");
       Assertion.AssertObject(username, "username");
       Assertion.AssertObject(password, "password");
@@ -47,12 +47,12 @@ namespace Empiria.Security {
 
       var identity = new EmpiriaIdentity(user, AuthenticationMode.Basic);
 
-      return new EmpiriaPrincipal(identity, clientApplication, contextId);
+      return new EmpiriaPrincipal(identity, clientApplication, contextData);
     }
 
 
     static public EmpiriaPrincipal AuthenticateAnonymous(string clientAppKey, AnonymousUser anonymousUser,
-                                                         int contextId = -1) {
+                                                         Json.JsonObject contextData = null) {
       Assertion.AssertObject(clientAppKey, "clientAppKey");
 
       var clientApplication = ClientApplication.ParseActive(clientAppKey);
@@ -63,7 +63,7 @@ namespace Empiria.Security {
 
       var identity = new EmpiriaIdentity(user, AuthenticationMode.Basic);
 
-      return new EmpiriaPrincipal(identity, clientApplication, contextId);
+      return new EmpiriaPrincipal(identity, clientApplication, contextData);
     }
 
     #endregion Services

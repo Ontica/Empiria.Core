@@ -46,14 +46,14 @@ namespace Empiria.Security {
     /// EmpiriaIdentity. Fails if identity represents a non authenticated EmpiriaIdentity.</summary>
     /// <param name="identity">Represents an authenticated Empiria user.</param>
     internal EmpiriaPrincipal(EmpiriaIdentity identity, ClientApplication clientApp,
-                              int contextId = -1) {
+                              Json.JsonObject contextData = null) {
       Assertion.AssertObject(identity, "identity");
       Assertion.AssertObject(clientApp, "clientApp");
 
       if (!identity.IsAuthenticated) {
         throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
       }
-      this.Initialize(identity, clientApp, contextId: contextId);
+      this.Initialize(identity, clientApp, contextData: contextData);
     }
 
     static public EmpiriaPrincipal Current {
@@ -151,17 +151,15 @@ namespace Empiria.Security {
     #region Private methods
 
     private void Initialize(EmpiriaIdentity identity, ClientApplication clientApp = null,
-                            EmpiriaSession session = null, int contextId = -1) {
+                            EmpiriaSession session = null, Json.JsonObject contextData = null) {
       this.Identity = identity;
       if (session != null) {
         this.ClientApp = ClientApplication.Parse(session.ClientAppId);
-        this.ContextId = (contextId != -1) ? contextId : session.ContextId;
         this.Session = session;
       } else {
         Assertion.AssertObject(clientApp, "clientApp");
         this.ClientApp = clientApp;
-        this.ContextId = contextId;
-        this.Session = EmpiriaSession.Create(this);
+        this.Session = EmpiriaSession.Create(this, contextData);
       }
       LoadRolesArray(identity.User.Id);
       principalsCache.Insert(this.Session.Token, this);
