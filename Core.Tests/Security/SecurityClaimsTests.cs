@@ -11,40 +11,31 @@ using System;
 using Xunit;
 
 using Empiria.Security;
+using Empiria.Security.Claims;
 
-namespace Empiria.Tests {
+namespace Empiria.Tests.Security {
 
   /// <summary>Security claims services tests.</summary>
-  public class CryptographerTests {
+  public class SecurityClaimsTests {
 
     [Fact]
-    public void MustEncryptAShortTextWithEntropy() {
-      const string secret = "My protected message";
-      const string entropy = "ABC123";
+    public void MustGetClaimValue() {
+      CommonMethods.Authenticate();
 
-      string encrypted = Cryptographer.Encrypt(EncryptionMode.EntropyKey, secret, entropy);
+      var value = ClaimsService.GetClaimValue<string>(EmpiriaUser.Current,
+                                                      ClaimType.ElectronicSignPrivateKeyFilePath);
 
-      Assert.NotEqual(encrypted, secret);
-
-      string decrypted = Cryptographer.Decrypt(encrypted, entropy);
-
-      Assert.Equal(decrypted, secret);
+      Assert.NotEmpty(value);
     }
 
+
     [Fact]
-    public void MustEncryptTheHashOfAShortTextWithEntropy() {
-      const string secret = "My protected message";
-      const string entropy = "ABC123";
+    public void MustHaveClaimValue() {
+      CommonMethods.Authenticate();
 
-      string s = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, secret, entropy);
-
-      Assert.NotEqual(s, secret);
-
-      string decrypted = Cryptographer.Decrypt(s, entropy);
-
-      Assert.Equal(decrypted, Cryptographer.CreateHashCode(secret, entropy));
+      ClaimsService.EnsureClaim(EmpiriaUser.Current, ClaimType.UserID, "AutoTester");
     }
 
   }  // SecurityClaimsTests
 
-}  //namespace Empiria.Tests
+}  // namespace Empiria.Tests.Security
