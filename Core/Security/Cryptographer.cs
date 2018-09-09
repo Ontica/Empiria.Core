@@ -108,8 +108,9 @@ namespace Empiria.Security {
       entropy = entropy ?? "";
 
       if (entropy.Length != 0 &&
-         protectionMode != EncryptionMode.Standard && protectionMode != EncryptionMode.HashCode) {
-        throw new SecurityException(SecurityException.Msg.InvalidProtectionMode, protectionMode.ToString());
+         (protectionMode == EncryptionMode.Standard || protectionMode == EncryptionMode.HashCode)) {
+        Assertion.AssertFail($"Entropy parameter was provided but it not works with encryption mode " +
+                             $"{protectionMode.ToString()}.");
       }
 
       string s = String.Empty;
