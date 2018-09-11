@@ -22,11 +22,11 @@ namespace Empiria.Security.Authorization {
     }
 
 
-    public AuthorizationRequest(string operation, string externalObjectUID, string notes = "") {
-      Assertion.AssertObject(operation, "operation");
+    public AuthorizationRequest(string operationName, string externalObjectUID, string notes = "") {
+      Assertion.AssertObject(operationName, "operationName");
       Assertion.AssertObject(externalObjectUID, "externalObjectUID");
 
-      this.Operation = operation;
+      this.OperationName = operationName;
       this.ExternalObjectUID = externalObjectUID;
 
       this.RequestTime = DateTime.Now;
@@ -36,7 +36,7 @@ namespace Empiria.Security.Authorization {
 
 
     [DataField("RequestedOperation")]
-    public string Operation {
+    public string OperationName {
       get;
       private set;
     }

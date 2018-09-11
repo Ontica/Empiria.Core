@@ -16,14 +16,33 @@ namespace Empiria.Security.Authorization {
   /// <summary>Provides database read and write methods used by authorization services.</summary>
   static internal class AuthorizationServiceData {
 
-    #region Public methods
+    #region Internal methods
 
-    static internal FixedList<Authorization> GetActiveAuthorizations() {
+    static internal FixedList<Authorization> GetPendingAuthorizations() {
       int userId = EmpiriaUser.Current.Id;
 
       string sql = $"SELECT * FROM Authorizations " +
                    $"WHERE (RequestedById = {userId} OR ApprovedById = {userId} OR AuthorizedById = {userId}) AND " +
-                   $"AuthorizationStatus NOT IN ('C', 'L', 'X') " +
+                   $"AuthorizationStatus NOT IN ('T', 'C', 'L', 'X') " +
+                   $"ORDER BY RequestTime";
+
+      return DataReader.GetFixedList<Authorization>(DataOperation.Parse(sql));
+    }
+
+
+    static internal FixedList<Authorization> GetPendingAuthorizations(Predicate<Authorization> match) {
+      Assertion.AssertObject(match, "match");
+
+      return GetPendingAuthorizations().FindAll(match);
+    }
+
+
+    static internal FixedList<Authorization> GetReadyToApplyAuthorizations() {
+      int userId = EmpiriaUser.Current.Id;
+
+      string sql = $"SELECT * FROM Authorizations " +
+                   $"WHERE (RequestedById = {userId} OR ApprovedById = {userId} OR AuthorizedById = {userId}) AND " +
+                   $"AuthorizationStatus = 'T' " +
                    $"ORDER BY RequestTime";
 
       return DataReader.GetFixedList<Authorization>(DataOperation.Parse(sql));
@@ -31,13 +50,12 @@ namespace Empiria.Security.Authorization {
 
 
     static internal void WriteAuthorization(Authorization o) {
-
       var op = DataOperation.Parse("writeAuthorization", o.Id, o.UID,
-                                    o.Request.Operation, o.Request.ExternalObjectUID,
+                                    o.Request.OperationName, o.Request.ExternalObjectUID,
                                     o.Request.RequestTime, o.Request.Notes, o.Request.RequestedBy.Id,
                                     o.ApprovedBy.Id, o.AuthorizedBy.Id, o.AuthorizationNotes,
                                     o.AuthorizationTime, o.ExpirationTime, o.ExtensionData.ToString(),
-                                    o.Status, String.Empty);
+                                    (char) o.Status, String.Empty);
       DataWriter.Execute(op);
     }
 

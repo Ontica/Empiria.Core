@@ -23,7 +23,7 @@ namespace Empiria.Security.Authorization {
       // Required by Empiria Framework.
     }
 
-    internal Authorization(AuthorizationRequest request) {
+    private Authorization(AuthorizationRequest request) {
       Assertion.AssertObject(request, "request");
 
       this.Request = request;
@@ -34,6 +34,39 @@ namespace Empiria.Security.Authorization {
       return BaseObject.ParseKey<Authorization>(uid);
     }
 
+
+    public static FixedList<Authorization> Authorized() {
+      return AuthorizationServiceData.GetReadyToApplyAuthorizations();
+    }
+
+
+    /// <summary>Return all unauthorized authorizations where the current user is involved
+    /// as a requester or who authorizes or approves the authorization request.</summary>
+    /// <returns>A read only list of authorizations.</returns>
+    static public FixedList<Authorization> Pending() {
+      return AuthorizationServiceData.GetPendingAuthorizations();
+    }
+
+
+    /// <summary>Return unauthorized authorizations that match the given predicate and
+    /// where the current user is involved as a requester or who authorizes or
+    /// approves the authorization request.</summary>
+    /// <returns>A read only list of filtered authorizations.</returns>
+    static public FixedList<Authorization> Pending(Predicate<Authorization> match) {
+      return AuthorizationServiceData.GetPendingAuthorizations(match);
+    }
+
+
+    /// <summary>Creates an authorization object from a given authorization request.</summary>
+    static public Authorization Create(AuthorizationRequest request) {
+      Assertion.AssertObject(request, "request");
+
+      var authorization = new Authorization(request);
+
+      authorization.Save();
+
+      return authorization;
+    }
 
     #endregion Constructors and parsers
 
@@ -94,9 +127,60 @@ namespace Empiria.Security.Authorization {
       private set;
     }
 
+
+    public bool IsReadyToBeAuthorized {
+      get {
+        return (this.Status == AuthorizationStatus.Pending ||
+                this.Status == AuthorizationStatus.Approved ||
+                this.Status == AuthorizationStatus.Expired);
+      }
+    }
+
+
     #endregion Properties
 
     #region Methods
+
+    public void Apply() {
+      Assertion.Assert(this.Status == AuthorizationStatus.Authorized,
+                      $"Authorization request '{this.UID}' is in status {this.Status.ToString()}, " +
+                      "so it can not be applied.");
+
+      this.AssertNotExpired();
+
+      this.Status = AuthorizationStatus.Closed;
+
+      this.Save();
+    }
+
+    private void AssertNotExpired() {
+      if (DateTime.Now < this.ExpirationTime) {
+        return;
+      }
+
+      this.Status = AuthorizationStatus.Expired;
+      this.Save();
+
+      throw new AuthorizationException(AuthorizationException.Msg.AuthorizationWasExpired, this.UID);
+    }
+
+
+    public void Authorize(int expirationMinutes = 60, string notes = "") {
+      Assertion.Assert(0 <= expirationMinutes,
+                       "Expiration minutes must be a positive number.");
+      Assertion.Assert(this.IsReadyToBeAuthorized,
+                       $"Authorization request '{this.UID}' is in status {this.Status.ToString()}, " +
+                       "so it can not be authorized.");
+
+      this.AuthorizedBy = EmpiriaUser.Current.AsContact();
+      this.AuthorizationTime = DateTime.Now;
+      this.ExpirationTime = DateTime.Now.AddMinutes(expirationMinutes);
+      this.AuthorizationNotes = notes ?? String.Empty;
+      this.Status = AuthorizationStatus.Authorized;
+
+      this.Save();
+    }
+
 
     protected override void OnSave() {
       if (base.IsNew) {

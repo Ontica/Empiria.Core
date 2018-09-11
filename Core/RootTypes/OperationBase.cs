@@ -1,10 +1,10 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Fundamental Types                 *
-*  Namespace : Empiria                                          License  : Please read LICENSE.txt file      *
-*  Type      : OperationBase                                    Pattern  : Structure Type                    *
+*  Module   : Empiria Core                                 Component : Fundamental Types                     *
+*  Assembly : Empiria.Core.dll                             Pattern   : Information Holder                    *
+*  Type     : OperationBase                                License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Abstract class that represents a named operation with or without parameters.                  *
+*  Summary  : Abstract class that represents a named operation with or without parameters.                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -18,32 +18,24 @@ namespace Empiria {
   /// <summary>Abstract class that represents a named operation with or without parameters.</summary>
   public abstract class OperationBase {
 
-    #region Fields
-
-    private string name = String.Empty;
-    private object[] parameters = new object[0];
-
-    #endregion Fields
-
     #region Constructors and parsers
-
-    private OperationBase() {
-      // Default instance constructor not allowed
-    }
 
     protected OperationBase(string name) {
       Assertion.AssertObject(name, "name");
 
-      this.name = name;
+      this.Name = name;
+      this.Parameters = new object[0];
     }
+
 
     protected OperationBase(string name, object[] parameters) {
       Assertion.AssertObject(name, "name");
       Assertion.AssertObject(parameters, "parameters");
 
-      this.name = name;
-      this.parameters = parameters;
+      this.Name = name;
+      this.Parameters = parameters;
     }
+
 
     static protected void ExtractFromMessage(string message, out string name, out object[] parameters) {
       Assertion.AssertObject(message, "message");
@@ -63,6 +55,7 @@ namespace Empiria {
       }
     }
 
+
     static protected void ExtractFromMessageProtected(string message, out string name, out object[] parameters) {
       Assertion.AssertObject(message, "message");
 
@@ -74,12 +67,13 @@ namespace Empiria {
 
     #region Public properties
 
-    public object[] Parameters {
-      get { return parameters; }
+    public string Name {
+      get;
     }
 
-    public string Name {
-      get { return name; }
+
+    public object[] Parameters {
+      get;
     }
 
     #endregion Public properties
@@ -94,23 +88,27 @@ namespace Empiria {
       }
     }
 
-  public string ParametersToString() {
+
+    public string ParametersToString() {
       string parametersString = String.Empty;
 
-      for (int i = 0; i < parameters.Length; i++) {
-        parametersString += (i != 0 ? "¸" : String.Empty) + Convert.ToString(parameters[i]);
+      for (int i = 0; i < this.Parameters.Length; i++) {
+        parametersString += (i != 0 ? "¸" : String.Empty) + Convert.ToString(this.Parameters[i]);
       }
 
       return parametersString;
     }
 
+
     public string ParametersToStringProtected() {
       return FormerCryptographer.Encrypt(EncryptionMode.Standard, this.ParametersToString());
     }
 
+
     public string ToMessage() {
-      return this.name + "§" + this.ParametersToString();
+      return this.Name + "§" + this.ParametersToString();
     }
+
 
     public string ToMessageProtected() {
       return FormerCryptographer.Encrypt(EncryptionMode.Standard, this.ToMessage());
