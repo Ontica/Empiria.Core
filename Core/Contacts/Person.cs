@@ -58,37 +58,59 @@ namespace Empiria.Contacts {
 
     #region Public properties
 
+    [DataField("FirstName")]
+    public string FirstName {
+      get {
+        return firstName;
+      }
+      set {
+        firstName = value;
+      }
+    }
+
+    [DataField("LastName")]
+    public string LastName {
+      get {
+        return lastName;
+      }
+      set {
+        lastName = value;
+      }
+    }
+
+
+    [DataField("LastName2")]
+    public string LastName2 {
+      get {
+        return lastName2;
+      }
+      set {
+        lastName2 = value;
+      }
+    }
+
+
     public string FamilyFullName {
       get {
         return EmpiriaString.TrimAll(this.LastName + " " + this.LastName2 + ", " + this.FirstName);
       }
     }
 
-    [DataField("FirstName")]
-    public string FirstName {
-      get { return firstName; }
-      set { firstName = value; }
-    }
 
     public new string FullName {
       get {
-        if (this.FirstName.Length == 0 && this.LastName.Length == 0) {
+        if (base.FullName != String.Empty) {
           return base.FullName;
         }
         return EmpiriaString.TrimAll(this.FirstName + " " + this.LastName + " " + this.LastName2);
       }
     }
 
-    [DataField("LastName")]
-    public string LastName {
-      get { return lastName; }
-      set { lastName = value; }
-    }
 
-    [DataField("LastName2")]
-    public string LastName2 {
-      get { return lastName2; }
-      set { lastName2 = value; }
+    public string JobTitle {
+      get {
+        return ExtendedData.Get("JobTitle", "No determinado");
+      }
     }
 
     #endregion Public properties
