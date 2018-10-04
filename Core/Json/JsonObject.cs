@@ -468,6 +468,17 @@ namespace Empiria.Json {
     }
 
 
+    /// <summary>Updates or adds a new JsonObject from this instance given an itemPath.</summary>
+    /// <param name="itemPath">The item path to set (e.g. like '/parent/child/item' or just 'item').</param>
+    /// <param name="jsonObject">The json object to add.</param>
+    public void Set(string itemPath, JsonObject jsonObject) {
+      Assertion.AssertObject(itemPath, "itemPath");
+      Assertion.AssertObject(jsonObject, "jsonObject");
+
+      Set(itemPath, jsonObject.ToDictionary());
+    }
+
+
     /// <summary>Updates or adds a new JsonObject from this instance given an itemPath.
     /// If value has no value (null or empty), removes it from the structure if already exists.</summary>
     /// <param name="itemPath">The item path to set (e.g. like '/parent/child/item' or just 'item').</param>
@@ -484,6 +495,16 @@ namespace Empiria.Json {
 
         this.Set(itemPath, value);
       }
+    }
+
+    /// <summary>Updates or adds a new JsonObject from this instance given an itemPath.</summary>
+    /// <param name="itemPath">The item path to set (e.g. like '/parent/child/item' or just 'item').</param>
+    /// <param name="jsonObject">The json object to add.</param>
+    public void SetIfValue(string itemPath, JsonObject jsonObject) {
+      Assertion.AssertObject(itemPath, "itemPath");
+      Assertion.AssertObject(jsonObject, "jsonObject");
+
+      SetIfValue(itemPath, jsonObject.ToDictionary());
     }
 
 
