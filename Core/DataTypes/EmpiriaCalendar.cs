@@ -29,7 +29,7 @@ namespace Empiria.DataTypes {
 
       var storedJson = StoredJson.Parse("System.Calendars");
 
-      JsonObject json = storedJson.Value.Slice(calendarName);
+      JsonObject json = storedJson.Value.Slice(calendarName, true);
 
       return new EmpiriaCalendar(json);
     }
