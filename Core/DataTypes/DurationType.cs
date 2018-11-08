@@ -18,13 +18,15 @@ namespace Empiria.DataTypes {
 
     Hours = 1,
 
-    Days = 2,
+    CalendarDays = 2,
 
-    WorkingDays = 3,
+    BusinessDays = 3,
 
     Months = 4,
 
     Years = 5,
+
+    NA = 6,
 
   }  // enum DurationType
 

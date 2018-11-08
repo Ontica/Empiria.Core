@@ -83,18 +83,24 @@ namespace Empiria.DataTypes {
         return DurationType.Hours;
 
       } else if (durationType == "days" || durationType == "day") {
-        return DurationType.Days;
+        return DurationType.CalendarDays;
 
-      } else if (durationType == "work-days" || durationType == "work-day" ||
+      } else if (durationType == "business-days" || durationType == "business-day" ||
+        durationType == "work-days" || durationType == "work-day" ||
         durationType == "working-days" || durationType == "working-day") {
-        return DurationType.WorkingDays;
-
+        return DurationType.BusinessDays;
 
       } else if (durationType == "months" || durationType == "month") {
         return DurationType.Months;
 
       } else if (durationType == "years" || durationType == "year") {
         return DurationType.Years;
+
+      } else if (durationType == "unknown") {
+        return DurationType.Unknown;
+
+      } else if (durationType == "not-available" || durationType == "NA") {
+        return DurationType.NA;
 
       } else {
         throw Assertion.AssertNoReachThisCode($"Unrecognized duration type '{durationType}'.");
@@ -108,11 +114,11 @@ namespace Empiria.DataTypes {
         case DurationType.Hours:
           return value + " hours";
 
-        case DurationType.Days:
+        case DurationType.CalendarDays:
           return value + " days";
 
-        case DurationType.WorkingDays:
-          return value + " working-days";
+        case DurationType.BusinessDays:
+          return value + " business-days";
 
         case DurationType.Months:
           return value + " months";
@@ -120,8 +126,14 @@ namespace Empiria.DataTypes {
         case DurationType.Years:
           return value + " years";
 
+        case DurationType.Unknown:
+          return value + " unknown";
+
+        case DurationType.NA:
+          return value + " not-available";
+
         default:
-          throw Assertion.AssertNoReachThisCode();
+          throw Assertion.AssertNoReachThisCode("Unrecognized");
       }
     }
 
@@ -133,6 +145,14 @@ namespace Empiria.DataTypes {
         this.Value = int.Parse(parts[0]);
         this.DurationType = GetDurationType(parts[1]);
       }
+    }
+
+
+    public object ToJson() {
+      return new {
+        value = this.Value,
+        type = this.DurationType.ToString()
+      };
     }
 
 
