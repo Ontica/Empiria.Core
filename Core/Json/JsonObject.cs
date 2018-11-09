@@ -53,10 +53,10 @@ namespace Empiria.Json {
       return JsonObject.Parse(jsonString);
     }
 
-    static private readonly JsonObject _empty = new JsonObject() { IsEmptyInstance = true };
+
     static public JsonObject Empty {
       get {
-        return _empty;
+        return new JsonObject() { IsEmptyInstance = true };
       }
     }
 
@@ -418,6 +418,8 @@ namespace Empiria.Json {
     public void Set(string itemPath, object value) {
       Assertion.AssertObject(itemPath, "itemPath");
 
+      Assertion.AssertObject(!this.IsEmptyInstance, "Can't change a JsonObject empty instance.");
+
       if (dictionary.ContainsKey(itemPath)) {   // Fast-track case
         dictionary[itemPath] = value;
 
@@ -659,13 +661,9 @@ namespace Empiria.Json {
         return defaultValue;
       }
 
-      // Return defaultValue for empty strings values of some types;
+      // Return defaultValue for empty strings values
       if (value is string && ((string) value).Length == 0) {
-        var convertToType = typeof(T);
-
-        if (convertToType == typeof(DateTime)) {
-          return defaultValue;
-        }
+        return defaultValue;
       }
 
       try {
