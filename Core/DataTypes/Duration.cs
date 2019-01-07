@@ -160,6 +160,36 @@ namespace Empiria.DataTypes {
       return _string_value;
     }
 
+
+    public double ToDays() {
+      switch (this.DurationType) {
+        case DurationType.Hours:
+          return this.Value / 24.0;
+
+        case DurationType.CalendarDays:
+          return this.Value;
+
+        case DurationType.BusinessDays:
+          return this.Value;
+
+        case DurationType.Months:
+          return this.Value * 30;
+
+        case DurationType.Years:
+          return this.Value * 365;
+
+        case DurationType.Unknown:
+          return 0;
+
+        case DurationType.NA:
+          return 0;
+
+        default:
+          throw Assertion.AssertNoReachThisCode("Unrecognized");
+      }
+
+    }
+
     #endregion Methods
 
   } // class Duration
