@@ -59,6 +59,8 @@ namespace Empiria.Security {
 
     static public string CreateHashCode(byte[] bytesArray, string salt = "") {
       Assertion.AssertObject(bytesArray, "bytesArray");
+      Assertion.Assert(bytesArray.Length != 0, "bytesArray can't be empty.");
+
       salt = salt ?? String.Empty;
 
       StartEngine();
