@@ -61,16 +61,7 @@ namespace Empiria.Security {
       Assertion.AssertObject(bytesArray, "bytesArray");
       Assertion.Assert(bytesArray.Length != 0, "bytesArray can't be empty.");
 
-      salt = salt ?? String.Empty;
-
-      StartEngine();
-
-      bytesArray = Encoding.UTF8.GetBytes(salt + bytesArray + ExecutionServer.LicenseNumber +
-                                          ConstructKey(salt + ExecutionServer.LicenseNumber));
-
-      SHA512 sha = SHA512Cng.Create();
-
-      return ConvertToString(sha.ComputeHash(bytesArray));
+      return CreateHashCode(Encoding.UTF8.GetString(bytesArray, 0, bytesArray.Length), salt);
     }
 
 
