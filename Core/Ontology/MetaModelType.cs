@@ -242,9 +242,9 @@ namespace Empiria.Ontology {
       protected set { name = EmpiriaString.TrimAll(value); }
     }
 
-    internal string NamedIdFieldName {
+    public string NamedIdFieldName {
       get { return namedIdFieldName; }
-      set { namedIdFieldName = EmpiriaString.TrimAll(value); }
+      internal set { namedIdFieldName = EmpiriaString.TrimAll(value); }
     }
 
     protected EntityStatus Status {
@@ -294,9 +294,9 @@ namespace Empiria.Ontology {
       get { return typeFamily; }
     }
 
-    internal string TypeIdFieldName {
+    public string TypeIdFieldName {
       get { return typeIdFieldName; }
-      set { typeIdFieldName = EmpiriaString.TrimAll(value); }
+      internal set { typeIdFieldName = EmpiriaString.TrimAll(value); }
     }
 
     #endregion Public properties
