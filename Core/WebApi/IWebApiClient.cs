@@ -25,16 +25,13 @@ namespace Empiria.WebApi {
     Task<T> GetAsync<T>(string path, params object[] pars);
 
 
-    Task PostAsync<T>(T body, string path, params object[] pars);
+    Task<T> PostAsync<T>(string path, params object[] pars);
 
 
-    Task<R> PostAsync<T, R>(T body, string path, params object[] pars);
+    Task<T> PostAsync<T>(object body, string path, params object[] pars);
 
 
-    Task PutAsync<T>(T body, string path, params object[] pars);
-
-
-    Task<R> PutAsync<T, R>(T body, string path, params object[] pars);
+    Task<T> PutAsync<T>(object body, string path, params object[] pars);
 
 
   }  // interface IWebApiClient
