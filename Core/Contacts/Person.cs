@@ -11,12 +11,6 @@ using System;
 
 namespace Empiria.Contacts {
 
-  public enum Gender {
-    NotApply = 'N',
-    Female = 'F',
-    Male = 'M',
-    Unknown = 'U',
-  }
 
   /// <summary>Information specific to a person.</summary>
   public class Person : Contact {

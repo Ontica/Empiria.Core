@@ -16,7 +16,7 @@ using Empiria.StateEnums;
 
 namespace Empiria.Contacts {
 
-  public class Contact : BaseObject {
+  public class Contact : BaseObject, IContact {
 
     #region Constructors and parsers
 
