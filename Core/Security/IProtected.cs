@@ -12,7 +12,7 @@ using System;
 namespace Empiria.Security {
 
   /// <summary>This interface serves to control the data integrity of a stored entity.</summary>
-  public interface IProtected : IIdentifiable {
+  public interface IProtected {
 
     #region Members definition
 

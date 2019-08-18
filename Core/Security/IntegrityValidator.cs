@@ -86,7 +86,7 @@ namespace Empiria.Security {
           throw new SecurityException(SecurityException.Msg.InvalidDIFDataItemDataType,
                                       resourceTypeName, currentData[i],
                                       currentData[i].GetType().FullName, i,
-                                      version, resource.Id);
+                                      version, resource.GetType());
         }
         dif += "|";
       }

@@ -67,7 +67,7 @@ namespace Empiria.Security {
     }
 
 
-    string IIdentifiable.UID {
+    public string UID {
       get {
         return this.Token;
       }

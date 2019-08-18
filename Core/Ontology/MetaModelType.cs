@@ -196,7 +196,7 @@ namespace Empiria.Ontology {
       get { return id; }
     }
 
-    string IIdentifiable.UID {
+    public string UID {
       get {
         return this.Name;
       }
