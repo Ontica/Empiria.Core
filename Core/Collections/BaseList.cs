@@ -358,8 +358,9 @@ namespace Empiria.Collections {
     }
 
     public void CopyTo(Array array, int index) {
-      throw new NotImplementedException();
+      Array.Copy(this.items.ToArray(), index, array, 0, this.items.Count - index);
     }
+
 
     public object SyncRoot {
       get {
