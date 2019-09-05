@@ -67,13 +67,6 @@ namespace Empiria.Security.Claims {
     }
 
 
-    [DataField("ClaimExtData")]
-    public JsonObject ExtensionData {
-      get;
-      private set;
-    }
-
-
     [DataField("ClaimValue")]
     public string Value {
       get;

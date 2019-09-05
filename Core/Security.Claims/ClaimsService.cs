@@ -36,6 +36,7 @@ namespace Empiria.Security.Claims {
       throw new SecurityException(SecurityException.Msg.EnsureClaimFailed, assertionFailMsg);
     }
 
+
     static public T GetClaimValue<T>(IClaimsSubject subject,
                                      ClaimType claimType) {
 

@@ -238,12 +238,12 @@ namespace Empiria.Security.Claims {
       if (!internalList.ContainsKey(cacheKey)) {
         internalList.Insert(cacheKey, new List<Claim>());
       }
-      Claim claim = Claim.Create(claimType, this.Subject,
-                                                 claimValue, status);
+      Claim claim = Claim.Create(claimType, this.Subject, claimValue, status);
       internalList[cacheKey].Add(claim);
 
       return claim;
     }
+
 
     static private string BuildUniqueKey(ClaimType claimType,
                                          IClaimsSubject subject) {
@@ -251,6 +251,7 @@ namespace Empiria.Security.Claims {
 
       return temp.ToLowerInvariant();
     }
+
 
     private void LoadClaimList() {
       FixedList<Claim> fullList = ClaimsData.GetSecurityClaims(this.Subject);

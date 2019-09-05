@@ -52,8 +52,7 @@ namespace Empiria.Security.Claims {
 
     static internal void WriteSecurityClaim(Claim o) {
       var op = DataOperation.Parse("writeSecurityClaim", o.Id, o.ClaimType.Id, o.UID,
-                                   o.Subject.ClaimsToken, o.ExtensionData.ToString(),
-                                   o.Value, (char) o.Status);
+                                   o.Subject.ClaimsToken, o.Value, (char) o.Status);
 
       DataWriter.Execute(op);
     }
