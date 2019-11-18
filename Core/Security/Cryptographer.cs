@@ -29,6 +29,18 @@ namespace Empiria.Security {
 
     #region Public methods
 
+
+    static public void AssertValidPrivateKeyPassword(SecureString password) {
+      Assertion.AssertObject(password, "password");
+
+      var privateKeyFilePath =
+                    ClaimsService.GetClaimValue<string>(EmpiriaUser.Current,
+                                                        ClaimType.ElectronicSignPrivateKeyFilePath);
+
+      RSAProvider.GetProvider(privateKeyFilePath, password);
+    }
+
+
     static public SecureString ConvertToSecureString(string source) {
       Assertion.AssertObject(source, "source");
 
