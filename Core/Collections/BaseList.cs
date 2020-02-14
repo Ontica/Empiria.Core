@@ -169,6 +169,18 @@ namespace Empiria.Collections {
       }
     }
 
+
+    public List<TOutput> ConvertAll<TOutput>(Converter<T, TOutput> converter) {
+      if (isSynchronized) {
+        lock (items) {
+          return items.ConvertAll(converter);
+        }
+      } else {
+        return items.ConvertAll(converter);
+      }
+    }
+
+
     protected T Find(Predicate<T> match) {
       if (isSynchronized) {
         lock (items) {
