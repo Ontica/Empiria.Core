@@ -14,7 +14,10 @@ using System.Data;
 using Empiria.Data.Handlers;
 using Empiria.Data.Integration;
 using Empiria.Json;
+using Empiria.ORM;
+using Empiria.Reflection;
 using Empiria.Security;
+
 
 namespace Empiria.Data {
 
@@ -204,6 +207,43 @@ namespace Empiria.Data {
       DataRow dataRow = DataReader.GetDataRow(operation);
 
       return BaseObject.ParseDataRow<T>(dataRow);
+    }
+
+
+    static public T GetPlainObject<T>(DataOperation operation) {
+      var rules = DataMappingRules.Parse(typeof(T));
+
+      DataRow dataRow = DataReader.GetDataRow(operation);
+
+      T instance = ObjectFactory.CreateObject<T>();
+
+      rules.DataBind(instance, dataRow);
+
+      return instance;
+    }
+
+
+    static public List<T> GetPlainObjectList<T>(DataOperation operation) {
+      var rules = DataMappingRules.Parse(typeof(T));
+
+      DataTable dataTable = DataReader.GetDataTable(operation);
+
+      var list = new List<T>(dataTable.Rows.Count);
+
+      foreach (DataRow dataRow in dataTable.Rows) {
+        T instance = ObjectFactory.CreateObject<T>();
+
+        rules.DataBind(instance, dataRow);
+
+        list.Add(instance);
+      }
+
+      return list;
+    }
+
+
+    static public FixedList<T> GetPlainObjectFixedList<T>(DataOperation operation) {
+      return GetPlainObjectList<T>(operation).ToFixedList();
     }
 
 
