@@ -35,6 +35,26 @@ namespace Empiria.DataTypes {
     }
 
 
+    static public EmpiriaCalendar ParseOrDefault(string calendarName) {
+      Assertion.AssertObject(calendarName, "calendarName");
+
+      if (Exists(calendarName)) {
+        return Parse(calendarName);
+      } else {
+        return Default;
+      }
+    }
+
+
+    static public bool Exists(string calendarName) {
+      Assertion.AssertObject(calendarName, "calendarName");
+
+      var storedJson = StoredJson.Parse("System.Calendars");
+
+      return storedJson.Value.Contains(calendarName);
+    }
+
+
     static public EmpiriaCalendar Default {
       get {
         var calendarName = ConfigurationData.Get<string>("Default.Calendar.Name", "Default");
