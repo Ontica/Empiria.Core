@@ -10,14 +10,14 @@
 using System;
 
 using Empiria.Logging;
-using Empiria.Reflection;
 
 namespace Empiria {
 
   /// <summary>Public facade to invoke logging services.</summary>
   static public class EmpiriaLog {
 
-    #region Static properties
+
+    #region Properties
 
     static private Guid CurrentTraceGuid {
       get;
@@ -25,14 +25,10 @@ namespace Empiria {
     } = Guid.NewGuid();
 
 
-    static private bool StopExecution {
-      get;
-      set;
-    } = false;
+    #endregion Properties
 
-    #endregion Static properties
 
-    #region Static methods
+    #region Public  methods
 
     static public void Critical(string message) {
       CreateLogEntryInCurrentLogTrail(LogEntryType.Critical, message);
@@ -65,6 +61,8 @@ namespace Empiria {
 
 
     static public void Trace(string message) {
+      EmpiriaLog.CurrentTraceGuid = Guid.NewGuid();
+
       CreateLogEntryInCurrentLogTrail(LogEntryType.Trace, message);
     }
 
@@ -74,9 +72,11 @@ namespace Empiria {
     }
 
 
-    #endregion Static methods
+    #endregion Public methods
+
 
     #region Private methods
+
 
     static private ILogEntry CreateLogEntry(LogEntryType type, string data) {
       var logEntry = new LogEntryModel();
@@ -92,38 +92,40 @@ namespace Empiria {
       return logEntry;
     }
 
-    static private Object _lockObject = new object();
+
     static private void CreateLogEntryInCurrentLogTrail(LogEntryType type, string data) {
-      lock (_lockObject) {
-        try {
-          if (EmpiriaLog.StopExecution) {
-            return;
-          }
-          EmpiriaLog.StopExecution = true;
+      try {
 
-          ILogTrail logTrail = GetDefaultLogTrail();
+        ILogTrail logTrail = GetDefaultLogTrail();
 
-          var logEntry = CreateLogEntry(type, data);
+        var logEntry = CreateLogEntry(type, data);
 
-          logTrail.Write(logEntry);
+        logTrail.Write(logEntry);
 
-        } catch (Exception innerException) {
-          throw new LoggingException(LoggingException.Msg.LoggingIssue, innerException);
-        } finally {
-          EmpiriaLog.StopExecution = false;
-        }
+      } catch (Exception innerException) {
+        throw new LoggingException(LoggingException.Msg.LoggingIssue, innerException);
       }
     }
 
+
+    static private Object _lockObject = new object();
     static private ILogTrail _defaultLogTrail = null;
-    static internal ILogTrail GetDefaultLogTrail() {
+
+    static private ILogTrail GetDefaultLogTrail() {
       if (_defaultLogTrail == null) {
-        _defaultLogTrail = new LogTrail();
+        lock (_lockObject) {
+          if (_defaultLogTrail == null) {
+            _defaultLogTrail = new LogTrail();
+          }
+        }
       }
+
       return _defaultLogTrail;
     }
 
+
     #endregion Private methods
+
 
   } // class EmpiriaLog
 
