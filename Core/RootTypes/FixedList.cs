@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Collections;
-using Empiria.Contacts;
 
 namespace Empiria {
 
@@ -34,6 +33,7 @@ namespace Empiria {
     public FixedList() {
       //no-op
     }
+
 
     public FixedList(int capacity) : base(capacity) {
       // no-op

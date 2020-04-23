@@ -165,6 +165,7 @@ namespace Empiria {
       }
     }
 
+
     static public bool IsAuthenticated {
       get {
         var principal = Thread.CurrentPrincipal;

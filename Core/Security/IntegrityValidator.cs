@@ -41,6 +41,7 @@ namespace Empiria.Security {
       //}
     }
 
+
     public string GetUpdatedHashCode() {
       int version = resource.CurrentDataIntegrityVersion;
 
@@ -49,11 +50,13 @@ namespace Empiria.Security {
       return version.ToString("X") + this.GetDIFHashCode(version);
     }
 
+
     private string GetDIFHashCode(int version) {
       string data = this.GetDIFString(version);
 
       return FormerCryptographer.CreateHashCode(data, version.ToString("X") + "." + resourceTypeName);
     }
+
 
     private string GetDIFString(int version) {
       object[] currentData = resource.GetDataIntegrityFieldValues(version);

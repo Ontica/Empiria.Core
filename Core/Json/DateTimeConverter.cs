@@ -1,10 +1,10 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : JSON Data Services                *
-*  Namespace : Empiria.Json                                     License  : Please read LICENSE.txt file      *
-*  Type      : DateTimeConverter                                Pattern  : Json Serializer Class             *
+*  Module   : Empiria Json Services                      Component : Json Converters                         *
+*  Assembly : Empiria.OnePoint.dll                       Pattern   : Newtonsoft Json Converter               *
+*  Type     : DateTimeConverter                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Empiria JSON serialization class that writes empty strings for DateTime special values.       *
+*  Summary  : Empiria JSON serialization class that writes empty strings for DateTime special values.        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -16,22 +16,30 @@ namespace Empiria.Json {
   ///<summary>Empiria JSON serialization class that writes empty strings for DateTime special values.</summary>
   public class DateTimeConverter : Newtonsoft.Json.Converters.DateTimeConverterBase {
 
+
+    public override bool CanRead {
+      get {
+        return false;
+      }
+    }
+
+    public override bool CanWrite {
+      get {
+        return true;
+      }
+    }
+
+
     public override bool CanConvert(Type objectType) {
       return objectType == typeof(DateTime);
     }
 
-    public override bool CanRead {
-      get { return false; }
-    }
-
-    public override bool CanWrite {
-      get { return true; }
-    }
 
     public override object ReadJson(JsonReader reader, Type objectType,
                                     object existingValue, JsonSerializer serializer) {
       throw new NotImplementedException();
     }
+
 
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
       DateTime date = (DateTime) value;

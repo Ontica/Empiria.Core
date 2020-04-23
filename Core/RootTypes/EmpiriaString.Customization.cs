@@ -20,6 +20,7 @@ namespace Empiria {
       return ((source) ? "Sí" : "No");
     }
 
+
     static public string BuildDigitalString(params object[] items) {
       const string beginEndTag = "||";
       const string delimiter = "|";

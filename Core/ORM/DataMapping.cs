@@ -192,6 +192,7 @@ namespace Empiria.ORM {
       if (this.MapToLazyParseWithIdInstance) {
         Assertion.Assert(this.DataFieldType == typeof(int),
                          "LazyObjects can only be parsed from integer type data columns.");
+
       } else if (this.MapToJsonItem) {
         Assertion.Assert(this.DataFieldType == typeof(string),
                          "Json items can only be parsed from string type data columns.");

@@ -126,6 +126,7 @@ namespace Empiria.Ontology {
 
     #region Public methods
 
+
     /// <summary>Creates a new instance of type T invoking its default or powertype constructor.</summary>
     protected internal T CreateObject<T>() where T : BaseObject {
       this.AssertTypeInstancesConstructorIsAssigned();
@@ -139,24 +140,30 @@ namespace Empiria.Ontology {
       }
     }
 
+
     internal void DataBind(BaseObject instance, DataRow row) {
       if (this.IsDataBound) {
         this.AssertMappingRulesAreLoaded();
+
         dataMappingRules.DataBind(instance, row);
       }
     }
 
+
     internal Tuple<ObjectTypeInfo, DataRow> GetObjectTypeAndDataRow(int objectId) {
       DataRow dataRow = OntologyData.GetBaseObjectDataRow(this, objectId);
+
       if (dataRow == null) {
         throw new OntologyException(OntologyException.Msg.ObjectIdNotFound,
                                     objectId, this.Name);
       }
+
       if (this.TypeIdFieldName.Length == 0) {
         return new Tuple<ObjectTypeInfo, DataRow>(this, dataRow);
       }
 
       int derivedTypeId = (int) dataRow[this.TypeIdFieldName];
+
       if ((objectId == EmptyInstanceId || objectId == UnknownInstanceId)) {
         if (this.IsAbstract) {
           return new Tuple<ObjectTypeInfo, DataRow>(ObjectTypeInfo.Parse(derivedTypeId), dataRow);
@@ -164,8 +171,10 @@ namespace Empiria.Ontology {
       } else if (derivedTypeId != this.Id) {  // If types are distinct then change basetype to derived
         return new Tuple<ObjectTypeInfo, DataRow>(ObjectTypeInfo.Parse(derivedTypeId), dataRow);
       }
+
       return new Tuple<ObjectTypeInfo, DataRow>(this, dataRow);
     }
+
 
     internal Tuple<ObjectTypeInfo, DataRow> GetObjectTypeAndDataRow(string objectNamedKey) {
       DataRow dataRow = OntologyData.GetBaseObjectDataRow(this, objectNamedKey);
