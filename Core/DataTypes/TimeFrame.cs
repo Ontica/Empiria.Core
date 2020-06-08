@@ -1,24 +1,19 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Data Types Library                *
-*  Namespace : Empiria.DataTypes                                License  : Please read LICENSE.txt file      *
-*  Type      : TimeFrame                                        Pattern  : Value Type                        *
+*  Module   : Core Data Types                            Component : Data Types                              *
+*  Assembly : Empiria.Core.dll                           Pattern   : Structure                               *
+*  Type     : TimeFrame                                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Value type that handles timeframe operations.                                                 *
+*  Summary  : Holds information about a time frame or period with start and end times.                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using Empiria.Json;
 
 namespace Empiria.DataTypes {
 
+  /// <summary>Holds information about a time frame or period with start and end times.</summary>
   public struct TimeFrame {
-
-    #region Fields
-
-    private DateTime _startTime;
-    private DateTime _endTime;
-
-    #endregion Fields
 
     #region Constructors and parsers
 
@@ -27,12 +22,14 @@ namespace Empiria.DataTypes {
                                      endTime ?? ExecutionServer.DateMaxValue) {
     }
 
+
     public TimeFrame(DateTime startTime, DateTime endTime) {
       Assertion.Assert(startTime <= endTime, "startTime should be before or equal to endTime.");
 
-      _startTime = startTime;
-      _endTime = endTime;
+      this.StartTime = startTime;
+      this.EndTime = endTime;
     }
+
 
     static public TimeFrame Default {
       get {
@@ -40,17 +37,25 @@ namespace Empiria.DataTypes {
       }
     }
 
+
+    static public TimeFrame Parse(JsonObject json) {
+      return new TimeFrame(json.Get<DateTime>("from"), json.Get<DateTime>("to"));
+    }
+
+
     #endregion Constructors and parsers
 
     #region Public properties
 
     public DateTime StartTime {
-      get { return _startTime; }
+      get;
     }
 
+
     public DateTime EndTime {
-      get { return _endTime; }
+      get;
     }
+
 
     #endregion Public properties
 
@@ -60,6 +65,7 @@ namespace Empiria.DataTypes {
       return ((periodA.StartTime == periodB.StartTime) && (periodA.EndTime == periodB.EndTime));
     }
 
+
     static public bool operator !=(TimeFrame periodA, TimeFrame periodB) {
       return !(periodA == periodB);
     }
@@ -68,34 +74,40 @@ namespace Empiria.DataTypes {
 
     #region Public methods
 
-    public bool IsInRange(DateTime date) {
-      if (_endTime.TimeOfDay.Hours == 0) {
-        if (_startTime <= date && date < _endTime.AddSeconds(86400)) {
-          return true;
-        }
-      }
-      return (_startTime <= date && date <= _endTime);
-    }
-
     public override bool Equals(object o) {
       if (!(o is TimeFrame)) {
         return false;
       }
+
       TimeFrame temp = (TimeFrame) o;
 
       return ((this.StartTime == temp.StartTime) && (this.EndTime == temp.EndTime));
     }
 
+
+    public bool Includes(DateTime date) {
+      if (this.EndTime.TimeOfDay.Hours == 0) {
+        if (this.StartTime <= date && date < this.EndTime.AddSeconds(86400)) {
+          return true;
+        }
+      }
+
+      return (this.StartTime <= date && date <= this.EndTime);
+    }
+
+
     public override int GetHashCode() {
       return (this.ToString().GetHashCode());
     }
 
+
     public override string ToString() {
-      return _startTime.ToString("yyyymmdd") + "." + _endTime.ToString("yyyymmdd");
+      return this.StartTime.ToString("yyyymmdd") + "." + this.EndTime.ToString("yyyymmdd");
     }
+
 
     #endregion Public methods
 
-  } // class TimeFrame
+  } // struct TimeFrame
 
 } // namespace Empiria.DataTypes
