@@ -4,14 +4,14 @@
 *  Namespace : Empiria.DataTypes                                License  : Please read LICENSE.txt file      *
 *  Type      : Duration                                         Pattern  : Value Type                        *
 *                                                                                                            *
-*  Summary   : Data type with methods used to describe and control time duration.                            *
+*  Summary   : Describes a time duration (e.g, 10 business days, 8 hours, 3 months, etc).                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.DataTypes {
 
-  /// <summary>Data type with methods used to describe and control time duration.</summary>
+  /// <summary>Describes a time duration (e.g, 10 business days, 8 hours, 3 months, etc).</summary>
   public class Duration {
 
     #region Fields
@@ -28,11 +28,13 @@ namespace Empiria.DataTypes {
       this.Load();
     }
 
+
     private Duration(string value) {
       _string_value = EmpiriaString.TrimAll(value);
 
       this.Load();
     }
+
 
     static public Duration Parse(string value) {
       if (String.IsNullOrWhiteSpace(value)) {
@@ -41,6 +43,7 @@ namespace Empiria.DataTypes {
 
       return new Duration(value);
     }
+
 
     static public Duration Empty {
       get {
@@ -52,6 +55,7 @@ namespace Empiria.DataTypes {
       }
     }
 
+
     #endregion Constructors and parsers
 
     #region Properties
@@ -60,6 +64,7 @@ namespace Empiria.DataTypes {
       get;
       private set;
     } = false;
+
 
     public DurationType DurationType {
       get;
@@ -72,9 +77,57 @@ namespace Empiria.DataTypes {
       private set;
     } = 0;
 
+
     #endregion Properties
 
-    #region Methods
+    #region Public methods
+
+
+    public double ToDays() {
+      switch (this.DurationType) {
+        case DurationType.Hours:
+          return this.Value / 24.0;
+
+        case DurationType.CalendarDays:
+          return this.Value;
+
+        case DurationType.BusinessDays:
+          return this.Value;
+
+        case DurationType.Months:
+          return this.Value * 30;
+
+        case DurationType.Years:
+          return this.Value * 365;
+
+        case DurationType.Unknown:
+          return 0;
+
+        case DurationType.NA:
+          return 0;
+
+        default:
+          throw Assertion.AssertNoReachThisCode("Unrecognized");
+      }
+    }
+
+
+    public object ToJson() {
+      return new {
+        value = this.Value,
+        type = this.DurationType.ToString()
+      };
+    }
+
+
+    public override string ToString() {
+      return _string_value;
+    }
+
+
+    #endregion Public methods
+
+    #region Private methods
 
     private DurationType GetDurationType(string durationType) {
       durationType = durationType.ToLowerInvariant();
@@ -82,12 +135,17 @@ namespace Empiria.DataTypes {
       if (durationType == "hours" || durationType == "hour") {
         return DurationType.Hours;
 
-      } else if (durationType == "days" || durationType == "day") {
+      } else if (durationType == "days" || durationType == "day" ||
+                 durationType == "calendarday" || durationType == "calendardays" ||
+                 durationType == "calendar-day" || durationType == "calendar-days") {
         return DurationType.CalendarDays;
 
-      } else if (durationType == "business-days" || durationType == "business-day" ||
-        durationType == "work-days" || durationType == "work-day" ||
-        durationType == "working-days" || durationType == "working-day") {
+      } else if (durationType == "businessday" || durationType == "businessdays" ||
+                 durationType == "workday" || durationType == "workdays" ||
+                 durationType == "workingday" || durationType == "workingdays" ||
+                 durationType == "business-days" || durationType == "business-day" ||
+                 durationType == "work-days" || durationType == "work-day" ||
+                 durationType == "working-days" || durationType == "working-day") {
         return DurationType.BusinessDays;
 
       } else if (durationType == "months" || durationType == "month") {
@@ -148,49 +206,7 @@ namespace Empiria.DataTypes {
     }
 
 
-    public object ToJson() {
-      return new {
-        value = this.Value,
-        type = this.DurationType.ToString()
-      };
-    }
-
-
-    public override string ToString() {
-      return _string_value;
-    }
-
-
-    public double ToDays() {
-      switch (this.DurationType) {
-        case DurationType.Hours:
-          return this.Value / 24.0;
-
-        case DurationType.CalendarDays:
-          return this.Value;
-
-        case DurationType.BusinessDays:
-          return this.Value;
-
-        case DurationType.Months:
-          return this.Value * 30;
-
-        case DurationType.Years:
-          return this.Value * 365;
-
-        case DurationType.Unknown:
-          return 0;
-
-        case DurationType.NA:
-          return 0;
-
-        default:
-          throw Assertion.AssertNoReachThisCode("Unrecognized");
-      }
-
-    }
-
-    #endregion Methods
+    #endregion Private methods
 
   } // class Duration
 
