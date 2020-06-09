@@ -1,10 +1,10 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Data Types Library                *
-*  Namespace : Empiria.DataTypes                                License  : Please read LICENSE.txt file      *
-*  Type      : EmpiriaCalendar                                  Pattern  : Storage Item Class                *
+*  Module   : Core Data Types                            Component : Data Types                              *
+*  Assembly : Empiria.Core.dll                           Pattern   : Information Holder                      *
+*  Type     : EmpiriaCalendar                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Provides calendar operations mainly for working days.                                         *
+*  Summary  : Provides calendar data to know working and non working days.                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,14 +13,15 @@ using Empiria.Json;
 
 namespace Empiria.DataTypes {
 
-  /// <summary>Provides calendar operations mainly for working days.</summary>
+  /// <summary>Provides calendar data to know working and non working days.</summary>
   public class EmpiriaCalendar {
 
     #region Constructors and parsers
 
     public EmpiriaCalendar(JsonObject json) {
-      this.Holidays = json.GetList<DateTime>("holidays")
-                          .ToFixedList();
+      Assertion.AssertObject(json, "json");
+
+      this.LoadJsonData(json);
     }
 
 
@@ -73,10 +74,22 @@ namespace Empiria.DataTypes {
       private set;
     }
 
+
+    public FixedList<TimeFrame> NonWorkingDaysPeriods {
+      get;
+      private set;
+    }
+
+
+    public FixedList<DateTime> NonWorkingDaysExceptions {
+      get;
+      private set;
+    }
+
+
     #endregion Public properties
 
     #region Public methods
-
 
     public DateTime AddWorkingDays(DateTime date, int days) {
       Assertion.Assert(days >= 0, "'days' parameter must be a non-negative number.");
@@ -107,7 +120,9 @@ namespace Empiria.DataTypes {
 
 
     public bool IsNonWorkingDate(DateTime date) {
-      return (this.IsWeekendDay(date) || this.IsHoliday(date));
+      return (this.IsWeekendDay(date) || this.IsHoliday(date) ||
+             (this.IncludedInANonWorkingDaysPeriod(date) &&
+             !this.IsNonWorkingDateException(date)));
     }
 
 
@@ -136,7 +151,6 @@ namespace Empiria.DataTypes {
           date = date.AddDays(-1);
         }
       }
-
     }
 
 
@@ -154,7 +168,6 @@ namespace Empiria.DataTypes {
           date = date.AddDays(1);
         }
       }
-
     }
 
 
@@ -234,6 +247,49 @@ namespace Empiria.DataTypes {
 
 
     #endregion Public methods
+
+    #region Private methods
+
+    private bool IncludedInANonWorkingDaysPeriod(DateTime date) {
+      foreach (var period in this.NonWorkingDaysPeriods) {
+        if (period.Includes(date)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+
+    private bool IsNonWorkingDateException(DateTime date) {
+      return this.NonWorkingDaysExceptions.Contains(date.Date);
+    }
+
+
+    private void LoadJsonData(JsonObject json) {
+
+      this.Holidays = new FixedList<DateTime>();
+      if (json.HasValue("holidays")) {
+        this.Holidays = json.GetList<DateTime>("holidays")
+                            .ToFixedList();
+
+      }
+
+      this.NonWorkingDaysPeriods = new FixedList<TimeFrame>();
+      if (json.HasValue("nonWorkingPeriods")) {
+        this.NonWorkingDaysPeriods = json.GetList<TimeFrame>("nonWorkingPeriods")
+                                         .ToFixedList();
+      }
+
+      this.NonWorkingDaysExceptions = new FixedList<DateTime>();
+      if (json.HasValue("nonWorkingExceptions")) {
+        this.NonWorkingDaysExceptions = json.GetList<DateTime>("nonWorkingExceptions")
+                                            .ToFixedList();
+      }
+
+    }
+
+
+    #endregion Private methods
 
   } // class EmpiriaCalendar
 
