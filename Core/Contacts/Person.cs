@@ -107,6 +107,13 @@ namespace Empiria.Contacts {
       }
     }
 
+
+    public bool IsFemale {
+      get {
+        return ExtendedData.Get("IsFemale", false);
+      }
+    }
+
     #endregion Public properties
 
   } // class Person
