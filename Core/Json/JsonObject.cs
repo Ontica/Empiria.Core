@@ -29,11 +29,20 @@ namespace Empiria.Json {
       this.dictionary = new Dictionary<string, object>();
     }
 
+
+    public JsonObject(JsonObject copyFrom) {
+      Assertion.AssertObject(copyFrom, "copyFrom");
+
+      this.dictionary = new Dictionary<string, object>(copyFrom.dictionary);
+    }
+
+
     internal JsonObject(IDictionary<string, object> items) {
       Assertion.AssertObject(items, "items");
 
       this.dictionary = items;
     }
+
 
     static public JsonObject Parse(string jsonString) {
       if (String.IsNullOrWhiteSpace(jsonString)) {
@@ -43,6 +52,7 @@ namespace Empiria.Json {
 
       return new JsonObject(dictionary);
     }
+
 
     static public JsonObject Parse(object instance) {
       if (instance == null) {
@@ -59,6 +69,7 @@ namespace Empiria.Json {
         return new JsonObject() { IsEmptyInstance = true };
       }
     }
+
 
     #endregion Constructors and parsers
 
@@ -78,6 +89,7 @@ namespace Empiria.Json {
       private set;
     }
 
+
     #endregion Properties
 
     #region Public methods
@@ -92,6 +104,7 @@ namespace Empiria.Json {
 
       dictionary.Add(key, value);
     }
+
 
     /// <summary>Adds a new json object to the json tree structure.</summary>
     /// <param name="key">The item key that describes the json object</param>
@@ -289,6 +302,7 @@ namespace Empiria.Json {
 
       return GetList<T>(listPath, true);
     }
+
 
     /// <summary>Searches for a list of objects inside the JsonObject.</summary>
     /// <typeparam name="T">The type of the list elements.</typeparam>
@@ -498,6 +512,7 @@ namespace Empiria.Json {
         this.Set(itemPath, value);
       }
     }
+
 
     /// <summary>Updates or adds a new JsonObject from this instance given an itemPath.</summary>
     /// <param name="itemPath">The item path to set (e.g. like '/parent/child/item' or just 'item').</param>
@@ -746,7 +761,6 @@ namespace Empiria.Json {
         throw Assertion.AssertNoReachThisCode();
 
       }
-
     }
 
 
