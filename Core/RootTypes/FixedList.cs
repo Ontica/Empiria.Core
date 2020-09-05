@@ -25,6 +25,7 @@ namespace Empiria {
 
   }  // class FixedListExtensionMethods
 
+
   /// <summary>Represents a fixed list of objects whose members cannot be added, removed or changed.</summary>
   public class FixedList<T> : BaseList<T> {
 
@@ -39,15 +40,18 @@ namespace Empiria {
       // no-op
     }
 
+
     public FixedList(IEnumerable<T> list) : base() {
       foreach (var item in list) {
         this.Add(item);
       }
     }
 
+
     public FixedList(List<T> list) : base(list) {
 
     }
+
 
     public FixedList(Func<DataRow, T> parser, DataView view) : this(view.Count) {
       foreach (DataRowView row in view) {
@@ -55,17 +59,20 @@ namespace Empiria {
       }
     }
 
+
     public FixedList(Func<DataRow, T> parser, DataTable table) {
       foreach (DataRow row in table.Rows) {
         this.Add(parser.Invoke(row));
       }
     }
 
+
     static public FixedList<T> Empty {
       get {
         return new FixedList<T>();
       }
     }
+
 
     #endregion Constructors and parsers
 
@@ -75,31 +82,38 @@ namespace Empiria {
       return base.Contains(item);
     }
 
+
     public bool Contains(Predicate<T> match) {
       T result = base.Find(match);
 
       return (result != null);
     }
 
+
     public new bool Exists(Predicate<T> match) {
       return base.Exists(match);
     }
+
 
     public new T Find(Predicate<T> match) {
       return base.Find(match);
     }
 
+
     public new FixedList<T> FindAll(Predicate<T> match) {
       return base.FindAll(match).ToFixedList();
     }
+
 
     public new T FindLast(Predicate<T> match) {
       return base.FindLast(match);
     }
 
+
     public new void Reverse() {
       base.Reverse();
     }
+
 
     public FixedList<T> Remove(IEnumerable<T> items) {
       var copy = new FixedList<T>(this);
@@ -110,6 +124,12 @@ namespace Empiria {
 
       return copy;
     }
+
+
+    public new IEnumerable<TResult> Select<TResult>(Func<T, TResult> selector) {
+      return base.Select<TResult>(selector);
+    }
+
 
     public new void Sort(Comparison<T> comparison) {
       base.Sort(comparison);
