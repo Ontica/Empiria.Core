@@ -1,4 +1,4 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
 *  Module   : Empiria Core Data Types                      Component : Unit tests                            *
 *  Assembly : Empiria.Core.Tests.dll                       Pattern   : Test class                            *

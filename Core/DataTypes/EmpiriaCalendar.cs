@@ -18,9 +18,10 @@ namespace Empiria.DataTypes {
 
     #region Constructors and parsers
 
-    public EmpiriaCalendar(JsonObject json) {
+    public EmpiriaCalendar(string calendarName, JsonObject json) {
       Assertion.AssertObject(json, "json");
 
+      this.Name = calendarName;
       this.LoadJsonData(json);
     }
 
@@ -32,7 +33,7 @@ namespace Empiria.DataTypes {
 
       JsonObject json = storedJson.Value.Slice(calendarName, true);
 
-      return new EmpiriaCalendar(json);
+      return new EmpiriaCalendar(calendarName, json);
     }
 
 
@@ -69,6 +70,11 @@ namespace Empiria.DataTypes {
 
     #region Public properties
 
+    public string Name {
+      get;
+    }
+
+
     public FixedList<DateTime> Holidays {
       get;
       private set;
@@ -85,6 +91,7 @@ namespace Empiria.DataTypes {
       get;
       private set;
     }
+
 
 
     #endregion Public properties
