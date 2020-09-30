@@ -122,11 +122,11 @@ namespace Empiria.Json {
     /// <param name="key">The key or name of the item to add.</param>
     /// <param name="value">The value of the object added</param>
     public void AddIf(string key, object value, bool condition) {
-      Assertion.AssertObject(key, "key");
       if (!condition) {
         return;
       }
 
+      Assertion.AssertObject(key, "key");
       Assertion.AssertObject(value, "value");
 
       if (HasEmptyOrNullValue(value)) {
@@ -165,8 +165,6 @@ namespace Empiria.Json {
           HasEmptyOrNullValue(itemPath)) {     // Fast-track case
 
         dictionary.Remove(itemPath);
-
-
       }
 
       string traversingPath = itemPath;
@@ -492,6 +490,30 @@ namespace Empiria.Json {
       Assertion.AssertObject(jsonObject, "jsonObject");
 
       Set(itemPath, jsonObject.ToDictionary());
+    }
+
+
+    public void SetIf(string itemPath, JsonObject jsonObject, bool condition) {
+      if (!condition) {
+        this.Remove(itemPath);
+        this.Clean(itemPath);
+
+        return;
+      }
+
+      Set(itemPath, jsonObject);
+    }
+
+
+    public void SetIf(string itemPath, object value, bool condition) {
+      if (!condition) {
+        this.Remove(itemPath);
+        this.Clean(itemPath);
+
+        return;
+      }
+
+      Set(itemPath, value);
     }
 
 
