@@ -116,8 +116,7 @@ namespace Empiria {
       string temp = String.Empty;
 
       for (int i = 0; i < fieldValues.Length; i++) {
-        temp += ((temp.Length != 0) ? " OR " : String.Empty) +
-                ParseLike(fieldName, (string) fieldValues[i]);
+        temp += ((temp.Length != 0) ? " OR " : String.Empty) + ParseLike(fieldName, fieldValues[i]);
       }
 
       if (temp.Length != 0) {

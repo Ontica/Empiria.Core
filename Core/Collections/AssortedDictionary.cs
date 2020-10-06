@@ -7,7 +7,6 @@
 *  Summary   : Represents an assorted objects dictionary retrived by a string key.                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -18,7 +17,7 @@ namespace Empiria.Collections {
 
     #region Fields
 
-    private Dictionary<string, object> items = null;
+    private readonly Dictionary<string, object> items = null;
 
     #endregion Fields
 

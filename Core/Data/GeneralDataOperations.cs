@@ -169,19 +169,24 @@ namespace Empiria.Data {
       if (String.IsNullOrWhiteSpace(filterExpression) &&
           String.IsNullOrWhiteSpace(sortExpression)) {
         operation = DataOperation.Parse("@qryEntities", sourceName);
+
       } else if (!String.IsNullOrWhiteSpace(filterExpression) &&
                  String.IsNullOrWhiteSpace(sortExpression)) {
         operation = DataOperation.Parse("@qryEntitiesFiltered", sourceName, filterExpression);
+
       } else if (String.IsNullOrWhiteSpace(filterExpression) &&
                  !String.IsNullOrWhiteSpace(sortExpression)) {
         operation = DataOperation.Parse("@qryEntitiesSorted", sourceName, sortExpression);
+
       } else if (!String.IsNullOrWhiteSpace(filterExpression) &&
                  !String.IsNullOrWhiteSpace(sortExpression)) {
         operation = DataOperation.Parse("@qryEntitiesFilteredAndSorted", sourceName,
                                         filterExpression, sortExpression);
+
       } else {
         Assertion.AssertNoReachThisCode();
       }
+
       return DataReader.GetDataTable(operation);
     }
 

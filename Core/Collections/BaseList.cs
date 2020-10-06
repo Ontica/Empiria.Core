@@ -21,9 +21,8 @@ namespace Empiria.Collections {
 
     #region Fields
 
-    private string name = String.Empty;
-    private List<T> items = null;
-    private bool isSynchronized = false;
+    private readonly List<T> items = null;
+    private readonly bool isSynchronized = false;
 
     #endregion Fields
 

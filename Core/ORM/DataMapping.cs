@@ -13,7 +13,6 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 
-using Empiria.Data;
 using Empiria.Json;
 using Empiria.Reflection;
 using Empiria.Ontology;
@@ -366,7 +365,7 @@ namespace Empiria.ORM {
         return String.Empty;
 
       } else if (type == typeof(int)) {
-        return (int) 0;
+        return 0;
 
       } else if (type == typeof(DateTime)) {
         return ExecutionServer.DateMaxValue;

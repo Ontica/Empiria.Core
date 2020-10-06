@@ -18,10 +18,10 @@ namespace Empiria.Collections {
 
     #region Fields
 
-    private Dictionary<int, T> items = null;
-    private Dictionary<string, T> keys = null;
+    private readonly Dictionary<int, T> items = null;
+    private readonly Dictionary<string, T> keys = null;
 
-    private object _locker = new object();
+    private readonly object _locker = new object();
 
     #endregion Fields
 

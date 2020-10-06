@@ -40,7 +40,6 @@ namespace Empiria.Reflection {
 
       } else if (convertToType == typeof(decimal)) {
         return (T) (object) System.Convert.ToDecimal(value);
-
       }
 
 

@@ -18,7 +18,7 @@ namespace Empiria.DataTypes {
 
     #region Fields
 
-    private EmpiriaDictionary<string, ValuesTableColumn> columns = new EmpiriaDictionary<string, ValuesTableColumn>(16);
+    private readonly EmpiriaDictionary<string, ValuesTableColumn> columns = new EmpiriaDictionary<string, ValuesTableColumn>(16);
 
     #endregion Fields
 

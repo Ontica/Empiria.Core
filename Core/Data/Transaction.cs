@@ -21,10 +21,11 @@ namespace Empiria.Data {
 
     #region Fields
 
-    private Hashtable transactions = Hashtable.Synchronized(new Hashtable());
+    private readonly Hashtable transactions = Hashtable.Synchronized(new Hashtable());
+    private readonly DataWriterContext context = null;
+    private readonly IsolationLevel isolationLevel = IsolationLevel.Unspecified;
+
     private DataOperationList operations = null;
-    private DataWriterContext context = null;
-    private IsolationLevel isolationLevel = IsolationLevel.Unspecified;
 
     private bool wasCommited = false;
     private bool wasRolledBack = false;

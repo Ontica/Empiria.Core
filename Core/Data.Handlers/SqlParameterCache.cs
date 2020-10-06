@@ -110,7 +110,7 @@ namespace Empiria.Data.Handlers {
           }
           parameter = new SqlParameter((string) reader["Name"], (SqlDbType) reader["ParameterDbType"]);
           parameter.Direction = (ParameterDirection) reader["ParameterDirection"];
-          if (!(reader["ParameterDefaultValue"] != System.DBNull.Value)) {
+          if (reader["ParameterDefaultValue"] == DBNull.Value) {
             parameter.Value = reader["ParameterDefaultValue"];
           }
           discoveredParameters[i] = parameter;

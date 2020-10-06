@@ -18,8 +18,8 @@ namespace Empiria.DataTypes {
 
     #region Fields
 
-    private string name;
-    private string value;
+    private readonly string name;
+    private readonly string value;
 
     #endregion Fields
 

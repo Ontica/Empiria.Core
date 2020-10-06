@@ -14,28 +14,12 @@ namespace Empiria.Contacts {
 
   public class TempAddress {
 
-    #region Fields
-
-    private string street = String.Empty;
-    private string extNumber = String.Empty;
-    private string intNumber = String.Empty;
-    private string borough = String.Empty;
-    private string zipCode = String.Empty;
-    private string municipality = String.Empty;
-    private string state = String.Empty;
-    private string country = String.Empty;
-
-    private string address1 = String.Empty;
-    private string address2 = String.Empty;
-    private string address3 = String.Empty;
-
-    #endregion Fields
-
     #region Constructors and parsers
 
     private TempAddress() {
 
     }
+
 
     static public TempAddress Empty {
       get {
@@ -45,70 +29,34 @@ namespace Empiria.Contacts {
 
     #endregion Constructors and parsers
 
-    #region Public properties
 
-    public string Description {
-      get {
-        return "Principal";
-      }
-    }
+    #region Properties
 
-    public string Street {
-      get { return street; }
-      set { street = value; }
-    }
+    public string Description { get; set; } = "Principal";
 
-    public string ExtNumber {
-      get { return extNumber; }
-      set { extNumber = value; }
-    }
+    public string Street { get; set; } = String.Empty;
 
-    public string IntNumber {
-      get { return intNumber; }
-      set { intNumber = value; }
-    }
+    public string ExtNumber { get; set; } = String.Empty;
 
-    public string Borough {
-      get { return borough; }
-      set { borough = value; }
-    }
+    public string IntNumber { get; set; } = String.Empty;
 
-    public string ZipCode {
-      get { return zipCode; }
-      set { zipCode = value; }
-    }
+    public string Borough { get; set; } = String.Empty;
 
-    public string Municipality {
-      get { return municipality; }
-      set { municipality = value; }
-    }
+    public string ZipCode { get; set; } = String.Empty;
 
-    public string State {
-      get { return state; }
-      set { state = value; }
-    }
+    public string Municipality { get; set; } = String.Empty;
 
-    public string Country {
-      get { return country; }
-      set { country = value; }
-    }
+    public string State { get; set; } = String.Empty;
 
-    public string Address1 {
-      get { return address1; }
-      set { address1 = value; }
-    }
+    public string Country { get; set; } = String.Empty;
 
-    public string Address2 {
-      get { return address2; }
-      set { address2 = value; }
-    }
+    public string Address1 { get; set; } = String.Empty;
 
-    public string Address3 {
-      get { return address3; }
-      set { address3 = value; }
-    }
+    public string Address2 { get; set; } = String.Empty;
 
-    #endregion Public properties
+    public string Address3 { get; set; } = String.Empty;
+
+    #endregion Properties
 
   } // class TempAddress
 

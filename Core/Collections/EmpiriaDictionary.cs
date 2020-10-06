@@ -17,8 +17,8 @@ namespace Empiria.Collections {
 
     #region Fields
 
-    private Dictionary<KeyType, ItemsType> items = null;
-    private object locker = new object();
+    private readonly Dictionary<KeyType, ItemsType> items = null;
+    private readonly object locker = new object();
 
     #endregion Fields
 

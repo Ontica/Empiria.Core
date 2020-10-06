@@ -5,7 +5,7 @@
 *  Type      : DataMappingRules                                 Pattern  : Standard class                    *
 *                                                                                                            *
 *  Summary   : Holds data mapping rules for a giving type using DataFieldAttribute decorators,               *
-*              and performs those type instances data loading.                                               *
+*              and performs data loading for those type instances.                                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -19,14 +19,15 @@ using Empiria.Json;
 namespace Empiria.ORM {
 
   /// <summary>Holds data mapping rules for a giving type using DataField type attributes decorators,
-  /// and performs those type instances data loading.</summary>
+  /// and performs data loading for those type instances.</summary>
   internal class DataMappingRules {
 
     #region Fields
 
-    private Type mappedType = null;
-    private DataMapping[] dataMappingsArray = null;
-    private DataObjectMapping[] innerDataObjectsMappingsArray = null;
+    private readonly Type mappedType = null;
+    private readonly DataMapping[] dataMappingsArray = null;
+    private readonly DataObjectMapping[] innerDataObjectsMappingsArray = null;
+
     private List<string> jsonFieldsNames = null;
     private bool dataColumnsAreMapped = false;
 

@@ -26,6 +26,8 @@ namespace Empiria.Security {
     private PasswordStrength(string password) {
       this.password = password;
     }
+
+
     internal PasswordStrength(EmpiriaUser user, string password) {
       Assertion.AssertObject(user, "user");
       Assertion.AssertObject(password, "password");
@@ -33,6 +35,7 @@ namespace Empiria.Security {
       this.user = user;
       this.password = password;
     }
+
 
     static public void AssertIsValid(string password) {
       Assertion.AssertObject(password, "password");
@@ -42,7 +45,10 @@ namespace Empiria.Security {
       instance.VerifyLength();
       instance.VerifyCharactersCombination();
     }
+
+
     #endregion Constructors and parsers
+
 
     #region Public methods
 
@@ -54,7 +60,10 @@ namespace Empiria.Security {
 
     #endregion Public methods
 
+
+
     #region Private methods
+
 
     private void VerifyCharactersCombination() {
       int counter = 0;
@@ -80,10 +89,12 @@ namespace Empiria.Security {
                                     "Non-alphabetic characters like: ~!@#$%^*&;?.+_");
     }
 
+
     private void VerifyLength() {
       Validate.IsTrue(password.Length >= 8,
                       "Passwords must be at least eight (8) characters in length.");
     }
+
 
     private void VerifyNoUserDataPortions() {
       if (EmpiriaString.ContainsSegment(password, user.UserName, 3) ||
@@ -96,6 +107,7 @@ namespace Empiria.Security {
                       "first name, last name, or email address.");
       }
     }
+
 
     #endregion Private methods
 

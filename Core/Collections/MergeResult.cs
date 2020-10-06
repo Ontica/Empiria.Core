@@ -15,7 +15,7 @@ namespace Empiria.Collections {
   /// <typeparam name="T">The type of the objects to be compared.</typeparam>
   public class MergeResult<T> where T : IIdentifiable {
 
-    private string mergeKey = String.Empty;
+    private readonly string mergeKey = String.Empty;
 
     internal MergeResult(string mergeKey, T leftObject, T rightObject, MergeResultType result) {
       this.MergeKey = mergeKey;

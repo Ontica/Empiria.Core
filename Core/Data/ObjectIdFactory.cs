@@ -123,8 +123,8 @@ namespace Empiria.Data {
 
       #region Fields
 
-      private int fromId;
-      private int toId;
+      private readonly int fromId;
+      private readonly int toId;
       private int currentId;
 
       #endregion Fields

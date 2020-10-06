@@ -41,8 +41,11 @@ namespace Empiria.DataTypes {
         if (String.IsNullOrEmpty(source)) {
           return false;
         }
-        DateTime temp = DateTime.ParseExact(source, format, DateTimeFormatInfo.InvariantInfo);
+
+        DateTime.ParseExact(source, format, DateTimeFormatInfo.InvariantInfo);
+
         return true;
+
       } catch {
         return false;
       }

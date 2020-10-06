@@ -17,18 +17,6 @@ namespace Empiria.Ontology {
   /// <summary>Sealed class that represents an ontology type attribute definition.</summary>
   public sealed class TypeAttributeInfo : TypeRelationInfo {
 
-    #region Fields
-
-    //private int size = 0;
-    //private int precision = 0;
-    //private int scale = 0;
-    //private object minValue = null;
-    //private object maxValue = null;
-    //private string format = String.Empty;
-    //private bool isFixedSize = false;
-
-    #endregion Fields
-
     #region Constructors and parsers
 
     private TypeAttributeInfo(MetaModelType sourceType)
@@ -46,57 +34,25 @@ namespace Empiria.Ontology {
 
     #endregion Constructors and parsers
 
-    #region Public properties
+    #region Properties
 
-    public new object DefaultValue {
-      //get { return base.DefaultValue; }
-      get;
-      set;
-    }
+    public new object DefaultValue { get; private set; }
 
-    public string Format {
-      //get { return attributeData.IsFixedSize; }
-      get;
-      set;
-    }
+    public string Format { get; private set; } = String.Empty;
 
-    public bool IsFixedSize {
-      //get { return attributeData.IsFixedSize; }
-      get;
-      set;
-    }
+    public bool IsFixedSize { get; private set; }
 
-    public object MaxValue {
-      //get { return attributeData.IsFixedSize; }
-      get;
-      set;
-    }
+    public object MaxValue { get; private set; }
 
-    public object MinValue {
-      //get { return attributeData.IsFixedSize; }
-      get;
-      set;
-    }
+    public object MinValue { get; private set; }
 
-    public int Precision {
-      //get { return attributeData.Precision; }
-      get;
-      set;
-    }
+    public int Precision { get; private set; }
 
-    public int Scale {
-      //get { return attributeData.IsFixedSize; }
-      get;
-      set;
-    }
+    public int Scale { get; private set; }
 
-    public int Size {
-      //get { return attributeData.IsFixedSize; }
-      get;
-      set;
-    }
+    public int Size { get; private set; }
 
-    #endregion Public properties
+    #endregion Properties
 
     #region Public methods
 
@@ -108,14 +64,16 @@ namespace Empiria.Ontology {
       if (targetType.Equals(valueType)) {
         return value;
       }
+
       // Process null values
-      if (value == null || value.Equals(System.DBNull.Value)) {
+      if (value.Equals(DBNull.Value)) {
         if (targetType.Equals(typeof(string))) { // Nulls converted to String.Empty if target type is string
           return String.Empty;
         } else { // Nulls converted to default instance value if target != string
           return Activator.CreateInstance(targetType);
         }
       }
+
       // Process Target.Type == string and value.Type != string
       if (targetType.Equals(typeof(string))) {
         return System.Convert.ToString(value);
@@ -127,7 +85,6 @@ namespace Empiria.Ontology {
       return System.Convert.ChangeType(value, targetType);
     }
 
-    //private Structure<TypeAttributeInfo> attributeData = new Structure<TypeAttributeInfo>();
 
     protected override void LoadDataRow(DataRow row) {
       base.LoadDataRow(row);
@@ -136,13 +93,6 @@ namespace Empiria.Ontology {
         MinValue = String.Empty, MaxValue = String.Empty,
         DisplayFormat = "", IsFixedSize = false
       };
-
-      //opcion 1: Structure.Parse(this, (string) row["TypeRelationExtensionData"]);
-
-      //opcion 2: this.attributeData.Parse((string) row["TypeRelationExtensionData"]);
-
-      //opcion 3:
-      dynamic o = JsonConverter.ToObject((string) row["TypeRelationExtensionData"], attributes);
 
       this.Size = (int) row["AttributeSize"];
       this.Precision = (int) row["AttributePrecision"];

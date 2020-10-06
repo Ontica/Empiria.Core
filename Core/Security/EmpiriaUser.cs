@@ -55,7 +55,7 @@ namespace Empiria.Security {
     static public EmpiriaUser Current {
       get {
         if (ExecutionServer.IsAuthenticated) {
-          return ExecutionServer.CurrentIdentity.User as EmpiriaUser;
+          return ExecutionServer.CurrentIdentity.User;
         } else {
           throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
         }

@@ -23,7 +23,7 @@ namespace Empiria.Data {
     static private EmpiriaDictionary<string, string> textCommandCache = new EmpiriaDictionary<string, string>(16);
 
     private readonly DataSource dataSource;
-    private string sourceText = String.Empty;
+    private readonly string sourceText;
     private int executionTimeout = 0;
 
     #endregion Fields

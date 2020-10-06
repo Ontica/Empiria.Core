@@ -20,12 +20,12 @@ namespace Empiria.Collections {
 
     #region Fields
 
-    private string name = String.Empty;
-    private bool isReadOnly = false;
-    private bool isSynchronized = false;
+    private readonly string name = String.Empty;
+    private readonly bool isReadOnly = false;
+    private readonly bool isSynchronized = false;
 
-    private Dictionary<TKey, TItem> itemsDictionary = null;
-    private List<TKey> keysList = null;
+    private readonly Dictionary<TKey, TItem> itemsDictionary = null;
+    private readonly List<TKey> keysList = null;
 
     #endregion Fields
 

@@ -98,7 +98,7 @@ namespace Empiria.Data.Handlers {
           }
           parameter = new OleDbParameter((string) reader["Name"], (OleDbType) reader["ParameterDbType"]);
           parameter.Direction = (ParameterDirection) reader["ParameterDirection"];
-          if (!(reader["ParameterDefaultValue"] != System.DBNull.Value)) {
+          if (reader["ParameterDefaultValue"] == DBNull.Value) {
             parameter.Value = reader["ParameterDefaultValue"];
           }
           discoveredParameters[i] = parameter;

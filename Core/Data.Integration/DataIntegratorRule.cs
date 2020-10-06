@@ -31,10 +31,10 @@ namespace Empiria.Data.Integration {
 
     #region Fields
 
-    private int id = 0;
-    private WebServer targetServer = null;
-    private string condition = String.Empty;
-    DataIntegrationRulePriority priority = DataIntegrationRulePriority.Normal;
+    private readonly int id = 0;
+    private readonly WebServer targetServer = null;
+    private readonly string condition = String.Empty;
+    private readonly DataIntegrationRulePriority priority = DataIntegrationRulePriority.Normal;
 
     #endregion Fields
 

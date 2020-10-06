@@ -23,8 +23,8 @@ namespace Empiria.Data {
 
     #region Fields
 
-    private DataOperationList internalOp = null;
-    private DataOperationList transactionalOp = null;
+    private readonly DataOperationList internalOp = null;
+    private readonly DataOperationList transactionalOp = null;
 
     private Transaction currentTransaction = null;
 

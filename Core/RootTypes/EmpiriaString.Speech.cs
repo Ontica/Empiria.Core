@@ -38,17 +38,17 @@ namespace Empiria {
       } else if (value == 1) {
         return "Uno";
       }
-      if ((value >= 1000000m) && ((int) (value / 1000000)) == 1) {
-        result = SpeechHundreds((int) (value / 1000000)) + " Millón ";
+      if (value >= 1000000m && (value / 1000000) == 1) {
+        result = SpeechHundreds((value / 1000000)) + " Millón ";
       } else if (value > 1000000m) {
-        result = SpeechHundreds((int) (value / 1000000)) + " Millones ";
+        result = SpeechHundreds(value / 1000000) + " Millones ";
       }
       value = value % 1000000;
       if (value >= 1000m) {
         result += (value / 1000) == 1 ? " Mil " : SpeechHundreds(value / 1000) + " Mil ";
       }
       if (value > 0) {
-        result += SpeechHundreds((int) (value % 1000)) + " ";
+        result += SpeechHundreds(value % 1000) + " ";
       }
       return EmpiriaString.TrimAll(result);
     }
