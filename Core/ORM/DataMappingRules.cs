@@ -87,7 +87,7 @@ namespace Empiria.ORM {
           if (rule.MapToJsonItem) {
             rule.SetJsonValue(instance, (string) dataRow[rule.DataColumnIndex], jsonObjectsCache);
           } else {
-            rule.SetValue(instance, dataRow[rule.DataColumnIndex]);
+            rule.SetNoJsonValue(instance, dataRow[rule.DataColumnIndex]);
           }
         }
       } catch (Exception e) {

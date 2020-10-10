@@ -58,8 +58,9 @@ namespace Empiria.ORM {
       } else if (memberInfo is FieldInfo) {
         dataMapping = new DataFieldMapping((FieldInfo) declaredMemberInfo);
       } else {
-        Assertion.AssertNoReachThisCode();
+        throw Assertion.AssertNoReachThisCode();
       }
+
       dataMapping.SetRules();
 
       return dataMapping;
@@ -226,7 +227,6 @@ namespace Empiria.ORM {
     ///  Only for use when MapToJsonItem is true.</summary>
     internal void SetJsonValue(object instance, string jsonStringValue,
                                Dictionary<string, JsonObject> jsonObjectsCache) {
-      //Assert(this.MapToJsonItem, "Method for use only when this.MapToJsonItem is true.");
       if (jsonStringValue.Length == 0) {
         return;   // If not value, do nothing?
       }
@@ -247,8 +247,7 @@ namespace Empiria.ORM {
 
     /// <summary>Set instance member value according to this DataMapping rule.
     /// Only for use when MapToJsonItem is false.</summary>
-    internal void SetValue(object instance, object value) {
-      //Assert(this.MapToJsonItem == false, "Method for use only when this.MapToJsonItem is false.");
+    internal void SetNoJsonValue(object instance, object value) {
       object memberValue = this.TransformDataStoredValueBeforeAssignToMember(value);
 
       this.ImplementsSetValue(instance, memberValue);
@@ -320,13 +319,13 @@ namespace Empiria.ORM {
       if (this.DataFieldAttribute.Default == null) {
         // If there is not defined a default value, then simply return the predefined value
         // for instances of type this.MemberType.
-        return DataMapping.GetTypeDefaultValue(this.MemberType);
+        return this.GetTypeDefaultValue(this.MemberType);
       }
 
       Type defaultValueType = this.DataFieldAttribute.Default.GetType();
       if (defaultValueType != this.MemberType && defaultValueType == typeof(string)) {
         //Builds a delegate in order to execute it when this.DefaultValue has been invoked.
-        defaultValueDelegate = GetDelegateForDefaultValue();
+        this.defaultValueDelegate = GetDelegateForDefaultValue();
 
         return defaultValueDelegate.Invoke();
 
@@ -360,7 +359,7 @@ namespace Empiria.ORM {
       }
     }
 
-    static private object GetTypeDefaultValue(Type type) {
+    private object GetTypeDefaultValue(Type type) {
       if (type == typeof(string)) {
         return String.Empty;
 
@@ -375,6 +374,11 @@ namespace Empiria.ORM {
 
       } else if (type == typeof(decimal)) {
         return decimal.Zero;
+
+      } else if (type == typeof(JsonObject)) {
+        this.defaultValueDelegate = () => new JsonObject();
+
+        return defaultValueDelegate.Invoke();
 
       } else if (ObjectFactory.HasEmptyInstance(type)) {
         return ObjectFactory.EmptyInstance(type);
@@ -404,24 +408,33 @@ namespace Empiria.ORM {
       this.MapToEnumeration = this.MemberType.IsEnum;
       this.MapToChar = (this.MemberType == typeof(char));
 
+      this.SetJsonRules();
+
       this.DefaultValue = this.GetDataFieldDefaultValue();
+    }
 
-      if (this.MemberType == typeof(JsonObject) || this.DataFieldAttribute.Name.Contains('.')) {
-        string dataFieldAttrName = this.DataFieldAttribute.Name;
 
-        int indexOfPeriod = dataFieldAttrName.IndexOf('.');
-        if (indexOfPeriod != -1) {
-          // [DataField("ContactExtData.Address")] <- returns a string or Address object
-          this.JsonFieldName = dataFieldAttrName.Substring(0, dataFieldAttrName.IndexOf('.'));
-          this.JsonInnerFieldName = dataFieldAttrName.Substring(dataFieldAttrName.IndexOf('.') + 1);
-        } else {
-          // [DataField("ContactExtData")] <- returns a JsonObject, JsonInnerFieldName is empty.
-          this.JsonFieldName = dataFieldAttrName;
-          this.JsonInnerFieldName = String.Empty;
-        }
-        this.MapToJsonItem = true;
+    private void SetJsonRules() {
+      if (this.MemberType != typeof(JsonObject) && !this.DataFieldAttribute.Name.Contains('.')) {
+        return;
+      }
+
+      this.MapToJsonItem = true;
+
+      string dataFieldAttrName = this.DataFieldAttribute.Name;
+
+      int indexOfPeriod = dataFieldAttrName.IndexOf('.');
+      if (indexOfPeriod != -1) {
+        // [DataField("ContactExtData.Address")] <- returns a string or Address object
+        this.JsonFieldName = dataFieldAttrName.Substring(0, dataFieldAttrName.IndexOf('.'));
+        this.JsonInnerFieldName = dataFieldAttrName.Substring(dataFieldAttrName.IndexOf('.') + 1);
+      } else {
+        // [DataField("ContactExtData")] <- returns a JsonObject, JsonInnerFieldName is empty.
+        this.JsonFieldName = dataFieldAttrName;
+        this.JsonInnerFieldName = String.Empty;
       }
     }
+
 
     private object TransformDataStoredValueBeforeAssignToMember(object value) {
       if (this.MapToEnumeration) {
