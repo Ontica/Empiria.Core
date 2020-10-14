@@ -32,7 +32,7 @@ namespace Empiria.Tests.Security {
     public void MustHaveClaimValue() {
       CommonMethods.Authenticate();
 
-      ClaimsService.EnsureClaim(EmpiriaUser.Current, ClaimType.UserID, "AutoTester");
+      ClaimsService.EnsureClaim(EmpiriaUser.Current, ClaimType.UserRole, "Tester");
 
       Assert.True(true);
     }

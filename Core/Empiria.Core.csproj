@@ -15,7 +15,7 @@
     <PackageTags>data access, orm, ontology, powertypes, base-architecture, software foundation, general purpose backend, government solutions, business solutions</PackageTags>
     <RepositoryUrl>https://github.com/Ontica/Empiria.Core</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <TargetFramework>net471</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <NeutralLanguage></NeutralLanguage>
     <RootNamespace>Empiria</RootNamespace>
@@ -52,7 +52,7 @@
     <WarningsAsErrors />
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Configuration" />
