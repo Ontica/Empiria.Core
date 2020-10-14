@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
-using Empiria.DataTypes;
+using Empiria.DataTypes.Time;
 using Empiria.Reflection;
 
 namespace Empiria.Ontology {

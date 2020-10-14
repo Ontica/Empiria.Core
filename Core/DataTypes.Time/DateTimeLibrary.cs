@@ -1,8 +1,8 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Empiria Core                                 Component : Kernel Types                          *
-*  Assembly : Empiria.Core.dll                             Pattern  : Static Data Type                       *
-*  Type     : DateTimeLibrary                              License   : Please read LICENSE.txt file          *
+*  Module   : Core Data Types                            Component : Time-Related Data Types                 *
+*  Assembly : Empiria.Core.dll                           Pattern   : Static Data Type                        *
+*  Type     : DateTimeLibrary                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Static methods library that performs datetime operations.                                      *
 *                                                                                                            *
@@ -10,13 +10,12 @@
 using System;
 using System.Globalization;
 
-namespace Empiria.DataTypes {
+namespace Empiria.DataTypes.Time {
 
   /// <summary>Static methods library that performs datetime operations.</summary>
   static public class DateTimeLibrary {
 
     #region Public methods
-
 
     static public int DaysTo(this DateTime fromDate, DateTime toDate) {
       if (fromDate <= toDate) {
@@ -26,7 +25,6 @@ namespace Empiria.DataTypes {
       }
     }
 
-
     static public int HoursTo(DateTime fromDate, DateTime toDate) {
       if (fromDate <= toDate) {
         return toDate.Subtract(fromDate).Hours;
@@ -34,7 +32,6 @@ namespace Empiria.DataTypes {
         return fromDate.Subtract(toDate).Hours;
       }
     }
-
 
     static public bool IsDateTime(string source, string format) {
       try {
@@ -51,21 +48,17 @@ namespace Empiria.DataTypes {
       }
     }
 
-
     static public bool IsWeekendDate(this DateTime date) {
       return IsWeekendDate(date, EmpiriaCalendar.Default);
     }
-
 
     static public bool IsWeekendDate(this DateTime date, EmpiriaCalendar calendar) {
       return calendar.IsWeekendDay(date);
     }
 
-
     static public bool IsNonWorkingDate(this DateTime date) {
       return IsNonWorkingDate(date, EmpiriaCalendar.Default);
     }
-
 
     static public bool IsNonWorkingDate(this DateTime date, EmpiriaCalendar calendar) {
       Assertion.AssertObject(calendar, "calendar");
@@ -86,4 +79,4 @@ namespace Empiria.DataTypes {
 
   }  // class DateTimeLibrary
 
-} // namespace Empiria.DataTypes
+} // namespace Empiria.DataTypes.Time

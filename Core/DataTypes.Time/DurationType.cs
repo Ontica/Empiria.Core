@@ -1,15 +1,14 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Data Types Library                *
-*  Namespace : Empiria.DataTypes                                License  : Please read LICENSE.txt file      *
-*  Type      : DurationType                                     Pattern  : Enumeration Type                  *
+*  Module   : Core Data Types                            Component : Time-Related Data Types                 *
+*  Assembly : Empiria.Core.dll                           Pattern   : Enumeration Type                        *
+*  Type     : DurationType                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Describes a duration type.                                                                    *
+*  Summary  : Describes a duration type.                                                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
-namespace Empiria.DataTypes {
+namespace Empiria.DataTypes.Time {
 
   /// <summary>Describes a duration type.</summary>
   public enum DurationType {
@@ -30,4 +29,4 @@ namespace Empiria.DataTypes {
 
   }  // enum DurationType
 
-}  // namespace Empiria.DataTypes
+}  // namespace Empiria.DataTypes.Time

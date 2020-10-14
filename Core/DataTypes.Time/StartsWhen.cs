@@ -1,15 +1,14 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Module   : Core Data Types                              Component : Date Time                             *
-*  Assembly : Empiria.Core.dll                             Pattern   : Enumeration                           *
-*  Type     : StartsWhen                                   License   : Please read LICENSE.txt file          *
+*  Module   : Core Data Types                            Component : Time-Related Data Types                 *
+*  Assembly : Empiria.Core.dll                           Pattern   : Enumeration                             *
+*  Type     : StartsWhen                                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Describes an activity or event start condition.                                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
-namespace Empiria.DataTypes {
+namespace Empiria.DataTypes.Time {
 
   /// <summary>Describes an activity or event start condition.</summary>
   public enum StartsWhen {
@@ -30,4 +29,4 @@ namespace Empiria.DataTypes {
 
   }  // enum StartsWhen
 
-}  // namespace Empiria.DataTypes
+}  // namespace Empiria.DataTypes.Time

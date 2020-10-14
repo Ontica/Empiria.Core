@@ -1,22 +1,22 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Data Types Library                *
-*  Namespace : Empiria.DataTypes                                License  : Please read LICENSE.txt file      *
-*  Type      : Duration                                         Pattern  : Value Type                        *
+*  Module   : Core Data Types                            Component : Time-Related Data Types                 *
+*  Assembly : Empiria.Core.dll                           Pattern   : Enumeration Type                        *
+*  Type     : Duration                                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Describes a time duration (e.g, 10 business days, 8 hours, 3 months, etc).                    *
+*  Summary  : Describes a time duration (e.g, 10 business days, 8 hours, 3 months, etc).                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.DataTypes {
+namespace Empiria.DataTypes.Time {
 
   /// <summary>Describes a time duration (e.g, 10 business days, 8 hours, 3 months, etc).</summary>
   public class Duration {
 
     #region Fields
 
-    private string _string_value = String.Empty;
+    private readonly string _string_value;
 
     #endregion Fields
 
@@ -28,13 +28,11 @@ namespace Empiria.DataTypes {
       this.Load();
     }
 
-
     private Duration(string value) {
       _string_value = EmpiriaString.TrimAll(value);
 
       this.Load();
     }
-
 
     static public Duration Parse(string value) {
       if (String.IsNullOrWhiteSpace(value)) {
@@ -43,7 +41,6 @@ namespace Empiria.DataTypes {
 
       return new Duration(value);
     }
-
 
     static public Duration Empty {
       get {
@@ -82,7 +79,6 @@ namespace Empiria.DataTypes {
 
     #region Public methods
 
-
     public double ToDays() {
       switch (this.DurationType) {
         case DurationType.Hours:
@@ -111,14 +107,12 @@ namespace Empiria.DataTypes {
       }
     }
 
-
     public object ToJson() {
       return new {
         value = this.Value,
         type = this.DurationType.ToString()
       };
     }
-
 
     public override string ToString() {
       return _string_value;
@@ -166,7 +160,6 @@ namespace Empiria.DataTypes {
       }
     }
 
-
     private string GetStringValue(int value, DurationType type) {
       switch (type) {
         case DurationType.Hours:
@@ -195,7 +188,6 @@ namespace Empiria.DataTypes {
       }
     }
 
-
     private void Load() {
       string[] parts = _string_value.Split(' ');
 
@@ -205,9 +197,8 @@ namespace Empiria.DataTypes {
       }
     }
 
-
     #endregion Private methods
 
   } // class Duration
 
-} // namespace Empiria.DataTypes
+} // namespace Empiria.DataTypes.Time

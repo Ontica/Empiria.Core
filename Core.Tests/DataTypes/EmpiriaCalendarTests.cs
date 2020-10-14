@@ -10,8 +10,7 @@
 using System;
 using Xunit;
 
-
-namespace Empiria.DataTypes.Tests {
+namespace Empiria.DataTypes.Time.Tests {
 
   /// <summary>EmpiriaCalendar data type configuration loading and methods tests.</summary>
   public class EmpiriaCalendarTests {
@@ -53,4 +52,4 @@ namespace Empiria.DataTypes.Tests {
 
   }  // EmpiriaCalendarTests
 
-}  // namespace Empiria.Tests
+}  // namespace Empiria.DataTypes.Time.Tests

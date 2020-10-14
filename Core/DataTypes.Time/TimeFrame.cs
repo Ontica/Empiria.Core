@@ -1,6 +1,6 @@
 ﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Module   : Core Data Types                            Component : Data Types                              *
+*  Module   : Core Data Types                            Component : Time-Related Data Types                 *
 *  Assembly : Empiria.Core.dll                           Pattern   : Structure                               *
 *  Type     : TimeFrame                                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -10,7 +10,7 @@
 using System;
 using Empiria.Json;
 
-namespace Empiria.DataTypes {
+namespace Empiria.DataTypes.Time {
 
   /// <summary>Holds information about a time frame or period with start and end times.</summary>
   public struct TimeFrame {
@@ -22,7 +22,6 @@ namespace Empiria.DataTypes {
                                      endTime ?? ExecutionServer.DateMaxValue) {
     }
 
-
     public TimeFrame(DateTime startTime, DateTime endTime) {
       Assertion.Assert(startTime <= endTime, "startTime should be before or equal to endTime.");
 
@@ -30,18 +29,15 @@ namespace Empiria.DataTypes {
       this.EndTime = endTime;
     }
 
-
     static public TimeFrame Default {
       get {
         return new TimeFrame(ExecutionServer.DateMinValue, ExecutionServer.DateMaxValue);
       }
     }
 
-
     static public TimeFrame Parse(JsonObject json) {
       return new TimeFrame(json.Get<DateTime>("from"), json.Get<DateTime>("to"));
     }
-
 
     #endregion Constructors and parsers
 
@@ -51,11 +47,9 @@ namespace Empiria.DataTypes {
       get;
     }
 
-
     public DateTime EndTime {
       get;
     }
-
 
     #endregion Public properties
 
@@ -64,7 +58,6 @@ namespace Empiria.DataTypes {
     static public bool operator ==(TimeFrame periodA, TimeFrame periodB) {
       return ((periodA.StartTime == periodB.StartTime) && (periodA.EndTime == periodB.EndTime));
     }
-
 
     static public bool operator !=(TimeFrame periodA, TimeFrame periodB) {
       return !(periodA == periodB);
@@ -84,30 +77,25 @@ namespace Empiria.DataTypes {
       return ((this.StartTime == temp.StartTime) && (this.EndTime == temp.EndTime));
     }
 
-
     public bool Includes(DateTime date) {
-      if (this.EndTime.TimeOfDay.Hours == 0) {
-        if (this.StartTime <= date && date < this.EndTime.AddSeconds(86400)) {
-          return true;
-        }
+      if ((this.EndTime.TimeOfDay.Hours == 0) &&
+          (this.StartTime <= date && date < this.EndTime.AddSeconds(86400))) {
+        return true;
       }
 
       return (this.StartTime <= date && date <= this.EndTime);
     }
 
-
     public override int GetHashCode() {
       return (this.ToString().GetHashCode());
     }
-
 
     public override string ToString() {
       return this.StartTime.ToString("yyyymmdd") + "." + this.EndTime.ToString("yyyymmdd");
     }
 
-
     #endregion Public methods
 
   } // struct TimeFrame
 
-} // namespace Empiria.DataTypes
+} // namespace Empiria.DataTypes.Time

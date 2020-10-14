@@ -1,6 +1,6 @@
 ﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Module   : Core Data Types                            Component : Data Types                              *
+*  Module   : Core Data Types                            Component : Time-Related Data Types                 *
 *  Assembly : Empiria.Core.dll                           Pattern   : Information Holder                      *
 *  Type     : EmpiriaCalendar                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
@@ -11,7 +11,7 @@ using System;
 
 using Empiria.Json;
 
-namespace Empiria.DataTypes {
+namespace Empiria.DataTypes.Time {
 
   /// <summary>Provides calendar data to know working and non working days.</summary>
   public class EmpiriaCalendar {
@@ -300,4 +300,4 @@ namespace Empiria.DataTypes {
 
   } // class EmpiriaCalendar
 
-} // namespace Empiria.DataTypes
+} // namespace Empiria.DataTypes.Time

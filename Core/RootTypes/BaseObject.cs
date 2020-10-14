@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
-using Empiria.DataTypes;
+using Empiria.DataTypes.Time;
 using Empiria.Ontology;
 
 namespace Empiria {
@@ -148,6 +148,7 @@ namespace Empiria {
       }
       var baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
       int objectId = 0;
+
       try {
         List<T> list = new List<T>(dataTable.Rows.Count);
 

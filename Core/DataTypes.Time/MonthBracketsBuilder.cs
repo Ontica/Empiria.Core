@@ -1,8 +1,8 @@
 ﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Module   : Core Data Types                             Component : Time-Related Data Types                *
-*  Assembly : Empiria.Core.dll                            Pattern   : Service provider                       *
-*  Type     : MonthBracketsBuilder                        License   : Please read LICENSE.txt file           *
+*  Module   : Core Data Types                            Component : Time-Related Data Types                 *
+*  Assembly : Empiria.Core.dll                           Pattern   : Service provider                        *
+*  Type     : MonthBracketsBuilder                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Generates month brackets lists.                                                                *
 *                                                                                                            *
@@ -10,12 +10,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace Empiria.DataTypes {
+namespace Empiria.DataTypes.Time {
 
   /// <summary>Generates month brackets lists.</summary>
   public class MonthBracketsBuilder {
 
-    #region Constructors
+    #region Constructors and fields
 
     private readonly int _bracketSize;
     private readonly int _firstBracketDueMonth;
@@ -25,7 +25,7 @@ namespace Empiria.DataTypes {
       _firstBracketDueMonth = firstBracketDueMonth;
     }
 
-    #endregion Constructors
+    #endregion Constructors and fields
 
     #region Public methods
 
@@ -36,7 +36,6 @@ namespace Empiria.DataTypes {
 
       return bracket;
     }
-
 
     public FixedList<MonthBracket> GetBrackets() {
       var brackets = this.BuildBrackets();
@@ -66,7 +65,6 @@ namespace Empiria.DataTypes {
       return brackets;
     }
 
-
     private MonthBracket BuildFirstBracket() {
       int startMonth = _firstBracketDueMonth - _bracketSize;
 
@@ -82,7 +80,6 @@ namespace Empiria.DataTypes {
 
       return new MonthBracket(startMonth, endMonth);
     }
-
 
     private MonthBracket BuildNextBracket(MonthBracket fromBracket) {
       int startMonth = fromBracket.EndMonth + 1;
@@ -104,4 +101,4 @@ namespace Empiria.DataTypes {
 
   }  // class MonthBracketsBuilder
 
-}  // namespace Empiria.DataTypes
+}  // namespace Empiria.DataTypes.Time

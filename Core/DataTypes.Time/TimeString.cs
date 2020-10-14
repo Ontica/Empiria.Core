@@ -1,18 +1,18 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Module   : Core Data Types                              Component : Date Time                             *
-*  Assembly : Empiria.Core.dll                             Pattern   : Methods library                       *
-*  Type     : Time                                         License   : Please read LICENSE.txt file          *
+*  Module   : Core Data Types                            Component : Time-Related Data Types                 *
+*  Assembly : Empiria.Core.dll                           Pattern   : Methods library                         *
+*  Type     : TimeString                                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Methods library used to manipulate time values as strings.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-namespace Empiria.DataTypes {
+namespace Empiria.DataTypes.Time {
 
   /// <summary>Methods library used to manipulate time values as strings.</summary>
-  static public class Time {
+  static public class TimeString {
 
     public static DateTime SetTimeToDate(DateTime dateTime, string timeString) {
       if (String.IsNullOrWhiteSpace(timeString)) {
@@ -43,6 +43,6 @@ namespace Empiria.DataTypes {
       }
     }
 
-  }  // class Time
+  }  // class TimeString
 
-}  // namespace Empiria.DataTypes
+}  // namespace Empiria.DataTypes.Time

@@ -1,15 +1,14 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Data Types Library                *
-*  Namespace : Empiria.DataTypes                                License  : Please read LICENSE.txt file      *
-*  Type      : TimeUnit                                         Pattern  : Enumeration Type                  *
+*  Module   : Core Data Types                            Component : Time-Related Data Types                 *
+*  Assembly : Empiria.Core.dll                           Pattern   : Enumeration                             *
+*  Type     : TimeType                                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Represents a time unit.                                                                       *
+*  Summary  : Represents a time unit.                                                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
-namespace Empiria.DataTypes {
+namespace Empiria.DataTypes.Time {
 
   /// <summary>Represents a time unit.</summary>
   public enum TimeUnit {
@@ -26,4 +25,4 @@ namespace Empiria.DataTypes {
 
   }  // enum TimeUnit
 
-}  // namespace Empiria.DataTypes
+}  // namespace Empiria.DataTypes.Time

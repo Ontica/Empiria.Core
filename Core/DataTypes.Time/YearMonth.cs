@@ -1,8 +1,8 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Kernel Types                      *
-*  Namespace : Empiria.DataTypes                                License  : Please read LICENSE.txt file      *
-*  Type      : YearMonth                                        Pattern  : Static Data Type                  *
+*  Module   : Core Data Types                            Component : Time-Related Data Types                 *
+*  Assembly : Empiria.Core.dll                           Pattern   : Enumeration                             *
+*  Type     : YearMonth                                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary   : Structure that holds a year-month pair value.                                                 *
 *                                                                                                            *
@@ -10,7 +10,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Empiria.DataTypes {
+namespace Empiria.DataTypes.Time {
 
   /// <summary>Structure that holds a year-month pair value.</summary>
   public struct YearMonth {
@@ -114,11 +114,11 @@ namespace Empiria.DataTypes {
 
     #region Methods
 
-    public override bool Equals(object o) {
-      if (!(o is YearMonth)) {
+    public override bool Equals(object obj) {
+      if (!(obj is YearMonth)) {
         return false;
       }
-      YearMonth temp = (YearMonth) o;
+      YearMonth temp = (YearMonth) obj;
 
       return ((this.Year == temp.Year) && (this.Month == temp.Month));
     }
@@ -136,4 +136,4 @@ namespace Empiria.DataTypes {
 
   }  // struct YearMonth
 
-}  // namespace Empiria.DataTypes
+}  // namespace Empiria.DataTypes.Time

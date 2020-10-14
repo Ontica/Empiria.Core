@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Data;
-using Empiria.DataTypes;
+using Empiria.DataTypes.Time;
 
 namespace Empiria.Ontology {
 
