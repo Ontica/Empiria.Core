@@ -1,18 +1,15 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Tests                                        Component : Ontology Services                     *
-*  Assembly : Empiria.Core.Tests.dll                       Pattern   : Test class                            *
-*  Type     : OntologyTests                                License   : Please read LICENSE.txt file          *
+*  Module   : Empiria Core Tests                         Component : Ontology Tests                          *
+*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Test class                              *
+*  Type     : OntologyTests                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Empiria Ontology types tests.                                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 using Xunit;
 
-using Empiria.Ontology;
-
-namespace Empiria.Tests {
+namespace Empiria.Ontology.Tests {
 
   /// <summary>Empiria Ontology types tests</summary>
   public class OntologyTests {
@@ -26,4 +23,4 @@ namespace Empiria.Tests {
 
   }  // OntologyTests
 
-}  // namespace Empiria.Tests
+}  // namespace Empiria.Ontology.Tests

@@ -1,13 +1,12 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Tests                                        Component : Core Data Types                       *
-*  Assembly : Empiria.Core.Tests.dll                       Pattern   : Test class                            *
-*  Type     : EmpiriaStringTest                            License   : Please read LICENSE.txt file          *
+*  Module   : Empiria Core Tests                         Component : ConfigurationData Tests                 *
+*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Test class                              *
+*  Type     : EmpiriaStringTest                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : EmpiriaString methods tests.                                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 using Xunit;
 
 namespace Empiria.Tests {

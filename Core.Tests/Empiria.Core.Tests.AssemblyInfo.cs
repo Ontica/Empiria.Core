@@ -1,10 +1,10 @@
-﻿/* Empiria Foundation Framework ******************************************************************************
+﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Foundation Framework                System   : Foundation Library                     *
-*  Assembly  : Empiria.Foundation.Tests.dll                Pattern  : Assembly Attributes File               *
-*                                                          License  : Please read license.txt file           *
+*  Module   : Empiria Core Test suite                    Component : Test suite                              *
+*  Assembly : Empiria.Core.dll                           Pattern   : Assembly Attributes File                *
+*  Type     : None                                       License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Test suite for Empiria.Foundation.                                                            *
+*  Summary  : Test suite for Empiria Core types and components.                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;

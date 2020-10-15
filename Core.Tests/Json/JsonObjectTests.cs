@@ -1,22 +1,20 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Tests                                        Component : Core Data Types                       *
-*  Assembly : Empiria.Core.Tests.dll                       Pattern   : Test class                            *
-*  Type     : JsonObjectTests                              License   : Please read LICENSE.txt file          *
+*  Module   : Empiria Core Tests                         Component : Json Tests                              *
+*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Test class                              *
+*  Type     : JsonObjectTests                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : JsonObject methods tests.                                                                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
+
 using Xunit;
 
+namespace Empiria.Json.Tests {
 
-using Empiria.Json;
-
-namespace Empiria.Tests {
-
-  /// <summary>EmpiriaString methods tests.</summary>
+  /// <summary>JsonObject methods tests.</summary>
   public class JsonObjectTests {
 
     [Fact]
@@ -153,4 +151,4 @@ namespace Empiria.Tests {
 
   }  // EmpiriaStringTest
 
-}  // namespace Empiria.Tests
+}  // namespace Empiria.Json.Tests

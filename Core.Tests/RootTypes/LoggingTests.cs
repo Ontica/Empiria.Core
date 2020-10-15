@@ -1,8 +1,8 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Tests                                        Component : Logging Services                      *
-*  Assembly : Empiria.Core.Tests.dll                       Pattern   : Test class                            *
-*  Type     : LoggingTests                                 License   : Please read LICENSE.txt file          *
+*  Module   : Empiria Core Tests                         Component : Logging services Tests                  *
+*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Test class                              *
+*  Type     : LoggingTests                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Logging service tests.                                                                         *
 *                                                                                                            *
@@ -22,6 +22,7 @@ namespace Empiria.Tests {
       EmpiriaLog.Error(exception);
 
       // How to write the assertion?
+      Assert.True(true);
     }
 
   }  // LoggingTests

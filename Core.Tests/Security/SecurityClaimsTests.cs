@@ -1,13 +1,12 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Tests                                        Component : Security Services                     *
-*  Assembly : Empiria.Core.Tests.dll                       Pattern   : Test class                            *
-*  Type     : SecurityClaimsTests                          License   : Please read LICENSE.txt file          *
+*  Module   : Empiria Core Tests                         Component : Security Claims Tests                   *
+*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Test class                              *
+*  Type     : SecurityClaimsTests                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Security claims services tests.                                                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 using Xunit;
 
 using Empiria.Security;
@@ -34,6 +33,8 @@ namespace Empiria.Tests.Security {
       CommonMethods.Authenticate();
 
       ClaimsService.EnsureClaim(EmpiriaUser.Current, ClaimType.UserID, "AutoTester");
+
+      Assert.True(true);
     }
 
   }  // SecurityClaimsTests

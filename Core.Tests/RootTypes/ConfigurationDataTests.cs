@@ -1,8 +1,8 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Tests                                        Component : Configuration Services                *
-*  Assembly : Empiria.Core.Tests.dll                       Pattern   : Test class                            *
-*  Type     : ConfigurationDataTests                       License   : Please read LICENSE.txt file          *
+*  Module   : Empiria Core Tests                         Component : ConfigurationData Tests                 *
+*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Test class                              *
+*  Type     : ConfigurationDataTests                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Configuration data tests.                                                                      *
 *                                                                                                            *

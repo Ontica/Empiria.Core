@@ -1,8 +1,8 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Tests                                        Component : Security Services                     *
-*  Assembly : Empiria.Core.Tests.dll                       Pattern   : Test class                            *
-*  Type     : AuthorizationServiceTests                    License   : Please read LICENSE.txt file          *
+*  Module   : Empiria Core Tests                         Component : Authorization services Tests            *
+*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Test class                              *
+*  Type     : AuthorizationServiceTests                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Authorization service tests.                                                                   *
 *                                                                                                            *
@@ -19,7 +19,7 @@ namespace Empiria.Tests.Security {
 
     static readonly string OPERATION_NAME = "TestOperation";
 
-    [Fact]
+    [Fact(Skip = "Authorization data has not been set.")]
     public void ShouldRequestAnAuthorization() {
       CommonMethods.Authenticate();
 
@@ -43,7 +43,7 @@ namespace Empiria.Tests.Security {
     }
 
 
-    [Fact]
+    [Fact(Skip = "Authorization data has not been set.")]
     public void ShouldAuthorizeAnAuthorizationRequest() {
       CommonMethods.Authenticate();
 
@@ -69,7 +69,7 @@ namespace Empiria.Tests.Security {
     }
 
 
-    [Fact]
+    [Fact(Skip = "Authorization data has not been set.")]
     public void ShouldApplyAnAuthorizationRequest() {
       CommonMethods.Authenticate();
 

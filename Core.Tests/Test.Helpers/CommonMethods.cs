@@ -1,19 +1,17 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Tests                                        Component : N/A                                   *
-*  Assembly : Empiria.Core.Tests.dll                       Pattern   : Test class                            *
-*  Type     : CommonMethods                                License   : Please read LICENSE.txt file          *
+*  Module   : Empiria Core Tests                         Component : General Test Helper Methods             *
+*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Methods Library                         *
+*  Type     : CommonMethods                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Auxiliary common methods used by unit tests.                                                   *
+*  Summary  : Auxiliary common methods used by test cases.                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-
 using Empiria.Security;
 
 namespace Empiria.Tests {
 
-  /// <summary>Auxiliary common methods used by tests.</summary>
+  /// <summary>Auxiliary common methods used by test cases.</summary>
   static internal class CommonMethods {
 
     #region Auxiliary methods
