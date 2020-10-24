@@ -545,6 +545,18 @@ namespace Empiria {
       return TrimAll(source);
     }
 
+    static public string RemoveEndPunctuation(string source) {
+      char[] punctuations = new char[] {'.', ',', ';', ':', '=', '-', '_', '|'};
+
+      string temp = source;
+
+      for (int i = 0; i < punctuations.Length; i++) {
+        temp = temp.TrimEnd(punctuations[i]);
+      }
+      return temp.TrimEnd();
+    }
+
+
     static public bool Similar(string stringA, string stringB) {
       stringA = RemoveNoise(stringA).ToLowerInvariant();
       stringB = RemoveNoise(stringB).ToLowerInvariant();
