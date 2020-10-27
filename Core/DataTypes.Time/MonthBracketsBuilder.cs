@@ -18,11 +18,17 @@ namespace Empiria.DataTypes.Time {
     #region Constructors and fields
 
     private readonly int _bracketSize;
-    private readonly int _firstBracketDueMonth;
+    private readonly int _firstBracketStart;
 
-    public MonthBracketsBuilder(int bracketSize, int firstBracketDueMonth) {
+    public MonthBracketsBuilder(int bracketSize, int firstBracketStart) {
+      Assertion.Assert(bracketSize > 0,
+                      $"bracketSize value ({bracketSize}) must be greater than zero.");
+
+      Assertion.Assert(1 <= firstBracketStart && firstBracketStart <= 12,
+                       $"firstBracketStart value ({firstBracketStart}) out of bounds.");
+
       _bracketSize = bracketSize;
-      _firstBracketDueMonth = firstBracketDueMonth;
+      _firstBracketStart = firstBracketStart;
     }
 
     #endregion Constructors and fields
@@ -34,8 +40,18 @@ namespace Empiria.DataTypes.Time {
 
       var bracket = brackets.Find(x => x.StartMonth <= date.Month && date.Month <= x.EndMonth);
 
+      if (!bracket.Equals(default(MonthBracket))) {
+        return bracket;
+      }
+
+      bracket = brackets.Find(x => x.EndMonth < x.StartMonth && x.StartMonth <= date.Month);
+
+      Assertion.Assert(!bracket.Equals(default(MonthBracket)),
+                        $"A bracket for date ({date}) was not found.");
+
       return bracket;
     }
+
 
     public FixedList<MonthBracket> GetBrackets() {
       var brackets = this.BuildBrackets();
@@ -66,10 +82,10 @@ namespace Empiria.DataTypes.Time {
     }
 
     private MonthBracket BuildFirstBracket() {
-      int startMonth = _firstBracketDueMonth - _bracketSize;
+      int startMonth = _firstBracketStart - _bracketSize;
 
       if (startMonth < 0) {
-        startMonth = 12 - startMonth;
+        startMonth = 12 - Math.Abs(startMonth);
       }
 
       int endMonth = startMonth + _bracketSize - 1;
