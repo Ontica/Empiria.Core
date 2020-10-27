@@ -125,6 +125,9 @@ namespace Empiria.DataTypes.Time {
       return this.Holidays.Contains(date.Date);
     }
 
+    public bool IsHolidayOrWeekendDay(DateTime date) {
+      return (this.Holidays.Contains(date.Date) || this.IsWeekendDay(date.Date));
+    }
 
     public bool IsNonWorkingDate(DateTime date) {
       return (this.IsWeekendDay(date) || this.IsHoliday(date) ||
@@ -144,6 +147,39 @@ namespace Empiria.DataTypes.Time {
     }
 
 
+    public DateTime LastNonHolidayOrWeekendDate(DateTime date, bool includeDate = false) {
+      date = date.Date;
+
+      if (!includeDate) {
+        date = date.AddDays(-1);
+      }
+
+      while (true) {
+        if (!this.IsHolidayOrWeekendDay(date)) {
+          return date;
+        } else {
+          date = date.AddDays(-1);
+        }
+      }
+    }
+
+
+    public DateTime LastNonWeekendDate(DateTime date, bool includeDate = false) {
+      date = date.Date;
+
+      if (!includeDate) {
+        date = date.AddDays(-1);
+      }
+
+      while (true) {
+        if (!this.IsWeekendDay(date)) {
+          return date;
+        } else {
+          date = date.AddDays(-1);
+        }
+      }
+    }
+
     public DateTime LastWorkingDate(DateTime date, bool includeDate = false) {
       date = date.Date;
 
@@ -158,6 +194,25 @@ namespace Empiria.DataTypes.Time {
           date = date.AddDays(-1);
         }
       }
+    }
+
+
+    public DateTime LastWorkingDateWithinMonth(int year, int month) {
+      var date = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+
+      var lastWorkingDate = this.LastWorkingDate(date, true);
+
+      if (lastWorkingDate.Month == month) {
+        return lastWorkingDate;
+      }
+
+      lastWorkingDate = LastNonHolidayOrWeekendDate(date, true);
+
+      if (lastWorkingDate.Month == month) {
+        return lastWorkingDate;
+      }
+
+      return LastNonWeekendDate(date, true);
     }
 
 
