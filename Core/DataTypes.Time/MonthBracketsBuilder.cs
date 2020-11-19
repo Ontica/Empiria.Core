@@ -44,7 +44,13 @@ namespace Empiria.DataTypes.Time {
         return bracket;
       }
 
-      bracket = brackets.Find(x => x.EndMonth < x.StartMonth && x.StartMonth <= date.Month);
+      bracket = brackets.Find(x => x.StartMonth > x.EndMonth && date.Month <= x.EndMonth);
+
+      if (!bracket.Equals(default(MonthBracket))) {
+        return bracket;
+      }
+
+      bracket = brackets.Find(x => x.StartMonth > x.EndMonth && date.Month >= x.StartMonth);
 
       Assertion.Assert(!bracket.Equals(default(MonthBracket)),
                         $"A bracket for date ({date}) was not found.");
@@ -84,7 +90,7 @@ namespace Empiria.DataTypes.Time {
     private MonthBracket BuildFirstBracket() {
       int startMonth = _firstBracketStart - _bracketSize;
 
-      if (startMonth < 0) {
+      if (startMonth <= 0) {
         startMonth = 12 - Math.Abs(startMonth);
       }
 
