@@ -82,8 +82,8 @@ namespace Empiria.Security {
       var json = JsonObject.Parse((string) row["ObjectExtData"]);
       this.AssignedTo = Contact.Parse(json.Get<Int32>("AssignedToId", -1));
 
-      this.WebApiAddresses = json.GetList<NameValuePair>("WebApiAddresses").ToFixedList();
-
+      this.WebApiAddresses = json.GetList<NameValuePair>("WebApiAddresses", false)
+                                 .ToFixedList();
     }
 
     #endregion Constructors and parsers
