@@ -20,7 +20,7 @@ namespace Empiria.Security.Claims {
 
     #region Fields
 
-    private EmpiriaDictionary<string, List<Claim>> internalList =
+    private readonly EmpiriaDictionary<string, List<Claim>> internalList =
                                             new EmpiriaDictionary<string, List<Claim>>();
 
     #endregion Fields
@@ -118,7 +118,7 @@ namespace Empiria.Security.Claims {
       string cacheKey = BuildUniqueKey(claimType, this.Subject);
 
       return (internalList.ContainsKey(cacheKey) &&
-              internalList[cacheKey].Exists( (x) => x.Value.ToLowerInvariant().Equals(claimValue.ToLowerInvariant())) );
+              internalList[cacheKey].Exists((x) => x.Value.Equals(claimValue)));
     }
 
 
@@ -142,9 +142,11 @@ namespace Empiria.Security.Claims {
       if (!internalList.ContainsKey(cacheKey)) {
         throw new SecurityException(SecurityException.Msg.SubjectClaimTypeNotFound,
                                     claimType.DisplayName, Subject.ClaimsToken);
+
       } else if (internalList[cacheKey].Count != 1) {
         throw new SecurityException(SecurityException.Msg.SubjectClaimTypeIsMultiValue,
                                     claimType.DisplayName);
+
       } else {
         return internalList[cacheKey][0];
       }
@@ -162,8 +164,7 @@ namespace Empiria.Security.Claims {
                                     claimType.DisplayName, Subject.ClaimsToken);
       }
 
-      Claim claim = internalList[cacheKey].Find((x) => x.Value.ToLowerInvariant()
-                                                                .Equals(claimValue.ToLowerInvariant()));
+      Claim claim = internalList[cacheKey].Find((x) => x.Value.Equals(claimValue));
 
       if (claim != null) {
         return claim;
@@ -209,6 +210,7 @@ namespace Empiria.Security.Claims {
         throw new SecurityException(SecurityException.Msg.SubjectClaimNotFound,
                                     claimType.DisplayName, Subject.ClaimsToken, oldClaimValue);
       }
+
       this.RemoveSecure(claimType, oldClaimValue);
       this.AppendSecure(claimType, newClaimValue);
     }
@@ -247,9 +249,7 @@ namespace Empiria.Security.Claims {
 
     static private string BuildUniqueKey(ClaimType claimType,
                                          IClaimsSubject subject) {
-      string temp = $"{claimType.Id}~{subject.ClaimsToken}";
-
-      return temp.ToLowerInvariant();
+      return $"{claimType.Id}~{subject.ClaimsToken}";
     }
 
 
