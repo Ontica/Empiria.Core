@@ -347,6 +347,18 @@ namespace Empiria {
       }
     }
 
+
+    static public bool IsDate(string source) {
+      DateTime dischardedResult;
+
+      return DateTime.TryParse(source, out dischardedResult);
+    }
+
+    static public bool NotIsDate(string source) {
+      return !IsDate(source);
+    }
+
+
     static public bool IsDouble(string source) {
       try {
         if (String.IsNullOrEmpty(source)) {
@@ -387,17 +399,27 @@ namespace Empiria {
       }
     }
 
+
     static public bool IsEmpty(string source) {
-      if (source == null) {
+      string temp = TrimAll(source);
+
+      if (String.IsNullOrWhiteSpace(source)) {
         return true;
       }
-      for (int i = 0; i < source.Length; i++) {
-        if (!Char.IsWhiteSpace(source[i])) {
+
+      for (int i = 0; i < temp.Length; i++) {
+        if (!Char.IsWhiteSpace(temp[i])) {
           return false;
         }
       }
       return true;
     }
+
+
+    static public bool NotIsEmpty(string source) {
+      return !IsEmpty(source);
+    }
+
 
     static public bool IsFloat(string source) {
       try {
