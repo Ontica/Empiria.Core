@@ -42,7 +42,7 @@ namespace Empiria.Ontology {
     /// <param name="constructor">Method to call to build T instances from a U instance</param>
     /// <returns></returns>
     public FixedList<T> GetValuesList<T, U>(Func<U, T> constructor) where T : ValueObject<U> {
-      var json = JsonObject.Parse(this.ExtensionData);
+      var json = this.ExtensionData;
 
       List<U> list = json.GetList<U>("Values");
 

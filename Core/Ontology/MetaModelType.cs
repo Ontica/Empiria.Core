@@ -13,6 +13,7 @@ using System.Data;
 using System.Linq;
 
 using Empiria.Collections;
+using Empiria.Json;
 using Empiria.Reflection;
 using Empiria.StateEnums;
 
@@ -53,7 +54,7 @@ namespace Empiria.Ontology {
     private string displayPluralName = String.Empty;
     private bool femaleGenre = false;
     private string documentation = String.Empty;
-    private string extensionData = String.Empty;
+    private JsonObject extensionData = JsonObject.Empty;
     private string keywords = String.Empty;
     private string dataSource = String.Empty;
     private string idFieldName = String.Empty;
@@ -182,9 +183,9 @@ namespace Empiria.Ontology {
       protected set { documentation = EmpiriaString.TrimAll(value); }
     }
 
-    public string ExtensionData {
+    public JsonObject ExtensionData {
       get { return extensionData; }
-      protected set { extensionData = EmpiriaString.TrimAll(value); }
+      protected set { extensionData = value; }
     }
 
     public bool FemaleGenre {
@@ -428,7 +429,7 @@ namespace Empiria.Ontology {
       this.displayPluralName = (string) dataRow["DisplayPluralName"];
       this.femaleGenre = (bool) dataRow["FemaleGenre"];
       this.documentation = (string) dataRow["Documentation"];
-      this.extensionData = (string) dataRow["TypeExtData"];
+      this.extensionData = JsonObject.Parse((string) dataRow["TypeExtData"]);
       this.keywords = (string) dataRow["TypeKeywords"];
       this.solutionName = (string) dataRow["SolutionName"];
       this.systemName = (string) dataRow["SystemName"];
