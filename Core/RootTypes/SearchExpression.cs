@@ -4,37 +4,21 @@
 *  Assembly : Empiria.Core.dll                             Pattern   : Utility class                         *
 *  Type     : SearchExpression                             License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Represents a search expression.                                                                *
+*  Summary  : Contains methods to build search expressions.                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections;
+using System.Linq;
 
 namespace Empiria {
 
-  public struct SearchExpression {
+  /// <summary>Contains methods to build search expressions.</summary>
+  static public class SearchExpression {
 
-    #region Fields
+    #region Public members
 
-    private string expression;
-
-    #endregion Fields
-
-    #region Constructors and parsers
-
-    public SearchExpression(string expression) {
-      this.expression = expression;
-    }
-
-
-    static public SearchExpression Empty {
-      get {
-        return new SearchExpression(String.Empty);
-      }
-    }
-
-
-    public static string AllRecordsFilter {
+    static public string AllRecordsFilter {
       get {
         return "(1 = 1)";
       }
@@ -47,147 +31,56 @@ namespace Empiria {
     }
 
 
-    static public implicit operator string(SearchExpression expression) {
-      return expression.ToString();
+    static public string ParseAndLike(string fieldName, string keywords) {
+      return ParseLikeExpressionUtility(fieldName, keywords, "AND", true);
     }
 
 
-    static public implicit operator SearchExpression(string expression) {
-      return new SearchExpression(expression);
-    }
+    static public string ParseAndLikeKeywords(string fieldName, string rawtext) {
+      var keywords = EmpiriaString.BuildKeywords(rawtext);
 
-    #endregion Constructors and parsers
-
-    #region Static methods
-
-    static public SearchExpression ParseAndLike(string fieldName, string searchKeywords) {
-      if (String.IsNullOrEmpty(searchKeywords)) {
-        return String.Empty;
-      }
-
-      string[] fieldValues = EmpiriaString.BuildKeywords(searchKeywords).Split(' ');
-      string temp = String.Empty;
-
-      for (int i = 0; i < fieldValues.Length; i++) {
-        temp += ((temp.Length != 0) ? " AND " : String.Empty) +
-                 ParseLike(fieldName, fieldValues[i]);
-      }
-
-      if (temp.Length != 0) {
-        return "(" + temp + ")";
-      } else {
-        return String.Empty;
-      }
+      return ParseLikeExpressionUtility(fieldName, keywords, "AND", true);
     }
 
 
-    static public SearchExpression ParseAndLikeKeywords(string keywordsField, string words) {
-      return ParseAndLike(keywordsField, EmpiriaString.BuildKeywords(words));
+    static public string ParseAndLikeWithNoiseWords(string fieldName, string keywords) {
+      return ParseLikeExpressionUtility(fieldName, keywords, "AND", false);
     }
 
 
-    static public SearchExpression ParseAndLikeWithNoiseWords(string fieldName, string searchKeywords) {
-      if (String.IsNullOrEmpty(searchKeywords)) {
-        return String.Empty;
-      }
-
-      string[] fieldValues = EmpiriaString.BuildKeywords(searchKeywords, false).Split(' ');
-      string temp = String.Empty;
-
-      for (int i = 0; i < fieldValues.Length; i++) {
-        temp += ((temp.Length != 0) ? " AND " : String.Empty) +
-                 ParseLike(fieldName, fieldValues[i]);
-      }
-
-      if (temp.Length != 0) {
-        return "(" + temp + ")";
-      } else {
-        return String.Empty;
-      }
+    static public string ParseOrLike(string fieldName, string keywords) {
+      return ParseLikeExpressionUtility(fieldName, keywords, "OR", true);
     }
 
 
-    static public SearchExpression ParseOrLike(string fieldName, string searchKeywords) {
-      if (String.IsNullOrWhiteSpace(searchKeywords)) {
-        return String.Empty;
-      }
+    static public string ParseOrLikeKeywords(string fieldName, string rawtext) {
+      var keywords = EmpiriaString.BuildKeywords(rawtext);
 
-      string[] fieldValues = EmpiriaString.BuildKeywords(searchKeywords).Split(' ');
-      string temp = String.Empty;
-
-      for (int i = 0; i < fieldValues.Length; i++) {
-        temp += ((temp.Length != 0) ? " OR " : String.Empty) + ParseLike(fieldName, fieldValues[i]);
-      }
-
-      if (temp.Length != 0) {
-        return "(" + temp + ")";
-      } else {
-        return String.Empty;
-      }
+      return ParseLikeExpressionUtility(fieldName, keywords, "OR", true);
     }
 
 
-    static public SearchExpression ParseOrLikeKeywords(string keywordsField, string words) {
-      return ParseOrLike(keywordsField, EmpiriaString.BuildKeywords(words));
+    static public string ParseOrLikeWithNoiseWords(string fieldName, string keywords) {
+      return ParseLikeExpressionUtility(fieldName, keywords, "OR", false);
     }
 
 
-    static public SearchExpression ParseOrLikeWithNoiseWords(string fieldName, string searchKeywords) {
-      if (String.IsNullOrWhiteSpace(searchKeywords)) {
-        return String.Empty;
-      }
-
-      string[] fieldValues = EmpiriaString.BuildKeywords(searchKeywords, true).Split(' ');
-      string temp = String.Empty;
-
-      for (int i = 0; i < fieldValues.Length; i++) {
-        temp += ((temp.Length != 0) ? " OR " : String.Empty) +
-                ParseLike(fieldName, (string) fieldValues[i]);
-      }
-
-      if (temp.Length != 0) {
-        return "(" + temp + ")";
-      } else {
-        return String.Empty;
-      }
+    static public string ParseBetweenDates(string fieldName, DateTime fromDate, DateTime toDate) {
+      return ParseBetweenDates(fieldName, fromDate.ToShortDateString(), toDate.ToShortDateString());
     }
 
 
-    static public SearchExpression ParseBetweenDates(string fieldName, string dateValue1, string dateValue2) {
-      if (dateValue1.CompareTo(dateValue2) < 0) {
-        return "((" + Format(dateValue1 + " 00:00:00") + " <= [" + fieldName + "]) AND ([" +
-                fieldName + "] <= " + Format(dateValue2 + " 23:59:59") + "))";
+    static public string ParseBetweenDates(string fieldName, string fromDate, string toDate) {
+      string dateWithTime1 = fromDate.CompareTo(toDate) <= 0 ?
+                                  Format(fromDate + " 00:00:00") : Format(toDate + " 00:00:00");
+      string dateWithTime2 = fromDate.CompareTo(toDate) <= 0 ?
+                                  Format(toDate + " 23:59:59") : Format(fromDate + " 23:59:59");
 
-      } else if (dateValue1.CompareTo(dateValue2) > 0) {
-        return "((" + Format(dateValue2 + " 00:00:00") + " <= [" + fieldName + "]) AND ([" +
-                fieldName + "] <= " + Format(dateValue1 + " 23:59:59") + "))";
-
-      } else {
-        return "((" + Format(dateValue1 + " 00:00:00") + " <= [" + fieldName + "]) AND ([" +
-                fieldName + "] <= " + Format(dateValue1 + " 23:59:59") + "))";
-
-      }
+      return ParseBetweenValues(fieldName, dateWithTime1, dateWithTime2);
     }
 
 
-    static public SearchExpression ParseBetweenDates(string fieldName, DateTime dateValue1, DateTime dateValue2) {
-      if (dateValue1.CompareTo(dateValue2) < 0) {
-        return "((" + Format(dateValue1.ToShortDateString() + " 00:00:00") + " <= [" + fieldName + "]) AND ([" +
-                fieldName + "] <= " + Format(dateValue2.ToShortDateString() + " 23:59:59") + "))";
-
-      } else if (dateValue1.CompareTo(dateValue2) > 0) {
-        return "((" + Format(dateValue2.ToShortDateString() + " 00:00:00") + " <= [" + fieldName + "]) AND ([" +
-                fieldName + "] <= " + Format(dateValue1.ToShortDateString() + " 23:59:59") + "))";
-
-      } else {
-        return "((" + Format(dateValue1.ToShortDateString() + " 00:00:00") + " <= [" + fieldName + "]) AND ([" +
-                fieldName + "] <= " + Format(dateValue1.ToShortDateString() + " 23:59:59") + "))";
-
-      }
-    }
-
-
-    static public SearchExpression ParseBetweenValues(string fieldName, string fieldValue1, string fieldValue2) {
+    static public string ParseBetweenValues(string fieldName, string fieldValue1, string fieldValue2) {
       if (fieldValue1.CompareTo(fieldValue2) < 0) {
         return "((" + Format(fieldValue1) + " <= [" + fieldName + "]) AND ([" +
                 fieldName + "] <= " + Format(fieldValue2) + "))";
@@ -203,145 +96,60 @@ namespace Empiria {
     }
 
 
-    static public SearchExpression ParseDistinct(string fieldName, object fieldValue) {
+    static public string ParseDistinct(string fieldName, object fieldValue) {
       return "([" + fieldName + "] <> " + Format(fieldValue) + ")";
     }
 
 
-    static public SearchExpression ParseEquals(string fieldName, object fieldValue) {
+    static public string ParseEquals(string fieldName, object fieldValue) {
       return "([" + fieldName + "] = " + Format(fieldValue) + ")";
     }
 
 
-    static public SearchExpression ParseInSet(string fieldName, ArrayList fieldValues) {
-      if ((fieldValues == null) || (fieldValues.Count == 0)) {
-        return String.Empty;
+    static public string ParseInSet(string fieldName, string[] fieldValues) {
+      string[] formattedValues = fieldValues.Select(x => Format(x)).ToArray();
 
-      } else if (fieldValues.Count == 1) {
-        return "([" + fieldName + "] = " + Format(fieldValues[0]) + ")";
-
-      } else {
-        string temp = String.Empty;
-
-        for (int i = 0; i < fieldValues.Count; i++) {
-          temp += ((temp.Length != 0) ? "," : String.Empty) + Format(fieldValues[i]);
-        }
-
-        return "([" + fieldName + "] IN (" + temp + "))";
-
-      }
+      return ParseInSetUtility(fieldName, formattedValues);
     }
 
 
-    static public SearchExpression ParseInSet(string fieldName, string[] fieldValues) {
-      if ((fieldValues == null) || (fieldValues.Length == 0)) {
-        return String.Empty;
+    static public string ParseInSet(string fieldName, ArrayList fieldValues) {
+      string[] formattedValues = fieldValues.ToArray().Select(x => Format(x)).ToArray();
 
-      } else if (fieldValues.Length == 1) {
-        return "([" + fieldName + "] = " + Format(fieldValues[0]) + ")";
-
-      } else {
-        string temp = String.Empty;
-
-        for (int i = 0; i < fieldValues.Length; i++) {
-          temp += ((temp.Length != 0) ? "," : String.Empty) + Format(fieldValues[i]);
-        }
-
-        return "([" + fieldName + "] IN (" + temp + "))";
-
-      }
+      return ParseInSetUtility(fieldName, formattedValues);
     }
 
 
-    static public SearchExpression ParseInSet(string fieldName, string joinedValues, char separator) {
+    static public string ParseInSet(string fieldName, int[] fieldValues) {
+      string[] formattedValues = fieldValues.Select(x => x.ToString()).ToArray();
+
+      return ParseInSetUtility(fieldName, formattedValues);
+    }
+
+
+    static public string ParseInSet(string fieldName, string joinedValues, char separator) {
       string[] valuesArray = joinedValues.Split(separator);
 
       for (int i = 1; i < valuesArray.Length; i++) {
         valuesArray[i] = valuesArray[i - 1] + separator + valuesArray[i];
       }
 
-      return SearchExpression.ParseInSet(fieldName, valuesArray);
+      return ParseInSet(fieldName, valuesArray);
     }
 
 
-    static public SearchExpression ParseLike(string fieldName, string fieldValue,
-                                             bool searchAsIs = false) {
-      if (String.IsNullOrEmpty(fieldValue)) {
+    static public string ParseLike(string fieldName, string fieldValue) {
+      if (EmpiriaString.IsEmpty(fieldValue)) {
         return String.Empty;
-
-      } else if (searchAsIs) {
-        return "([" + fieldName + "] LIKE '%" + fieldValue + "%')";
-
-      } else {
-        return "([" + fieldName + "] LIKE '%" + Prepare(fieldValue) + "%')";
-
       }
+
+      return "([" + fieldName + "] LIKE '%" + fieldValue + "%')";
     }
 
-    #endregion Static methods
+    #endregion Public members
 
-    #region Public properties
+    #region Helper methods
 
-    public bool IsEmpty {
-      get { return (expression.Length == 0); }
-    }
-
-    #endregion Public properties
-
-    #region Public methods
-
-    public void AppendAnd(SearchExpression e) {
-      if (IsEmpty) {
-        this.expression = e.ToString();
-
-      } else if (!e.IsEmpty) {
-        this.expression += " AND " + e.ToString();
-
-      } else {
-        this.expression = SearchExpression.Empty;
-
-      }
-    }
-
-
-    public void AppendOr(SearchExpression e) {
-      if (IsEmpty) {
-        this.expression = e.ToString();
-
-      } else {
-        this.expression += " OR " + e.ToString();
-
-      }
-    }
-
-
-    public void SetNot() {
-      if (IsEmpty) {
-        this.expression = "NOT";
-
-      } else {
-        this.expression = "( NOT " + this.ToString() + ")";
-
-      }
-    }
-
-
-    public override string ToString() {
-      if (IsEmpty || expression.StartsWith("(")) {
-        return expression;
-
-      } else if (!IsEmpty) {
-        return "(" + expression + ")";
-
-      } else {
-        return String.Empty;
-
-      }
-    }
-
-    #endregion Public methods
-
-    #region Private methods
 
     static private string Format(object fieldValue) {
       if (fieldValue.GetType() == Type.GetType("System.String")) {
@@ -361,7 +169,49 @@ namespace Empiria {
       return EmpiriaString.BuildKeywords(fieldValue);
     }
 
-    #endregion Private methods
+    static private string ParseInSetUtility(string fieldName, string[] fieldValues) {
+      if ((fieldValues == null) || (fieldValues.Length == 0)) {
+        return String.Empty;
+      }
+
+      if (fieldValues.Length == 1) {
+        return "([" + fieldName + "] = " + fieldValues[0] + ")";
+      }
+
+      string temp = String.Empty;
+
+      for (int i = 0; i < fieldValues.Length; i++) {
+        temp += ((temp.Length != 0) ? "," : String.Empty) + fieldValues[i];
+      }
+
+      return "([" + fieldName + "] IN (" + temp + "))";
+    }
+
+
+    static private string ParseLikeExpressionUtility(string fieldName, string keywords,
+                                                     string logicalOperator, bool removeNoiseWords) {
+      if (EmpiriaString.IsEmpty(keywords)) {
+        return String.Empty;
+      }
+
+      string[] fieldValues = EmpiriaString.BuildKeywords(keywords, removeNoiseWords).Split(' ');
+      string temp = String.Empty;
+
+      for (int i = 0; i < fieldValues.Length; i++) {
+        if (temp.Length != 0) {
+          temp += $" {logicalOperator} ";
+        }
+        temp += ParseLike(fieldName, fieldValues[i]);
+      }
+
+      if (temp.Length != 0) {
+        return "(" + temp + ")";
+      } else {
+        return String.Empty;
+      }
+    }
+
+    #endregion Helper methods
 
   } // struct SearchExpression
 
