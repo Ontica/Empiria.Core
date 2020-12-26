@@ -243,6 +243,12 @@ namespace Empiria.Ontology {
       protected set { name = EmpiriaString.TrimAll(value); }
     }
 
+    public string NamedKey {
+      get {
+        return this.ExtensionData.Get("NamedKey", String.Empty);
+      }
+    }
+
     public string NamedIdFieldName {
       get { return namedIdFieldName; }
       internal set { namedIdFieldName = EmpiriaString.TrimAll(value); }
