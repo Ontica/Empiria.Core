@@ -16,7 +16,7 @@ using Empiria.StateEnums;
 
 namespace Empiria.Contacts {
 
-  public class Contact : BaseObject, IContact {
+  public class Contact : BaseObject, IContact, INamedEntity {
 
     #region Constructors and parsers
 
@@ -112,6 +112,12 @@ namespace Empiria.Contacts {
     public EntityStatus Status {
       get;
       protected set;
+    }
+
+    string INamedEntity.Name {
+      get {
+        return this.FullName;
+      }
     }
 
     #endregion Public properties
