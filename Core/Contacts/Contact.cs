@@ -116,7 +116,7 @@ namespace Empiria.Contacts {
 
     string INamedEntity.Name {
       get {
-        return this.FullName;
+        return !String.IsNullOrWhiteSpace(this.Alias) ? this.Alias : this.FullName;
       }
     }
 

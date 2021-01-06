@@ -59,6 +59,10 @@ namespace Empiria {
       return list.Select((x) => MapToNamedEntity(x)).ToArray();
     }
 
+    static public FixedList<NamedEntityDto> MapToNamedEntityList(this IEnumerable<INamedEntity> list) {
+      return new FixedList<NamedEntityDto>(list.Select((x) => MapToNamedEntity(x)));
+    }
+
   } // class NamedEntityMappingExtensions
 
 }  // namespace Empiria
