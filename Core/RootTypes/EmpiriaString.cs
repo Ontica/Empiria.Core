@@ -38,7 +38,13 @@ namespace Empiria {
       return words;
     }
 
-    static public string BuildRandomString(int minLength, int maxLength = -1) {
+
+    static public string BuildRandomString(int length) {
+      return BuildRandomString(length, length);
+    }
+
+
+    static public string BuildRandomString(int minLength, int maxLength) {
       Assertion.Assert(0 < minLength,
                       $"Parameter 'minLength' ({minLength}) must be greater than zero.");
       Assertion.Assert(minLength == -1 || minLength <= maxLength,

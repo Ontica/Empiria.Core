@@ -52,7 +52,6 @@ namespace Empiria {
 
     }
 
-
     public FixedList(Func<DataRow, T> parser, DataView view) : this(view.Count) {
       foreach (DataRowView row in view) {
         this.Add(parser.Invoke(row.Row));

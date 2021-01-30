@@ -23,7 +23,7 @@ namespace Empiria.Ontology {
     #region Fields
 
     private DataMappingRules dataMappingRules = null;
-    private object lockThreadObject = new object();
+    private readonly object lockThreadObject = new object();
 
     internal const int EmptyInstanceId = -1;
     internal const int UnknownInstanceId = -2;
@@ -69,8 +69,11 @@ namespace Empiria.Ontology {
       return ObjectTypeInfo.Parse(typeof(T));
     }
 
+
     static private Dictionary<int, ObjectTypeInfo> _cacheByUnderlyingType =
                                                       new Dictionary<int, ObjectTypeInfo>();
+
+
     static internal ObjectTypeInfo Parse(Type type) {
      int typeHashCode = type.GetHashCode();
       ObjectTypeInfo value = null;
@@ -84,6 +87,7 @@ namespace Empiria.Ontology {
       }  // lock
       return _cacheByUnderlyingType[typeHashCode];
     }
+
 
     #endregion Constructors and parsers
 
@@ -193,6 +197,7 @@ namespace Empiria.Ontology {
       return new Tuple<ObjectTypeInfo, DataRow>(this, dataRow);
     }
 
+
     internal ObjectTypeInfo GetDerivedType(DataRow dataRow) {
       if (this.TypeIdFieldName.Length == 0) {
         return this;
@@ -205,6 +210,7 @@ namespace Empiria.Ontology {
       }
     }
 
+
     private BaseObject _emptyInstance = null;
     /// <summary>Return the empty instance for this type.</summary>
     internal T GetEmptyInstance<T>() where T : BaseObject {
@@ -213,6 +219,7 @@ namespace Empiria.Ontology {
       }
       return (T) _emptyInstance;
     }
+
 
     private ObjectTypeInfo[] _subclassesArray = null;
     public ObjectTypeInfo[] GetSubclasses() {
@@ -264,14 +271,14 @@ namespace Empiria.Ontology {
     }
 
     public bool IsSubclassOf(ObjectTypeInfo typeInfo) {
-      var typeIterator = (ObjectTypeInfo) this.BaseType;
+      var typeIterator = this.BaseType;
       while (true) {
         if (typeIterator.Id == typeInfo.Id) {
           return true;
         } else if (typeIterator.IsPrimitive) {
           return false;
         } else {
-          typeIterator = (ObjectTypeInfo) typeIterator.BaseType;
+          typeIterator = typeIterator.BaseType;
         }
       }
     }
