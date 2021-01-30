@@ -59,7 +59,6 @@ namespace Empiria.Data {
                                                        .GetResult();
 
       } else {
-
         return CreateThisClusterIdAsync(sourceName).GetAwaiter()
                                                    .GetResult();
       }
@@ -97,15 +96,10 @@ namespace Empiria.Data {
       foreach (var operation in operationList) {
         Execute(operation);
       }
-
     }
 
 
-    #endregion Public methods
-
-    #region Internal methods
-
-    static internal T Execute<T>(DataOperation operation) {
+    static public T Execute<T>(DataOperation operation) {
       T result = DataWriter.ExecuteInternal<T>(operation);
 
       WriteDataLog(operation);
@@ -117,6 +111,10 @@ namespace Empiria.Data {
       return result;
     }
 
+
+    #endregion Public methods
+
+    #region Internal methods
 
     static internal int Execute(IDbConnection connection, DataOperation operation) {
       IDataHandler handler = GetDataHander(operation);
@@ -173,7 +171,6 @@ namespace Empiria.Data {
     }
 
 
-
     static private T ExecuteInternal<T>(DataOperation operation) {
       IDataHandler handler = GetDataHander(operation);
 
@@ -187,7 +184,6 @@ namespace Empiria.Data {
       }
 
       if (operationList.Count == 1) {
-
         ExecuteInternal(operationList[0]);
 
         return;
