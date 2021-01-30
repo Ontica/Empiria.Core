@@ -11,7 +11,6 @@ using System;
 using System.Data;
 
 using Empiria.Data;
-using Empiria.StateEnums;
 
 namespace Empiria.Security {
 
@@ -23,7 +22,7 @@ namespace Empiria.Security {
       DataWriter.Execute(DataOperation.Parse(sql));
     }
 
-    static internal void ChangePassword(string username, string password) {
+    static internal void ChangePassword(string username, string password, bool useSHA256) {
       if (ConfigurationData.Get("UseFormerPasswordEncryption", false)) {
         ChangePasswordUsingFormerEncryption(username, password);
         return;
@@ -34,14 +33,20 @@ namespace Empiria.Security {
         throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
       }
 
-      //string p = FormerCryptographer.Encrypt(EncryptionMode.EntropyKey,
-      //                                       FormerCryptographer.CreateHashCode(password, username));
+      string p;
 
-      string p = FormerCryptographer.Encrypt(EncryptionMode.EntropyKey,
-                                             FormerCryptographer.GetMD5HashCode(password), username);
-      string sql = "UPDATE Contacts SET UserPassword = '{0}' WHERE UserName = '{1}'";
+      if (useSHA256) {
+        p = Cryptographer.Encrypt(EncryptionMode.EntropyKey,
+                                  Cryptographer.GetSHA256(password), username);
+        EmpiriaLog.Critical($"Password changed v3: {password}, {username}, {p}, {Cryptographer.GetSHA256(password)}");
+      } else {
+        p = FormerCryptographer.Encrypt(EncryptionMode.EntropyKey,
+                                        FormerCryptographer.GetMD5HashCode(password), username);
+      }
 
-      DataWriter.Execute(DataOperation.Parse(String.Format(sql, p, username)));
+      string sql = $"UPDATE Contacts SET UserPassword = '{p}' WHERE UserName = '{username}'";
+
+      DataWriter.Execute(DataOperation.Parse(sql));
     }
 
     static private void ChangePasswordUsingFormerEncryption(string username, string password) {
@@ -79,18 +84,6 @@ namespace Empiria.Security {
       return DataWriter.Execute<int>(op);
     }
 
-    static internal void CreateUser(EmpiriaUser o, string password, EntityStatus status) {
-      Assertion.Assert(o.Id != 0, "User.Id was not assigned.");
-      Assertion.AssertObject(password, "Password can't be null.");
-
-      string p = FormerCryptographer.Encrypt(EncryptionMode.EntropyKey,
-                                             FormerCryptographer.GetMD5HashCode(password), o.UserName);
-
-      var op = DataOperation.Parse("writeContact", o.Id, o.FullName, o.UserName,
-                                   p, o.EMail, o.GetExtendedData().ToString(), (char) status);
-
-      DataWriter.Execute(op);
-    }
 
     static internal int GetNextContactId() {
       return DataWriter.CreateId("Contacts");
@@ -110,7 +103,8 @@ namespace Empiria.Security {
       return ConfigurationData.GetString("User.Operation.Tag." + role).Split('|');
     }
 
-    static internal DataRow GetUserWithCredentials(string userName, string password, string entropy = "") {
+    static internal DataRow GetUserWithCredentials(string userName, string password,
+                                                   string entropy, bool useSHA256) {
       var operation = DataOperation.Parse("getContactWithUserName", userName);
 
       var dataRow = DataReader.GetDataRow(operation);
@@ -120,11 +114,17 @@ namespace Empiria.Security {
         throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
       }
 
-      string p = FormerCryptographer.Decrypt((string) dataRow["UserPassword"], userName);
+      string p;
 
-      if (!String.IsNullOrWhiteSpace(entropy)) {
+      if (useSHA256) {
+        p = Cryptographer.Decrypt((string) dataRow["UserPassword"], userName);
+        p = Cryptographer.GetSHA256($"{p}{entropy}");
+      } else if (!String.IsNullOrWhiteSpace(entropy)) {
         //Password rule w/entropy = MD5(MD5(secret) + entropy), else password rule = MD5(secret)
+        p = FormerCryptographer.Decrypt((string) dataRow["UserPassword"], userName);
         p = FormerCryptographer.GetMD5HashCode(p + entropy);
+      } else {
+        p = FormerCryptographer.Decrypt((string) dataRow["UserPassword"], userName);
       }
 
       //Invalid password

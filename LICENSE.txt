@@ -1,7 +1,7 @@
 ﻿Empiria Core Framework License
 ==============================
 
-Copyright (c) 2002-2020. La Vía Óntica SC, Ontica LLC and contributors.
+Copyright (c) 2002-2021. La Vía Óntica SC, Ontica LLC and contributors.
 -----------------------------------------------------------------------
 
 These software components are free software: you can redistribute them
@@ -29,7 +29,7 @@ To say this another way: if you modify the Empiria Core Framework source
 code, or any other Empiria-based product, the goal is that you have to
 contribute those modifications back to the community.
 
-La Vía Óntica SC or Ontica LLC also offer the same software components
+La Vía Óntica SC and Ontica LLC also offer the same software components
 under other licensing terms, for such cases where the GNU Affero General
 Public License is not well-suitable.
 

@@ -34,14 +34,14 @@ namespace Empiria.Security {
 
 
     static public EmpiriaPrincipal Authenticate(string clientAppKey, string username, string password,
-                                                string entropy = "", Json.JsonObject contextData = null) {
+                                                string entropy, bool useSHA256, Json.JsonObject contextData = null) {
       Assertion.AssertObject(clientAppKey, "clientAppKey");
       Assertion.AssertObject(username, "username");
       Assertion.AssertObject(password, "password");
 
       var clientApplication = ClientApplication.ParseActive(clientAppKey);
 
-      EmpiriaUser user = EmpiriaUser.Authenticate(username, password, entropy);
+      EmpiriaUser user = EmpiriaUser.Authenticate(username, password, entropy, useSHA256);
 
       Assertion.AssertObject(user, "user");
 

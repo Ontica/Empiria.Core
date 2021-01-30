@@ -147,6 +147,16 @@ namespace Empiria.Security {
       }
     }
 
+    static public string GetSHA256(string text) {
+      Assertion.AssertObject(text, "text");
+
+
+      byte[] data = Encoding.UTF8.GetBytes(text);
+
+      SHA256 sha = SHA256.Create();
+
+      return ConvertToString(sha.ComputeHash(data));
+    }
 
     static public string SignText(string text, SecureString password) {
       Assertion.AssertObject(text, "text");

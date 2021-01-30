@@ -17,15 +17,17 @@ namespace Empiria.Security {
 
     #region Services
 
-    static public void ChangePassword(string apiKey, string username, string email, string password) {
+    static public void ChangePassword(string apiKey, string username,
+                                      string email, string password, bool useSHA256) {
       if (apiKey != ConfigurationData.GetString("ChangePasswordKey")) {
         throw new SecurityException(SecurityException.Msg.InvalidClientAppKey, apiKey);
       }
+
       EmpiriaUser user = EmpiriaUser.Parse(username, email);
 
       VerifyPasswordStrengthRules(user, password);
 
-      SecurityData.ChangePassword(username, password);
+      SecurityData.ChangePassword(username, password, useSHA256);
     }
 
 
