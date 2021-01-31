@@ -50,6 +50,11 @@ namespace Empiria.Security {
     }
 
 
+    public static void AssertIsActive(string appKey) {
+      ClientApplication.ParseActive(appKey);
+    }
+
+
     static public ClientApplication Current {
       get {
         if (EmpiriaPrincipal.Current != null) {

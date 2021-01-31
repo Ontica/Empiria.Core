@@ -62,10 +62,4 @@
     <ProjectReference Include="..\Core\Empiria.Core.csproj" />
     <ProjectReference Include="..\..\extensions\Messaging\Empiria.Messaging.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Authentication\Adapters\" />
-    <Folder Include="Authentication\Entities\" />
-    <Folder Include="Authentication\UseCases\" />
-    <Folder Include="UserManagement\Adapters\" />
-  </ItemGroup>
 </Project>
