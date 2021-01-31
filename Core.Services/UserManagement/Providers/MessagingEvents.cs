@@ -1,15 +1,14 @@
-﻿/* Empiria Extensions ****************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Module   : Empiria User Management                    Component : Integration Layer                       *
-*  Assembly : Empiria.UserManagement.dll                 Pattern   : String constants enumeration            *
+*  Module   : User Management                            Component : Integration Layer                       *
+*  Assembly : Empiria.Core.Services.dll                  Pattern   : String constants enumeration            *
 *  Type     : MessagingEvents                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : List of messaging events dispatched by the services offered by this component.                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
-namespace Empiria.UserManagement.Integration {
+namespace Empiria.Services.UserManagement.Providers {
 
   /// <summary>List of messaging events dispatched by the services offered by this component.</summary>
   internal enum MessagingEvents {
@@ -20,4 +19,4 @@ namespace Empiria.UserManagement.Integration {
 
   } // enum MessagingEvents
 
-}  // namespace Empiria.UserManagement.Integration
+}  // namespace Empiria.Services.UserManagement.Providers

@@ -1,14 +1,12 @@
-﻿/* Empiria Extensions ****************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Module   : Empiria User Management                    Component : Integration Layer                       *
-*  Assembly : Empiria.UserManagement.dll                 Pattern   : Service provider                        *
+*  Module   : User Management                            Component : Integration Layer                       *
+*  Assembly : Empiria.Core.Services.dll                  Pattern   : Service provider                        *
 *  Type     : EMailServices                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Sends e-mail messages.                                                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-
 using System.IO;
 
 using Empiria.Contacts;
@@ -16,7 +14,7 @@ using Empiria.Security;
 
 using Empiria.Messaging.EMailDelivery;
 
-namespace Empiria.UserManagement.Integration {
+namespace Empiria.Services.UserManagement.Providers {
 
   /// <summary>Sends e-mail messages.</summary>
   static internal class EMailServices {
@@ -67,4 +65,4 @@ namespace Empiria.UserManagement.Integration {
 
   }  // class EMailServices
 
-}  // namespace Empiria.UserManagement.Integration
+}  // namespace Empiria.Services.UserManagement.Providers

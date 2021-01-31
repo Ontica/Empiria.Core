@@ -72,13 +72,12 @@ namespace Empiria.Security {
 
     #region Authenticate methods
 
-    static internal EmpiriaUser Authenticate(string username, string password,
-                                             string entropy, bool useSHA256) {
+    static internal EmpiriaUser Authenticate(string username, string password, string entropy) {
       Assertion.AssertObject(username, "username");
       Assertion.AssertObject(password, "password");
       Assertion.Assert(entropy != null, "entropy can't be null.");
 
-      EmpiriaUser user = EmpiriaUser.GetUserWithCredentials(username, password, entropy, useSHA256);
+      EmpiriaUser user = EmpiriaUser.GetUserWithCredentials(username, password, entropy);
 
       user.EnsureCanAuthenticate();
       user.IsAuthenticated = true;
@@ -220,13 +219,13 @@ namespace Empiria.Security {
       this.MobilePhone = extendedData.Get("MobilePhone", String.Empty);
     }
 
-    static private EmpiriaUser GetUserWithCredentials(string username, string password,
-                                                      string entropy, bool useSHA256) {
-      DataRow row = SecurityData.GetUserWithCredentials(username, password,
-                                                        entropy, useSHA256);
+
+    static private EmpiriaUser GetUserWithCredentials(string username, string password, string entropy) {
+      DataRow row = SecurityData.GetUserWithCredentials(username, password, entropy);
 
       return EmpiriaUser.Parse(row);
     }
+
 
     internal protected override void OnLoadObjectData(DataRow row) {
       this.UserName = (string) row["UserName"];

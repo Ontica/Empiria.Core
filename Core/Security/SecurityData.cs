@@ -16,61 +16,7 @@ namespace Empiria.Security {
 
   static internal class SecurityData {
 
-    static internal void ActivateUser(EmpiriaUser empiriaUser) {
-      string sql = "UPDATE Contacts SET ContactStatus = 'A' WHERE ContactId = " + empiriaUser.Id;
-
-      DataWriter.Execute(DataOperation.Parse(sql));
-    }
-
-    static internal void ChangePassword(string username, string password, bool useSHA256) {
-      if (ConfigurationData.Get("UseFormerPasswordEncryption", false)) {
-        ChangePasswordUsingFormerEncryption(username, password);
-        return;
-      }
-
-      var dataRow = DataReader.GetDataRow(DataOperation.Parse("getContactWithUserName", username));
-      if (dataRow == null) {
-        throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
-      }
-
-      string p;
-
-      if (useSHA256) {
-        p = Cryptographer.Encrypt(EncryptionMode.EntropyKey,
-                                  Cryptographer.GetSHA256(password), username);
-        EmpiriaLog.Critical($"Password changed v3: {password}, {username}, {p}, {Cryptographer.GetSHA256(password)}");
-      } else {
-        p = FormerCryptographer.Encrypt(EncryptionMode.EntropyKey,
-                                        FormerCryptographer.GetMD5HashCode(password), username);
-      }
-
-      string sql = $"UPDATE Contacts SET UserPassword = '{p}' WHERE UserName = '{username}'";
-
-      DataWriter.Execute(DataOperation.Parse(sql));
-    }
-
-    static private void ChangePasswordUsingFormerEncryption(string username, string password) {
-      var dataRow = DataReader.GetDataRow(DataOperation.Parse("getContactWithUserName", username));
-      if (dataRow == null) {
-        throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
-      }
-
-      password = FormerCryptographer.Encrypt(EncryptionMode.EntropyHashCode, password, username);
-      password = FormerCryptographer.Decrypt(password, username);
-
-      password = FormerCryptographer.Encrypt(EncryptionMode.EntropyKey, password, username);
-
-      // Warning: This is the former encryption model (before Empiria v6.0)
-      // password"= Cryptographer.Encrypt(EncryptionMode.EntropyKey,
-      //                                  Cryptographer.GetMD5HashCode(password), username);
-
-      string sql = "UPDATE Contacts SET UserPassword = '{0}' WHERE UserName = '{1}'";
-
-      DataWriter.Execute(DataOperation.Parse(String.Format(sql, password, username)));
-    }
-
-
-    static internal void CloseSession(EmpiriaSession o) {
+     static internal void CloseSession(EmpiriaSession o) {
       var op = DataOperation.Parse("doCloseUserSession", o.Token, o.EndTime);
 
       DataWriter.Execute(op);
@@ -103,8 +49,7 @@ namespace Empiria.Security {
       return ConfigurationData.GetString("User.Operation.Tag." + role).Split('|');
     }
 
-    static internal DataRow GetUserWithCredentials(string userName, string password,
-                                                   string entropy, bool useSHA256) {
+    static internal DataRow GetUserWithCredentials(string userName, string password, string entropy) {
       var operation = DataOperation.Parse("getContactWithUserName", userName);
 
       var dataRow = DataReader.GetDataRow(operation);
@@ -114,15 +59,18 @@ namespace Empiria.Security {
         throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
       }
 
+      bool useSecurityModelV3 = ConfigurationData.Get("UseSecurityModel.V3", false);
+
       string p;
 
-      if (useSHA256) {
+      if (useSecurityModelV3) {
         p = Cryptographer.Decrypt((string) dataRow["UserPassword"], userName);
-        p = Cryptographer.GetSHA256($"{p}{entropy}");
+        p = Cryptographer.GetSHA256(p + entropy);
+
       } else if (!String.IsNullOrWhiteSpace(entropy)) {
-        //Password rule w/entropy = MD5(MD5(secret) + entropy), else password rule = MD5(secret)
         p = FormerCryptographer.Decrypt((string) dataRow["UserPassword"], userName);
         p = FormerCryptographer.GetMD5HashCode(p + entropy);
+
       } else {
         p = FormerCryptographer.Decrypt((string) dataRow["UserPassword"], userName);
       }
@@ -131,6 +79,7 @@ namespace Empiria.Security {
       if (p != password) {
         throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
       }
+
       dataRow.Table.Columns.Remove("UserPassword");
 
       return dataRow;

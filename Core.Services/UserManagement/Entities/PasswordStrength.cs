@@ -1,41 +1,39 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Security Services                 *
-*  Namespace : Empiria.Security                                 License  : Please read LICENSE.txt file      *
-*  Type      : PasswordStrength                                 Pattern  : Helper Class                      *
+*  Module   : User Management                            Component : Domain Layer                            *
+*  Assembly : Empiria.Core.Services.dll                  Pattern   : Service provider                        *
+*  Type     : PasswordStrength                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Helper class that verifies a password strength.                                               *
+*  Summary  : Contains services to verify a password strength.                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+using Empiria.Security;
 
-namespace Empiria.Security {
+namespace Empiria.Services.UserManagement {
 
-  /// <summary>Helper class that verifies a password strength.</summary>
+  /// <summary>Contains services to verify a password strength.</summary>
   public class PasswordStrength {
 
     #region Fields
 
-    private readonly EmpiriaUser user;
-    private readonly string password;
+    private readonly EmpiriaUser _user;
+    private readonly string _password;
 
     #endregion Fields
 
     #region Constructors and parsers
 
     private PasswordStrength(string password) {
-      this.password = password;
+      _password = password;
     }
-
 
     internal PasswordStrength(EmpiriaUser user, string password) {
       Assertion.AssertObject(user, "user");
       Assertion.AssertObject(password, "password");
 
-      this.user = user;
-      this.password = password;
+      _user = user;
+      _password = password;
     }
-
 
     static public void AssertIsValid(string password) {
       Assertion.AssertObject(password, "password");
@@ -46,9 +44,7 @@ namespace Empiria.Security {
       instance.VerifyCharactersCombination();
     }
 
-
     #endregion Constructors and parsers
-
 
     #region Public methods
 
@@ -60,24 +56,21 @@ namespace Empiria.Security {
 
     #endregion Public methods
 
-
-
     #region Private methods
-
 
     private void VerifyCharactersCombination() {
       int counter = 0;
 
-      if (EmpiriaString.ContainsAnyChar(password, "ABCDEFGHIJKLMNOPQRSTUVWXYZ")) {
+      if (EmpiriaString.ContainsAnyChar(_password, "ABCDEFGHIJKLMNOPQRSTUVWXYZ")) {
         counter++;
       }
-      if (EmpiriaString.ContainsAnyChar(password, "abcdefghijklmnopqrstuvwxyz")) {
+      if (EmpiriaString.ContainsAnyChar(_password, "abcdefghijklmnopqrstuvwxyz")) {
         counter++;
       }
-      if (EmpiriaString.ContainsAnyChar(password, "0123456789")) {
+      if (EmpiriaString.ContainsAnyChar(_password, "0123456789")) {
         counter++;
       }
-      if (EmpiriaString.ContainsAnyChar(password, @"~¡!@#$€£%^*&¿?-+='_""(){}[]\/|ñÑ<>.,:;")) {
+      if (EmpiriaString.ContainsAnyChar(_password, @"~¡!@#$€£%^*&¿?-+='_""(){}[]\/|ñÑ<>.,:;")) {
         counter++;
       }
       Validate.IsTrue(counter >= 3, "Passwords must contain characters from " +
@@ -91,16 +84,16 @@ namespace Empiria.Security {
 
 
     private void VerifyLength() {
-      Validate.IsTrue(password.Length >= 8,
+      Validate.IsTrue(_password.Length >= 8,
                       "Passwords must be at least eight (8) characters in length.");
     }
 
 
     private void VerifyNoUserDataPortions() {
-      if (EmpiriaString.ContainsSegment(password, user.UserName, 3) ||
-          EmpiriaString.ContainsSegment(password, user.FirstName, 3) ||
-          EmpiriaString.ContainsSegment(password, user.LastName, 3) ||
-          EmpiriaString.ContainsSegment(password, user.EMail, 3)) {
+      if (EmpiriaString.ContainsSegment(_password, _user.UserName, 3) ||
+          EmpiriaString.ContainsSegment(_password, _user.FirstName, 3) ||
+          EmpiriaString.ContainsSegment(_password, _user.LastName, 3) ||
+          EmpiriaString.ContainsSegment(_password, _user.EMail, 3)) {
 
         Validate.Fail("Passwords must not contain significant portions " +
                       "(three or more contiguous characters) of the user name, " +
@@ -113,4 +106,4 @@ namespace Empiria.Security {
 
   } // class PasswordStrength
 
-} // namespace Empiria.Security
+} // namespace Empiria.Services.UserManagement
