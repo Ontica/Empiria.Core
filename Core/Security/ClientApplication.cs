@@ -24,13 +24,21 @@ namespace Empiria.Security {
 
     #region Constructors and parsers
 
-    private ClientApplication() {
+    internal ClientApplication() {
       // Required by Empiria Framework
     }
 
 
     static internal ClientApplication Parse(int id) {
       return BaseObject.ParseId<ClientApplication>(id);
+    }
+
+
+    static public ClientApplication TryParseActive(string clientAppKey) {
+
+      Assertion.AssertObject(clientAppKey, "clientAppKey");
+
+      return BaseObject.TryParse<ClientApplication>("ObjectKey = '" + clientAppKey + "'");
     }
 
 
@@ -72,7 +80,7 @@ namespace Empiria.Security {
         if (_innerApplication == null) {
           string clientAppKey = ConfigurationData.GetString("ApplicationKey");
 
-          _innerApplication = ParseActive(clientAppKey);
+          _innerApplication = TryParseActive(clientAppKey);
         }
         return _innerApplication;
       }

@@ -20,22 +20,22 @@ namespace Empiria.Logging {
     #region Constructors and parsers
 
     public LogTrail() {
-      this.ClientApplication = ClientApplication.Inner;
+
     }
 
     public LogTrail(ClientApplication clientApplication) {
       Assertion.AssertObject(clientApplication, "clientApplication");
 
-      this.ClientApplication = clientApplication;
+      this.ClientApplicationId = clientApplication.Id;
     }
 
     #endregion Constructors and parsers
 
     #region Properties
 
-    public ClientApplication ClientApplication {
+    public int ClientApplicationId {
       get;
-    }
+    } = -1;
 
     #endregion Properties
 
@@ -70,14 +70,13 @@ namespace Empiria.Logging {
     #region Private methods
 
     private DataOperation GetDataOperation(ILogEntry o) {
-      return DataOperation.Parse("apdLogEntry", this.ClientApplication.Id,
+      return DataOperation.Parse("apdLogEntry", this.ClientApplicationId,
                                  o.SessionToken, o.Timestamp,
                                  (char) o.EntryType, o.TraceGuid, o.Data);
     }
 
 
     private void WriteLogEntry(ILogEntry o) {
-
       var dataOperation = GetDataOperation(o);
 
       DataWriter.Execute(dataOperation);
