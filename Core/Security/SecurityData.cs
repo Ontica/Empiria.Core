@@ -46,7 +46,12 @@ namespace Empiria.Security {
     }
 
     internal static string[] GetUsersInRole(string role) {
-      return ConfigurationData.GetString("User.Operation.Tag." + role).Split('|');
+      var roles = ConfigurationData.Get($"User.Role.{role}", string.Empty);
+
+      if (roles.Length != 0) {
+        return roles.Split('|');
+      }
+      return new string[0];
     }
 
     static internal DataRow GetUserWithCredentials(string userName, string password, string entropy) {
