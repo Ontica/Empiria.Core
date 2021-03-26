@@ -122,19 +122,19 @@ namespace Empiria {
     }
 
     static public char GetRandomCharacter(string current = "") {
-      const string characters = "ACDEFHJKMNPRTWXYZ";
+      const string characters = "ABCDEFHJKLMNPQRSTUVWXYZ";
 
       return GetRandomCharacterHelper(characters, current);
     }
 
     static public char GetRandomDigit(string current = "") {
-      const string digits = "234789";
+      const string digits = "2345789";
 
       return GetRandomCharacterHelper(digits, current);
     }
 
     static public char GetRandomDigitOrCharacter(string current = "") {
-      const string digitsAndCharacters = "AC2D3E4FH7J8K9MLNPRTWXYZ";
+      const string digitsAndCharacters = "ABC2D3E45FH7J8K9MLNPQRSTUVWXYZ";
 
       return GetRandomCharacterHelper(digitsAndCharacters, current);
     }
