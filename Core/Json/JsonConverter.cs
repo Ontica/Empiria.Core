@@ -79,10 +79,15 @@ namespace Empiria.Json {
     /// <param name="instance">The object instance of type T. Can be an anonymous object.</param>
     /// <returns>The object with the merged properties values</returns>
     static public T Merge<T>(string json, T instance) {
+      if (string.IsNullOrWhiteSpace(json)) {
+        return instance;
+      }
+
       JsonConvert.PopulateObject(json, instance, new JsonSerializerSettings());
 
       return instance;
     }
+
 
     static public void RemoveConverter(Type type) {
       string formatType = BuildDictionaryKey(type);

@@ -209,6 +209,21 @@ namespace Empiria.Json {
     }
 
 
+    public void CleanAll() {
+      if (!this.HasItems) {
+        return;
+      }
+
+      string[] array = new string[this.dictionary.Keys.Count];
+
+      this.dictionary.Keys.CopyTo(array, 0);
+
+      foreach (var path in array) {
+        Clean(path);
+      }
+    }
+
+
     /// <summary>Returns true if the json object has an item path.</summary>
     /// <param name="itemPath">The item path to search.</param>
     public bool Contains(string itemPath) {
