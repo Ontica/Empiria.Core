@@ -366,6 +366,9 @@ namespace Empiria.ORM {
       } else if (type == typeof(int)) {
         return 0;
 
+      } else if (type == typeof(long)) {
+        return 0;
+
       } else if (type == typeof(DateTime)) {
         return ExecutionServer.DateMaxValue;
 
@@ -437,6 +440,17 @@ namespace Empiria.ORM {
 
 
     private object TransformDataStoredValueBeforeAssignToMember(object value) {
+      if (value == DBNull.Value) {
+        if (this.DataFieldType == typeof(string)) {
+          return String.Empty;
+        } else if (this.DataFieldType == typeof(int) ||
+                   this.DataFieldType == typeof(long) ||
+                   this.DataFieldType == typeof(decimal) ||
+                   this.DataFieldType == typeof(float)) {
+          return 0;
+        }
+      }
+
       if (this.MapToEnumeration) {
         if (((string) value).Length == 1) {
           return Enum.ToObject(this.MemberType, Convert.ToChar(value));
