@@ -24,6 +24,9 @@ namespace Empiria.Data {
     static private EmpiriaDictionary<string, DataSource> sourcesCache =
                                                                 new EmpiriaDictionary<string, DataSource>(8);
 
+    static private EmpiriaDictionary<string, IDataHandler> handlersCache =
+                                                                new EmpiriaDictionary<string, IDataHandler>(4);
+
     private readonly string name;
     private readonly string source;
     private readonly DataTechnology technology;
@@ -49,29 +52,47 @@ namespace Empiria.Data {
     }
 
     internal IDataHandler GetDataHandler() {
-      Type type = null;
+      if (handlersCache.ContainsKey(this.Source)) {
+        return handlersCache[this.Source];
+      }
+
+      IDataHandler handler;
+      Type type;
 
       switch (this.Technology) {
         case DataTechnology.SqlServer:
-          return new SqlMethods();
+          handler = new SqlMethods();
+          break;
+
         case DataTechnology.MySql:
           type = Reflection.ObjectFactory.GetType("Empiria.Data.MySql", "Empiria.Data.Handlers.MySqlMethods");
 
-          return (IDataHandler) Reflection.ObjectFactory.CreateObject(type);
+          handler = (IDataHandler) Reflection.ObjectFactory.CreateObject(type);
+          break;
+
         case DataTechnology.OleDb:
-          return new OleDbMethods();
+          handler = new OleDbMethods();
+          break;
+
         case DataTechnology.Oracle:
           type = Reflection.ObjectFactory.GetType("Empiria.Data.Oracle", "Empiria.Data.Handlers.OracleMethods");
 
-          return (IDataHandler) Reflection.ObjectFactory.CreateObject(type);
+          handler = (IDataHandler) Reflection.ObjectFactory.CreateObject(type);
+          break;
+
         case DataTechnology.PostgreSql:
           type = Reflection.ObjectFactory.GetType("Empiria.Data.PostgreSql", "Empiria.Data.Handlers.PostgreSqlMethods");
 
-          return (IDataHandler) Reflection.ObjectFactory.CreateObject(type);
+          handler = (IDataHandler) Reflection.ObjectFactory.CreateObject(type);
+          break;
+
         default:
           throw new EmpiriaDataException(EmpiriaDataException.Msg.InvalidDatabaseTechnology,
                                          this.Technology);
       }
+      handlersCache.Insert(this.Source, handler);
+
+      return handler;
     }
 
     static internal DataSource Default {
