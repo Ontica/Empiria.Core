@@ -20,7 +20,7 @@ namespace Empiria.ORM {
 
   /// <summary>Holds data mapping rules for a giving type using DataField type attributes decorators,
   /// and performs data loading for those type instances.</summary>
-  internal class DataMappingRules {
+  public class DataMappingRules {
 
     #region Fields
 
@@ -41,7 +41,7 @@ namespace Empiria.ORM {
       this.innerDataObjectsMappingsArray = this.GetTypeInnerDataObjectsMappings();
     }
 
-    static internal DataMappingRules Parse(Type type) {
+    static public DataMappingRules Parse(Type type) {
       Assertion.AssertObject(type, "type");
 
       return new DataMappingRules(type);
@@ -65,7 +65,7 @@ namespace Empiria.ORM {
 
     /// <summary>Binds DataRow data into the instance fields and properties marked
     /// with the DataField attribute.</summary>
-    internal void DataBind(object instance, DataRow dataRow) {
+    public void DataBind(object instance, DataRow dataRow) {
       this.DataBindFieldsAndProperties(instance, dataRow);
       this.DataBindInnerDataObjects(instance, dataRow);
     }
