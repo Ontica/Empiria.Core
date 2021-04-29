@@ -29,6 +29,10 @@ namespace Empiria.DataTypes {
       return BaseObject.ParseId<Currency>(id);
     }
 
+    static public Currency Parse(string uid) {
+      return BaseObject.ParseKey<Currency>(uid);
+    }
+
     static public Currency Default {
       get { return Currency.Parse(defaultCurrencyId); }
     }
