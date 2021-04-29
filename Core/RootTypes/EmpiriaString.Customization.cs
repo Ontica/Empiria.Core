@@ -179,6 +179,18 @@ namespace Empiria {
       return String.Empty;
     }
 
+    static internal string ToString(object value) {
+      if (value == null || value == DBNull.Value) {
+        return string.Empty;
+
+      } else if (value is string) {
+        return (string) value;
+
+      } else {
+        return Convert.ToString(value);
+      }
+    }
+
     #endregion Private methods
 
   }  // class EmpiriaString

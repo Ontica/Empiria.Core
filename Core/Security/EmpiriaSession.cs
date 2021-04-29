@@ -174,7 +174,7 @@ namespace Empiria.Security {
     }
 
     private void Load(DataRow row) {
-      this.Id = (int) row["SessionId"];
+      this.Id = Convert.ToInt32(row["SessionId"]);
       this.Token = (string) row["SessionToken"];
       this.ServerId = (int) row["ServerId"];
       this.ClientAppId = (int) row["ClientAppId"];

@@ -242,16 +242,15 @@ namespace Empiria.Security {
 
 
     internal protected override void OnLoadObjectData(DataRow row) {
-      this.UserName = (string) row["UserName"];
+      this.UserName = EmpiriaString.ToString(row["UserName"]);
       this.IsAuthenticated = false;
       this.IsActive = ((EntityStatus) Convert.ToChar((string) row["ContactStatus"]) == EntityStatus.Active);
       this.PasswordExpired = false;
-      this.EMail = (string) row["ContactEmail"];
-      this.FullName = (string) row["ContactFullName"];
+      this.EMail = EmpiriaString.ToString(row["ContactEmail"]);
+      this.FullName = EmpiriaString.ToString(row["ContactFullName"]);
 
-      var json = Json.JsonObject.Parse((string) row["ContactExtData"]);
+      var json = JsonObject.Parse(EmpiriaString.ToString(row["ContactExtData"]));
       this.FillExtendedData(json);
-
     }
 
     #endregion Private methods

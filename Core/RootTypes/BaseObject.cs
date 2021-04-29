@@ -76,7 +76,7 @@ namespace Empiria {
       ObjectTypeInfo baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       if (!reload) {
-        int objectId = (int) dataRow[baseTypeInfo.IdFieldName];
+        int objectId = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
         T item = cache.TryGetItem<T>(baseTypeInfo.Name, objectId);
         if (item != null) {
           return item;    // Only use dataRow when item is not in cache
@@ -153,7 +153,7 @@ namespace Empiria {
         List<T> list = new List<T>(dataTable.Rows.Count);
 
         foreach (DataRow dataRow in dataTable.Rows) {
-          objectId = (int) dataRow[baseTypeInfo.IdFieldName];
+          objectId = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
 
           if (!reload) {
             T item = cache.TryGetItem<T>(baseTypeInfo.Name, objectId);
@@ -461,12 +461,15 @@ namespace Empiria {
 
       item.objectTypeInfo = typeInfo;
 
-      item.objectId = (int) dataRow[typeInfo.IdFieldName];
+      try {
+        item.objectId = Convert.ToInt32(dataRow[typeInfo.IdFieldName]);
 
-      if (typeInfo.UsesNamedKey) {
-        item.UID = (string) dataRow[typeInfo.NamedIdFieldName];
+        if (typeInfo.UsesNamedKey) {
+          item.UID = EmpiriaString.ToString(dataRow[typeInfo.NamedIdFieldName]);
+        }
+      } catch (Exception e) {
+        throw new NotSupportedException("No puedo hacer el parsing del objeto de tipo " + item.objectTypeInfo, e);
       }
-
       if (typeInfo.IsDataBound) {
         item.DataBind(dataRow);
       }
