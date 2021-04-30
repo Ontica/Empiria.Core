@@ -55,10 +55,13 @@ namespace Empiria.ORM {
 
       if (memberInfo is PropertyInfo) {
         dataMapping = new DataPropertyMapping((PropertyInfo) declaredMemberInfo);
+
       } else if (memberInfo is FieldInfo) {
         dataMapping = new DataFieldMapping((FieldInfo) declaredMemberInfo);
+
       } else {
         throw Assertion.AssertNoReachThisCode();
+
       }
 
       dataMapping.SetRules();
@@ -208,7 +211,7 @@ namespace Empiria.ORM {
       }
 
       if (this.MapToParseWithIdObject && !this.MapToParseWithStringObject) {
-        Assertion.Assert(this.DataFieldType == typeof(int),
+        Assertion.Assert(this.DataFieldType == typeof(int) || this.DataFieldType == typeof(long),
                          this.MemberInfo.Name + " can only be parsed from an integer type data column.");
 
       } else if (!this.MapToParseWithIdObject && this.MapToParseWithStringObject) {
@@ -464,8 +467,8 @@ namespace Empiria.ORM {
       } else if (this.MapToJsonItem) {
         return value;
 
-      } else if (value is int && (this.MapToParseWithIdObject || this.MapToLazyParseWithIdInstance)) {
-        int objectId = (int) value;
+      } else if ((value is int || value is long) && (this.MapToParseWithIdObject || this.MapToLazyParseWithIdInstance)) {
+        int objectId = Convert.ToInt32(value);
 
         if (objectId == -1 && this.MapToEmptyObject) {
           return this.GetEmptyInstanceDelegate();
@@ -475,6 +478,9 @@ namespace Empiria.ORM {
 
       } else if (value is string && this.MapToParseWithStringObject && !this.MapToJsonItem) {
         return this.GetParseWithStringDelegate((string) value);
+
+      } else if (DataFieldAttribute.ConvertFrom != null) {
+        return Convert.ChangeType(value, this.MemberType);
 
       } else {
         return value;
