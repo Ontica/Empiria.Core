@@ -22,6 +22,7 @@ namespace Empiria {
       this.Name = name;
       this.IsOptional = true;
       this.Default = null;
+      this.ConvertFrom = null;
     }
 
     /// <summary>The name of the data item to map to the property or field.</summary>
@@ -43,6 +44,14 @@ namespace Empiria {
       get;
       set;
     }
+
+    /// <summary>Indicates that the data field must be converted from this type to the type
+    /// of the property of field.
+    public Type ConvertFrom {
+      get;
+      set;
+    }
+
 
   }  // class DataFieldAttribute
 
