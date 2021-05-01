@@ -37,7 +37,7 @@ namespace Empiria.Ontology {
 
     #region Fields
 
-    static private EmpiriaIdAndKeyDictionary<MetaModelType> cache = new EmpiriaIdAndKeyDictionary<MetaModelType>();
+    static private EmpiriaIdAndKeyDictionary<MetaModelType> cache = new EmpiriaIdAndKeyDictionary<MetaModelType>(256);
 
     private int id = 0;
     private string name = String.Empty;
@@ -68,6 +68,9 @@ namespace Empiria.Ontology {
     private Type underlyingSystemType = null;
     private EmpiriaIdAndKeyDictionary<TypeAssociationInfo> associationInfoList = null;
     private TypeMethodInfo[] methodsArray = null;
+
+    private readonly object _locker = new object();
+    private static readonly object _static_locker = new object();
 
     #endregion Fields
 
@@ -101,9 +104,11 @@ namespace Empiria.Ontology {
       MetaModelTypeFamily typeFamily = MetaModelType.ParseMetaModelTypeFamily((string) row["TypeFamily"]);
 
       MetaModelType instance = MetaModelType.CreateInstance(typeFamily, row);
+
       instance.LoadDataRow(row);
 
       cache.Insert(instance.Name, instance);
+
       instance.SetBaseType();
 
       return instance;
@@ -128,18 +133,20 @@ namespace Empiria.Ontology {
     }
 
     static internal Type TryGetSystemType(string systemTypeName) {
-      MetaModelType empiriaType = cache.FirstOrDefault((x) => x.className == systemTypeName);
-      if (empiriaType != null) {
-        return empiriaType.UnderlyingSystemType;
-      }
-      DataRow dataRow = OntologyData.TryGetSystemTypeDataRow(systemTypeName);
-      if (dataRow != null) {
-        empiriaType = MetaModelType.Parse(dataRow);
-      }
-      if (empiriaType != null) {
-        return empiriaType.UnderlyingSystemType;
-      } else {
-        return null;
+      lock (_static_locker) {
+        MetaModelType empiriaType = cache.FirstOrDefault((x) => x.className == systemTypeName);
+        if (empiriaType != null) {
+          return empiriaType.UnderlyingSystemType;
+        }
+        DataRow dataRow = OntologyData.TryGetSystemTypeDataRow(systemTypeName);
+        if (dataRow != null) {
+          empiriaType = MetaModelType.Parse(dataRow);
+        }
+        if (empiriaType != null) {
+          return empiriaType.UnderlyingSystemType;
+        } else {
+          return null;
+        }
       }
     }
 
@@ -151,8 +158,10 @@ namespace Empiria.Ontology {
     protected internal EmpiriaIdAndKeyDictionary<TypeAssociationInfo> Associations {
       get {
         if (associationInfoList == null) {
-          lock (this) {
-            LoadAssociations();
+          lock (_locker) {
+            if (associationInfoList == null) {
+              LoadAssociations();
+            }
           }
         }
         return associationInfoList;
@@ -230,8 +239,10 @@ namespace Empiria.Ontology {
     protected TypeMethodInfo[] Methods {
       get {
         if (methodsArray == null) {
-          lock (this) {
-            LoadMethods();
+          lock (_locker) {
+            if (methodsArray == null) {
+              LoadMethods();
+            }
           }
         }
         return methodsArray;
@@ -432,22 +443,22 @@ namespace Empiria.Ontology {
       this.assemblyName = (string) dataRow["AssemblyName"];
       this.className = (string) dataRow["ClassName"];
       this.displayName = (string) dataRow["DisplayName"];
-      this.displayPluralName = (string) dataRow["DisplayPluralName"];
-      this.femaleGenre = (bool) dataRow["FemaleGenre"];
-      this.documentation = (string) dataRow["Documentation"];
-      this.extensionData = JsonObject.Parse((string) dataRow["TypeExtData"]);
-      this.keywords = (string) dataRow["TypeKeywords"];
-      this.solutionName = (string) dataRow["SolutionName"];
-      this.systemName = (string) dataRow["SystemName"];
-      this.version = (string) dataRow["Version"];
+      this.displayPluralName = EmpiriaString.ToString(dataRow["DisplayPluralName"]);
+      this.femaleGenre = Convert.ToBoolean(dataRow["FemaleGenre"]);
+      this.documentation = EmpiriaString.ToString(dataRow["Documentation"]);
+      this.extensionData = JsonObject.Parse(EmpiriaString.ToString(dataRow["TypeExtData"]));
+      this.keywords = EmpiriaString.ToString(dataRow["TypeKeywords"]);
+      this.solutionName = EmpiriaString.ToString(dataRow["SolutionName"]);
+      this.systemName = EmpiriaString.ToString(dataRow["SystemName"]);
+      this.version = EmpiriaString.ToString(dataRow["Version"]);
       this.lastUpdate = (DateTime) dataRow["LastUpdate"];
-      this.dataSource = (string) dataRow["TypeDataSource"];
-      this.idFieldName = (string) dataRow["IdFieldName"];
-      this.namedIdFieldName = (string) dataRow["NamedIdFieldName"];
-      this.typeIdFieldName = (string) dataRow["TypeIdFieldName"];
-      this.isAbstract = (bool) dataRow["IsAbstract"];
-      this.isSealed = (bool) dataRow["IsSealed"];
-      this.isHistorizable = (bool) dataRow["IsHistorizable"];
+      this.dataSource = EmpiriaString.ToString(dataRow["TypeDataSource"]);
+      this.idFieldName = EmpiriaString.ToString(dataRow["IdFieldName"]);
+      this.namedIdFieldName = EmpiriaString.ToString(dataRow["NamedIdFieldName"]);
+      this.typeIdFieldName = EmpiriaString.ToString(dataRow["TypeIdFieldName"]);
+      this.isAbstract = Convert.ToBoolean(dataRow["IsAbstract"]);
+      this.isSealed = Convert.ToBoolean(dataRow["IsSealed"]);
+      this.isHistorizable = Convert.ToBoolean(dataRow["IsHistorizable"]);
       this.status = (EntityStatus) char.Parse((string) dataRow["TypeStatus"]);
     }
 
