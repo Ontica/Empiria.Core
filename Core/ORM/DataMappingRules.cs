@@ -85,7 +85,7 @@ namespace Empiria.ORM {
         for (int i = 0; i < dataMappingsArray.Length; i++) {
           rule = dataMappingsArray[i];
           if (rule.MapToJsonItem) {
-            rule.SetJsonValue(instance, (string) dataRow[rule.DataColumnIndex], jsonObjectsCache);
+            rule.SetJsonValue(instance, EmpiriaString.ToString(dataRow[rule.DataColumnIndex]), jsonObjectsCache);
           } else {
             rule.SetNoJsonValue(instance, dataRow[rule.DataColumnIndex]);
           }
@@ -140,10 +140,14 @@ namespace Empiria.ORM {
     #region Private methods
 
     private Dictionary<string, JsonObject> CreateJsonObjectsCache() {
+      var comparer = StringComparer.OrdinalIgnoreCase;
+
       if (jsonFieldsNames == null) {
-        return new Dictionary<string, JsonObject>(0);
+        return new Dictionary<string, JsonObject>(0, comparer);
       }
-      var dictionary = new Dictionary<string, JsonObject>(jsonFieldsNames.Count);
+
+      var dictionary = new Dictionary<string, JsonObject>(jsonFieldsNames.Count, comparer);
+
       foreach (string item in jsonFieldsNames) {
         dictionary.Add(item, null);   // Items are nulls because JsonObject instances are
                                       // created inside the method DataMapping.SetValue
