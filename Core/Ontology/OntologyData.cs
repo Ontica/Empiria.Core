@@ -34,10 +34,10 @@ namespace Empiria.Ontology {
       }
 
       if (objectTypeInfo.TypeIdFieldName.Length != 0) {
-        var filter = $"([{objectTypeInfo.DataSource}].{objectTypeInfo.NamedIdFieldName} = '{objectKey}') AND " +
-                     $"([Types].TypeName = '{objectTypeInfo.Name}' OR [Types].TypeName LIKE '{objectTypeInfo.Name}.%')";
+        var filter = $"({objectTypeInfo.DataSource}.{objectTypeInfo.NamedIdFieldName} = '{objectKey}') AND " +
+                     $"(Types.TypeName = '{objectTypeInfo.Name}' OR Types.TypeName LIKE '{objectTypeInfo.Name}.%')";
 
-        DataTable table = GeneralDataOperations.GetEntitiesJoined(objectTypeInfo.DataSource, "[Types]",
+        DataTable table = GeneralDataOperations.GetEntitiesJoined(objectTypeInfo.DataSource, "Types",
                                                                   objectTypeInfo.TypeIdFieldName, "TypeId",
                                                                   filter);
         return (table.Rows.Count == 1) ? table.Rows[0] : null;
