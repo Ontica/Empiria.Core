@@ -52,7 +52,7 @@ namespace Empiria.Ontology {
     }
 
     static internal DataRow GetBaseObjectTypeInfoDataRowWithType(Type type) {
-      var operation = DataOperation.Parse("getBaseObjectTypeInfoWithTypeName", type.FullName);
+      var operation = DataOperation.Parse("getBaseTypeWithTypeName", type.FullName);
 
       var row = DataReader.GetDataRow(operation);
       if (row != null) {
