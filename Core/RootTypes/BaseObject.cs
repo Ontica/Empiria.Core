@@ -391,20 +391,26 @@ namespace Empiria {
     /// <summary>Raised for new and stored instances, after object creation and before
     /// databinding if their type is marked as IsDatabounded.</summary>
     protected virtual void OnInitialize() {
-
+      // no-op
     }
 
 
     /// <summary>Raised after initialization and after databinding if their type is
     /// marked as IsDatabounded.</summary>
-    internal protected virtual void OnLoadObjectData(DataRow row) {
+    protected virtual void OnLoad() {
+      // no-op
+    }
 
+    /// <summary>Raised after initialization and after databinding if their type is
+    /// marked as IsDatabounded.</summary>
+    internal protected virtual void OnLoadObjectData(DataRow row) {
+      // no-op
     }
 
 
     /// <summary>Raised before Save() method is called and before object.Id and object.uid created.</summary>
     protected virtual void OnBeforeSave() {
-
+      // no-op
     }
 
 
@@ -476,6 +482,7 @@ namespace Empiria {
 
       item.isNewFlag = false;
       item.OnLoadObjectData(dataRow);
+      item.OnLoad();
       item.isDirtyFlag = false;
 
       if (typeInfo.UsesNamedKey) {
