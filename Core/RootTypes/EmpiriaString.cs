@@ -160,6 +160,12 @@ namespace Empiria {
       }
     }
 
+
+    static public int CountOccurences(string source, char value) {
+      return source.Split(value, value).Length - 1;
+    }
+
+
     static public string RemoveNoiseStrings(string source) {
       string[] tokens = source.Split(' ');
       string temp = String.Empty;
