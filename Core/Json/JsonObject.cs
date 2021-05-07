@@ -308,6 +308,26 @@ namespace Empiria.Json {
     /// <summary>Searches for a list of objects inside the JsonObject.</summary>
     /// <typeparam name="T">The type of the list elements.</typeparam>
     /// <param name="listPath">The list path to search.</param>
+    /// <returns>The fixed list of objects relative to the searched path, or an exception if the list
+    /// was not found or if the path is not well-formed.</returns>
+    public FixedList<T> GetFixedList<T>(string listPath) {
+      return GetList<T>(listPath).ToFixedList();
+    }
+
+    /// <summary>Searches for a list of objects inside the JsonObject.</summary>
+    /// <typeparam name="T">The type of the list elements.</typeparam>
+    /// <param name="listPath">The list path to search.</param>
+    /// <param name="required">Throws an exception if is true and the searched item was not found.</param>
+    /// <returns>The fixed list of objects relative to the searched path, or an exception if the list
+    /// was not found or if the path is not well-formed.</returns>
+    public FixedList<T> GetFixedList<T>(string listPath, bool required) {
+      return GetList<T>(listPath, required).ToFixedList();
+    }
+
+
+    /// <summary>Searches for a list of objects inside the JsonObject.</summary>
+    /// <typeparam name="T">The type of the list elements.</typeparam>
+    /// <param name="listPath">The list path to search.</param>
     /// <returns>The list of objects relative to the searched path, or an exception if the list
     /// was not found or if the path is not well-formed.</returns>
     public List<T> GetList<T>(string listPath) {
