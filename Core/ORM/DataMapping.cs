@@ -396,6 +396,7 @@ namespace Empiria.ORM {
       }
     }
 
+
     private void SetRules() {
       // Initialize fields with default vlaues;
       this.DataColumnIndex = -1;
@@ -451,6 +452,8 @@ namespace Empiria.ORM {
                    this.DataFieldType == typeof(decimal) ||
                    this.DataFieldType == typeof(float)) {
           return 0;
+        } else if (this.DataFieldType == typeof(DateTime)) {
+          return (DateTime) this.DefaultValue;
         }
       }
 
