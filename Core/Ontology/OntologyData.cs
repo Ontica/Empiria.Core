@@ -159,12 +159,12 @@ namespace Empiria.Ontology {
 
 
     static internal DataTable GetInverseObjectLinksTable(TypeRelationInfo typeRelation, IIdentifiable target) {
-      string sql = "SELECT [{SOURCE.TYPE.TABLE}].* FROM [{SOURCE.TYPE.TABLE}] INNER JOIN [{LINKS.TABLE}] " +
-             "ON [{SOURCE.TYPE.TABLE}].[{SourceTableIdField}] = [{LINKS.TABLE}].[{SourceIdField}] " +
-             "WHERE [{LINKS.TABLE}].[{TypeRelationIdField}] = {TypeRelationId} AND " +
-             "[{LINKS.TABLE}].[{TargetIdField}] = {TargetId} AND " +
-             "[{LINKS.TABLE}].LinkStatus = 'A' " +
-             "ORDER BY [{LINKS.TABLE}].LinkIndex";
+      string sql = "SELECT {SOURCE.TYPE.TABLE}.* FROM {SOURCE.TYPE.TABLE} INNER JOIN {LINKS.TABLE} " +
+             "ON {SOURCE.TYPE.TABLE}.{SourceTableIdField} = {LINKS.TABLE}.{SourceIdField} " +
+             "WHERE {LINKS.TABLE}.{TypeRelationIdField} = {TypeRelationId} AND " +
+             "{LINKS.TABLE}.{TargetIdField} = {TargetId} AND " +
+             "{LINKS.TABLE}.LinkStatus = 'A' " +
+             "ORDER BY {LINKS.TABLE}.LinkIndex";
 
       sql = sql.Replace("{LINKS.TABLE}", typeRelation.DataSource);
       sql = sql.Replace("{SOURCE.TYPE.TABLE}", typeRelation.SourceType.DataSource);
@@ -178,6 +178,7 @@ namespace Empiria.Ontology {
       return DataReader.GetDataTable(DataOperation.Parse(sql));
     }
 
+
     static internal DataRow GetTypeDataRow(int typeId) {
       DataRow row = GeneralDataOperations.GetEntityById("Types", "TypeId", typeId);
       if (row != null) {
@@ -186,6 +187,7 @@ namespace Empiria.Ontology {
         throw new OntologyException(OntologyException.Msg.TypeInfoNotFound, typeId.ToString());
       }
     }
+
 
     static internal DataRow GetTypeDataRow(string typeName) {
       DataRow row = GeneralDataOperations.GetEntityByKey("Types", "TypeName", typeName);
@@ -196,9 +198,11 @@ namespace Empiria.Ontology {
       }
     }
 
+
     static internal DataRow GetTypeMethodDataRow(int typeMethodId) {
       return GeneralDataOperations.GetEntityById("TypeMethods", "TypeMethodId", typeMethodId);
     }
+
 
     static internal DataTable GetTypeMethods(int typeId) {
       try {
@@ -208,24 +212,29 @@ namespace Empiria.Ontology {
       }
     }
 
+
     static internal DataTable GetTypeMethodParameters(int typeMethodId) {
       return GeneralDataOperations.GetEntitiesByField("TypeMethodsParameters", "TypeMethodId", typeMethodId);
     }
+
 
     static internal DataRow GetTypeRelation(int typeRelationId) {
       return GeneralDataOperations.GetEntityById("TypeRelations", "TypeRelationId", typeRelationId);
     }
 
-    internal static DataRow GetTypeRelation(string typeRelationName) {
+
+    static internal DataRow GetTypeRelation(string typeRelationName) {
       return GeneralDataOperations.GetEntityByKey("TypeRelations", "RelationName", typeRelationName);
     }
+
 
     static internal DataTable GetTypeRelations(string typeName) {
       return DataReader.GetDataTable(DataOperation.Parse("qryTypeRelations", typeName));
     }
 
+
     static internal DataRow TryGetSystemTypeDataRow(string systemTypeName) {
-      string filter = String.Format("([TypeName] = '{0}' OR ClassName LIKE '%{0}')", systemTypeName);
+      string filter = String.Format("(TypeName = '{0}' OR ClassName LIKE '%{0}')", systemTypeName);
 
       DataTable table = GeneralDataOperations.GetEntities("Types", filter);
 
@@ -234,24 +243,25 @@ namespace Empiria.Ontology {
       } else if (table.Rows.Count == 1) {
         return table.Rows[0];
       }
-      DataRow[] select = table.Select(String.Format("[ClassName] = '{0}'", systemTypeName));
+      DataRow[] select = table.Select(String.Format("ClassName = '{0}'", systemTypeName));
       if (select.Length == 1) {
         return select[0];
       }
-      select = table.Select(String.Format("[TypeName] = '{0}'", systemTypeName));
+      select = table.Select(String.Format("TypeName = '{0}'", systemTypeName));
       if (select.Length == 1) {
         return select[0];
       }
-      select = table.Select(String.Format("[ClassName] = 'System.{0}'", systemTypeName));
+      select = table.Select(String.Format("ClassName = 'System.{0}'", systemTypeName));
       if (select.Length == 1) {
         return select[0];
       }
-      select = table.Select(String.Format("[ClassName] = 'Empiria.{0}'", systemTypeName));
+      select = table.Select(String.Format("ClassName = 'Empiria.{0}'", systemTypeName));
       if (select.Length == 1) {
         return select[0];
       }
       return null;
     }
+
 
     static internal void WriteLink(TypeAssociationInfo assocationInfo, IIdentifiable source, IIdentifiable target) {
       DataOperation operation = DataOperation.Parse("writeObjectLink", GetNextRelationId(assocationInfo),
@@ -263,18 +273,6 @@ namespace Empiria.Ontology {
     }
 
     #endregion Internal methods
-
-    #region Private methods
-
-    static private string GetFieldName(string source, string fieldName) {
-      return "[" + source + "]." + "[" + fieldName + "]";
-    }
-
-    static private string GetTableIdFieldEqualsTo(string source, string fieldName, int idFieldValue) {
-      return "([" + source + "]." + "[" + fieldName + "] = " + idFieldValue.ToString() + ")";
-    }
-
-    #endregion Private methods
 
   } // class OntologyData
 
