@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 using Empiria.Collections;
 
@@ -106,6 +107,13 @@ namespace Empiria {
 
     public new T FindLast(Predicate<T> match) {
       return base.FindLast(match);
+    }
+
+
+    public FixedList<T> Intersect(FixedList<T> second) {
+      var intersect = this.Intersect<T>(second);
+
+      return new FixedList<T>(intersect);
     }
 
 
