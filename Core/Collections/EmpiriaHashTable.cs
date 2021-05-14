@@ -125,6 +125,14 @@ namespace Empiria.Collections {
       return new FixedList<ItemsType>(items.Values);
     }
 
+
+    public bool TryGetValue(string key, out ItemsType value) {
+      lock (locker) {
+        return items.TryGetValue(key, out value);
+      }
+    }
+
+
     #endregion Public methods
 
   } //class EmpiriaHashTable
