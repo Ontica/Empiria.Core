@@ -1,8 +1,8 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Core                                     System  : Data Access Library                 *
-*  Assembly : Empiria.Core.dll                                 Pattern : Static Class                        *
-*  Type     : DataReader                                       License : Please read LICENSE.txt file        *
+*  Module   : Empiria Data                               Component : Data Access Layer                       *
+*  Assembly : Empiria.Core.dll                           Pattern   : Service provider                        *
+*  Type     : DataReader                                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Static class with methods that performs data reading operations.                               *
 *                                                                                                            *
@@ -11,13 +11,15 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
+using Empiria.Collections;
+
 using Empiria.Data.Handlers;
 using Empiria.Data.Integration;
+
 using Empiria.Json;
 using Empiria.ORM;
 using Empiria.Reflection;
 using Empiria.Security;
-
 
 namespace Empiria.Data {
 
@@ -139,9 +141,11 @@ namespace Empiria.Data {
       return handler.GetDataView(operation, filter, sort);
     }
 
+
     static public dynamic GetDynamicObject(DataRow row, string fieldName) {
       return JsonConverter.ToObject((string) row[fieldName]);
     }
+
 
     static public object GetFieldValue(DataOperation operation, string fieldName) {
       Assertion.AssertObject(operation, "operation");
@@ -157,7 +161,8 @@ namespace Empiria.Data {
     }
 
     static public List<T> GetFieldValues<T>(DataOperation operation,
-                                            string fieldName = "", bool filterUniqueValues = true) {
+                                            string fieldName = "",
+                                            bool filterUniqueValues = true) {
       var view = DataReader.GetDataView(operation);
 
       if (String.IsNullOrWhiteSpace(fieldName)) {
@@ -179,6 +184,17 @@ namespace Empiria.Data {
 
     static public FixedList<T> GetFixedList<T>(DataOperation operation) where T : BaseObject {
       return GetList<T>(operation).ToFixedList();
+    }
+
+
+    static public EmpiriaHashTable<T> GetHashTable<T>(DataOperation operation,
+                                                      Func<T, string> hashFunction) where T : BaseObject {
+      Assertion.AssertObject(operation, "operation");
+      Assertion.AssertObject(hashFunction, "hashFunction");
+
+      DataTable dataTable = DataReader.GetDataTable(operation);
+
+      return BaseObject.ParseHashTable<T>(dataTable, hashFunction);
     }
 
 
@@ -220,6 +236,26 @@ namespace Empiria.Data {
       rules.DataBind(instance, dataRow);
 
       return instance;
+    }
+
+
+    static public EmpiriaHashTable<T> GetPlainObjectHashTable<T>(DataOperation operation,
+                                                                 Func<T, string> hashFunction) {
+      var rules = DataMappingRules.Parse(typeof(T));
+
+      DataTable dataTable = DataReader.GetDataTable(operation);
+
+      var hashTable = new EmpiriaHashTable<T>(dataTable.Rows.Count);
+
+      foreach (DataRow dataRow in dataTable.Rows) {
+        T instance = ObjectFactory.CreateObject<T>();
+
+        rules.DataBind(instance, dataRow);
+
+        hashTable.Insert(hashFunction.Invoke(instance), instance);
+      }
+
+      return hashTable;
     }
 
 
