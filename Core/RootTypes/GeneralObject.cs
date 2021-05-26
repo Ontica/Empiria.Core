@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
+using Empiria.Data;
 using Empiria.Ontology;
 using Empiria.StateEnums;
 
@@ -111,6 +112,24 @@ namespace Empiria {
     }
 
     #endregion Public properties
+
+    #region Public methods
+
+    protected override void OnSave() {
+      WriteSimpleObject(this);
+    }
+
+
+    static private void WriteSimpleObject(GeneralObject o) {
+      var op = DataOperation.Parse("writeSimpleObject",
+                    o.Id, o.GetEmpiriaType().Id, o.UID, o.Name,
+                    o.ExtendedDataField.ToString(), o.Keywords, (char) o.Status);
+
+      DataWriter.Execute(op);
+    }
+
+
+    #endregion Public methods
 
   } // class GeneralObject
 
