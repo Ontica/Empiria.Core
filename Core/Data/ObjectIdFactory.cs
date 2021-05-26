@@ -19,6 +19,9 @@ namespace Empiria.Data {
 
     #region Fields
 
+    static private bool OBJECT_ID_FACTORY_USES_DECIMAL =
+                                    ConfigurationData.Get("ObjectIdFactory.UsesDecimal", false);
+
     static private ObjectIdFactory instance = null;
     static private Mutex mutex = null;
 
@@ -143,11 +146,11 @@ namespace Empiria.Data {
         if (ruleDataRow == null) {
           throw new EmpiriaDataException(EmpiriaDataException.Msg.ObjectIdRuleNotSet, sourceName + "." + typeId);
         }
-        int lowerIdValue = (int) ruleDataRow["LowerIdValue"];
-        int upperIdValue = (int) ruleDataRow["UpperIdValue"];
-        int currentId = RetriveCurrentId(ruleDataRow);
+        int lowerIdValue = Convert.ToInt32(ruleDataRow["LowerIdValue"]);
+        int upperIdValue = Convert.ToInt32(ruleDataRow["UpperIdValue"]);
+        int retrievedCurrentId = Convert.ToInt32(RetriveCurrentId(ruleDataRow));
 
-        return new ObjectIdRule(lowerIdValue, upperIdValue, Math.Max(lowerIdValue, currentId));
+        return new ObjectIdRule(lowerIdValue, upperIdValue, Math.Max(lowerIdValue, retrievedCurrentId));
       }
 
       #endregion Constructors and parsers
@@ -176,15 +179,21 @@ namespace Empiria.Data {
       static private int RetriveCurrentId(DataRow ruleDataRow) {
         string idFieldName = (string) ruleDataRow["IdFieldName"];
 
-        string sql = "SELECT MAX([" + idFieldName + "]) FROM " + (string) ruleDataRow["SourceName"] +
-                     " WHERE ([" + idFieldName + "] >= " + (int) ruleDataRow["LowerIdValue"] + ") AND" +
-                     " ([" + idFieldName + "] <= " + (int) ruleDataRow["UpperIdValue"] + ")";
-        if ((int) ruleDataRow["TypeId"] != 0) {
-          sql += " AND ([" + (string) ruleDataRow["IdTypeFieldName"] + "] = " + (int) ruleDataRow["TypeId"] + ")";
+        string sql = $"SELECT MAX({idFieldName}) FROM {(string) ruleDataRow["SourceName"]} " +
+                     $"WHERE ({idFieldName} >= {Convert.ToInt32(ruleDataRow["LowerIdValue"])}) AND " +
+                     $"({idFieldName} <= {Convert.ToInt32(ruleDataRow["UpperIdValue"])})";
+
+        if (Convert.ToInt32(ruleDataRow["TypeId"]) != 0) {
+          sql += $" AND ({(string) ruleDataRow["IdTypeFieldName"]} = {Convert.ToInt32(ruleDataRow["TypeId"])})";
         }
         DataSource dataSource = DataSource.Parse((string) ruleDataRow["SourceName"]);
 
-        return DataReader.GetScalar<int>(DataOperation.Parse(dataSource, sql));
+        if (OBJECT_ID_FACTORY_USES_DECIMAL) {
+          return Convert.ToInt32(DataReader.GetScalar<decimal>(DataOperation.Parse(dataSource, sql)));
+        } else {
+          return DataReader.GetScalar<int>(DataOperation.Parse(dataSource, sql));
+        }
+
       }
 
       #endregion Private methods

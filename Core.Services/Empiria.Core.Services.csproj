@@ -57,7 +57,7 @@
     <PackageReference Include="Empiria.Core" Version="7.0.0" />
     <PackageReference Include="Empiria.Messaging" Version="7.0.0" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'Multisolutions' ">
     <ProjectReference Include="..\..\extensions\Services\Empiria.Services.csproj" />
     <ProjectReference Include="..\Core\Empiria.Core.csproj" />
     <ProjectReference Include="..\..\extensions\Messaging\Empiria.Messaging.csproj" />
