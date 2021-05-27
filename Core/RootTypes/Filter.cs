@@ -23,6 +23,10 @@ namespace Empiria {
 
     #region Public Members
 
+    public Filter() {
+      // no-op
+    }
+
     public Filter(string initialValue) {
       if (EmpiriaString.IsEmpty(initialValue)) {
         return;
