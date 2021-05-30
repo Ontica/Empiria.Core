@@ -470,7 +470,7 @@ namespace Empiria.ORM {
       } else if (this.MapToJsonItem) {
         return value;
 
-      } else if ((value is int || value is long) && (this.MapToParseWithIdObject || this.MapToLazyParseWithIdInstance)) {
+      } else if ((value is int || value is long || value is decimal) && (this.MapToParseWithIdObject || this.MapToLazyParseWithIdInstance)) {
         int objectId = Convert.ToInt32(value);
 
         if (objectId == -1 && this.MapToEmptyObject) {

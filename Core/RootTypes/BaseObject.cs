@@ -100,7 +100,7 @@ namespace Empiria {
     static protected internal T ParseId<T>(int id, bool reload = false) where T : BaseObject {
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-      if (id == ObjectTypeInfo.EmptyInstanceId) {
+      if (id == ObjectTypeInfo.EmptyInstanceId || id == 0) {    // To Do: Allow zeros using a flag
         return typeInfo.GetEmptyInstance<T>().Clone<T>();
       }
       if (id == ObjectTypeInfo.UnknownInstanceId) {
