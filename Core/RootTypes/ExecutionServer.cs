@@ -11,6 +11,7 @@ using System;
 using System.Threading;
 
 using Empiria.Collections;
+using Empiria.Reflection;
 using Empiria.Security;
 
 namespace Empiria {
@@ -32,6 +33,7 @@ namespace Empiria {
     private int serverId = -1;
     private string supportUrl = String.Empty;
     private bool isDevelopmentServer = false;
+
     private bool isPassThroughServer = false;
 
     #endregion Fields
@@ -210,9 +212,42 @@ namespace Empiria {
       return System.IO.Path.Combine(baseExecutionPath, fileName);
     }
 
+    static public void Preload() {
+      Thread thread = new Thread(new ThreadStart(DoPreload));
+
+      thread.Start();
+    }
+
     #endregion Static methods
 
     #region Private members
+
+    static private void DoPreload() {
+      try {
+        var preloadConfig = ConfigurationData.Get("Preload.Configuration", string.Empty);
+
+        if (preloadConfig.Length == 0) {
+          return;
+        }
+
+        string[] preloadData = preloadConfig.Split(';');
+
+        Type type = ObjectFactory.GetType(preloadData[0], preloadData[1]);
+
+        string methodName = preloadData[2];
+
+        Assertion.AssertObject(type,
+          $"Unrecognizable preloading type for assembly {preloadData[0]} and type name {preloadData[1]}.");
+
+        Assertion.AssertObject(methodName,
+          $"Unrecognizable preloading method name {preloadData[2]}.");
+
+        MethodInvoker.Execute(type, methodName);
+
+      } catch (Exception e) {
+        EmpiriaLog.Error(e);
+      }
+    }
 
     private void ExecuteStart() {
       try {
