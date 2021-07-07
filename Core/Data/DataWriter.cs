@@ -126,7 +126,7 @@ namespace Empiria.Data {
     static internal int Execute(IDbTransaction transaction, DataOperation operation) {
       IDataHandler handler = GetDataHander(operation);
 
-      return handler.Execute((System.Data.SqlClient.SqlTransaction) transaction, operation);
+      return handler.Execute(transaction, operation);
     }
 
 
