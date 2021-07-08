@@ -118,6 +118,11 @@ namespace Empiria.Security {
       private set;
     }
 
+    public string[] PermissionsArray {
+      get;
+      private set;
+    }
+
     #endregion Public properties
 
     #region Public methods
@@ -162,11 +167,21 @@ namespace Empiria.Security {
         this.Session = EmpiriaSession.Create(this, contextData);
       }
       LoadRolesArray(identity.User.Id);
+      LoadPermissionsArray(identity.User.Id);
       principalsCache.Insert(this.Session.Token, this);
 
       this.ContextItems = new AssortedDictionary();
 
       this.RefreshBeforeReturn();
+    }
+
+    private void LoadPermissionsArray(int id) {
+      PermissionsArray = new string[] {"menu-transactions", "menu-search-services", "menu-historic-registration",
+                                       "route-transactions", "route-search-services", "route-historic-registration",
+                                       "feature-transactions-add" };
+      if (id == 406 || id == 407 || id == 408) {
+        PermissionsArray = new string[] { "menu-historic-registration", "route-historic-registration" };
+      }
     }
 
     private void LoadRolesArray(int participantId) {

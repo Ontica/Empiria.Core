@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System;
 using Empiria.Security;
 
 namespace Empiria.Services.Authentication {
@@ -44,6 +45,20 @@ namespace Empiria.Services.Authentication {
       var authenticator = new Authenticator(fields);
 
       return authenticator.GenerateAuthenticationToken();
+    }
+
+
+    public void Logout() {
+
+    }
+
+
+    public PrincipalDto PrincipalData() {
+      Assertion.Assert(ExecutionServer.IsAuthenticated, "Unauthenticated user.");
+
+      var principal = ExecutionServer.CurrentPrincipal;
+
+      return PrincipalMapper.Map(principal);
     }
 
 

@@ -16,6 +16,17 @@ namespace Empiria.Security.Claims {
 
     #region Services
 
+
+    static public Claim[] Claims(EmpiriaPrincipal principal) {
+      ClaimList applicationClaims = ClaimList.ParseFor(principal.ClientApp);
+
+      Claim appRoles = applicationClaims.GetItem(ClaimType.ApplicationRoles);
+      Claim appFeatures = applicationClaims.GetItem(ClaimType.ApplicationFeatures);
+
+      return new Claim[0];
+    }
+
+
     static public void EnsureClaim(IClaimsSubject subject,
                                    ClaimType claimType,
                                    string claimValue, string assertionFailMsg = "") {

@@ -33,6 +33,24 @@ namespace Empiria.Security.Claims {
     }
 
 
+    static public ClaimType ApplicationRoles => ClaimType.Parse("ObjectType.Claim.AppRoles");
+
+
+    static public ClaimType ApplicationFeatures => ClaimType.Parse("ObjectType.Claim.AppFeatures");
+
+
+    static public ClaimType RoleFeatures => ClaimType.Parse("ObjectType.Claim.RoleFeatures");
+
+
+    static public ClaimType RoleUsers => ClaimType.Parse("ObjectType.Claim.RoleUsers");
+
+
+    static public ClaimType UserFeatures => ClaimType.Parse("ObjectType.Claim.UserFeatures");
+
+
+    static public ClaimType UserRole => ClaimType.Parse("ObjectType.Claim.UserRole");
+
+
     static public ClaimType ElectronicSign => ClaimType.Parse("ObjectType.Claim.ElectronicSign");
 
 
@@ -43,9 +61,6 @@ namespace Empiria.Security.Claims {
 
 
     static public ClaimType UserAppAccess => ClaimType.Parse("ObjectType.Claim.UserAppAccess");
-
-
-    static public ClaimType UserRole => ClaimType.Parse("ObjectType.Claim.UserRole");
 
 
     static public ClaimType WebApiController => ClaimType.Parse("ObjectType.Claim.WebApiController");
