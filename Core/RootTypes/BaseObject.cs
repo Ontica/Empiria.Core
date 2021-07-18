@@ -471,6 +471,37 @@ namespace Empiria {
     }
 
 
+    protected string PatchField(string newValue, string defaultValue) {
+      if (!String.IsNullOrWhiteSpace(newValue)) {
+        return newValue;
+      }
+      return defaultValue;
+    }
+
+
+    protected DateTime PatchField(DateTime newValue, DateTime defaultValue) {
+      if (newValue != ExecutionServer.DateMaxValue && newValue != ExecutionServer.DateMinValue) {
+        return newValue;
+      }
+      return defaultValue;
+    }
+
+
+    protected U PatchField<U>(int newValue, U defaultValue) where U : BaseObject {
+      if (newValue > 0) {
+        return BaseObject.ParseId<U>(newValue);
+      }
+      return defaultValue;
+    }
+
+
+    protected U PatchField<U>(string newValue, U defaultValue) where U : BaseObject {
+      if (!String.IsNullOrWhiteSpace(newValue)) {
+        return BaseObject.ParseKey<U>(newValue);
+      }
+      return defaultValue;
+    }
+
     public void Save() {
       // Never save special case instances (e.g. Empty or Unknown)
       if (this.IsSpecialCase) {
