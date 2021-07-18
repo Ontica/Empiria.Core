@@ -445,15 +445,21 @@ namespace Empiria.ORM {
 
     private object TransformDataStoredValueBeforeAssignToMember(object value) {
       if (value == DBNull.Value) {
-        if (this.DataFieldType == typeof(string)) {
+        if (this.MapToParseWithIdObject) {
+          value = -1;
+
+        } else if (this.DataFieldType == typeof(string)) {
           return String.Empty;
+
         } else if (this.DataFieldType == typeof(int) ||
                    this.DataFieldType == typeof(long) ||
                    this.DataFieldType == typeof(decimal) ||
                    this.DataFieldType == typeof(float)) {
           return 0;
+
         } else if (this.DataFieldType == typeof(DateTime)) {
           return (DateTime) this.DefaultValue;
+
         }
       }
 
