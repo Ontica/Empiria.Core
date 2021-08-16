@@ -51,6 +51,7 @@
     <WarningsAsErrors />
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\extensions\Data.Oracle\Empiria.Data.Oracle.csproj" />
     <ProjectReference Include="..\Core\Empiria.Core.csproj" />
   </ItemGroup>
   <ItemGroup>

@@ -37,10 +37,12 @@ namespace Empiria.Services.Authentication {
 
 
     static private SecurityClaimDto[] MapSecurityClaims(EmpiriaPrincipal principal) {
-      Claim[] claims = ClaimsService.Claims(principal);
+      return new SecurityClaimDto[0];
 
-      return claims.Select(x => MapToSecurityClaim(x))
-                   .ToArray();
+      //Claim[] claims = ClaimsService.Claims(principal);
+
+      //return claims.Select(x => MapToSecurityClaim(x))
+      //             .ToArray();
     }
 
 
