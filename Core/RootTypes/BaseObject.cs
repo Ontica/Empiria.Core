@@ -96,12 +96,17 @@ namespace Empiria {
       return typeInfo.GetEmptyInstance<T>().Clone<T>();
     }
 
+    static protected T ParseEmpty<T>(int emptyId) where T : BaseObject {
+      var typeInfo = ObjectTypeInfo.Parse(typeof(T));
+
+      return typeInfo.GetEmptyInstance<T>(emptyId).Clone<T>();
+    }
 
     static protected internal T ParseId<T>(int id, bool reload = false) where T : BaseObject {
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       if (id == ObjectTypeInfo.EmptyInstanceId || id == 0) {    // To Do: Allow zeros using a flag
-        return typeInfo.GetEmptyInstance<T>().Clone<T>();
+        return typeInfo.GetEmptyInstance<T>(id).Clone<T>();
       }
       if (id == ObjectTypeInfo.UnknownInstanceId) {
         return typeInfo.GetUnknownInstance<T>().Clone<T>();
@@ -112,8 +117,8 @@ namespace Empiria {
 
 
     static internal T ParseIdInternal<T>(ObjectTypeInfo typeInfo,
-                                         int id, bool reload) where T : BaseObject {
-      if (id == 0) {
+                                         int id, bool reload, bool acceptZeros = false) where T : BaseObject {
+      if (!acceptZeros && id == 0) {
         throw new OntologyException(OntologyException.Msg.TryToParseZeroObjectId, typeInfo.Name);
       }
       if (!reload) {

@@ -213,9 +213,9 @@ namespace Empiria.Ontology {
 
     private BaseObject _emptyInstance = null;
     /// <summary>Return the empty instance for this type.</summary>
-    internal T GetEmptyInstance<T>() where T : BaseObject {
+    internal T GetEmptyInstance<T>(int emptyId = EmptyInstanceId) where T : BaseObject {
       if (_emptyInstance == null) {
-        _emptyInstance = BaseObject.ParseIdInternal<T>(this, EmptyInstanceId, false);
+        _emptyInstance = BaseObject.ParseIdInternal<T>(this, emptyId, false, true);
       }
       return (T) _emptyInstance;
     }
