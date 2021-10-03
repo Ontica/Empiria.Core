@@ -226,6 +226,19 @@ namespace Empiria.Data {
     }
 
 
+    static public T GetObject<T>(DataOperation operation, T defaultValue) where T : BaseObject {
+      Assertion.AssertObject(operation, "operation");
+
+      DataRow dataRow = DataReader.GetDataRow(operation);
+
+      if (dataRow != null) {
+        return BaseObject.ParseDataRow<T>(dataRow);
+      } else {
+        return defaultValue;
+      }
+    }
+
+
     static public T GetPlainObject<T>(DataOperation operation) {
       var rules = DataMappingRules.Parse(typeof(T));
 
