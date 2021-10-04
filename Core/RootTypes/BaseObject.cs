@@ -260,7 +260,7 @@ namespace Empiria {
         return null;
       }
 
-      int id = (int) objectData.Item2[typeInfo.IdFieldName];
+      int id = (int) (long) objectData.Item2[typeInfo.IdFieldName];
 
       if (!reload) {
         T item = cache.TryGetItem<T>(typeInfo.Name, id);
