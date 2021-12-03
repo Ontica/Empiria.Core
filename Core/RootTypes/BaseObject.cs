@@ -133,7 +133,7 @@ namespace Empiria {
     }
 
 
-    static protected T ParseKey<T>(string namedKey, bool reload = false) where T : BaseObject {
+    static protected internal T ParseKey<T>(string namedKey, bool reload = false) where T : BaseObject {
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       if (!reload) {
@@ -260,7 +260,7 @@ namespace Empiria {
         return null;
       }
 
-      int id = (int) (long) objectData.Item2[typeInfo.IdFieldName];
+      int id = Convert.ToInt32(objectData.Item2[typeInfo.IdFieldName]);
 
       if (!reload) {
         T item = cache.TryGetItem<T>(typeInfo.Name, id);
@@ -477,35 +477,25 @@ namespace Empiria {
 
 
     protected string PatchField(string newValue, string defaultValue) {
-      if (!String.IsNullOrWhiteSpace(newValue)) {
-        return newValue;
-      }
-      return defaultValue;
+      return FieldPatcher.PatchField(newValue, defaultValue);
     }
 
 
     protected DateTime PatchField(DateTime newValue, DateTime defaultValue) {
-      if (newValue != ExecutionServer.DateMaxValue && newValue != ExecutionServer.DateMinValue) {
-        return newValue;
-      }
-      return defaultValue;
+      return FieldPatcher.PatchField(newValue, defaultValue);
     }
 
 
     protected U PatchField<U>(int newValue, U defaultValue) where U : BaseObject {
-      if (newValue > 0) {
-        return BaseObject.ParseId<U>(newValue);
-      }
-      return defaultValue;
+      return FieldPatcher.PatchField(newValue, defaultValue);
     }
 
 
     protected U PatchField<U>(string newValue, U defaultValue) where U : BaseObject {
-      if (!String.IsNullOrWhiteSpace(newValue)) {
-        return BaseObject.ParseKey<U>(newValue);
-      }
-      return defaultValue;
+      return FieldPatcher.PatchField(newValue, defaultValue);
     }
+
+
 
     public void Save() {
       // Never save special case instances (e.g. Empty or Unknown)
