@@ -252,6 +252,23 @@ namespace Empiria.Data {
     }
 
 
+    static public T GetPlainObject<T>(DataOperation operation, T defaultValue) {
+      var rules = DataMappingRules.Parse(typeof(T));
+
+      DataRow dataRow = DataReader.GetDataRow(operation);
+
+      if (dataRow == null) {
+        return defaultValue;
+      }
+
+      T instance = ObjectFactory.CreateObject<T>();
+
+      rules.DataBind(instance, dataRow);
+
+      return instance;
+    }
+
+
     static public EmpiriaHashTable<T> GetPlainObjectHashTable<T>(DataOperation operation,
                                                                  Func<T, string> hashFunction) {
       var rules = DataMappingRules.Parse(typeof(T));
