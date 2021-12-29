@@ -549,7 +549,10 @@ namespace Empiria {
 
         if (typeInfo.UsesNamedKey) {
           item.UID = EmpiriaString.ToString(dataRow[typeInfo.NamedIdFieldName]);
+        } else {
+          item.UID = item.objectId.ToString();
         }
+
       } catch (Exception e) {
         throw new NotSupportedException("No puedo hacer el parsing del objeto de tipo " + item.objectTypeInfo, e);
       }
