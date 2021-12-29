@@ -10,6 +10,7 @@
 using System;
 using System.Data;
 using System.Data.OleDb;
+
 using System.EnterpriseServices;
 
 namespace Empiria.Data.Handlers {
@@ -147,10 +148,8 @@ namespace Empiria.Data.Handlers {
     }
 
 
-    public IDataParameter[] GetParameters(string connectionString,
-                                          string sourceName,
-                                          object[] parameterValues) {
-      return OleDbParameterCache.GetParameters(connectionString, sourceName, parameterValues);
+    public IDataParameter[] GetParameters(string source, string name, object[] values) {
+      return OleDbParameterCache.GetParameters(source, name, values);
     }
 
 
