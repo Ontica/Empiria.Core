@@ -95,7 +95,6 @@ namespace Empiria {
 
     static private void CreateLogEntryInCurrentLogTrail(LogEntryType type, string data) {
       try {
-
         ILogTrail logTrail = GetDefaultLogTrail();
 
         var logEntry = CreateLogEntry(type, data);

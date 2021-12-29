@@ -7,7 +7,7 @@
 *  Summary  : Represents an entity with a unique ID and a name.                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,7 +24,7 @@ namespace Empiria {
 
 
   /// <summary>Data transfer object for INamedEntity instances.</summary>
-  public class NamedEntityDto {
+  public class NamedEntityDto : INamedEntity {
 
     public NamedEntityDto(INamedEntity entity) {
       this.UID = entity.UID;
@@ -55,13 +55,16 @@ namespace Empiria {
       return new NamedEntityDto(instance);
     }
 
+
     static public NamedEntityDto[] MapToNamedEntityArray(this IEnumerable<INamedEntity> list) {
       return list.Select((x) => MapToNamedEntity(x)).ToArray();
     }
 
+
     static public FixedList<NamedEntityDto> MapToNamedEntityList(this IEnumerable<INamedEntity> list) {
       return new FixedList<NamedEntityDto>(list.Select((x) => MapToNamedEntity(x)));
     }
+
 
   } // class NamedEntityMappingExtensions
 

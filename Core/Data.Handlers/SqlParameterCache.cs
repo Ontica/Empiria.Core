@@ -39,6 +39,7 @@ namespace Empiria.Data.Handlers {
       return CloneParameters(cachedParameters);
     }
 
+
     static internal SqlParameter[] GetParameters(string connectionString, string sourceName,
                                                  object[] parameterValues) {
       string hashKey = BuildHashKey(connectionString, sourceName);
@@ -63,6 +64,7 @@ namespace Empiria.Data.Handlers {
       return connectionString + ":" + sourceName;
     }
 
+
     static private SqlParameter[] CloneParameters(SqlParameter[] sourceParameters) {
       SqlParameter[] clonedParameters = new SqlParameter[sourceParameters.Length];
 
@@ -71,6 +73,7 @@ namespace Empiria.Data.Handlers {
       }
       return clonedParameters;
     }
+
 
     static private SqlParameter[] CloneParameters(SqlParameter[] sourceParameters,
                                                   object[] parameterValues) {
@@ -88,6 +91,7 @@ namespace Empiria.Data.Handlers {
       }
       return clonedParameters;
     }
+
 
     static private SqlParameter[] DiscoverParameters(string connectionString, string sourceName) {
       SqlParameter[] discoveredParameters = null;

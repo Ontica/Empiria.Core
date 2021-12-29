@@ -62,6 +62,7 @@ namespace Empiria {
                                         failMessage, args);
     }
 
+
     /// <summary>Checks if a value object is not empty. Throws an AssertionFailException if the value
     /// is marked as empty.</summary>
     /// <param name="value">The value object to check.</param>
@@ -78,6 +79,8 @@ namespace Empiria {
       }
       throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, msg, args);
     }
+
+
     /// <summary>Special assertion used to check if an object is not null, and for strings, if not is
     /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
     /// <param name="instance">The object to check.</param>

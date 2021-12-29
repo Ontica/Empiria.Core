@@ -30,6 +30,7 @@ namespace Empiria.Tests {
       }
     }
 
+
     [Fact]
     public void ShouldDivideLongStringWithRemainder() {
       int size = 7;

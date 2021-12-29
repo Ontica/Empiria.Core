@@ -12,7 +12,7 @@ using Empiria.Security;
 
 namespace Empiria.Services.Authentication {
 
-  /// <summary>Extension methods for AuthetnticationField instances.</summary>
+  /// <summary>Extension methods for AuthenticationField instances.</summary>
   static internal class AuthenticationFieldsExtensions {
 
     static internal void AssertValidForAuthentication(this AuthenticationFields fields) {
