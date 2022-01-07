@@ -73,7 +73,7 @@ namespace Empiria {
     }
 
     /// <summary>Trims all excesive whitespaces and removes any control characters.</summary>
-    static internal string Clean(string value) {
+    static public string Clean(string value) {
       value = EmpiriaString.TrimControl(value);
 
       return value = EmpiriaString.TrimAll(value);
