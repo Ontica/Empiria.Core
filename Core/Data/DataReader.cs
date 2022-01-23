@@ -290,6 +290,11 @@ namespace Empiria.Data {
 
 
     static public List<T> GetPlainObjectList<T>(DataOperation operation) {
+      return GetPlainObjectList<T>(operation, () => ObjectFactory.CreateObject<T>());
+    }
+
+
+    static public List<T> GetPlainObjectList<T>(DataOperation operation, Func<T> factory) {
       var rules = DataMappingRules.Parse(typeof(T));
 
       DataTable dataTable = DataReader.GetDataTable(operation);
@@ -297,7 +302,7 @@ namespace Empiria.Data {
       var list = new List<T>(dataTable.Rows.Count);
 
       foreach (DataRow dataRow in dataTable.Rows) {
-        T instance = ObjectFactory.CreateObject<T>();
+        T instance = factory.Invoke();
 
         rules.DataBind(instance, dataRow);
 
@@ -313,6 +318,11 @@ namespace Empiria.Data {
     }
 
 
+    static public FixedList<T> GetPlainObjectFixedList<T>(DataOperation operation, Func<T> factory) {
+      return GetPlainObjectList<T>(operation, factory).ToFixedList();
+    }
+
+
     static public T GetScalar<T>(DataOperation operation, T defaultValue = default(T)) {
       object scalar = GetScalar(operation);
 
@@ -322,6 +332,7 @@ namespace Empiria.Data {
         return defaultValue;
       }
     }
+
 
     static private object GetScalar(DataOperation operation) {
       Assertion.AssertObject(operation, "operation");
@@ -334,6 +345,7 @@ namespace Empiria.Data {
 
       return handler.GetScalar(operation);
     }
+
 
     static public bool IsEmpty(DataOperation operation) {
       return (Count(operation) == 0);
