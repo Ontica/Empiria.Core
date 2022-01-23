@@ -191,6 +191,16 @@ namespace Empiria {
       }
     }
 
+    static public string ToString(FixedList<string> list) {
+      string temp = string.Empty;
+
+      foreach (var item in list) {
+        temp += item + "\n";
+      }
+
+      return temp;
+    }
+
     #endregion Private methods
 
   }  // class EmpiriaString
