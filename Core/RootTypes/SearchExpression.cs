@@ -80,17 +80,8 @@ namespace Empiria {
     }
 
 
-    static public string ParseBetweenValues(string fieldName, string fieldValue1, string fieldValue2) {
-      if (fieldValue1.CompareTo(fieldValue2) < 0) {
-        return $"(({Format(fieldValue1)} <= {fieldName}) AND ({fieldName} <= {Format(fieldValue2)}))";
-
-      } else if (fieldValue1.CompareTo(fieldValue2) > 0) {
-        return $"(({Format(fieldValue2)} <= {fieldName}) AND ({fieldName} <= {Format(fieldValue1)}))";
-
-      } else {
-        return $"({fieldName} = {Format(fieldValue1)})";
-
-      }
+    static public string ParseBetweenValues(string fieldName, string value1, string value2) {
+      return $"(({Format(value1)} <= {fieldName}) AND ({fieldName} <= {Format(value2)}))";
     }
 
 
