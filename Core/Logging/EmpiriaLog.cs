@@ -101,8 +101,10 @@ namespace Empiria {
 
         logTrail.Write(logEntry);
 
-      } catch (Exception innerException) {
-        throw new LoggingException(LoggingException.Msg.LoggingIssue, innerException);
+      } catch {
+        // ToDo:
+        // Log the CreateLogEntry exception to another kind of log outside the database.
+        // Also log the original logEntry to the same chosen log technology.
       }
     }
 
