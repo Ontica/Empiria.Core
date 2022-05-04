@@ -19,8 +19,13 @@ namespace Empiria {
   /// <summary>Static class that contains FixedList extension methods.</summary>
   static public class FixedListExtensionMethods {
 
-    /// <summary>Extends generic List[T] objects to return a FixedList[T] type.</summary>
-    static public FixedList<T> ToFixedList<T>(this List<T> list) {
+    ///// <summary>Extends generic List[T] objects to return a FixedList[T] type.</summary>
+    //static public FixedList<T> ToFixedList<T>(this List<T> list) {
+    //  return new FixedList<T>(list);
+    //}
+
+    /// <summary>Extends generic IEnumerable<T> objects to return a FixedList[T] type.</summary>
+    static public FixedList<T> ToFixedList<T>(this IEnumerable<T> list) {
       return new FixedList<T>(list);
     }
 
