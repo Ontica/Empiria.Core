@@ -1,19 +1,22 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Extensions ****************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Data Access Library               *
-*  Namespace : Empiria.Data.Handlers                            License  : Please read LICENSE.txt file      *
-*  Type      : SqlParameterCache                                Pattern  : Static Class With Objects Cache   *
+*  Module   : Empiria Core                               Component : Data Access Library                     *
+*  Assembly : Empiria.Core.dll                           Pattern   : Stored procedures parameters cache      *
+*  Type     : SqlParameterCache                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : This type is a wrapper of a static hash table that contains the loaded SqlParameters.         *
+*  Summary  : Wrapper of a static hash table that contains loaded MS Sql Server stored procedure parameters. *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
+
 using System.Data;
 using System.Data.SqlClient;
 
 namespace Empiria.Data.Handlers {
 
+  /// <summary>Wrapper of a static hash table that contains loaded
+  /// MS Sql Server stored procedure parameters./// </summary>
   static internal class SqlParameterCache {
 
     #region Fields
@@ -27,15 +30,14 @@ namespace Empiria.Data.Handlers {
     static internal SqlParameter[] GetParameters(string connectionString, string sourceName) {
       string hashKey = BuildHashKey(connectionString, sourceName);
 
-      SqlParameter[] cachedParameters = null;
+      SqlParameter[] cachedParameters;
+
       if (!parametersCache.TryGetValue(hashKey, out cachedParameters)) {
         SqlParameter[] spParameters = DiscoverParameters(connectionString, sourceName);
         parametersCache[hashKey] = spParameters;
         cachedParameters = spParameters;
       }
-      if ((cachedParameters != null) && (cachedParameters.Length != 0)) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.WrongQueryParametersNumber, sourceName);
-      }
+
       return CloneParameters(cachedParameters);
     }
 
@@ -44,15 +46,14 @@ namespace Empiria.Data.Handlers {
                                                  object[] parameterValues) {
       string hashKey = BuildHashKey(connectionString, sourceName);
 
-      SqlParameter[] cachedParameters = null;
+      SqlParameter[] cachedParameters;
+
       if (!parametersCache.TryGetValue(hashKey, out cachedParameters)) {
         SqlParameter[] spParameters = DiscoverParameters(connectionString, sourceName);
         parametersCache[hashKey] = spParameters;
         cachedParameters = spParameters;
       }
-      if ((cachedParameters == null) || (cachedParameters.Length != parameterValues.Length)) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.WrongQueryParametersNumber, sourceName);
-      }
+
       return CloneParameters(cachedParameters, parameterValues);
     }
 
@@ -71,6 +72,7 @@ namespace Empiria.Data.Handlers {
       for (int i = 0, j = sourceParameters.Length; i < j; i++) {
         clonedParameters[i] = (SqlParameter) ((ICloneable) sourceParameters[i]).Clone();
       }
+
       return clonedParameters;
     }
 
@@ -81,14 +83,10 @@ namespace Empiria.Data.Handlers {
 
       for (int i = 0, j = sourceParameters.Length; i < j; i++) {
         clonedParameters[i] = (SqlParameter) ((ICloneable) sourceParameters[i]).Clone();
-        if (parameterValues[i] is IValueObject) {
-          clonedParameters[i].Value = parameterValues[i].ToString();
-        } else if (parameterValues[i] is IIdentifiable) {
-          clonedParameters[i].Value = ((IIdentifiable) parameterValues[i]).Id;
-        } else {
-          clonedParameters[i].Value = parameterValues[i];
-        }
+
+        clonedParameters[i].Value = parameterValues[i];
       }
+
       return clonedParameters;
     }
 
@@ -103,25 +101,35 @@ namespace Empiria.Data.Handlers {
         command.Parameters.Add("@QueryName", SqlDbType.VarChar, 64);
         command.Parameters["@QueryName"].Value = sourceName;
         command.CommandType = CommandType.StoredProcedure;
-        connection.Open();
+
+        SqlMethods.TryOpenConnection(connection);
 
         SqlDataReader reader = command.ExecuteReader();
         SqlParameter parameter;
+
         int i = 0;
+
         while (reader.Read()) {
+
           if (discoveredParameters == null) {
             discoveredParameters = new SqlParameter[(int) reader["ParameterCount"]];
           }
+
           parameter = new SqlParameter((string) reader["Name"], (SqlDbType) reader["ParameterDbType"]);
+
           parameter.Direction = (ParameterDirection) reader["ParameterDirection"];
+
           if (reader["ParameterDefaultValue"] == DBNull.Value) {
             parameter.Value = reader["ParameterDefaultValue"];
           }
+
           discoveredParameters[i] = parameter;
+
           i++;
         }
         reader.Close();
       }
+
       return discoveredParameters;
     }
 
