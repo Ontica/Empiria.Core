@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Core.dll                           Pattern   : Stored procedures parameters cache      *
 *  Type     : SqlParameterCache                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Wrapper of a static hash table that contains loaded MS Sql Server stored procedure parameters. *
+*  Summary  : Provides methods to build Microsoft Sql Server stored procedure parameters.                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -15,8 +15,7 @@ using System.Data.SqlClient;
 
 namespace Empiria.Data.Handlers {
 
-  /// <summary>Wrapper of a static hash table that contains loaded
-  /// MS Sql Server stored procedure parameters./// </summary>
+  /// <summary>Provides methods to build Microsoft Sql Server stored procedure parameters.</summary>
   static internal class SqlParameterCache {
 
     #region Fields
@@ -126,7 +125,8 @@ namespace Empiria.Data.Handlers {
           discoveredParameters[i] = parameter;
 
           i++;
-        }
+        }  // using
+
         reader.Close();
       }
 

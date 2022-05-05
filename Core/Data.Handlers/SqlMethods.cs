@@ -13,6 +13,7 @@ using System.Data;
 using System.EnterpriseServices;
 
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 
 namespace Empiria.Data.Handlers {
 
@@ -65,13 +66,6 @@ namespace Empiria.Data.Handlers {
         dataAdapter.Dispose();
         connection.Dispose();
       }
-    }
-
-
-    public int CountRows(DataOperation operation) {
-      var dataTable = GetDataTable(operation, String.Empty);
-
-      return dataTable.Rows.Count;
     }
 
 
@@ -198,7 +192,7 @@ namespace Empiria.Data.Handlers {
       var reader = (SqlDataReader) this.GetDataReader(operation);
 
       if (reader.Read()) {
-        System.Data.SqlTypes.SqlBinary blob = reader.GetSqlBinary(reader.GetOrdinal(fieldName));
+        SqlBinary blob = reader.GetSqlBinary(reader.GetOrdinal(fieldName));
 
         value = blob.Value;
       }
@@ -241,18 +235,7 @@ namespace Empiria.Data.Handlers {
 
       } finally {
         command.Parameters.Clear();
-        // Do not dipose the connection because this method returns a DataReader.
-      }
-    }
-
-
-    public DataRow GetDataRow(DataOperation operation) {
-      DataTable dataTable = GetDataTable(operation, operation.SourceName);
-
-      if (dataTable.Rows.Count != 0) {
-        return dataTable.Rows[0];
-      } else {
-        return null;
+        // Do not dispose the connection because this method returns a DataReader.
       }
     }
 
@@ -289,13 +272,6 @@ namespace Empiria.Data.Handlers {
         command.Parameters.Clear();
         connection.Dispose();
       }
-    }
-
-
-    public DataView GetDataView(DataOperation operation, string filter, string sort) {
-      DataTable dataTable = GetDataTable(operation, operation.SourceName);
-
-      return new DataView(dataTable, filter, sort, DataViewRowState.CurrentRows);
     }
 
 

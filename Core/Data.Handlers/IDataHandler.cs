@@ -18,9 +18,6 @@ namespace Empiria.Data.Handlers {
     int AppendRows(IDbConnection connection, string tableName, DataTable table, string filter);
 
 
-    int CountRows(DataOperation operation);
-
-
     int Execute(DataOperation operation);
 
 
@@ -33,9 +30,6 @@ namespace Empiria.Data.Handlers {
     T Execute<T>(DataOperation operation);
 
 
-    IDataParameter[] GetParameters(string source, string name, object[] values);
-
-
     byte[] GetBinaryFieldValue(DataOperation operation, string fieldName);
 
 
@@ -45,16 +39,13 @@ namespace Empiria.Data.Handlers {
     IDataReader GetDataReader(DataOperation operation);
 
 
-    DataRow GetDataRow(DataOperation operation);
-
-
     DataTable GetDataTable(DataOperation operation, string dataTableName);
 
 
-    DataView GetDataView(DataOperation operation, string filter, string sort);
-
-
     object GetFieldValue(DataOperation operation, string fieldName);
+
+
+    IDataParameter[] GetParameters(string source, string name, object[] values);
 
 
     object GetScalar(DataOperation operation);

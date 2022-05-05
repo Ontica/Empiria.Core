@@ -37,14 +37,11 @@ namespace Empiria.Data {
     static public int Count(DataOperation operation) {
       Assertion.AssertObject(operation, "operation");
 
-      if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
-        return GetExternalCount(operation);
-      }
+      var dataTable = GetDataTable(operation);
 
-      IDataHandler handler = GetDataHander(operation);
-
-      return handler.CountRows(operation);
+      return dataTable.Rows.Count;
     }
+
 
     static public byte[] GetBinaryFieldValue(DataOperation operation, string fieldName) {
       Assertion.AssertObject(operation, "operation");
@@ -60,6 +57,7 @@ namespace Empiria.Data {
       return handler.GetBinaryFieldValue(operation, fieldName);
     }
 
+
     /// <summary>Retrives an IDataReader object giving a table name or stored procedure name.</summary>
     /// <returns>A generic IDataReader interface object.</returns>
     static public IDataReader GetDataReader(DataOperation operation) {
@@ -74,17 +72,19 @@ namespace Empiria.Data {
       return handler.GetDataReader(operation);
     }
 
+
     static public DataRow GetDataRow(DataOperation operation) {
       Assertion.AssertObject(operation, "operation");
 
-      if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
-        return GetExternalDataRow(operation);
+      DataTable dataTable = GetDataTable(operation, operation.SourceName);
+
+      if (dataTable.Rows.Count != 0) {
+        return dataTable.Rows[0];
+      } else {
+        return null;
       }
-
-      IDataHandler handler = GetDataHander(operation);
-
-      return handler.GetDataRow(operation);
     }
+
 
     static public DataRowView GetDataRowView(DataOperation operation) {
       DataView dataView = GetDataView(operation);
@@ -96,15 +96,18 @@ namespace Empiria.Data {
       }
     }
 
+
     static public DataTable GetDataTable(DataOperation operation) {
       return DataReader.GetDataTable(operation, operation.Name);
     }
+
 
     static public DataTable GetDataTable(DataOperation operation, DataQuery query) {
       var dataTable = DataReader.GetDataTable(operation, operation.Name);
 
       return query.ApplyTo(dataTable);
     }
+
 
     static public DataTable GetDataTable(DataOperation operation, string dataTableName) {
       Assertion.AssertObject(operation, "operation");
@@ -121,24 +124,23 @@ namespace Empiria.Data {
       return GetInternalDataTable(operation, dataTableName);
     }
 
+
     static public DataView GetDataView(DataOperation operation) {
       return DataReader.GetDataView(operation, String.Empty, String.Empty);
     }
+
 
     static public DataView GetDataView(DataOperation operation, string filter) {
       return DataReader.GetDataView(operation, filter, String.Empty);
     }
 
+
     static public DataView GetDataView(DataOperation operation, string filter, string sort) {
       Assertion.AssertObject(operation, "operation");
 
-      if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
-        return GetExternalDataView(operation, filter, sort);
-      }
+      DataTable dataTable = GetDataTable(operation, operation.SourceName);
 
-      IDataHandler handler = GetDataHander(operation);
-
-      return handler.GetDataView(operation, filter, sort);
+      return new DataView(dataTable, filter, sort, DataViewRowState.CurrentRows);
     }
 
 
@@ -159,6 +161,7 @@ namespace Empiria.Data {
 
       return handler.GetFieldValue(operation, fieldName);
     }
+
 
     static public List<T> GetFieldValues<T>(DataOperation operation,
                                             string fieldName = "",
