@@ -1,21 +1,19 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution : Empiria Core                                     System  : Data Access Library                 *
-*  Assembly : Empiria.Core.dll                                 Pattern : Provider                            *
-*  Type     : OleDbMethods                                     License : Please read LICENSE.txt file        *
+*  Module   : OleDb Database Handler                     Component : Data Access Library                     *
+*  Assembly : Empiria.Core.dll                           Pattern   : Data Handler                            *
+*  Type     : OleDbMethods                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Empiria data handler to connect solutions to OLE DB-based databases.                           *
+*  Summary  : Data handler used to connect Empiria-based solutions to OleDb-based databases.                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Data;
 using System.Data.OleDb;
 
-using System.EnterpriseServices;
-
 namespace Empiria.Data.Handlers {
 
-  /// <summary>Empiria data handler to connect solutions to OLE DB-based databases.</summary>
+  /// <summary> Data handler used to connect Empiria-based solutions with OleDb-based databases.</summary>
   internal class OleDbMethods : IDataHandler {
 
     #region Internal methods
@@ -27,32 +25,9 @@ namespace Empiria.Data.Handlers {
 
 
     public int CountRows(DataOperation operation) {
-      var connection = new OleDbConnection(operation.DataSource.Source);
-      var command = new OleDbCommand(operation.SourceName, connection);
+      var dataTable = GetDataTable(operation, String.Empty);
 
-      try {
-        operation.PrepareCommand(command);
-
-        var dataAdapter = new OleDbDataAdapter(command);
-
-        var dataTable = new DataTable();
-
-        dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
-
-        dataAdapter.Fill(dataTable);
-        dataAdapter.Dispose();
-
-        return dataTable.Rows.Count;
-
-      } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable,
-                                       exception,
-                                       operation.SourceName, operation.ParametersToString());
-
-      } finally {
-        command.Parameters.Clear();
-        connection.Dispose();
-      }
+      return dataTable.Rows.Count;
     }
 
 
@@ -63,9 +38,12 @@ namespace Empiria.Data.Handlers {
       try {
         operation.PrepareCommand(command);
 
-        connection.Open();
+        TryOpenConnection(connection);
 
         return command.ExecuteNonQuery();
+
+      } catch (ServiceException) {
+        throw;
 
       } catch (Exception exception) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery,
@@ -86,7 +64,7 @@ namespace Empiria.Data.Handlers {
       try {
         operation.PrepareCommand(command);
 
-        connection.Open();
+        TryOpenConnection(connection);
 
         object result = command.ExecuteScalar();
 
@@ -97,10 +75,12 @@ namespace Empiria.Data.Handlers {
                                          operation.SourceName);
         }
 
+      } catch (ServiceException) {
+        throw;
+
       } catch (Exception exception) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery,
-                                       exception,
-                                       operation.SourceName, operation.ParametersToString());
+                                       exception, operation.SourceName, operation.ParametersToString());
 
       } finally {
         command.Parameters.Clear();
@@ -115,12 +95,16 @@ namespace Empiria.Data.Handlers {
       try {
         operation.PrepareCommand(command);
 
+        TryOpenConnection((OleDbConnection) connection);
+
         return command.ExecuteNonQuery();
+
+      } catch (ServiceException) {
+        throw;
 
       } catch (Exception exception) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery,
-                                       exception,
-                                       operation.SourceName, operation.ParametersToString());
+                                       exception, operation.SourceName, operation.ParametersToString());
 
       } finally {
         command.Parameters.Clear();
@@ -135,21 +119,20 @@ namespace Empiria.Data.Handlers {
       try {
         operation.PrepareCommand(command);
 
+        TryOpenConnection((OleDbConnection) transaction.Connection);
+
         return command.ExecuteNonQuery();
+
+      } catch (ServiceException) {
+        throw;
 
       } catch (Exception exception) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery,
-                                       exception,
-                                       operation.SourceName, operation.ParametersToString());
+                                       exception,  operation.SourceName, operation.ParametersToString());
 
       } finally {
         command.Parameters.Clear();
       }
-    }
-
-
-    public IDataParameter[] GetParameters(string source, string name, object[] values) {
-      return OleDbParameterCache.GetParameters(source, name, values);
     }
 
 
@@ -162,6 +145,7 @@ namespace Empiria.Data.Handlers {
       return new OleDbConnection(connectionString);
     }
 
+
     public IDataReader GetDataReader(DataOperation operation) {
       var connection = new OleDbConnection(operation.DataSource.Source);
       var command = new OleDbCommand(operation.SourceName, connection);
@@ -169,9 +153,12 @@ namespace Empiria.Data.Handlers {
       try {
         operation.PrepareCommand(command);
 
-        connection.Open();
+        TryOpenConnection(connection);
 
         return command.ExecuteReader(CommandBehavior.CloseConnection);
+
+      } catch (ServiceException) {
+        throw;
 
       } catch (Exception exception) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataReader,
@@ -180,41 +167,18 @@ namespace Empiria.Data.Handlers {
 
       } finally {
         command.Parameters.Clear();
-        //Don't dispose the connection because this method returns a DataReader.
+        // Do not dispose the connection because this method returns a DataReader.
       }
     }
 
 
     public DataRow GetDataRow(DataOperation operation) {
-      var connection = new OleDbConnection(operation.DataSource.Source);
-      var command = new OleDbCommand(operation.SourceName, connection);
+      DataTable dataTable = GetDataTable(operation, operation.SourceName);
 
-      try {
-        operation.PrepareCommand(command);
-
-        var dataAdapter = new OleDbDataAdapter(command);
-
-        var dataTable = new DataTable(operation.SourceName);
-
-        dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
-
-        dataAdapter.Fill(dataTable);
-        dataAdapter.Dispose();
-
-        if (dataTable.Rows.Count != 0) {
-          return dataTable.Rows[0];
-        } else {
-          return null;
-        }
-
-      } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable,
-                                       exception,
-                                       operation.SourceName, operation.ParametersToString());
-
-      } finally {
-        command.Parameters.Clear();
-        connection.Dispose();
+      if (dataTable.Rows.Count != 0) {
+        return dataTable.Rows[0];
+      } else {
+        return null;
       }
     }
 
@@ -232,10 +196,15 @@ namespace Empiria.Data.Handlers {
 
         dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
 
+        TryOpenConnection(connection);
+
         dataAdapter.Fill(dataTable);
         dataAdapter.Dispose();
 
         return dataTable;
+
+      } catch (ServiceException) {
+        throw;
 
       } catch (Exception exception) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataTable,
@@ -250,33 +219,9 @@ namespace Empiria.Data.Handlers {
 
 
     public DataView GetDataView(DataOperation operation, string filter, string sort) {
-      var connection = new OleDbConnection(operation.DataSource.Source);
-      var command = new OleDbCommand(operation.SourceName, connection);
+      DataTable dataTable = GetDataTable(operation, operation.SourceName);
 
-      try {
-        operation.PrepareCommand(command);
-
-        OleDbDataAdapter dataAdapter = new OleDbDataAdapter(command);
-
-        DataTable dataTable = new DataTable(operation.SourceName);
-
-        dataTable.Locale = System.Globalization.CultureInfo.InvariantCulture;
-
-        dataAdapter.Fill(dataTable);
-        dataAdapter.Dispose();
-
-        return new DataView(dataTable, filter, sort,
-                            DataViewRowState.CurrentRows);
-
-      } catch (Exception exception) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetDataView,
-                                       exception,
-                                       operation.SourceName, operation.ParametersToString());
-
-      } finally {
-        command.Parameters.Clear();
-        connection.Dispose();
-      }
+      return new DataView(dataTable, filter, sort, DataViewRowState.CurrentRows);
     }
 
 
@@ -287,7 +232,7 @@ namespace Empiria.Data.Handlers {
       try {
         operation.PrepareCommand(command);
 
-        connection.Open();
+        TryOpenConnection(connection);
 
         OleDbDataReader dataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
 
@@ -296,6 +241,9 @@ namespace Empiria.Data.Handlers {
         } else {
           return null;
         }
+
+      } catch (ServiceException) {
+        throw;
 
       } catch (Exception exception) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetFieldValue,
@@ -310,6 +258,11 @@ namespace Empiria.Data.Handlers {
     }
 
 
+    public IDataParameter[] GetParameters(string source, string name, object[] values) {
+      return OleDbParameterCache.GetParameters(source, name, values);
+    }
+
+
     public object GetScalar(DataOperation operation) {
       var connection = new OleDbConnection(operation.DataSource.Source);
       var command = new OleDbCommand(operation.SourceName, connection);
@@ -317,18 +270,35 @@ namespace Empiria.Data.Handlers {
       try {
         operation.PrepareCommand(command);
 
-        connection.Open();
+        TryOpenConnection(connection);
 
         return command.ExecuteScalar();
 
+      } catch (ServiceException) {
+        throw;
+
       } catch (Exception exception) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotGetScalar,
-                                       exception,
-                                       operation.SourceName, operation.ParametersToString());
+                                       exception, operation.SourceName, operation.ParametersToString());
 
       } finally {
         command.Parameters.Clear();
         connection.Dispose();
+      }
+    }
+
+
+    static internal void TryOpenConnection(OleDbConnection connection) {
+      try {
+        connection.Open();
+
+      } catch (Exception innerException) {
+        throw new ServiceException("DATABASE_SERVER_CONNECTION_FAILED",
+          "No se pudo hacer una conexión del sistema con la base de datos. " +
+          "Puede ser que el servidor de base de datos no esté disponible, " +
+          "o que la conexión entre el servidor de base de datos " +
+          "y el servidor de aplicaciones se haya perdido.",
+          innerException);
       }
     }
 

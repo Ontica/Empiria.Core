@@ -1,19 +1,21 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Extensions ****************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Data Access Library               *
-*  Namespace : Empiria.Data.Handlers                            License  : Please read LICENSE.txt file      *
-*  Type      : OleDbParameterCache                              Pattern  : Static Class With Objects Cache   *
+*  Module   : OleDb Database Handler                     Component : Data Access Library                     *
+*  Assembly : Empiria.Core.dll                           Pattern   : Stored procedures parameters cache      *
+*  Type     : OleDbParameterCache                        License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : This type is a wrapper of a static hash table that contains the loaded OleDbParameters.       *
+*  Summary  : Provides methods to build OleDb-based database stored procedure parameters.                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
+
 using System.Data;
 using System.Data.OleDb;
 
 namespace Empiria.Data.Handlers {
 
+  /// <summary>Provides methods to build OleDb-based database stored procedure parameters.</summary>
   static internal class OleDbParameterCache {
 
     #region Fields
@@ -28,24 +30,29 @@ namespace Empiria.Data.Handlers {
       string hashKey = BuildHashKey(connectionString, sourceName);
 
       OleDbParameter[] cachedParameters;
+
       if (!parametersCache.TryGetValue(hashKey, out cachedParameters)) {
         OleDbParameter[] spParameters = DiscoverParameters(connectionString, sourceName);
         parametersCache[hashKey] = spParameters;
         cachedParameters = spParameters;
       }
+
       return CloneParameters(cachedParameters);
     }
+
 
     static internal OleDbParameter[] GetParameters(string connectionString, string sourceName,
                                                    object[] parameterValues) {
       string hashKey = BuildHashKey(connectionString, sourceName);
 
       OleDbParameter[] cachedParameters;
+
       if (!parametersCache.TryGetValue(hashKey, out cachedParameters)) {
         OleDbParameter[] spParameters = DiscoverParameters(connectionString, sourceName);
         parametersCache[hashKey] = spParameters;
         cachedParameters = spParameters;
       }
+
       return CloneParameters(cachedParameters, parameterValues);
     }
 
@@ -57,14 +64,17 @@ namespace Empiria.Data.Handlers {
       return connectionString + ":" + sourceName;
     }
 
+
     static private OleDbParameter[] CloneParameters(OleDbParameter[] sourceParameters) {
       OleDbParameter[] clonedParameters = new OleDbParameter[sourceParameters.Length];
 
       for (int i = 0, j = sourceParameters.Length; i < j; i++) {
         clonedParameters[i] = (OleDbParameter) ((ICloneable) sourceParameters[i]).Clone();
       }
+
       return clonedParameters;
     }
+
 
     static private OleDbParameter[] CloneParameters(OleDbParameter[] sourceParameters,
                                                     object[] parameterValues) {
@@ -74,8 +84,10 @@ namespace Empiria.Data.Handlers {
         clonedParameters[i] = (OleDbParameter) ((ICloneable) sourceParameters[i]).Clone();
         clonedParameters[i].Value = parameterValues[i];
       }
+
       return clonedParameters;
     }
+
 
     static private OleDbParameter[] DiscoverParameters(string connectionString, string sourceName) {
       OleDbParameter[] discoveredParameters = null;
@@ -87,27 +99,39 @@ namespace Empiria.Data.Handlers {
         command.Parameters.Add("pQueryName", OleDbType.VarChar, 128);
         command.Parameters["pQueryName"].Value = sourceName;
         command.CommandType = CommandType.StoredProcedure;
-        connection.Open();
+
+        OleDbMethods.TryOpenConnection(connection);
 
         OleDbDataReader reader = command.ExecuteReader();
         OleDbParameter parameter;
+
         int i = 0;
+
         while (reader.Read()) {
+
           if (discoveredParameters == null) {
             discoveredParameters = new OleDbParameter[(int) reader["ParameterCount"]];
           }
+
           parameter = new OleDbParameter((string) reader["Name"], (OleDbType) reader["ParameterDbType"]);
+
           parameter.Direction = (ParameterDirection) reader["ParameterDirection"];
+
           if (reader["ParameterDefaultValue"] == DBNull.Value) {
             parameter.Value = reader["ParameterDefaultValue"];
           }
+
           discoveredParameters[i] = parameter;
+
           i++;
-        }
+        }  // using
+
         reader.Close();
       }
+
       return discoveredParameters;
     }
+
 
     #endregion Private methods
 
