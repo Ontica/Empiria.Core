@@ -11,7 +11,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.EnterpriseServices;
 
 using Empiria.Security;
 
@@ -66,14 +65,7 @@ namespace Empiria.Data {
 
     public bool IsInTransaction {
       get {
-        return (currentTransaction != null);
-      }
-    }
-
-
-    internal bool IsInOSTransaction {
-      get {
-        return ContextUtil.IsInTransaction;
+        return currentTransaction != null;
       }
     }
 
@@ -85,13 +77,6 @@ namespace Empiria.Data {
 
     public Guid Guid {
       get;
-    }
-
-
-    internal ITransaction OSTransaction {
-      get {
-        return (ITransaction) ContextUtil.Transaction;
-      }
     }
 
 
@@ -120,7 +105,6 @@ namespace Empiria.Data {
       } else {
         internalOp.Add(operation);
       }
-
     }
 
 
@@ -129,19 +113,13 @@ namespace Empiria.Data {
         return;
       }
 
-      if (IsInTransaction) {
-
-        foreach (DataOperation operation in operationList) {
+      foreach (DataOperation operation in operationList) {
+        if (IsInTransaction) {
           transactionalOp.Add(operation);
-        }
-
-      } else {
-
-        foreach (DataOperation operation in operationList) {
+        } else {
           internalOp.Add(operation);
         }
-
-      } // if
+      }
     }
 
 
@@ -150,19 +128,13 @@ namespace Empiria.Data {
         return;
       }
 
-      if (IsInTransaction) {
-
-        foreach (DataOperation operation in operationList) {
+      foreach (DataOperation operation in operationList) {
+        if (IsInTransaction) {
           transactionalOp.Add(operation);
-        }
-
-      } else {
-
-        foreach (DataOperation operation in operationList) {
+        } else {
           internalOp.Add(operation);
         }
-
-      }  // if
+      }
     }
 
 
@@ -187,8 +159,6 @@ namespace Empiria.Data {
 
     public void Close() {
       Dispose(true);
-
-      GC.SuppressFinalize(this);
     }
 
 
@@ -219,13 +189,9 @@ namespace Empiria.Data {
 
         internalOp.Clear();
 
-      } catch {
-
-        throw;
-
       } finally {
-
         CloseConnections(connections);
+
       }
     }
 

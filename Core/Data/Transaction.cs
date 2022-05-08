@@ -9,9 +9,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using System.Collections;
 using System.Data;
-using System.EnterpriseServices;
 
 namespace Empiria.Data {
 
@@ -67,7 +67,7 @@ namespace Empiria.Data {
 
 
     public int Commit() {
-      if (wasCommited == true) {
+      if (wasCommited) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.TransactionAlreadyCommited);
       }
 
@@ -114,29 +114,19 @@ namespace Empiria.Data {
 
         lock (operations) {
 
-          if (!context.IsInOSTransaction) {
+          foreach (IDbTransaction transaction in transactions.Values) {
 
-            foreach (IDbTransaction transaction in transactions.Values) {
+            if ((transaction != null) && (transaction.Connection != null) &&
+                (transaction.Connection.State != ConnectionState.Closed)) {
+              transaction.Rollback();
+            }
 
-              if ((transaction != null) && (transaction.Connection != null) &&
-                  (transaction.Connection.State != ConnectionState.Closed)) {
-                transaction.Rollback();
-              }
-
-            } //foreach
-
-          } else {
-            ContextUtil.SetAbort();
-          }
+          } //foreach
 
         }  //lock
 
       } catch (Exception innerException) {
         CleanResources();
-
-        if (context.IsInOSTransaction) {
-          ContextUtil.SetAbort();
-        }
 
         throw new EmpiriaDataException(EmpiriaDataException.Msg.RollbackFails, innerException,
                                        innerException.Message);
@@ -157,46 +147,28 @@ namespace Empiria.Data {
         return;
       }
 
-      if (!context.IsInOSTransaction) {
+      lock (transactions) {
+        IDictionaryEnumerator enumerator = transactions.GetEnumerator();
 
-        lock (transactions) {
-          IDictionaryEnumerator enumerator = transactions.GetEnumerator();
+        while (enumerator.MoveNext()) {
 
-          while (enumerator.MoveNext()) {
+        IDbTransaction transaction = (IDbTransaction) enumerator.Value;
 
-          IDbTransaction transaction = (IDbTransaction) enumerator.Value;
+        if ((transaction != null) && (transaction.Connection != null)) {
+            IDbConnection connection = transaction.Connection;
 
-          if ((transaction != null) && (transaction.Connection != null)) {
-              IDbConnection connection = transaction.Connection;
-
-              connection.Dispose();
-
-              transaction = null;
-            } //if
-
-          } //while
-        }
-
-      } else {
-
-        foreach (IDbConnection connection in transactions.Values) {
-
-          if (connection != null) {
             connection.Dispose();
-          }
 
-        } //foreach
+            transaction.Dispose();
+          } //if
 
-      } //if
+        } //while
+      }
 
       transactions.Clear();
     }
 
     private void CommitTransactions() {
-      if (context.IsInOSTransaction) {
-        return;
-      }
-
       IDictionaryEnumerator enumerator = transactions.GetEnumerator();
 
       while (enumerator.MoveNext()) {
@@ -209,31 +181,9 @@ namespace Empiria.Data {
         transaction.Dispose();
 
         connection.Dispose();
-
-        transaction = null;
       }
     }
 
-
-    private void CreateConnections() {
-      string lastSource = String.Empty;
-
-      for (int i = 0, count = operations.Count; i < count; i++) {
-
-        DataSource dataSource = operations[i].DataSource;
-
-        if (lastSource != dataSource.Source) {
-          lastSource = dataSource.Source;
-
-          if (!transactions.ContainsKey(dataSource.Source)) {
-            transactions.Add(dataSource.Source, dataSource.GetConnection());
-          }
-
-        } // if
-
-      } // for
-
-    }
 
     private void CreateTransactions() {
 
@@ -278,41 +228,20 @@ namespace Empiria.Data {
       int counter = 0;
       string lastSource = String.Empty;
 
-      if (!context.IsInOSTransaction) {
-        CreateTransactions();
+      CreateTransactions();
 
-        IDbTransaction transaction = null;
+      IDbTransaction transaction = null;
 
-        for (int i = 0, count = operations.Count; i < count; i++) {
-          DataOperation operation = operations[i];
+      for (int i = 0, count = operations.Count; i < count; i++) {
+        DataOperation operation = operations[i];
 
-          if (lastSource != operation.DataSource.Source) {
-            lastSource = operation.DataSource.Source;
+        if (lastSource != operation.DataSource.Source) {
+          lastSource = operation.DataSource.Source;
 
-            transaction = (IDbTransaction) transactions[lastSource];
-          }
-
-          counter += DataWriter.Execute(transaction, operation);
+          transaction = (IDbTransaction) transactions[lastSource];
         }
 
-      } else {
-
-        CreateConnections();
-
-        IDbConnection connection = null;
-
-        for (int i = 0, count = operations.Count; i < count; i++) {
-          DataOperation operation = operations[i];
-
-          if (lastSource != operation.DataSource.Source) {
-            lastSource = operation.DataSource.Source;
-
-            connection = (IDbConnection) transactions[lastSource];
-          }
-
-          counter += DataWriter.Execute(connection, operation);
-        }
-
+        counter += DataWriter.Execute(transaction, operation);
       }
 
       return counter;

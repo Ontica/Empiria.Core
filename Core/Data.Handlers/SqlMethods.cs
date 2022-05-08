@@ -10,8 +10,6 @@
 using System;
 using System.Data;
 
-using System.EnterpriseServices;
-
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 
@@ -78,10 +76,6 @@ namespace Empiria.Data.Handlers {
 
         TryOpenConnection(connection);
 
-        if (ContextUtil.IsInTransaction) {
-          connection.EnlistDistributedTransaction((System.EnterpriseServices.ITransaction) ContextUtil.Transaction);
-        }
-
         return command.ExecuteNonQuery();
 
       } catch (ServiceException) {
@@ -107,10 +101,6 @@ namespace Empiria.Data.Handlers {
         operation.PrepareCommand(command);
 
         TryOpenConnection(connection);
-
-        if (ContextUtil.IsInTransaction) {
-          connection.EnlistDistributedTransaction((System.EnterpriseServices.ITransaction) ContextUtil.Transaction);
-        }
 
         object result = command.ExecuteScalar();
 
@@ -204,13 +194,7 @@ namespace Empiria.Data.Handlers {
 
 
     public IDbConnection GetConnection(string connectionString) {
-      var connection = new SqlConnection(connectionString);
-
-      if (ContextUtil.IsInTransaction) {
-        connection.EnlistDistributedTransaction((System.EnterpriseServices.ITransaction) ContextUtil.Transaction);
-      }
-
-      return connection;
+      return new SqlConnection(connectionString);
     }
 
 
