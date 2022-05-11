@@ -7,6 +7,7 @@
 *  Summary  : Output DTO with data representing an authenticated user or principal.                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System;
 
 namespace Empiria.Services.Authentication {
 
@@ -18,23 +19,15 @@ namespace Empiria.Services.Authentication {
     }
 
 
-    public SecurityClaimDto[] Claims {
-      get; internal set;
-    }
-
-
     public IdentityDto Identity {
       get; internal set;
     }
 
 
-    public string[] Roles {
+    public string[] Permissions {
       get; internal set;
     }
-    public string[] Permissions {
-      get;
-      internal set;
-    }
+
   }  // class PrincipalDto
 
 
@@ -46,28 +39,9 @@ namespace Empiria.Services.Authentication {
     }
 
     public string Name {
-      get;
-      internal set;
+      get; internal set;
     }
+
   }  // class IdentityDto
-
-
-
-  public class SecurityClaimDto {
-
-    internal SecurityClaimDto() {
-      // no-op
-    }
-
-    public string Type {
-      get;
-      internal set;
-    }
-    public string Value {
-      get;
-      internal set;
-    }
-  }  // class SecurityClaimDto
-
 
 }  // namespace Empiria.Services.Authentication

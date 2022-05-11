@@ -8,10 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Linq;
 
 using Empiria.Security;
-using Empiria.Security.Claims;
 
 namespace Empiria.Services.Authentication {
 
@@ -21,8 +19,6 @@ namespace Empiria.Services.Authentication {
     internal static PrincipalDto Map(EmpiriaPrincipal principal) {
       return new PrincipalDto {
         Identity = MapIdentity(principal.Identity),
-        Claims = MapSecurityClaims(principal),
-        Roles = principal.RolesArray,
         Permissions = principal.PermissionsArray
       };
     }
@@ -34,25 +30,6 @@ namespace Empiria.Services.Authentication {
         Name = identity.Name
       };
     }
-
-
-    static private SecurityClaimDto[] MapSecurityClaims(EmpiriaPrincipal principal) {
-      return new SecurityClaimDto[0];
-
-      //Claim[] claims = ClaimsService.Claims(principal);
-
-      //return claims.Select(x => MapToSecurityClaim(x))
-      //             .ToArray();
-    }
-
-
-    static private SecurityClaimDto MapToSecurityClaim(Claim claim) {
-      return new SecurityClaimDto {
-        Type = claim.ClaimType.NamedKey,
-        Value = claim.Value,
-      };
-    }
-
 
     #endregion Helper methods
 
