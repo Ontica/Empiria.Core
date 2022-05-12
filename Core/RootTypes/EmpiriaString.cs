@@ -76,7 +76,7 @@ namespace Empiria {
     static public string Clean(string value) {
       value = EmpiriaString.TrimControl(value);
 
-      return value = EmpiriaString.TrimAll(value);
+      return EmpiriaString.TrimAll(value);
     }
 
     static public bool Contains(string source, string searchWords) {
