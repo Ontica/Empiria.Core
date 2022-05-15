@@ -173,11 +173,14 @@ namespace Empiria.Json {
     /// <param name="instance">The object instance of type T. Can be an anonymous object.</param>
     /// <returns>The object instance of type T with the properties obtained from the JSON structure.</returns>
     static public T ToObject<T>(string jsonString, T instance) {
+      if (string.IsNullOrWhiteSpace(jsonString)) {
+        return instance;
+      }
+
       if (instance.GetType().Namespace == null) {
         return JsonConvert.DeserializeAnonymousType(jsonString, instance);
       } else {
-        instance = JsonConvert.DeserializeObject<T>(jsonString);
-        return instance;
+        return JsonConvert.DeserializeObject<T>(jsonString);
       }
     }
 

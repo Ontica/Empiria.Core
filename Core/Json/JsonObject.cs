@@ -650,11 +650,11 @@ namespace Empiria.Json {
 
       } else {
 
-        var dictionary = new Dictionary<string, object>(1);
+        var slice = new Dictionary<string, object>(1);
 
-        dictionary.Add(GetChildKey(itemPath), value);
+        slice.Add(GetChildKey(itemPath), value);
 
-        return new JsonObject(dictionary);
+        return new JsonObject(slice);
 
       }
     }
@@ -668,7 +668,7 @@ namespace Empiria.Json {
 
     /// <summary>Returns this Json object as a Json string.</summary>
     /// <param name="indented">If true, returns the Json string in indented format. Default false.</param>
-    public string ToString(bool indented = false) {
+    public string ToString(bool indented) {
       if (this.dictionary.Count == 0) {
         return String.Empty;
       }
@@ -691,8 +691,8 @@ namespace Empiria.Json {
 
       foreach (var item in this.dictionary) {
 
-        if (item.Value is JsonObject) {
-          copy[item.Key] = ((JsonObject) item.Value).ToDictionary();
+        if (item.Value is JsonObject json) {
+          copy[item.Key] = json.ToDictionary();
         }
 
       }
@@ -700,6 +700,17 @@ namespace Empiria.Json {
       return copy;
     }
 
+
+    public override bool Equals(object obj) {
+      return obj is JsonObject json &&
+             json.GetHashCode() == this.GetHashCode();
+    }
+
+
+    public override int GetHashCode() {
+      return this.ToString()
+                 .GetHashCode();
+    }
 
     #endregion Public methods
 
