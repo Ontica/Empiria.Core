@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Empiria {
 
@@ -37,6 +38,39 @@ namespace Empiria {
 
       return temp;
     }
+
+    static public string Combine(params object[] items) {
+      var temp = new StringBuilder("||");
+
+      foreach (var item in items) {
+        if (item is null) {
+          temp.Append("null");
+        } else if (item is string) {
+          temp.Append(item);
+        } else if (item is int || item is decimal || item is float || item is double) {
+          temp.Append(item.ToString());
+        } else if (item is DateTime) {
+          temp.Append(((DateTime) item).ToString("yyy-MM-dd HH:mm:ss"));
+        } else if (item is Enum) {
+          temp.Append((Enum) item).ToString();
+        } else if (item is bool) {
+          temp.Append((bool) item ? "true" : "false");
+        } else {
+          temp.Append(item.GetHashCode());
+        }
+        temp.Append("|");
+      }
+
+      temp.Append("|");
+
+      return temp.ToString();
+    }
+
+
+    static public int CreateHashCode(params object[] items) {
+      return Combine(items).GetHashCode();
+    }
+
 
     static public string DateTimeString(DateTime date) {
       if (date.Date == ExecutionServer.DateMinValue) {
@@ -143,6 +177,7 @@ namespace Empiria {
         return timespan.TotalMinutes.ToString("N2") + " seg";
       }
     }
+
 
     static public string TimeSpanString(TimeSpan timespan) {
       if (timespan == TimeSpan.Zero) {
