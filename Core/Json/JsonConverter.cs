@@ -13,6 +13,7 @@ using System.Dynamic;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 /// ToDo List:    OOJJOO
 /// Object slicing (include/exclude a list of properties)
@@ -194,6 +195,30 @@ namespace Empiria.Json {
 
     static private string BuildDictionaryKey(string formatType) {
       return formatType.ToUpperInvariant();
+    }
+
+    public static JsonSerializerSettings JsonSerializerDefaultSettings() {
+      var settings = new JsonSerializerSettings();
+
+      settings.Formatting = Formatting.Indented;
+
+      settings.NullValueHandling = NullValueHandling.Ignore;
+
+      settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+      // Empiria Json converters
+
+      settings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss";
+
+      settings.Converters.Add(new DateTimeConverter());
+      settings.Converters.Add(new ValueObjectConverter());
+      settings.Converters.Add(new DataViewConverter());
+      settings.Converters.Add(new DataRowConverter());
+
+      // Third party converters
+      settings.Converters.Add(new StringEnumConverter());
+
+      return settings;
     }
 
     #endregion Private methods
