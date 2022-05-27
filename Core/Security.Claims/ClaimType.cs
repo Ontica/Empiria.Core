@@ -33,34 +33,37 @@ namespace Empiria.Security.Claims {
     }
 
 
-    static public ClaimType ApplicationRoles => ClaimType.Parse("ObjectType.Claim.AppRoles");
+    // static public ClaimType ApplicationRoles => ClaimType.Parse("ObjectType.Claim.AppRoles");
 
 
-    static public ClaimType ApplicationFeatures => ClaimType.Parse("ObjectType.Claim.AppFeatures");
+    // static public ClaimType ApplicationFeatures => ClaimType.Parse("ObjectType.Claim.AppFeatures");
 
 
-    static public ClaimType RoleFeatures => ClaimType.Parse("ObjectType.Claim.RoleFeatures");
+    static public ClaimType DataEntityUsers => ClaimType.Parse("ObjectType.Claim.DataEntityUsers");
+
+
+    // static public ClaimType RoleFeatures => ClaimType.Parse("ObjectType.Claim.RoleFeatures");
 
 
     static public ClaimType RoleUsers => ClaimType.Parse("ObjectType.Claim.RoleUsers");
 
 
-    static public ClaimType UserFeatures => ClaimType.Parse("ObjectType.Claim.UserFeatures");
+    // static public ClaimType UserFeatures => ClaimType.Parse("ObjectType.Claim.UserFeatures");
 
 
     static public ClaimType UserRole => ClaimType.Parse("ObjectType.Claim.UserRole");
 
 
-    static public ClaimType ElectronicSign => ClaimType.Parse("ObjectType.Claim.ElectronicSign");
+    // static public ClaimType ElectronicSign => ClaimType.Parse("ObjectType.Claim.ElectronicSign");
 
 
-    static public ClaimType Token => ClaimType.Parse("ObjectType.Claim.Token");
+    // static public ClaimType Token => ClaimType.Parse("ObjectType.Claim.Token");
 
 
-    static public ClaimType UserID => ClaimType.Parse("ObjectType.Claim.UserID");
+    // static public ClaimType UserID => ClaimType.Parse("ObjectType.Claim.UserID");
 
 
-    static public ClaimType UserAppAccess => ClaimType.Parse("ObjectType.Claim.UserAppAccess");
+    static public ClaimType UserClientApplication => ClaimType.Parse("ObjectType.Claim.UserClientApplication");
 
 
     static public ClaimType WebApiController => ClaimType.Parse("ObjectType.Claim.WebApiController");
@@ -74,15 +77,15 @@ namespace Empiria.Security.Claims {
     static public ClaimType ElectronicSignPrivateKeyFilePath =>
                                     ClaimType.Parse("ObjectType.Claim.ElectronicSignPrivateKeyFilePath");
 
-    static public ClaimType ActivationToken =>
-                                    ClaimType.Parse("ObjectType.Claim.ActivationToken");
+    // static public ClaimType ActivationToken =>
+    //                                ClaimType.Parse("ObjectType.Claim.ActivationToken");
 
 
-    static public ClaimType ResetPasswordToken =>
-                              ClaimType.Parse("ObjectType.Claim.ResetPasswordToken");
+    //static public ClaimType ResetPasswordToken =>
+    //    ClaimType.Parse("ObjectType.Claim.ResetPasswordToken");
 
-    static public ClaimType UserPassword =>
-                                    ClaimType.Parse("ObjectType.Claim.UserPassword");
+    // static public ClaimType UserPassword =>
+    //                                ClaimType.Parse("ObjectType.Claim.UserPassword");
 
 
     #endregion Constructors and parsers

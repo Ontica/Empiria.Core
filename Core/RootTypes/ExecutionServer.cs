@@ -30,6 +30,8 @@ namespace Empiria {
     private DateTime dateMaxValue = DateTime.MaxValue;
     private DateTime dateMinValue = DateTime.MinValue;
 
+    private string systemName = string.Empty;
+
     private int serverId = -1;
     private string supportUrl = String.Empty;
     private bool isDevelopmentServer = false;
@@ -128,7 +130,7 @@ namespace Empiria {
       get {
         var principal = Thread.CurrentPrincipal;
 
-        if (principal != null && principal is EmpiriaPrincipal) {
+        if (principal is EmpiriaPrincipal) {
           return (EmpiriaPrincipal) principal;
         }
         throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
@@ -202,9 +204,14 @@ namespace Empiria {
       }
     }
 
+    static public string SystemName {
+      get {
+        return Instance.systemName;
+      }
+    }
     #endregion Other public properties
 
-    #region Static methods
+      #region Static methods
 
     static public string GetFullFileNameFromCurrentExecutionPath(string fileName) {
       string baseExecutionPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
@@ -236,10 +243,10 @@ namespace Empiria {
 
         string methodName = preloadData[2];
 
-        Assertion.AssertObject(type,
+        Assertion.Require(type,
           $"Unrecognizable preloading type for assembly {preloadData[0]} and type name {preloadData[1]}.");
 
-        Assertion.AssertObject(methodName,
+        Assertion.Require(methodName,
           $"Unrecognizable preloading method name {preloadData[2]}.");
 
         MethodInvoker.Execute(type, methodName);
@@ -258,6 +265,8 @@ namespace Empiria {
         isSpecialLicense = ConfigurationData.Get(type, "License.IsSpecial", false);
         licenseNumber = ConfigurationData.Get<string>(type, "License.Number");
         licenseSerialNumber = ConfigurationData.Get<string>(type, "License.SerialNumber");
+
+        systemName = ConfigurationData.Get<string>(type, "System.Name");
 
         dateMaxValue = ConfigurationData.Get(type, "DateTime.MaxValue", DateTime.Parse("2078-12-31"));
         dateMinValue = ConfigurationData.Get(type, "DateTime.MinValue", DateTime.Parse("1900-01-01"));

@@ -91,6 +91,11 @@ namespace Empiria.Security {
     }
 
 
+    internal static FixedList<int> GetUsersWithDataAccessTo<T>(Type type, T entity) where T : IIdentifiable {
+      return new FixedList<int>();
+    }
+
+
     static internal EmpiriaUser TryGetUserWithUserName(string userName) {
       var dataRow = DataReader.GetDataRow(DataOperation.Parse("getContactWithUserName", userName));
 
@@ -109,7 +114,6 @@ namespace Empiria.Security {
 
       return DataWriter.Execute<long>(op);
     }
-
 
   } // class SecurityData
 

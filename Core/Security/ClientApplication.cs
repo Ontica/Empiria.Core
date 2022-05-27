@@ -10,7 +10,6 @@
 using System;
 using System.Data;
 
-using Empiria.Contacts;
 using Empiria.DataTypes;
 using Empiria.Json;
 using Empiria.StateEnums;
@@ -36,14 +35,14 @@ namespace Empiria.Security {
 
     static public ClientApplication TryParseActive(string clientAppKey) {
 
-      Assertion.AssertObject(clientAppKey, "clientAppKey");
+      Assertion.Require(clientAppKey, "clientAppKey");
 
       return BaseObject.TryParse<ClientApplication>("ObjectKey = '" + clientAppKey + "'");
     }
 
 
     static public ClientApplication ParseActive(string clientAppKey) {
-      Assertion.AssertObject(clientAppKey, "clientAppKey");
+      Assertion.Require(clientAppKey, "clientAppKey");
 
       ClientApplication application =
                 BaseObject.TryParse<ClientApplication>("ObjectKey = '" + clientAppKey + "'");
@@ -93,20 +92,16 @@ namespace Empiria.Security {
       this.Status = (EntityStatus) Convert.ToChar((string) row["ObjectStatus"]);
 
       var json = JsonObject.Parse((string) row["ObjectExtData"]);
-      this.AssignedTo = Contact.Parse(json.Get<Int32>("AssignedToId", -1));
 
-      this.WebApiAddresses = json.GetList<NameValuePair>("WebApiAddresses", false)
+      this.ClaimsToken = json.Get<string>("claimsToken");
+
+      this.WebApiAddresses = json.GetList<NameValuePair>("webApiAddresses", false)
                                  .ToFixedList();
     }
 
     #endregion Constructors and parsers
 
     #region Properties
-
-    public Contact AssignedTo {
-      get;
-      private set;
-    }
 
 
     [DataField("ObjectKey")]
@@ -136,10 +131,9 @@ namespace Empiria.Security {
     }
 
 
-    string IClaimsSubject.ClaimsToken {
-      get {
-        return this.Key;
-      }
+    public string ClaimsToken {
+      get;
+      private set;
     }
 
     #endregion Properties
