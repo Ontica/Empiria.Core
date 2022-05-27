@@ -42,7 +42,7 @@ namespace Empiria.Data {
       } else if (firstFilter.Length == 0 && secondFilter.Length == 0) {
         filter = string.Empty;
       } else {
-        Assertion.AssertNoReachThisCode();
+        Assertion.EnsureNoReachThisCode();
       }
 
       for (int i = 0; i < otherFilters.Length; i++) {
@@ -124,7 +124,7 @@ namespace Empiria.Data {
       } else if (firstFilter.Length == 0 && secondFilter.Length == 0) {
         filter = string.Empty;
       } else {
-        Assertion.AssertNoReachThisCode();
+        Assertion.EnsureNoReachThisCode();
       }
 
       for (int i = 0; i < otherFilters.Length; i++) {
@@ -184,7 +184,7 @@ namespace Empiria.Data {
                                         filterExpression, sortExpression);
 
       } else {
-        Assertion.AssertNoReachThisCode();
+        Assertion.EnsureNoReachThisCode();
       }
 
       return DataReader.GetDataTable(operation);
@@ -225,7 +225,7 @@ namespace Empiria.Data {
         operation = DataOperation.Parse("@qryEntitiesJoinedFilteredAndSorted", sourceName, joinedSourceName,
                                         sourceJoinField, joinedTargetField, filterExpression, sortExpression);
       } else {
-        Assertion.AssertNoReachThisCode();
+        Assertion.EnsureNoReachThisCode();
       }
       return DataReader.GetDataTable(operation);
     }
@@ -288,7 +288,7 @@ namespace Empiria.Data {
       } else if (!String.IsNullOrWhiteSpace(filter) && !String.IsNullOrWhiteSpace(sort)) {
         return " WHERE " + filter + " ORDER BY " + sort;
       } else {
-        throw Assertion.AssertNoReachThisCode();
+        throw Assertion.EnsureNoReachThisCode();
       }
     }
 

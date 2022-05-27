@@ -34,7 +34,7 @@ namespace Empiria.Security.Claims {
     }
 
     static public ClaimList ParseFor(IClaimsSubject subject) {
-      Assertion.AssertObject(subject, "subject");
+      Assertion.Require(subject, "subject");
 
       return new ClaimList(subject);
     }
@@ -91,8 +91,8 @@ namespace Empiria.Security.Claims {
 
     public Claim AppendSecure(ClaimType claimType, string claimValue,
                               EntityStatus status = EntityStatus.Active) {
-      Assertion.AssertObject(claimType, "claimType");
-      Assertion.AssertObject(claimValue, "claimValue");
+      Assertion.Require(claimType, "claimType");
+      Assertion.Require(claimValue, "claimValue");
 
       string cacheKey = BuildUniqueKey(claimType, this.Subject);
 
@@ -103,7 +103,7 @@ namespace Empiria.Security.Claims {
 
 
     public bool Contains(ClaimType claimType) {
-      Assertion.AssertObject(claimType, "claimType");
+      Assertion.Require(claimType, "claimType");
 
       string cacheKey = BuildUniqueKey(claimType, this.Subject);
 
@@ -112,8 +112,8 @@ namespace Empiria.Security.Claims {
 
 
     public bool Contains(ClaimType claimType, string claimValue) {
-      Assertion.AssertObject(claimType, "claimType");
-      Assertion.AssertObject(claimValue, "claimValue");
+      Assertion.Require(claimType, "claimType");
+      Assertion.Require(claimValue, "claimValue");
 
       string cacheKey = BuildUniqueKey(claimType, this.Subject);
 
@@ -123,8 +123,8 @@ namespace Empiria.Security.Claims {
 
 
     public bool ContainsSecure(ClaimType claimType, string claimValue) {
-      Assertion.AssertObject(claimType, "claimType");
-      Assertion.AssertObject(claimValue, "claimValue");
+      Assertion.Require(claimType, "claimType");
+      Assertion.Require(claimValue, "claimValue");
 
       string cacheKey = BuildUniqueKey(claimType, this.Subject);
 
@@ -135,7 +135,7 @@ namespace Empiria.Security.Claims {
 
 
     public Claim GetItem(ClaimType claimType) {
-      Assertion.AssertObject(claimType, "claimType");
+      Assertion.Require(claimType, "claimType");
 
       string cacheKey = BuildUniqueKey(claimType, this.Subject);
 
@@ -154,8 +154,8 @@ namespace Empiria.Security.Claims {
 
 
     internal Claim GetItem(ClaimType claimType, string claimValue) {
-      Assertion.AssertObject(claimType, "claimType");
-      Assertion.AssertObject(claimValue, "claimValue");
+      Assertion.Require(claimType, "claimType");
+      Assertion.Require(claimValue, "claimValue");
 
       string cacheKey = BuildUniqueKey(claimType, this.Subject);
 
@@ -176,8 +176,8 @@ namespace Empiria.Security.Claims {
 
 
     internal void RemoveSecure(ClaimType claimType, string claimValue) {
-      Assertion.AssertObject(claimType, "claimType");
-      Assertion.AssertObject(claimValue, "claimValue");
+      Assertion.Require(claimType, "claimType");
+      Assertion.Require(claimValue, "claimValue");
 
       string cacheKey = BuildUniqueKey(claimType, this.Subject);
 
@@ -193,8 +193,8 @@ namespace Empiria.Security.Claims {
 
 
     public void ReplaceSecure(ClaimType claimType, string newClaimValue) {
-      Assertion.AssertObject(claimType, "claimType");
-      Assertion.AssertObject(newClaimValue, "newClaimValue");
+      Assertion.Require(claimType, "claimType");
+      Assertion.Require(newClaimValue, "newClaimValue");
 
       Claim claim = this.GetItem(claimType);
 
@@ -232,8 +232,8 @@ namespace Empiria.Security.Claims {
 
     private Claim AppendUtil(ClaimType claimType,
                              string claimValue, EntityStatus status) {
-      Assertion.AssertObject(claimType, "claimType");
-      Assertion.AssertObject(claimValue, "claimValue");
+      Assertion.Require(claimType, "claimType");
+      Assertion.Require(claimValue, "claimValue");
 
       string cacheKey = BuildUniqueKey(claimType, this.Subject);
 

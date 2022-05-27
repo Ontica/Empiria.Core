@@ -61,7 +61,7 @@ namespace Empiria.ORM {
       } else if (memberInfo is FieldInfo) {
         throw new NotImplementedException();
       } else {
-        Assertion.AssertNoReachThisCode();
+        Assertion.EnsureNoReachThisCode();
       }
       return dataMapping;
     }

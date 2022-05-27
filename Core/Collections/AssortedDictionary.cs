@@ -42,8 +42,8 @@ namespace Empiria.Collections {
     #region Public methods
 
     public void Add(string key, object item) {
-      Assertion.AssertObject(key, "key");
-      Assertion.AssertObject(item, "item");
+      Assertion.Require(key, "key");
+      Assertion.Require(item, "item");
 
       if (!this.ContainsKey(key)) {
         items.Add(key, item);
@@ -72,8 +72,8 @@ namespace Empiria.Collections {
     }
 
     public void SetItem(string key, object item) {
-      Assertion.AssertObject(key, "key");
-      Assertion.AssertObject(item, "item");
+      Assertion.Require(key, "key");
+      Assertion.Require(item, "item");
 
       if (!this.ContainsKey(key)) {
         items.Add(key, item);

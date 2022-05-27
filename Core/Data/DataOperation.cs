@@ -42,13 +42,13 @@ namespace Empiria.Data {
     }
 
     static public DataOperation Parse(string sourceName) {
-      Assertion.AssertObject(sourceName, "sourceName");
+      Assertion.Require(sourceName, "sourceName");
 
       return new DataOperation(DataSource.Parse(sourceName), sourceName);
     }
 
     static public DataOperation Parse(string sourceName, params object[] parameters) {
-      Assertion.AssertObject(sourceName, "sourceName");
+      Assertion.Require(sourceName, "sourceName");
 
       if (parameters != null && parameters.Length == 1 && parameters[0] is Array) {
         return new DataOperation(DataSource.Parse(sourceName), sourceName, (object[]) parameters[0]);
@@ -59,7 +59,7 @@ namespace Empiria.Data {
 
     static internal DataOperation Parse(DataSource dataSource, string sourceName,
                                         params object[] parameters) {
-      Assertion.AssertObject(dataSource, "dataSource");
+      Assertion.Require(dataSource, "dataSource");
 
       return new DataOperation(dataSource, sourceName, parameters);
     }

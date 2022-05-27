@@ -60,7 +60,7 @@ namespace Empiria.ORM {
         dataMapping = new DataFieldMapping((FieldInfo) declaredMemberInfo);
 
       } else {
-        throw Assertion.AssertNoReachThisCode();
+        throw Assertion.EnsureNoReachThisCode();
 
       }
 
@@ -193,29 +193,29 @@ namespace Empiria.ORM {
       this.DataFieldType = this.DataColumn.DataType;
 
       if (this.MapToLazyParseWithIdInstance) {
-        Assertion.Assert(this.DataFieldType == typeof(int),
+        Assertion.Require(this.DataFieldType == typeof(int),
                          "LazyObjects can only be parsed from integer type data columns.");
 
       } else if (this.MapToJsonItem) {
-        Assertion.Assert(this.DataFieldType == typeof(string),
+        Assertion.Require(this.DataFieldType == typeof(string),
                          "Json items can only be parsed from string type data columns.");
 
       } else if (this.MapToEnumeration) {
-        Assertion.Assert(this.DataFieldType == typeof(string) || this.DataFieldType == typeof(char),
+        Assertion.Require(this.DataFieldType == typeof(string) || this.DataFieldType == typeof(char),
                          "Enumeration items can only be parsed from char(1) or string type data columns.");
 
       } else if (this.MapToChar) {
-        Assertion.Assert(this.DataFieldType == typeof(string) || this.DataFieldType == typeof(char),
+        Assertion.Require(this.DataFieldType == typeof(string) || this.DataFieldType == typeof(char),
                          "Char value items can only be parsed from char(1) or string type data columns.");
 
       }
 
       if (this.MapToParseWithIdObject && !this.MapToParseWithStringObject) {
-        Assertion.Assert(this.DataFieldType == typeof(int) || this.DataFieldType == typeof(long),
+        Assertion.Require(this.DataFieldType == typeof(int) || this.DataFieldType == typeof(long),
                          this.MemberInfo.Name + " can only be parsed from an integer type data column.");
 
       } else if (!this.MapToParseWithIdObject && this.MapToParseWithStringObject) {
-        Assertion.Assert(this.DataFieldType == typeof(string),
+        Assertion.Require(this.DataFieldType == typeof(string),
                          this.MemberInfo.Name + " can only be parsed from string type data columns.");
 
       }
@@ -266,7 +266,7 @@ namespace Empiria.ORM {
       get {
         if (_jsonGetItemMethod == null) {
           var method = typeof(JsonObject).GetMethod("Get", new Type[] { typeof(string) });
-          Assertion.AssertObject(method, "Expected generic 'Get<T>(string)' method is not " +
+          Assertion.Require(method, "Expected generic 'Get<T>(string)' method is not " +
                                          "defined in type JsonObject.");
           _jsonGetItemMethod = method.MakeGenericMethod(this.MemberType);
 
@@ -284,7 +284,7 @@ namespace Empiria.ORM {
                                                 .Where(x => x.IsGenericMethod && x.Name == "Get" &&
                                                             x.GetParameters().Length == 2)
                                                 .Single();
-          Assertion.AssertObject(method, "Expected generic 'Get<T>(string, T)' method is not " +
+          Assertion.Require(method, "Expected generic 'Get<T>(string, T)' method is not " +
                                          "defined in type JsonObject.");
           _jsonGetItemMethodWDefault = method.MakeGenericMethod(this.MemberType);
         }
@@ -349,7 +349,7 @@ namespace Empiria.ORM {
         string propertyName = defaultValueCode.Substring(defaultValueCode.LastIndexOf('.') + 1);
 
         Type type = MetaModelType.TryGetSystemType(typeName);
-        Assertion.AssertObject(type, "type");
+        Assertion.Require(type, "type");
 
         PropertyInfo propertyInfo = MethodInvoker.GetStaticProperty(type, propertyName);
 

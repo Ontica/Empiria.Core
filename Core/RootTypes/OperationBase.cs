@@ -21,7 +21,7 @@ namespace Empiria {
     #region Constructors and parsers
 
     protected OperationBase(string name) {
-      Assertion.AssertObject(name, "name");
+      Assertion.Require(name, "name");
 
       this.Name = name;
       this.Parameters = new object[0];
@@ -29,8 +29,8 @@ namespace Empiria {
 
 
     protected OperationBase(string name, object[] parameters) {
-      Assertion.AssertObject(name, "name");
-      Assertion.AssertObject(parameters, "parameters");
+      Assertion.Require(name, "name");
+      Assertion.Require(parameters, "parameters");
 
       this.Name = name;
       this.Parameters = parameters;
@@ -38,7 +38,7 @@ namespace Empiria {
 
 
     static protected void ExtractFromMessage(string message, out string name, out object[] parameters) {
-      Assertion.AssertObject(message, "message");
+      Assertion.Require(message, "message");
 
       name = message.Split('§')[0];
       string parametersString = message.Split('§')[1];
@@ -57,7 +57,7 @@ namespace Empiria {
 
 
     static protected void ExtractFromMessageProtected(string message, out string name, out object[] parameters) {
-      Assertion.AssertObject(message, "message");
+      Assertion.Require(message, "message");
 
       message = FormerCryptographer.Decrypt(message);
       ExtractFromMessage(message, out name, out parameters);

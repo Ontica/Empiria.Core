@@ -31,7 +31,7 @@ namespace Empiria.Security.Authorization {
 
 
     static internal FixedList<Authorization> GetPendingAuthorizations(Predicate<Authorization> match) {
-      Assertion.AssertObject(match, "match");
+      Assertion.Require(match, "match");
 
       return GetPendingAuthorizations().FindAll(match);
     }

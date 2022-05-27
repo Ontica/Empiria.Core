@@ -42,7 +42,7 @@ namespace Empiria.ORM {
     }
 
     static public DataMappingRules Parse(Type type) {
-      Assertion.AssertObject(type, "type");
+      Assertion.Require(type, "type");
 
       return new DataMappingRules(type);
     }

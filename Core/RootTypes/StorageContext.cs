@@ -114,8 +114,8 @@ namespace Empiria {
 
 
     internal static void EnsureIsStorageContextDefined() {
-      Assertion.Assert(StorageContext.IsStorageContextDefined,
-                       new Exception("Programming Error: An opened StorageContext is required."));
+      Assertion.Ensure(IsStorageContextDefined,
+                      "An opened StorageContext is required.");
     }
 
 

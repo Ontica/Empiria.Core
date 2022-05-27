@@ -41,7 +41,7 @@ namespace Empiria {
       bool registered = IsRegistered(type, value);
 
       if (onlyIfRegistered && !registered) {
-        Assertion.AssertFail("Unrecognized value '{0}' for value type '{1}'.", value, type.Name);
+        Assertion.RequireFail($"Unrecognized value '{value}' for value type '{type.Name}'.");
       }
       return (IValueObject) ObjectFactory.CreateObject(type, new Type[] { typeof(string), typeof(bool) },
                                                              new object[] { value, registered });

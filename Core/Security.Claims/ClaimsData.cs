@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Data;
@@ -35,7 +34,7 @@ namespace Empiria.Security.Claims {
 
 
     static internal FixedList<Claim> GetSecurityClaims(IClaimsSubject subject) {
-      Assertion.AssertObject(subject, "subject");
+      Assertion.Require(subject, "subject");
 
       var op = DataOperation.Parse("qryResourceSecurityClaims", subject.ClaimsToken);
 

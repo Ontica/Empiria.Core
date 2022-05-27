@@ -31,7 +31,7 @@ namespace Empiria.Security {
 
 
     static public void AssertValidPrivateKeyPassword(SecureString password) {
-      Assertion.AssertObject(password, "password");
+      Assertion.Require(password, "password");
 
       var privateKeyFilePath =
                     ClaimsService.GetClaimValue<string>(EmpiriaUser.Current,
@@ -42,7 +42,7 @@ namespace Empiria.Security {
 
 
     static public SecureString ConvertToSecureString(string source) {
-      Assertion.AssertObject(source, "source");
+      Assertion.Require(source, "source");
 
       var securedString = new SecureString();
 
@@ -55,7 +55,7 @@ namespace Empiria.Security {
 
 
     static public string CreateHashCode(string text, string salt = "") {
-      Assertion.AssertObject(text, "text");
+      Assertion.Require(text, "text");
       salt = salt ?? String.Empty;
 
       StartEngine();
@@ -70,8 +70,8 @@ namespace Empiria.Security {
 
 
     static public string CreateHashCode(byte[] bytesArray, string salt = "") {
-      Assertion.AssertObject(bytesArray, "bytesArray");
-      Assertion.Assert(bytesArray.Length != 0, "bytesArray can't be empty.");
+      Assertion.Require(bytesArray, "bytesArray");
+      Assertion.Require(bytesArray.Length != 0, "bytesArray can't be empty.");
 
       return CreateHashCode(Encoding.UTF8.GetString(bytesArray, 0, bytesArray.Length), salt);
     }
@@ -81,7 +81,7 @@ namespace Empiria.Security {
     /// <param name="cipherText">Text string to be decrypted.</param>
     /// <param name="entropy">The entropy or salt string used to decrypt the text string.</param>
     static public string Decrypt(string cipherText, string entropy = "") {
-      Assertion.AssertObject(cipherText, "cipherText");
+      Assertion.Require(cipherText, "cipherText");
       entropy = entropy ?? "";
 
       return DecryptString(cipherText, entropy + ExecutionServer.LicenseNumber);
@@ -92,7 +92,7 @@ namespace Empiria.Security {
     /// <param name="plainText">Text string to be encrypted.</param>
     /// <param name="salt">Optional string to use as encryption salt.</param>
     static public string Encrypt(string plainText, string salt = "") {
-      Assertion.AssertObject(plainText, "plainText");
+      Assertion.Require(plainText, "plainText");
 
       throw new NotImplementedException();
 
@@ -109,13 +109,13 @@ namespace Empiria.Security {
     /// <param name="entropy">The entropy string used to encrypt the text string.</param>
     static public string Encrypt(EncryptionMode protectionMode,
                                  string plainText, string entropy = "") {
-      Assertion.AssertObject(plainText, "plainText");
+      Assertion.Require(plainText, "plainText");
       entropy = entropy ?? "";
 
       if (entropy.Length != 0 &&
          (protectionMode == EncryptionMode.Standard || protectionMode == EncryptionMode.HashCode)) {
-        Assertion.AssertFail($"Entropy parameter was provided but it not works with encryption mode " +
-                             $"{protectionMode.ToString()}.");
+        Assertion.RequireFail($"Entropy parameter was provided but it not works " +
+                              $"with encryption mode {protectionMode}.");
       }
 
       string s = String.Empty;
@@ -130,12 +130,12 @@ namespace Empiria.Security {
           return EncryptString(s, ExecutionServer.LicenseNumber);
 
         case EncryptionMode.EntropyKey:
-          Assertion.AssertObject(entropy, "entropy");
+          Assertion.Require(entropy, "entropy");
 
           return EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
 
         case EncryptionMode.EntropyHashCode:
-          Assertion.AssertObject(entropy, "entropy");
+          Assertion.Require(entropy, "entropy");
 
           s = EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
           s = CreateHashCode(s, entropy);
@@ -148,7 +148,7 @@ namespace Empiria.Security {
     }
 
     static public string GetSHA256(string text) {
-      Assertion.AssertObject(text, "text");
+      Assertion.Require(text, "text");
 
 
       byte[] data = Encoding.UTF8.GetBytes(text);
@@ -159,8 +159,8 @@ namespace Empiria.Security {
     }
 
     static public string SignText(string text, SecureString password) {
-      Assertion.AssertObject(text, "text");
-      Assertion.AssertObject(password, "password");
+      Assertion.Require(text, "text");
+      Assertion.Require(password, "password");
 
       var privateKeyFilePath =
                     ClaimsService.GetClaimValue<string>(EmpiriaUser.Current,
@@ -181,7 +181,7 @@ namespace Empiria.Security {
 
 
     static public string SignTextWithSystemCredentials(string text) {
-      Assertion.AssertObject(text, "text");
+      Assertion.Require(text, "text");
 
       RSACryptoServiceProvider rsa = RSAProvider.GetSystemProvider();
 

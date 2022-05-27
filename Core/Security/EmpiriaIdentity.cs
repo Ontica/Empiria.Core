@@ -57,10 +57,10 @@ namespace Empiria.Security {
     #region Private methods
 
     private void EnsureValid() {
-      Assertion.Assert(this.User != null,
+      Assertion.Require(this.User != null,
                        SecurityException.GetMessage(SecurityException.Msg.WrongAuthentication));
 
-      Assertion.Assert(this.IsAuthenticated,
+      Assertion.Require(this.IsAuthenticated,
                        SecurityException.GetMessage(SecurityException.Msg.WrongAuthentication));
     }
 
@@ -88,7 +88,7 @@ namespace Empiria.Security {
           return;
 
         default:
-          throw Assertion.AssertNoReachThisCode();
+          throw Assertion.EnsureNoReachThisCode();
       }
     }
 

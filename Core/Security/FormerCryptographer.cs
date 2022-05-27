@@ -33,7 +33,7 @@ namespace Empiria.Security {
 
 
     static public string CreateHashCode(string text, string entropy) {
-      Assertion.AssertObject(text, "text");
+      Assertion.Require(text, "text");
       entropy = entropy ?? String.Empty;
 
       StartEngine();
@@ -49,7 +49,7 @@ namespace Empiria.Security {
 
 
     static public string CreateHashCode(byte[] bytesArray, string entropy) {
-      Assertion.AssertObject(bytesArray, "bytesArray");
+      Assertion.Require(bytesArray, "bytesArray");
 
       StartEngine();
 
@@ -67,7 +67,7 @@ namespace Empiria.Security {
     /// <summary>Takes a ciphertext string and decrypts it.</summary>
     /// <param name="cipherText">Text string to be decrypted.</param>
     static public string Decrypt(string cipherText) {
-      Assertion.AssertObject(cipherText, "cipherText");
+      Assertion.Require(cipherText, "cipherText");
 
       return DecryptString(cipherText, ExecutionServer.LicenseNumber);
     }
@@ -77,8 +77,8 @@ namespace Empiria.Security {
     /// <param name="cipherText">Text string to be decrypted.</param>
     /// <param name="entropy">The public key used to decrypt the text string.</param>
     static public string Decrypt(string cipherText, string entropy) {
-      Assertion.AssertObject(cipherText, "cipherText");
-      Assertion.AssertObject(entropy, "entropy");
+      Assertion.Require(cipherText, "cipherText");
+      Assertion.Require(entropy, "entropy");
 
       return DecryptString(cipherText, entropy + ExecutionServer.LicenseNumber);
     }
@@ -87,7 +87,7 @@ namespace Empiria.Security {
     /// <summary>Takes a plaintext string and encrypts it.</summary>
     /// <param name="plainText">Text string to be encrypted.</param>
     static public string Encrypt(EncryptionMode protectionMode, string plainText) {
-      Assertion.AssertObject(plainText, "plainText");
+      Assertion.Require(plainText, "plainText");
 
       if (protectionMode == EncryptionMode.Standard || protectionMode == EncryptionMode.HashCode) {
         return Encrypt(protectionMode, plainText, String.Empty);
@@ -101,7 +101,7 @@ namespace Empiria.Security {
     /// <param name="plainText">Text string to be encrypted.</param>
     /// <param name="entropy">The entropy string used to encrypt the text string.</param>
     static public string Encrypt(EncryptionMode protectionMode, string plainText, string entropy) {
-      Assertion.AssertObject(plainText, "plainText");
+      Assertion.Require(plainText, "plainText");
 
       string s = String.Empty;
 
@@ -116,12 +116,12 @@ namespace Empiria.Security {
           return EncryptString(s, ExecutionServer.LicenseNumber);
 
         case EncryptionMode.EntropyKey:
-          Assertion.AssertObject(entropy, "entropy");
+          Assertion.Require(entropy, "entropy");
 
           return EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
 
         case EncryptionMode.EntropyHashCode:
-          Assertion.AssertObject(entropy, "entropy");
+          Assertion.Require(entropy, "entropy");
 
           s = EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
           s = CreateHashCode(s, entropy);

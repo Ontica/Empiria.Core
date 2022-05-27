@@ -97,8 +97,8 @@ namespace Empiria.Collections {
     }
 
     public void Insert(string key, T item) {
-      Assertion.AssertObject(key, "key");
-      Assertion.AssertObject(item, "item");
+      Assertion.Require(key, "key");
+      Assertion.Require(item, "item");
 
       if (!this.ContainsId(item.Id)) {
         lock (_locker) {

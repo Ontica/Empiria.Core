@@ -37,10 +37,10 @@ namespace Empiria.Services.UserManagement {
     public void CreateUserPassword(string apiKey,
                                    string userName, string userEmail,
                                    string newPassword) {
-      Assertion.AssertObject(apiKey, "apiKey");
-      Assertion.AssertObject(userName, "userName");
-      Assertion.AssertObject(userEmail, "userEmail");
-      Assertion.AssertObject(newPassword, "newPassword");
+      Assertion.Require(apiKey, "apiKey");
+      Assertion.Require(userName, "userName");
+      Assertion.Require(userEmail, "userEmail");
+      Assertion.Require(newPassword, "newPassword");
 
       ChangePassword(apiKey, userName, userEmail, newPassword);
 
@@ -53,8 +53,8 @@ namespace Empiria.Services.UserManagement {
 
 
     public void ChangeUserPassword(string currentPassword, string newPassword) {
-      Assertion.AssertObject(currentPassword, "currentPassword");
-      Assertion.AssertObject(newPassword, "newPassword");
+      Assertion.Require(currentPassword, "currentPassword");
+      Assertion.Require(newPassword, "newPassword");
 
       var apiKey = ConfigurationData.GetString("Empiria.Security", "ChangePasswordKey");
 

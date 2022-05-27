@@ -103,7 +103,7 @@ namespace Empiria.DataTypes.Time {
           return 0;
 
         default:
-          throw Assertion.AssertNoReachThisCode("Unrecognized");
+          throw Assertion.EnsureNoReachThisCode("Unrecognized");
       }
     }
 
@@ -155,7 +155,7 @@ namespace Empiria.DataTypes.Time {
         return DurationType.NA;
 
       } else {
-        throw Assertion.AssertNoReachThisCode($"Unrecognized duration type '{durationType}'.");
+        throw Assertion.EnsureNoReachThisCode($"Unrecognized duration type '{durationType}'.");
 
       }
     }
@@ -184,7 +184,7 @@ namespace Empiria.DataTypes.Time {
           return value + " not-available";
 
         default:
-          throw Assertion.AssertNoReachThisCode("Unrecognized");
+          throw Assertion.EnsureNoReachThisCode("Unrecognized");
       }
     }
 

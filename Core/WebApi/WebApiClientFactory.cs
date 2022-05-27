@@ -30,7 +30,7 @@ namespace Empiria.WebApi {
 
 
     static public IWebApiClient CreateWebApiClient(string baseAddress) {
-      Assertion.AssertObject(baseAddress, "baseAddress");
+      Assertion.Require(baseAddress, "baseAddress");
 
       Type type = GetWebApiClientType();
 

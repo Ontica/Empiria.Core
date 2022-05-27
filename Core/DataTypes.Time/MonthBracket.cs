@@ -18,9 +18,9 @@ namespace Empiria.DataTypes.Time {
     #region Constructors and parsers
 
     internal MonthBracket(int startMonth, int endMonth) {
-      Assertion.Assert(1 <= startMonth && startMonth <= 12,
+      Assertion.Require(1 <= startMonth && startMonth <= 12,
                        $"startMonth value ({startMonth}) out of bounds.");
-      Assertion.Assert(1 <= endMonth && endMonth <= 12,
+      Assertion.Require(1 <= endMonth && endMonth <= 12,
                        $"endMonth value ({endMonth}) out of bounds.");
 
       this.StartMonth = startMonth;

@@ -17,7 +17,7 @@ namespace Empiria.Security {
     #region Services
 
     static public EmpiriaPrincipal Authenticate(string sessionToken) {
-      Assertion.AssertObject(sessionToken, "sessionToken");
+      Assertion.Require(sessionToken, "sessionToken");
 
       EmpiriaPrincipal principal = EmpiriaPrincipal.TryParseWithToken(sessionToken);
       if (principal != null) {
@@ -36,15 +36,15 @@ namespace Empiria.Security {
     static public EmpiriaPrincipal Authenticate(string clientAppKey, string username,
                                                 string password, string entropy,
                                                 Json.JsonObject contextData = null) {
-      Assertion.AssertObject(clientAppKey, "clientAppKey");
-      Assertion.AssertObject(username, "username");
-      Assertion.AssertObject(password, "password");
+      Assertion.Require(clientAppKey, "clientAppKey");
+      Assertion.Require(username, "username");
+      Assertion.Require(password, "password");
 
       var clientApplication = ClientApplication.ParseActive(clientAppKey);
 
       EmpiriaUser user = EmpiriaUser.Authenticate(username, password, entropy);
 
-      Assertion.AssertObject(user, "user");
+      Assertion.Ensure(user, "user");
 
       var identity = new EmpiriaIdentity(user, AuthenticationMode.Basic);
 
@@ -54,13 +54,13 @@ namespace Empiria.Security {
 
     static public EmpiriaPrincipal AuthenticateAnonymous(string clientAppKey, AnonymousUser anonymousUser,
                                                          Json.JsonObject contextData = null) {
-      Assertion.AssertObject(clientAppKey, "clientAppKey");
+      Assertion.Require(clientAppKey, "clientAppKey");
 
       var clientApplication = ClientApplication.ParseActive(clientAppKey);
 
       EmpiriaUser user = EmpiriaUser.AuthenticateAnonymous(anonymousUser);
 
-      Assertion.AssertObject(user, "user");
+      Assertion.Ensure(user, "user");
 
       var identity = new EmpiriaIdentity(user, AuthenticationMode.Basic);
 

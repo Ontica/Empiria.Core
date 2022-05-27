@@ -41,7 +41,7 @@ namespace Empiria.Ontology {
         if (_partitionedType == null) {
           var attribute = (PowertypeAttribute) Attribute.GetCustomAttribute(this.GetType(),
                                                                             typeof(PowertypeAttribute));
-          Assertion.AssertObject(attribute, "attribute");
+          Assertion.Require(attribute, "attribute");
 
           _partitionedType = attribute.PartitionedType;
         }

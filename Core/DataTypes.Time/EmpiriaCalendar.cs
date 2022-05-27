@@ -19,7 +19,7 @@ namespace Empiria.DataTypes.Time {
     #region Constructors and parsers
 
     public EmpiriaCalendar(string calendarName, JsonObject json) {
-      Assertion.AssertObject(json, "json");
+      Assertion.Require(json, "json");
 
       this.Name = calendarName;
       this.LoadJsonData(json);
@@ -27,7 +27,7 @@ namespace Empiria.DataTypes.Time {
 
 
     static public EmpiriaCalendar Parse(string calendarName) {
-      Assertion.AssertObject(calendarName, "calendarName");
+      Assertion.Require(calendarName, "calendarName");
 
       var storedJson = StoredJson.Parse("System.Calendars");
 
@@ -38,7 +38,7 @@ namespace Empiria.DataTypes.Time {
 
 
     static public EmpiriaCalendar ParseOrDefault(string calendarName) {
-      Assertion.AssertObject(calendarName, "calendarName");
+      Assertion.Require(calendarName, "calendarName");
 
       if (Exists(calendarName)) {
         return Parse(calendarName);
@@ -49,7 +49,7 @@ namespace Empiria.DataTypes.Time {
 
 
     static public bool Exists(string calendarName) {
-      Assertion.AssertObject(calendarName, "calendarName");
+      Assertion.Require(calendarName, "calendarName");
 
       var storedJson = StoredJson.Parse("System.Calendars");
 
@@ -99,7 +99,7 @@ namespace Empiria.DataTypes.Time {
     #region Public methods
 
     public DateTime AddWorkingDays(DateTime date, int days) {
-      Assertion.Assert(days >= 0, "'days' parameter must be a non-negative number.");
+      Assertion.Require(days >= 0, "'days' parameter must be a non-negative number.");
 
       int workingDaysCounter = 0;
       DateTime datePointer = date.Date;
@@ -234,7 +234,7 @@ namespace Empiria.DataTypes.Time {
 
 
     public int NonWorkingDays(DateTime from, DateTime to) {
-      Assertion.Assert(from <= to, "'from' parameter must be earlier or equal than 'to' parameter.");
+      Assertion.Require(from <= to, "'from' parameter must be earlier or equal than 'to' parameter.");
 
       from = from.Date;
       to = to.Date;
@@ -260,7 +260,7 @@ namespace Empiria.DataTypes.Time {
 
 
     public int WorkingDays(DateTime from, DateTime to) {
-      Assertion.Assert(from <= to, "'from' parameter must be earlier or equal than 'to' parameter.");
+      Assertion.Require(from <= to, "'from' parameter must be earlier or equal than 'to' parameter.");
 
       from = from.Date;
       to = to.Date;
@@ -286,7 +286,7 @@ namespace Empiria.DataTypes.Time {
 
 
     public DateTime SubstractWorkingDays(DateTime date, int days) {
-      Assertion.Assert(days >= 0, "'days' parameter must be a non-negative number.");
+      Assertion.Require(days >= 0, "'days' parameter must be a non-negative number.");
 
       int workingDaysCounter = 0;
       DateTime datePointer = date.Date;

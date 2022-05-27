@@ -99,7 +99,7 @@ namespace Empiria.Ontology {
     }
 
     static protected MetaModelType Parse(DataRow row) {
-      Assertion.AssertObject(row, "row");
+      Assertion.Require(row, "row");
 
       MetaModelTypeFamily typeFamily = MetaModelType.ParseMetaModelTypeFamily((string) row["TypeFamily"]);
 
@@ -408,7 +408,7 @@ namespace Empiria.Ontology {
           return ObjectFactory.CreateObject<StaticTypeInfo>();
 
         default:
-          throw Assertion.AssertNoReachThisCode();
+          throw Assertion.EnsureNoReachThisCode();
       }
     }
 

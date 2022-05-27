@@ -39,7 +39,7 @@ namespace Empiria.DataTypes.Time {
         return dateTime.TimeOfDay.ToString(@"hh\:mm\:ss");
 
       } else {
-        throw Assertion.AssertNoReachThisCode("Unhandled timeType value.");
+        throw Assertion.EnsureNoReachThisCode("Unhandled timeType value.");
       }
     }
 

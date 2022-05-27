@@ -31,14 +31,14 @@ namespace Empiria.DataTypes {
     }
 
     static public NameValuePair Parse(string name, string value) {
-      Assertion.AssertObject(name, "name");
-      Assertion.AssertObject(value, "value");
+      Assertion.Require(name, "name");
+      Assertion.Require(value, "value");
 
       return new NameValuePair(name, value);
     }
 
     static public NameValuePair Parse(JsonObject json) {
-      Assertion.AssertObject(json, "json");
+      Assertion.Require(json, "json");
 
       return new NameValuePair(json.Get<string>("Name"), json.Get<string>("Value"));
     }

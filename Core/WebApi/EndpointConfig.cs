@@ -44,8 +44,8 @@ namespace Empiria.WebApi {
                                                                             ClientApplication clientApplication) {
       var defaultWebApiAddress = clientApplication.WebApiAddresses.Find((x) => x.Name == "Default");
 
-      Assertion.AssertObject(defaultWebApiAddress.Name,
-                             "ClientApplication doesn't have a default web api server address.");
+      Assertion.Ensure(defaultWebApiAddress.Name,
+                       "ClientApplication doesn't have a default web api server address.");
 
       foreach (var endpoint in endpointsList) {
         var itemWebApiName = endpoint.ApiName;

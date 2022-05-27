@@ -53,7 +53,7 @@ namespace Empiria {
     #region Public methods
 
     public bool Distinct(BaseObjectLite obj) {
-      Assertion.AssertObject(obj, "obj");
+      Assertion.Require(obj, "obj");
 
       return !this.Equals(obj);
     }

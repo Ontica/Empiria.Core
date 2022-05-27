@@ -35,7 +35,7 @@ namespace Empiria.Security {
     }
 
     static internal EmpiriaSession Create(EmpiriaPrincipal principal, JsonObject contextData = null) {
-      Assertion.AssertObject(principal, "principal");
+      Assertion.Require(principal, "principal");
 
       return new EmpiriaSession(principal, contextData);
     }

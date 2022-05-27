@@ -23,7 +23,7 @@ namespace Empiria.DataTypes.Time {
     }
 
     public TimeFrame(DateTime startTime, DateTime endTime) {
-      Assertion.Assert(startTime <= endTime, "startTime should be before or equal to endTime.");
+      Assertion.Require(startTime <= endTime, "startTime should be before or equal to endTime.");
 
       this.StartTime = startTime;
       this.EndTime = endTime;

@@ -69,7 +69,7 @@ namespace Empiria.Json {
       } else if (typeof(DataRowView).IsAssignableFrom(objectType)) {
         return ((DataRowView) value).Row;
       } else {
-        throw Assertion.AssertNoReachThisCode();
+        throw Assertion.EnsureNoReachThisCode();
       }
     }
 

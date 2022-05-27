@@ -29,7 +29,7 @@ namespace Empiria.Security {
     #region Constructors and parsers
 
     protected AuditTrail(IRequest request, AuditTrailType auditTrailType) {
-      Assertion.AssertObject(request, "request");
+      Assertion.Require(request, "request");
 
       Initialize();
       this.Request = request;
@@ -122,9 +122,9 @@ namespace Empiria.Security {
     }
 
     protected void SetOperationInfo(string eventTag, string operationName, JsonObject operationData) {
-      Assertion.AssertObject(eventTag, "eventTag");
-      Assertion.AssertObject(operationName, "operationName");
-      Assertion.AssertObject(operationData, "operationData");
+      Assertion.Require(eventTag, "eventTag");
+      Assertion.Require(operationName, "operationName");
+      Assertion.Require(operationData, "operationData");
 
       this.Event = eventTag;
       this.Operation = operationName;
@@ -139,7 +139,7 @@ namespace Empiria.Security {
     }
 
     protected void SetResponse(int responseCode, int responseItems, JsonObject responseData) {
-      Assertion.AssertObject(responseData, "responseData");
+      Assertion.Require(responseData, "responseData");
 
       this.ResponseCode = responseCode;
       this.ResponseItems = responseItems;

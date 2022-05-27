@@ -22,7 +22,7 @@ namespace Empiria {
     /// <summary>Returns the value of the configuration data belonging to the caller type.</summary>
     /// <param name="key">The key name of the configuration value.</param>
     static public T Get<T>(string key) {
-      Assertion.AssertObject(key, "key");
+      Assertion.Require(key, "key");
 
       string typeName = GetCallerTypeName();
 
@@ -42,8 +42,8 @@ namespace Empiria {
     /// <summary>Returns the value of the configuration data belonging for the given type.</summary>
     /// <param name="key">The key name of the configuration value.</param>
     static public T Get<T>(Type type, string key) {
-      Assertion.AssertObject(type, "type");
-      Assertion.AssertObject(key, "key");
+      Assertion.Require(type, "type");
+      Assertion.Require(key, "key");
 
       string valueAsString = TryReadValue(type.FullName, key);
 
@@ -62,7 +62,7 @@ namespace Empiria {
     /// <param name="key">The key name of the configuration value.</param>
     /// <param name="defaultValue">The default value to return if the key is not found.</param>
     static public T Get<T>(string key, T defaultValue) {
-      Assertion.AssertObject(key, "key");
+      Assertion.Require(key, "key");
 
       string typeName = GetCallerTypeName();
 
@@ -82,8 +82,8 @@ namespace Empiria {
     /// <param name="key">The key name of the configuration value.</param>
     /// <param name="defaultValue">The default value to return if the key is not found.</param>
     static public T Get<T>(Type type, string key, T defaultValue) {
-      Assertion.AssertObject(type, "type");
-      Assertion.AssertObject(key, "key");
+      Assertion.Require(type, "type");
+      Assertion.Require(key, "key");
 
       string valueAsString = TryReadValue(type.FullName, key);
 
@@ -182,8 +182,8 @@ namespace Empiria {
 
     static private string ReadValue(string typeName, string parameterName) {
       try {
-        Assertion.AssertObject(typeName, "typeName");
-        Assertion.AssertObject(parameterName, "parameterName");
+        Assertion.Require(typeName, "typeName");
+        Assertion.Require(parameterName, "parameterName");
 
         // Try get the parameter's value from the application's configuration file
         var value = ConfigurationFile.TryGetValue(typeName, parameterName);
@@ -200,9 +200,10 @@ namespace Empiria {
           }
         }
 
-        Assertion.AssertObject(value, parameterName);
+        Assertion.Ensure(value, parameterName);
 
         return value;
+
       } catch (Exception innerException) {
         throw new ConfigurationDataException(ConfigurationDataException.Msg.CantReadParameter,
                                              innerException, parameterName, typeName);
@@ -211,8 +212,8 @@ namespace Empiria {
 
     static private string TryReadValue(string typeName, string parameterName) {
       try {
-        Assertion.AssertObject(typeName, "typeName");
-        Assertion.AssertObject(parameterName, "parameterName");
+        Assertion.Require(typeName, "typeName");
+        Assertion.Require(parameterName, "parameterName");
 
         // Try get the parameter's value from the application's configuration file
         return ConfigurationFile.TryGetValue(typeName, parameterName);

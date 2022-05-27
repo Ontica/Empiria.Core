@@ -45,9 +45,9 @@ namespace Empiria {
 
 
     static public string BuildRandomString(int minLength, int maxLength) {
-      Assertion.Assert(0 < minLength,
+      Assertion.Require(0 < minLength,
                       $"Parameter 'minLength' ({minLength}) must be greater than zero.");
-      Assertion.Assert(minLength == -1 || minLength <= maxLength,
+      Assertion.Require(minLength == -1 || minLength <= maxLength,
                       $"Parameter 'minLength' ({minLength}) must be less or equal than " +
                       $"parameter 'maxLength' ({maxLength}).");
 
@@ -137,7 +137,7 @@ namespace Empiria {
     }
 
     static public T ConvertTo<T>(string source) {
-      Assertion.AssertObject(source, "source");
+      Assertion.Require(source, "source");
 
       if (typeof(T) == typeof(string)) {
         return (T) (object) source;
@@ -199,8 +199,8 @@ namespace Empiria {
 
 
     public static string EncodeAsUrlIdentifier(string identifier) {
-      Assertion.AssertObject(identifier, "identifier");
-      Assertion.Assert(!identifier.Contains("¯") &&
+      Assertion.Require(identifier, "identifier");
+      Assertion.Require(!identifier.Contains("¯") &&
                        !identifier.Contains("―") &&
                        !identifier.Contains("¢") &&
                        !identifier.Contains("§") &&
@@ -229,7 +229,7 @@ namespace Empiria {
     }
 
     public static string DecodeUrlIdentifier(string identifier) {
-      Assertion.AssertObject(identifier, "identifier");
+      Assertion.Require(identifier, "identifier");
 
       // Identifiers that starts with a '!' are not encoded, so return them as is without the '!' char.
       if (identifier.StartsWith("!")) {
@@ -474,8 +474,8 @@ namespace Empiria {
     }
 
     static public bool IsInList(string source, string firstValue, params string[] moreValues) {
-      Assertion.AssertObject(source, "source");
-      Assertion.AssertObject(firstValue, "firstValue");
+      Assertion.Require(source, "source");
+      Assertion.Require(firstValue, "firstValue");
 
       if (source == firstValue) {
         return true;
@@ -599,8 +599,8 @@ namespace Empiria {
     }
 
     static public bool StartsWith(string source, string firstValue, params string[] moreValues) {
-      Assertion.AssertObject(source, "source");
-      Assertion.AssertObject(firstValue, "firstValue");
+      Assertion.Require(source, "source");
+      Assertion.Require(firstValue, "firstValue");
 
       if (source.StartsWith(firstValue)) {
         return true;
@@ -731,7 +731,7 @@ namespace Empiria {
     }
 
     static public string ToProperNoun(string noun) {
-      Assertion.AssertObject(noun, "noun");
+      Assertion.Require(noun, "noun");
 
       string[] nounParts = EmpiriaString.TrimAll(noun).Split(' ');
       string result = String.Empty;

@@ -33,8 +33,8 @@ namespace Empiria.Collections {
 
     static public FixedListComparer<T> Parse(FixedList<T> leftList,
                                              FixedList<T> rightList, T nullObject) {
-      Assertion.AssertObject(leftList, "leftList");
-      Assertion.AssertObject(rightList, "rightList");
+      Assertion.Require(leftList, "leftList");
+      Assertion.Require(rightList, "rightList");
 
       FixedListComparer<T> comparer = new FixedListComparer<T>();
 

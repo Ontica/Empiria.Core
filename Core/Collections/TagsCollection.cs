@@ -39,7 +39,7 @@ namespace Empiria.Collections {
 
 
     private TagsCollection(IList<string> tagsArray) {
-      Assertion.AssertObject(tagsArray, "tagsArray");
+      Assertion.Require(tagsArray, "tagsArray");
 
       this.tagsArray = tagsArray.ToList();
     }
@@ -83,7 +83,7 @@ namespace Empiria.Collections {
     #region Public methods
 
     public void Add(string tag) {
-      Assertion.AssertObject(tag, "tag");
+      Assertion.Require(tag, "tag");
 
       tag = CleanTag(tag);
 
@@ -94,7 +94,7 @@ namespace Empiria.Collections {
 
 
     public void AddRange(TagsCollection tags) {
-      Assertion.AssertObject(tags, "tags");
+      Assertion.Require(tags, "tags");
 
       foreach (var tag in tags.Items) {
         this.tagsArray.Add(tag);
@@ -103,7 +103,7 @@ namespace Empiria.Collections {
 
 
     public bool Contains(string tag) {
-      Assertion.AssertObject(tag, "tag");
+      Assertion.Require(tag, "tag");
 
       tag = CleanTag(tag);
 
@@ -112,7 +112,7 @@ namespace Empiria.Collections {
 
 
     public bool Remove(string tag) {
-      Assertion.AssertObject(tag, "tag");
+      Assertion.Require(tag, "tag");
 
       tag = CleanTag(tag);
 

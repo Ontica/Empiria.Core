@@ -20,7 +20,7 @@ namespace Empiria.Data.Integration {
     #region Public methods
 
     static public void Publish(DataOperation operation) {
-      Assertion.AssertObject(operation, "operation");
+      Assertion.Require(operation, "operation");
 
       if (!DataIntegrationRules.HasPublishRule(operation.SourceName)) {
         return;
@@ -45,7 +45,7 @@ namespace Empiria.Data.Integration {
     }
 
     static public void Publish(DataOperationList operationList) {
-      Assertion.AssertObject(operationList, "operationList");
+      Assertion.Require(operationList, "operationList");
 
       if (!DataIntegrationRules.HasPublishRule(operationList.Name)) {
         return;

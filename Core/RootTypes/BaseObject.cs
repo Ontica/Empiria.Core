@@ -472,7 +472,7 @@ namespace Empiria {
 
     /// <summary>Raised when Save() method is called and after objectId and object.uid generated.</summary>
     protected virtual void OnSave() {
-      throw new NotImplementedException();
+      throw new NotImplementedException($"{this.GetType().Name}.OnSave() method.");
     }
 
 
@@ -577,8 +577,8 @@ namespace Empiria {
     #endregion Private methods
 
     protected void ReclassifyAs(ObjectTypeInfo newType) {
-      Assertion.AssertObject(newType, "newType");
-      Assertion.Assert(!this.GetEmpiriaType().Equals(newType),
+      Assertion.Require(newType, "newType");
+      Assertion.Require(!this.GetEmpiriaType().Equals(newType),
                        "newType should be distinct to the current one.");
       //Assertion.Assert(this.GetEmpiriaType().UnderlyingSystemType.Equals(newType.UnderlyingSystemType),
       //                 "newType underlying system type should be the same to the current one's.");

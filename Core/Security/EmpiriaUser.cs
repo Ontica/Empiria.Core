@@ -36,8 +36,8 @@ namespace Empiria.Security {
     }
 
     static public EmpiriaUser Parse(string username, string email) {
-      Assertion.AssertObject(username, "username");
-      Assertion.AssertObject(email, "email");
+      Assertion.Require(username, "username");
+      Assertion.Require(email, "email");
 
       EmpiriaUser user = SecurityData.TryGetUserWithUserName(username);
 
@@ -63,7 +63,7 @@ namespace Empiria.Security {
     }
 
     static public bool Exists(string userName) {
-      Assertion.AssertObject(userName, "userName");
+      Assertion.Require(userName, "userName");
 
       return (SecurityData.TryGetUserWithUserName(userName) != null);
     }
@@ -87,9 +87,9 @@ namespace Empiria.Security {
     #region Authenticate methods
 
     static internal EmpiriaUser Authenticate(string username, string password, string entropy) {
-      Assertion.AssertObject(username, "username");
-      Assertion.AssertObject(password, "password");
-      Assertion.Assert(entropy != null, "entropy can't be null.");
+      Assertion.Require(username, "username");
+      Assertion.Require(password, "password");
+      Assertion.Require(entropy != null, "entropy can't be null.");
 
       EmpiriaUser user = EmpiriaUser.GetUserWithCredentials(username, password, entropy);
 
@@ -100,7 +100,7 @@ namespace Empiria.Security {
     }
 
     static internal EmpiriaUser Authenticate(EmpiriaSession activeSession) {
-      Assertion.AssertObject(activeSession, "activeSession");
+      Assertion.Require(activeSession, "activeSession");
 
       if (!activeSession.IsStillActive) {
         throw new SecurityException(SecurityException.Msg.ExpiredSessionToken, activeSession.Token);

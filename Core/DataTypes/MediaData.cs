@@ -20,8 +20,8 @@ namespace Empiria.DataTypes {
     }
 
     public MediaData(string mediaType, string url) {
-      Assertion.AssertObject(mediaType, "mediaType");
-      Assertion.AssertObject(url, "url");
+      Assertion.Require(mediaType, "mediaType");
+      Assertion.Require(url, "url");
 
       this.MediaType = mediaType;
       this.Url = url;

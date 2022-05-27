@@ -45,7 +45,7 @@ namespace Empiria.Security {
     public string GetUpdatedHashCode() {
       int version = resource.CurrentDataIntegrityVersion;
 
-      Assertion.Assert(1 <= version && version <= 16, "Invalid version number");
+      Assertion.Ensure(1 <= version && version <= 16, "Invalid version number");
 
       return version.ToString("X") + this.GetDIFHashCode(version);
     }
@@ -61,12 +61,11 @@ namespace Empiria.Security {
     private string GetDIFString(int version) {
       object[] currentData = resource.GetDataIntegrityFieldValues(version);
 
-      Assertion.AssertObject(currentData, "currentData");
-      Assertion.Assert(version == (int) currentData[0],
-                       "Invalid version returned by the data integrity field vector.");
-      Assertion.Assert((currentData.Length % 2) == 1,
-                       "Invalid data integrity field vector for version {0} in protected type {1}.",
-                       version, resourceTypeName);
+      Assertion.Require(currentData, "currentData");
+      Assertion.Require(version == (int) currentData[0],
+        "Invalid version returned by the data integrity field vector.");
+      Assertion.Require((currentData.Length % 2) == 1,
+        $"Invalid data integrity field vector for version {version} in protected type {resourceTypeName}.");
 
       string dif = "||";
       for (int i = 0; i < currentData.Length; i++) {

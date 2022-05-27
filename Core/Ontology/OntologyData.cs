@@ -75,9 +75,9 @@ namespace Empiria.Ontology {
     static internal int GetNextObjectId(ObjectTypeInfo objectTypeInfo) {
       int id = DataWriter.CreateId(objectTypeInfo.DataSource);
 
-      Assertion.Assert(id != 0,
-                       "Generated Id value can't be zero. Please review DbRules table for type {0}.",
-                       objectTypeInfo.Name);
+      Assertion.Require(id != 0,
+        $"Generated Id value can't be zero. Please review DbRules table for type {objectTypeInfo.Name}.");
+
       return id;
     }
 

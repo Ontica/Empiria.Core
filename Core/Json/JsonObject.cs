@@ -31,14 +31,14 @@ namespace Empiria.Json {
 
 
     public JsonObject(JsonObject copyFrom) {
-      Assertion.AssertObject(copyFrom, "copyFrom");
+      Assertion.Require(copyFrom, "copyFrom");
 
       this.dictionary = new Dictionary<string, object>(copyFrom.dictionary);
     }
 
 
     internal JsonObject(IDictionary<string, object> items) {
-      Assertion.AssertObject(items, "items");
+      Assertion.Require(items, "items");
 
       this.dictionary = items;
     }
@@ -99,8 +99,8 @@ namespace Empiria.Json {
     /// <param name="key">The key or name of the item to add.</param>
     /// <param name="value">The value of the added object.</param>
     public void Add(string key, object value) {
-      Assertion.AssertObject(key, "key");
-      Assertion.AssertObject(value, "value");
+      Assertion.Require(key, "key");
+      Assertion.Require(value, "value");
 
       dictionary.Add(key, value);
     }
@@ -110,8 +110,8 @@ namespace Empiria.Json {
     /// <param name="key">The item key that describes the json object</param>
     /// <param name="jsonObject">The json object to add.</param>
     public void Add(string key, JsonObject jsonObject) {
-      Assertion.AssertObject(key, "key");
-      Assertion.AssertObject(jsonObject, "jsonObject");
+      Assertion.Require(key, "key");
+      Assertion.Require(jsonObject, "jsonObject");
 
       dictionary.Add(key, jsonObject.ToDictionary());
     }
@@ -126,8 +126,8 @@ namespace Empiria.Json {
         return;
       }
 
-      Assertion.AssertObject(key, "key");
-      Assertion.AssertObject(value, "value");
+      Assertion.Require(key, "key");
+      Assertion.Require(value, "value");
 
       if (HasEmptyOrNullValue(value)) {
         return;
@@ -142,7 +142,7 @@ namespace Empiria.Json {
     /// <param name="key">The key or name of the item to add.</param>
     /// <param name="value">The value of the object added</param>
     public void AddIfValue(string key, object value) {
-      Assertion.AssertObject(key, "key");
+      Assertion.Require(key, "key");
 
       if (HasEmptyOrNullValue(value)) {
         return;
@@ -155,7 +155,7 @@ namespace Empiria.Json {
     /// <summary>Cleans the json object removing all empty objects from the given itemPath.</summary>
     /// <param name="itemPath">The item path to clean.</param>
     public void Clean(string itemPath) {
-      Assertion.AssertObject(itemPath, "itemPath");
+      Assertion.Require(itemPath, "itemPath");
 
       if (RemoveIfEmptyOrNull(dictionary, itemPath)) {
         return;
@@ -227,7 +227,7 @@ namespace Empiria.Json {
     /// <summary>Returns true if the json object has an item path.</summary>
     /// <param name="itemPath">The item path to search.</param>
     public bool Contains(string itemPath) {
-      Assertion.AssertObject(itemPath, "itemPath");
+      Assertion.Require(itemPath, "itemPath");
 
       string[] pathMembers = SplitItemPath(itemPath);
 
@@ -253,7 +253,7 @@ namespace Empiria.Json {
 
       }  // for
 
-      throw Assertion.AssertNoReachThisCode();
+      throw Assertion.EnsureNoReachThisCode();
     }
 
 
@@ -262,7 +262,7 @@ namespace Empiria.Json {
     /// <returns>The item relative to the searched path, or an exception if the object
     /// was not found or if the path is not well-formed.</returns>
     public T Get<T>(string itemPath) {
-      Assertion.AssertObject(itemPath, "itemPath");
+      Assertion.Require(itemPath, "itemPath");
 
       return this.Find<T>(itemPath);
     }
@@ -274,7 +274,7 @@ namespace Empiria.Json {
     /// <returns>The item relative to the searched path, the defaultValue if the object
     /// was not found or an exception if the path is not well-formed.</returns>
     public T Get<T>(string itemPath, T defaultValue) {
-      Assertion.AssertObject(itemPath, "itemPath");
+      Assertion.Require(itemPath, "itemPath");
 
       return this.Find<T>(itemPath, defaultValue);
     }
@@ -286,7 +286,7 @@ namespace Empiria.Json {
     /// <returns>The item relative to the searched path, or an exception if the object
     /// was not found or if the path is not well-formed.</returns>
     public string GetClean(string itemPath, string defaultValue = null) {
-      Assertion.AssertObject(itemPath, "itemPath");
+      Assertion.Require(itemPath, "itemPath");
 
       string value = String.Empty;
 
@@ -331,7 +331,7 @@ namespace Empiria.Json {
     /// <returns>The list of objects relative to the searched path, or an exception if the list
     /// was not found or if the path is not well-formed.</returns>
     public List<T> GetList<T>(string listPath) {
-      Assertion.AssertObject(listPath, "listPath");
+      Assertion.Require(listPath, "listPath");
 
       return GetList<T>(listPath, true);
     }
@@ -344,7 +344,7 @@ namespace Empiria.Json {
     /// <returns>The list of objects relative to the searched path, or an exception if the list
     /// was not found or if the path is not well-formed.</returns>
     public List<T> GetList<T>(string listPath, bool required) {
-      Assertion.AssertObject(listPath, "listPath");
+      Assertion.Require(listPath, "listPath");
 
       List<object> objectsList;
 
@@ -362,14 +362,14 @@ namespace Empiria.Json {
 
         if (objectsList.TrueForAll((x) => EmpiriaString.IsInteger(Convert.ToString(x)))) {
 
-          Assertion.Assert(ObjectFactory.HasParseWithIdMethod(typeof(T)),
+          Assertion.Require(ObjectFactory.HasParseWithIdMethod(typeof(T)),
                            $"Type {typeof(T).FullName} doesn't have defined a static Parse(int) method.");
 
           return objectsList.ConvertAll<T>((x) => ObjectFactory.InvokeParseMethod<T>(Convert.ToInt32(x)));
 
         } else {
 
-          Assertion.Assert(ObjectFactory.HasParseWithStringMethod(typeof(T)),
+          Assertion.Require(ObjectFactory.HasParseWithStringMethod(typeof(T)),
                            $"Type {typeof(T).FullName} doesn't have defined a static Parse(string) method.");
 
           return objectsList.ConvertAll<T>((x) => ObjectFactory.InvokeParseMethod<T>(Convert.ToString(x)));
@@ -404,7 +404,7 @@ namespace Empiria.Json {
     /// <returns>True if the Json structure has an object with a non empty
     /// or null value. False otherwise.</returns>
     public bool HasValue(string itemPath) {
-      Assertion.AssertObject(itemPath, "itemPath");
+      Assertion.Require(itemPath, "itemPath");
 
       object value = this.TryGetDictionaryValue(itemPath, false);
 
@@ -463,9 +463,9 @@ namespace Empiria.Json {
     /// <param name="itemPath">The item path to set (e.g. '/parent/child/item' or just 'item').</param>
     /// <param name="value">The value of the item to set.</param>
     public void Set(string itemPath, object value) {
-      Assertion.AssertObject(itemPath, "itemPath");
+      Assertion.Require(itemPath, "itemPath");
 
-      Assertion.AssertObject(!this.IsEmptyInstance, "Can't change a JsonObject empty instance.");
+      Assertion.Require(!this.IsEmptyInstance, "Can't change a JsonObject empty instance.");
 
       if (dictionary.ContainsKey(itemPath)) {   // Fast-track case
         dictionary[itemPath] = value;
@@ -513,7 +513,7 @@ namespace Empiria.Json {
 
       }  // for
 
-      throw Assertion.AssertNoReachThisCode();    // Code must exit from above code
+      throw Assertion.EnsureNoReachThisCode();    // Code must exit from above code
     }
 
 
@@ -521,8 +521,8 @@ namespace Empiria.Json {
     /// <param name="itemPath">The item path to set (e.g. like '/parent/child/item' or just 'item').</param>
     /// <param name="jsonObject">The json object to add.</param>
     public void Set(string itemPath, JsonObject jsonObject) {
-      Assertion.AssertObject(itemPath, "itemPath");
-      Assertion.AssertObject(jsonObject, "jsonObject");
+      Assertion.Require(itemPath, "itemPath");
+      Assertion.Require(jsonObject, "jsonObject");
 
       Set(itemPath, jsonObject.ToDictionary());
     }
@@ -557,7 +557,7 @@ namespace Empiria.Json {
     /// <param name="itemPath">The item path to set (e.g. like '/parent/child/item' or just 'item').</param>
     /// <param name="value">The value of the item to set.</param>
     public void SetIfValue(string itemPath, object value) {
-      Assertion.AssertObject(itemPath, "itemPath");
+      Assertion.Require(itemPath, "itemPath");
 
       if (HasEmptyOrNullValue(value)) {  // Remove the item and clean up the path against empty objects
 
@@ -575,8 +575,8 @@ namespace Empiria.Json {
     /// <param name="itemPath">The item path to set (e.g. like '/parent/child/item' or just 'item').</param>
     /// <param name="jsonObject">The json object to add.</param>
     public void SetIfValue(string itemPath, JsonObject jsonObject) {
-      Assertion.AssertObject(itemPath, "itemPath");
-      Assertion.AssertObject(jsonObject, "jsonObject");
+      Assertion.Require(itemPath, "itemPath");
+      Assertion.Require(jsonObject, "jsonObject");
 
       SetIfValue(itemPath, jsonObject.ToDictionary());
     }
@@ -588,7 +588,7 @@ namespace Empiria.Json {
     /// <returns>The JsonObject relative to the searched path, or the JsonObject.Empty
     /// instance if the path is not found or an exception if the path is not well-formed.</returns>
     public JsonObject Slice(string itemPath) {
-      Assertion.AssertObject(itemPath, "itemPath");
+      Assertion.Require(itemPath, "itemPath");
 
       return this.Slice(itemPath, false);
     }
@@ -601,7 +601,7 @@ namespace Empiria.Json {
     /// <returns>The new JsonObject generated from the items path, or the JsonObject.Empty
     /// instance if any path was found or an exception if one of the paths are not well-formed.</returns>
     public JsonObject Slice(string[] itemPaths) {
-      Assertion.AssertObject(itemPaths, "itemPaths");
+      Assertion.Require(itemPaths, "itemPaths");
 
       var root = new Dictionary<string, object>(itemPaths.Length);
 
@@ -625,7 +625,7 @@ namespace Empiria.Json {
     /// <returns>The JsonObject relative to the searched path, or the JsonObject.Empty
     /// instance if the required flag is false. Otherwise throws an exception.</returns>
     public JsonObject Slice(string itemPath, bool required) {
-      Assertion.AssertObject(itemPath, "itemPath");
+      Assertion.Require(itemPath, "itemPath");
 
       bool includeitemNameInSlice = false;
 
@@ -638,7 +638,7 @@ namespace Empiria.Json {
 
       if (value == null && required) {
         // An exception should be thrown from the TryGetDictionaryValue call above.
-        Assertion.AssertNoReachThisCode();
+        Assertion.EnsureNoReachThisCode();
       }
 
       if (value == null) {
@@ -721,7 +721,7 @@ namespace Empiria.Json {
 
       if (value == null) {
         // An exception should be thrown from the this.TryGetDictionaryValue call above.
-        Assertion.AssertNoReachThisCode();
+        Assertion.EnsureNoReachThisCode();
       }
 
       try {
@@ -792,7 +792,7 @@ namespace Empiria.Json {
 
       }  // for
 
-      throw Assertion.AssertNoReachThisCode();
+      throw Assertion.EnsureNoReachThisCode();
     }
 
     #endregion Private methods
@@ -826,7 +826,7 @@ namespace Empiria.Json {
         return ("/", String.Empty);
 
       } else {
-        throw Assertion.AssertNoReachThisCode();
+        throw Assertion.EnsureNoReachThisCode();
 
       }
     }
@@ -868,7 +868,7 @@ namespace Empiria.Json {
 
 
     static private bool IsRoot(string itemPath) {
-      Assertion.AssertObject(itemPath, "itemPath");
+      Assertion.Require(itemPath, "itemPath");
 
       return (itemPath == "/");
     }

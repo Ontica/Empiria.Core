@@ -108,7 +108,7 @@ namespace Empiria.Reflection {
       try {
         PropertyInfo property = ObjectFactory.TryGetEmptyInstanceProperty(type);
 
-        Assertion.AssertObject(property, "Type {0} doesn't has a static Empty property.", type.FullName);
+        Assertion.Require(property, $"Type {type.FullName} doesn't has a static Empty property.");
 
         return property.GetMethod.Invoke(null, null);
 
@@ -223,7 +223,7 @@ namespace Empiria.Reflection {
       try {
         MethodInfo method = ObjectFactory.TryGetParseWithIdMethod(type);
 
-        Assertion.AssertObject(method, "Type {0} doesn't has static Parse(int) method.", type.FullName);
+        Assertion.Require(method, "$Type {type.FullName} doesn't has static Parse(int) method.");
 
         return method.Invoke(null, new object[] { objectId });
 
@@ -245,7 +245,7 @@ namespace Empiria.Reflection {
       try {
         MethodInfo method = ObjectFactory.TryGetParseStringMethod(type);
 
-        Assertion.AssertObject(method, "Type {0} doesn't has static Parse(string) method.", type.FullName);
+        Assertion.Require(method, $"Type {type.FullName} doesn't has static Parse(string) method.");
 
         return method.Invoke(null, new object[] { value });
 
@@ -267,7 +267,7 @@ namespace Empiria.Reflection {
       try {
         MethodInfo method = ObjectFactory.TryGetTryParseStringMethod(type);
 
-        Assertion.AssertObject(method, "Type {0} doesn't has static TryParse(string) method.", type.FullName);
+        Assertion.Require(method, $"Type {type.FullName} doesn't has static TryParse(string) method.");
 
         return (T) method.Invoke(null, new object[] { value });
 
@@ -289,8 +289,8 @@ namespace Empiria.Reflection {
       try {
         MethodInfo method = TryGetParseJsonMethod(type);
 
-        Assertion.AssertObject(method,
-                               "Type {0} doesn't has static Parse(JsonObject) method.", type.FullName);
+        Assertion.Require(method,
+                               $"Type {type.FullName} doesn't has static Parse(JsonObject) method.");
 
         return (T) method.Invoke(null, new object[] { jsonObject });
 

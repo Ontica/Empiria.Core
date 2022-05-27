@@ -21,10 +21,10 @@ namespace Empiria.DataTypes.Time {
     private readonly int _firstBracketStart;
 
     public MonthBracketsBuilder(int bracketSize, int firstBracketStart) {
-      Assertion.Assert(bracketSize > 0,
+      Assertion.Require(bracketSize > 0,
                       $"bracketSize value ({bracketSize}) must be greater than zero.");
 
-      Assertion.Assert(1 <= firstBracketStart && firstBracketStart <= 12,
+      Assertion.Require(1 <= firstBracketStart && firstBracketStart <= 12,
                        $"firstBracketStart value ({firstBracketStart}) out of bounds.");
 
       _bracketSize = bracketSize;
@@ -52,7 +52,7 @@ namespace Empiria.DataTypes.Time {
 
       bracket = brackets.Find(x => x.StartMonth > x.EndMonth && date.Month >= x.StartMonth);
 
-      Assertion.Assert(!bracket.Equals(default(MonthBracket)),
+      Assertion.Require(!bracket.Equals(default(MonthBracket)),
                         $"A bracket for date ({date}) was not found.");
 
       return bracket;

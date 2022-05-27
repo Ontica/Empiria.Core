@@ -66,7 +66,7 @@ namespace Empiria.Data {
 
 
     static public void Execute(DataOperation operation) {
-      Assertion.AssertObject(operation, "operation");
+      Assertion.Require(operation, "operation");
 
       if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
 
@@ -91,7 +91,7 @@ namespace Empiria.Data {
 
 
     static public void Execute(DataOperationList operationList) {
-      Assertion.AssertObject(operationList, "operationList");
+      Assertion.Require(operationList, "operationList");
 
       foreach (var operation in operationList) {
         Execute(operation);
@@ -131,8 +131,8 @@ namespace Empiria.Data {
 
 
     static internal int Execute(SingleSignOnToken token, DataOperation operation) {
-      Assertion.AssertObject(token, "token");
-      Assertion.AssertObject(operation, "operation");
+      Assertion.Require(token, "token");
+      Assertion.Require(operation, "operation");
 
       if (DataIntegrationRules.HasWriteRule(operation.SourceName)) {
         return ExecuteExternal(operation);
@@ -149,8 +149,8 @@ namespace Empiria.Data {
 
 
     static internal int Execute(SingleSignOnToken token, DataOperationList operationList) {
-      Assertion.AssertObject(token, "token");
-      Assertion.AssertObject(operationList, "operationList");
+      Assertion.Require(token, "token");
+      Assertion.Require(operationList, "operationList");
 
       using (DataWriterContext context = DataWriter.CreateContext(operationList.Name)) {
 

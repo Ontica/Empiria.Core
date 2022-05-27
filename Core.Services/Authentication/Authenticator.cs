@@ -23,7 +23,7 @@ namespace Empiria.Services.Authentication {
 
 
     internal Authenticator(AuthenticationFields fields) {
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(fields, "fields");
 
       _fields = fields;
     }
@@ -48,7 +48,7 @@ namespace Empiria.Services.Authentication {
                                                                       _fields.Password,
                                                                       token);
 
-      Assertion.AssertObject(principal, "principal");
+      Assertion.Require(principal, "principal");
 
       return principal;
     }
@@ -73,11 +73,11 @@ namespace Empiria.Services.Authentication {
     private static EmpiriaDictionary<string, TokenSalt> _tokens = new EmpiriaDictionary<string, TokenSalt>(64);
 
     static private string GetSaltFromGeneratedTokens(string rawToken) {
-      Assertion.AssertObject(_tokens.ContainsKey(rawToken), "token");
+      Assertion.Require(_tokens.ContainsKey(rawToken), "token");
 
       var storedSalt = _tokens[rawToken];
 
-      Assertion.Assert(storedSalt.GenerationTime.AddSeconds(5) > DateTime.Now,
+      Assertion.Require(storedSalt.GenerationTime.AddSeconds(5) > DateTime.Now,
                        "Authentication token has expired.");
 
       return storedSalt.Value;
@@ -98,7 +98,7 @@ namespace Empiria.Services.Authentication {
     }
 
 
-    private class TokenSalt {
+    sealed private class TokenSalt {
 
       internal DateTime GenerationTime {
         get;

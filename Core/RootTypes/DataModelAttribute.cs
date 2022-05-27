@@ -20,8 +20,8 @@ namespace Empiria {
     /// <summary>Initializes a new instance of the <see cref="DataModelAttribute"/> class.</summary>
     /// <param name="sourceName">The name of the data item to map to the property or field.</param>
     public DataModelAttribute(string sourceName, string idFieldName) {
-      Assertion.AssertObject(sourceName, "sourceName");
-      Assertion.AssertObject(idFieldName, "idFieldName");
+      Assertion.Require(sourceName, "sourceName");
+      Assertion.Require(idFieldName, "idFieldName");
 
       this.SourceName = sourceName;
       this.IdFieldName = idFieldName;
@@ -34,9 +34,9 @@ namespace Empiria {
     /// <param name="idFieldName">The name of the field that holds the integer id of the instance.</param>
     /// <param name="keyFieldName">The name of the field that holds the UID or unique key of the instance.</param>
     public DataModelAttribute(string sourceName, string idFieldName, string keyFieldName) {
-      Assertion.AssertObject(sourceName, "sourceName");
-      Assertion.AssertObject(idFieldName, "idFieldName");
-      Assertion.AssertObject(keyFieldName, "keyFieldName");
+      Assertion.Require(sourceName, "sourceName");
+      Assertion.Require(idFieldName, "idFieldName");
+      Assertion.Require(keyFieldName, "keyFieldName");
 
       this.SourceName = sourceName;
       this.IdFieldName = idFieldName;

@@ -23,8 +23,8 @@ namespace Empiria.Security.Authorization {
 
 
     public AuthorizationRequest(string operationName, string externalObjectUID, string notes = "") {
-      Assertion.AssertObject(operationName, "operationName");
-      Assertion.AssertObject(externalObjectUID, "externalObjectUID");
+      Assertion.Require(operationName, "operationName");
+      Assertion.Require(externalObjectUID, "externalObjectUID");
 
       this.OperationName = operationName;
       this.ExternalObjectUID = externalObjectUID;

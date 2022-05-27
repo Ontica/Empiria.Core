@@ -61,7 +61,7 @@ namespace Empiria.DataTypes.Time {
     }
 
     static public bool IsNonWorkingDate(this DateTime date, EmpiriaCalendar calendar) {
-      Assertion.AssertObject(calendar, "calendar");
+      Assertion.Require(calendar, "calendar");
 
       return (calendar.IsWeekendDay(date) || calendar.IsHoliday(date));
     }

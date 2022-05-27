@@ -41,7 +41,7 @@ namespace Empiria {
     }
 
     static public LazyInstance<T> Parse(T instance) {
-      Assertion.AssertObject(instance, "instance");
+      Assertion.Require(instance, "instance");
 
       return new LazyInstance<T>(instance);
     }

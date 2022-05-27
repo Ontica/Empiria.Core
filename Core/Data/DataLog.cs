@@ -16,7 +16,7 @@ namespace Empiria.Data {
     #region Constructors and parsers
 
     internal DataLog(DataOperation operation) {
-      Assertion.AssertObject(operation, "operation");
+      Assertion.Require(operation, "operation");
 
       this.DataOperation = operation;
 

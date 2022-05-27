@@ -28,15 +28,15 @@ namespace Empiria.Services.UserManagement {
     }
 
     internal PasswordStrength(EmpiriaUser user, string password) {
-      Assertion.AssertObject(user, "user");
-      Assertion.AssertObject(password, "password");
+      Assertion.Require(user, "user");
+      Assertion.Require(password, "password");
 
       _user = user;
       _password = password;
     }
 
     static public void AssertIsValid(string password) {
-      Assertion.AssertObject(password, "password");
+      Assertion.Require(password, "password");
 
       var instance = new PasswordStrength(password);
 

@@ -39,7 +39,7 @@ namespace Empiria {
       defaultConstructorDelegate = GetDefaultConstructorDelegate(type);
       var attribute = Attribute.GetCustomAttribute(type, typeof(DataModelAttribute));
 
-      Assertion.AssertObject(attribute, type.FullName + " has not defined the attribute DataModelAttribute.");
+      Assertion.Require(attribute, type.FullName + " has not defined the attribute DataModelAttribute.");
 
       dataModel = (DataModelAttribute) attribute;
     }

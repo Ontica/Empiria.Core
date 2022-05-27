@@ -37,7 +37,7 @@ namespace Empiria.DataTypes {
     }
 
     public ValuesTableColumn GetColumn(string columName) {
-      Assertion.AssertObject(columName, "columName");
+      Assertion.Require(columName, "columName");
 
       return columns[columName];
     }

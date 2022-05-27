@@ -20,9 +20,9 @@ namespace Empiria.DataTypes.Time {
     /// <summary>Initializes a new instance of the YearMonth structure
     ///  to the specified year and month.</summary>
     public YearMonth(int year, int month) {
-      Assertion.Assert(DateTime.MinValue.Year <= year && year <= DateTime.MaxValue.Year,
+      Assertion.Require(DateTime.MinValue.Year <= year && year <= DateTime.MaxValue.Year,
                        "Year value is out of bounds.");
-      Assertion.Assert(1 <= month && month <= 12,
+      Assertion.Require(1 <= month && month <= 12,
                       "Month value is out of bounds.");
 
       this.Year = year;

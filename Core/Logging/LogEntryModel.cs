@@ -56,25 +56,25 @@ namespace Empiria.Logging {
     #region Methods
 
     public void AssertIsValid() {
-      Assertion.Assert(this.SessionToken != null,
+      Assertion.Require(this.SessionToken != null,
                        "Session token can't be null. Please send an empty string for no active sessions.");
 
       if (!Enum.IsDefined(typeof(LogEntryType), this.EntryType)) {
-        Assertion.AssertFail("EntryType must have a valid value. Received value was {0}.", this.EntryType);
+        Assertion.RequireFail($"EntryType must have a valid value. Received value was {this.EntryType}.");
       }
 
-      Assertion.Assert(this.EntryType != LogEntryType.Unknown,
+      Assertion.Require(this.EntryType != LogEntryType.Unknown,
                        "EntryType can't have the 'Unknown' value.");
 
-      Assertion.Assert(this.EntryType != LogEntryType.Trace ||
+      Assertion.Require(this.EntryType != LogEntryType.Trace ||
                        this.TraceGuid != Guid.Empty,
                        "Trace logs must contain a non-empty TraceGuid value.");
 
-      Assertion.Assert(DateTime.Now.AddDays(-1 * TIMESTAMP_LOWER_BOUND_DAYS) <= this.Timestamp &&
+      Assertion.Require(DateTime.Now.AddDays(-1 * TIMESTAMP_LOWER_BOUND_DAYS) <= this.Timestamp &&
                        this.Timestamp <= DateTime.Now.AddDays(TIMESTAMP_UPPER_BOUND_DAYS),
                        "Timestamp value is out of bounds of the logging service time window.");
 
-      Assertion.AssertObject(this.Data, "Data");
+      Assertion.Require(this.Data, "Data");
 
     }
 

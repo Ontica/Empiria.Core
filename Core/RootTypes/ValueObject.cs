@@ -31,7 +31,7 @@ namespace Empiria {
     #region Constructors and parsers
 
     protected ValueObject(T value) {
-      Assertion.AssertObject(value, "value");
+      Assertion.Require(value, "value");
 
       this.value = value;
     }

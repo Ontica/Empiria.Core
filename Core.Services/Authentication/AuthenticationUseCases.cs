@@ -31,7 +31,7 @@ namespace Empiria.Services.Authentication {
     #region Use cases
 
     public EmpiriaPrincipal Authenticate(AuthenticationFields fields) {
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(fields, "fields");
 
       var authenticator = new Authenticator(fields);
 
@@ -40,7 +40,7 @@ namespace Empiria.Services.Authentication {
 
 
     public string GenerateAuthenticationToken(AuthenticationFields fields) {
-      Assertion.AssertObject(fields, "fields");
+      Assertion.Require(fields, "fields");
 
       var authenticator = new Authenticator(fields);
 
@@ -54,7 +54,7 @@ namespace Empiria.Services.Authentication {
 
 
     public PrincipalDto PrincipalData() {
-      Assertion.Assert(ExecutionServer.IsAuthenticated, "Unauthenticated user.");
+      Assertion.Require(ExecutionServer.IsAuthenticated, "Unauthenticated user.");
 
       var principal = ExecutionServer.CurrentPrincipal;
 

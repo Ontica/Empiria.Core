@@ -27,8 +27,8 @@ namespace Empiria {
     }
 
     static public void HasValue(JsonObject json, string itemPath, string message) {
-      Assertion.AssertObject(json, "json");
-      Assertion.AssertObject(itemPath, "itemPath");
+      Assertion.Require(json, "json");
+      Assertion.Require(itemPath, "itemPath");
 
       if (!json.HasValue(itemPath)) {
         throw new ValidationException("Validate.HasValue", message);

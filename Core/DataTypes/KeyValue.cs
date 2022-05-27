@@ -20,8 +20,8 @@ namespace Empiria.DataTypes {
 
 
     public KeyValue(string key, string value) {
-      Assertion.AssertObject(key, "key");
-      Assertion.Assert(value != null, "value");
+      Assertion.Require(key, "key");
+      Assertion.Require(value != null, "value");
 
       this.Key = key;
       this.Value = value;

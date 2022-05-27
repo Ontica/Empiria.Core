@@ -24,7 +24,7 @@ namespace Empiria.Security.Authorization {
     }
 
     private Authorization(AuthorizationRequest request) {
-      Assertion.AssertObject(request, "request");
+      Assertion.Require(request, "request");
 
       this.Request = request;
     }
@@ -59,7 +59,7 @@ namespace Empiria.Security.Authorization {
 
     /// <summary>Creates an authorization object from a given authorization request.</summary>
     static public Authorization Create(AuthorizationRequest request) {
-      Assertion.AssertObject(request, "request");
+      Assertion.Require(request, "request");
 
       var authorization = new Authorization(request);
 
@@ -142,7 +142,7 @@ namespace Empiria.Security.Authorization {
     #region Methods
 
     public void Apply() {
-      Assertion.Assert(this.Status == AuthorizationStatus.Authorized,
+      Assertion.Require(this.Status == AuthorizationStatus.Authorized,
                       $"Authorization request '{this.UID}' is in status {this.Status.ToString()}, " +
                       "so it can not be applied.");
 
@@ -166,9 +166,9 @@ namespace Empiria.Security.Authorization {
 
 
     public void Authorize(int expirationMinutes = 60, string notes = "") {
-      Assertion.Assert(0 <= expirationMinutes,
+      Assertion.Require(0 <= expirationMinutes,
                        "Expiration minutes must be a positive number.");
-      Assertion.Assert(this.IsReadyToBeAuthorized,
+      Assertion.Require(this.IsReadyToBeAuthorized,
                        $"Authorization request '{this.UID}' is in status {this.Status.ToString()}, " +
                        "so it can not be authorized.");
 

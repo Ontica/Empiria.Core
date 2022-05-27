@@ -19,9 +19,9 @@ namespace Empiria.Security.Claims {
     static public void EnsureClaim(IClaimsSubject subject,
                                    ClaimType claimType,
                                    string claimValue, string assertionFailMsg = "") {
-      Assertion.AssertObject(subject, "subject");
-      Assertion.AssertObject(claimType, "claimType");
-      Assertion.AssertObject(claimValue, "claimValue");
+      Assertion.Require(subject, "subject");
+      Assertion.Require(claimType, "claimType");
+      Assertion.Require(claimValue, "claimValue");
 
       var claimsList = ClaimList.ParseFor(subject);
 

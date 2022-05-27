@@ -201,8 +201,9 @@ namespace Empiria.Data {
 
 
     public void EndTransaction() {
-      Assertion.Assert(IsInTransaction,
-                       new EmpiriaDataException(EmpiriaDataException.Msg.DataContextOutOfTransaction));
+      if (!IsInTransaction) {
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.DataContextOutOfTransaction);
+      }
 
       transactionalOp.Clear();
 

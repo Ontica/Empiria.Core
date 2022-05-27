@@ -18,15 +18,15 @@ namespace Empiria.Services.Authentication {
     static internal void AssertValidForAuthentication(this AuthenticationFields fields) {
       AssertValidForTokenGeneration(fields);
 
-      Assertion.AssertObject(fields.Password, "Password");
+      Assertion.Require(fields.Password, "Password");
 
       ClientApplication.AssertIsActive(fields.AppKey);
     }
 
 
     static internal void AssertValidForTokenGeneration(this AuthenticationFields fields) {
-      Assertion.AssertObject(fields.UserID, "UserID");
-      Assertion.AssertObject(fields.AppKey, "AppKey");
+      Assertion.Require(fields.UserID, "UserID");
+      Assertion.Require(fields.AppKey, "AppKey");
     }
 
 

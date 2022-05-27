@@ -35,7 +35,7 @@ namespace Empiria.Data {
     #region Public methods
 
     static public int Count(DataOperation operation) {
-      Assertion.AssertObject(operation, "operation");
+      Assertion.Require(operation, "operation");
 
       var dataTable = GetDataTable(operation);
 
@@ -44,8 +44,8 @@ namespace Empiria.Data {
 
 
     static public byte[] GetBinaryFieldValue(DataOperation operation, string fieldName) {
-      Assertion.AssertObject(operation, "operation");
-      Assertion.AssertObject(fieldName, "fieldName");
+      Assertion.Require(operation, "operation");
+      Assertion.Require(fieldName, "fieldName");
 
       if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
         //return GetExternalBinaryFieldValue(operation);
@@ -61,7 +61,7 @@ namespace Empiria.Data {
     /// <summary>Retrives an IDataReader object giving a table name or stored procedure name.</summary>
     /// <returns>A generic IDataReader interface object.</returns>
     static public IDataReader GetDataReader(DataOperation operation) {
-      Assertion.AssertObject(operation, "operation");
+      Assertion.Require(operation, "operation");
 
       if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
         throw new NotImplementedException();
@@ -74,7 +74,7 @@ namespace Empiria.Data {
 
 
     static public DataRow GetDataRow(DataOperation operation) {
-      Assertion.AssertObject(operation, "operation");
+      Assertion.Require(operation, "operation");
 
       DataTable dataTable = GetDataTable(operation, operation.SourceName);
 
@@ -110,8 +110,8 @@ namespace Empiria.Data {
 
 
     static public DataTable GetDataTable(DataOperation operation, string dataTableName) {
-      Assertion.AssertObject(operation, "operation");
-      Assertion.AssertObject(dataTableName, "dataTableName");
+      Assertion.Require(operation, "operation");
+      Assertion.Require(dataTableName, "dataTableName");
 
       if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
         return GetExternalDataTable(operation, dataTableName);
@@ -136,7 +136,7 @@ namespace Empiria.Data {
 
 
     static public DataView GetDataView(DataOperation operation, string filter, string sort) {
-      Assertion.AssertObject(operation, "operation");
+      Assertion.Require(operation, "operation");
 
       DataTable dataTable = GetDataTable(operation, operation.SourceName);
 
@@ -150,8 +150,8 @@ namespace Empiria.Data {
 
 
     static public object GetFieldValue(DataOperation operation, string fieldName) {
-      Assertion.AssertObject(operation, "operation");
-      Assertion.AssertObject(fieldName, "fieldName");
+      Assertion.Require(operation, "operation");
+      Assertion.Require(fieldName, "fieldName");
 
       if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
         return GetExternalFieldValue(operation, fieldName);
@@ -192,8 +192,8 @@ namespace Empiria.Data {
 
     static public EmpiriaHashTable<T> GetHashTable<T>(DataOperation operation,
                                                       Func<T, string> hashFunction) where T : BaseObject {
-      Assertion.AssertObject(operation, "operation");
-      Assertion.AssertObject(hashFunction, "hashFunction");
+      Assertion.Require(operation, "operation");
+      Assertion.Require(hashFunction, "hashFunction");
 
       DataTable dataTable = DataReader.GetDataTable(operation);
 
@@ -202,7 +202,7 @@ namespace Empiria.Data {
 
 
     static public List<T> GetList<T>(DataOperation operation) where T : BaseObject {
-      Assertion.AssertObject(operation, "operation");
+      Assertion.Require(operation, "operation");
 
       DataTable dataTable = DataReader.GetDataTable(operation);
 
@@ -211,8 +211,8 @@ namespace Empiria.Data {
 
 
     static public List<T> GetList<T>(DataOperation operation, Func<DataTable, List<T>> parser) {
-      Assertion.AssertObject(operation, "operation");
-      Assertion.AssertObject(parser, "parser");
+      Assertion.Require(operation, "operation");
+      Assertion.Require(parser, "parser");
 
       DataTable dataTable = DataReader.GetDataTable(operation);
 
@@ -221,7 +221,7 @@ namespace Empiria.Data {
 
 
     static public T GetObject<T>(DataOperation operation) where T : BaseObject {
-      Assertion.AssertObject(operation, "operation");
+      Assertion.Require(operation, "operation");
 
       DataRow dataRow = DataReader.GetDataRow(operation);
 
@@ -230,7 +230,7 @@ namespace Empiria.Data {
 
 
     static public T GetObject<T>(DataOperation operation, T defaultValue) where T : BaseObject {
-      Assertion.AssertObject(operation, "operation");
+      Assertion.Require(operation, "operation");
 
       DataRow dataRow = DataReader.GetDataRow(operation);
 
@@ -338,7 +338,7 @@ namespace Empiria.Data {
 
 
     static private object GetScalar(DataOperation operation) {
-      Assertion.AssertObject(operation, "operation");
+      Assertion.Require(operation, "operation");
 
       if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
         return GetExternalScalar(operation);

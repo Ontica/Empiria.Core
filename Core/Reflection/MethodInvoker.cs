@@ -173,12 +173,12 @@ namespace Empiria.Reflection {
     }
 
     static public PropertyInfo GetStaticProperty(Type type, string propertyName) {
-      Assertion.AssertObject(type, "type");
-      Assertion.AssertObject(type, "propertyName");
+      Assertion.Require(type, "type");
+      Assertion.Require(type, "propertyName");
 
       PropertyInfo property = type.GetProperty(propertyName, BindingFlags.Static | BindingFlags.Public);
-      Assertion.AssertObject(property, "Type {0} doesn't has a static property with name '{1}'.",
-                                        type.FullName, propertyName);
+      Assertion.Require(property,
+        $"Type {type.FullName} doesn't has a static property with name '{propertyName}'.");
       return property;
     }
 
