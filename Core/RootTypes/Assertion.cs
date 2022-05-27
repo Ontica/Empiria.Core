@@ -1,152 +1,170 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Kernel Types                      *
-*  Namespace : Empiria                                          License  : Please read LICENSE.txt file      *
-*  Type      : Assertion                                        Pattern  : Static Class                      *
+*  Module   : Core                                       Component : Assertions                              *
+*  Assembly : Empiria.Core.dll                           Pattern   : Static class                            *
+*  Type     : Assertion                                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : This class allows assertion checking and automatic publishing of assertions fails.            *
+*  Summary  : This class allows assertion checking and automatic publishing of assertions fails.             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Runtime.CompilerServices;
 
 namespace Empiria {
+
+  public interface IInvariant {
+
+    bool Invariant();
+
+  }
+
 
   /// <summary>Static library that allows assertion checking and automatic publishing
   ///of assertions fails.</summary>
   static public class Assertion {
 
-    #region Public methods
+    #region Methods
 
-    /// <summary>Checks for an assertion and throws an AssertionFailException if it fails.</summary>
-    /// <param name="assertion">The assertion to check.</param>
-    /// <param name="failsMessage">Used to indicate the description of the exception
-    /// if the assertion fails.</param>
-    static public void Assert(bool assertion, string failsMessage, params object[] args) {
-      if (!assertion) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, failsMessage, args);
+    static public void Ensure(bool postcondition, string message) {
+      if (postcondition) {
+        return;
+      }
+
+      throw new ProgrammingException(ProgrammingException.Msg.PostconditionFailed,
+                                     message);
+    }
+
+
+    static public void Ensure(string nonEmptyStringPoscondition, string message) {
+      nonEmptyStringPoscondition = EmpiriaString.Clean(nonEmptyStringPoscondition);
+
+      if (!String.IsNullOrWhiteSpace(nonEmptyStringPoscondition)) {
+        return;
+      }
+
+      throw new ProgrammingException(ProgrammingException.Msg.PreconditionFailed,
+                                     message);
+    }
+
+
+
+    static public void Ensure(object nonEmptyObjectPostcondition, string message) {
+      if (nonEmptyObjectPostcondition == null) {
+
+        throw new ProgrammingException(ProgrammingException.Msg.PostconditionFailed,
+                                       message);
+
+      } else if (nonEmptyObjectPostcondition is string stringToCheck && (String.IsNullOrWhiteSpace(stringToCheck))) {
+
+        throw new ProgrammingException(ProgrammingException.Msg.PostconditionFailed,
+                                       message);
       }
     }
 
-    /// <summary>Checks for an assertion and throws an AssertionFailException if it fails.</summary>
-    /// <param name="assertion">The assertion to check.</param>
-    /// <param name="onFailsException">The exception to throw if the assertion fails.</param>
-    static public void Assert(bool assertion, Exception onFailsException) {
-      if (!assertion) {
 
-        EmpiriaLog.Error(onFailsException);
-
-        throw onFailsException;
+    static public void CheckInvariant(IInvariant instance, [CallerMemberName] string callerName = "") {
+      if (instance.Invariant()) {
+        return;
       }
+
+      throw new ProgrammingException(ProgrammingException.Msg.InvariantFailed,
+                                     callerName);
+
     }
 
-    static public void AssertFail(string failMessage, params object[] args) {
-      throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, failMessage, args);
+
+    static public void EnsureFailed(string message) {
+      throw new ProgrammingException(ProgrammingException.Msg.PostconditionFailed,
+                                     message);
     }
 
-    public static void AssertFail(Exception onFailException) {
-      throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, onFailException);
+
+    static public Exception EnsureNoReachThisCode() {
+      throw new ProgrammingException(ProgrammingException.Msg.EnsureNoReachThisCode);
     }
+
 
     /// <summary>Used to protect code execution when the code flow reaches an invalid line.</summary>
     /// <returns>Returns an exception in order to use it in methods that return values. Simply use
     ///it as throw Assertion.AssertNoReachThisCode(); in place of a 'return value;' statement.</returns>
-    static public Exception AssertNoReachThisCode() {
-      throw new AssertionFailsException(AssertionFailsException.Msg.AssertNoReachThisCode);
-    }
-
-    /// <summary>Used to protect code execution when the code flow reaches an invalid line.</summary>
-    /// <returns>Returns an exception in order to use it in methods that return values. Simply use
-    ///it as throw Assertion.AssertNoReachThisCode(); in place of a 'return value;' statement.</returns>
-    static public Exception AssertNoReachThisCode(string failMessage, params object[] args) {
-      throw new AssertionFailsException(AssertionFailsException.Msg.AssertNoReachThisCode,
-                                        failMessage, args);
+    static public Exception EnsureNoReachThisCode(string message) {
+      throw new ProgrammingException(ProgrammingException.Msg.EnsureNoReachThisCode, message);
     }
 
 
-    /// <summary>Checks if a value object is not empty. Throws an AssertionFailException if the value
-    /// is marked as empty.</summary>
-    /// <param name="value">The value object to check.</param>
-    /// <param name="messageOrFieldName">A message or the field name that holds the value object.</param>
-    static public void AssertObject(IValueObject value, string messageOrFieldName, params object[] args) {
-      if (!value.IsEmptyValue) {
-        return;
+    /// <summary>Checks a precondition and throws an AssertionFailException if it fails.</summary>
+    /// <param name="precondition">The precondition to check.</param>
+    /// <param name="message">Used to indicate the description of the exception
+    /// if the precondition fails.</param>
+    static public void Require(bool precondition, string message) {
+      if (!precondition) {
+        throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, message);
       }
-      string msg = String.Empty;
-      if (messageOrFieldName.Contains(" ")) {
-        msg = messageOrFieldName;
-      } else {
-        msg = String.Format("{0} can't have an empty value.", messageOrFieldName);
-      }
-      throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, msg, args);
     }
 
+    /// <summary>Checks as a precondition if a string is null or empty or if it consists
+    /// only in whitespaces after cleaning it. Throws an AssertionFailException if it fails.</summary>
+    /// <param name="instance">The string instance to check.</param>
+    /// <param name="messageOrName">A message or the variable name that holds the string object.</param>
+    static public void Require(string instance, string messageOrName) {
+      instance = EmpiriaString.Clean(instance);
 
-    /// <summary>Special assertion used to check if an object is not null, and for strings, if not is
-    /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
-    /// <param name="instance">The object to check.</param>
-    /// <param name="messageOrInstanceName">A message or the name of the instance variable.</param>
-    static public void AssertObject(object instance, string messageOrInstanceName, params object[] args) {
-      if (instance != null) {
-        return;
-      }
-      string msg = String.Empty;
-      if (messageOrInstanceName.Contains(" ")) {
-        msg = messageOrInstanceName;
-      } else {
-        msg = String.Format("Object variable '{0}' should be distinct to null.",
-                            messageOrInstanceName);
-      }
-      throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, msg, args);
-    }
-
-    static public void AssertObject(string instance, string messageOrInstanceName, params object[] args) {
       if (instance != null && !String.IsNullOrWhiteSpace(instance)) {
         return;
       }
-      string msg = String.Empty;
-      if (messageOrInstanceName.Contains(" ")) {
-        msg = messageOrInstanceName;
+
+      string message;
+
+      if (messageOrName.Contains(" ")) {
+        message = messageOrName;
+
       } else {
-        msg = String.Format("String variable '{0}' should be distinct to null or empty.",
-                            messageOrInstanceName);
+        message = String.Format("String variable '{0}' should be distinct to null or empty.",
+                                messageOrName);
       }
-      throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, msg, args);
+
+      throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
+                                        message);
     }
 
-    /// <summary>Special assertion used to check if an object is not null, and for strings, if not is
-    /// empty too. Throws an AssertionFailException if the object is null or is an empty string.</summary>
-    /// <param name="instance">The object to check.</param>
-    /// <param name="onFailException">The exception to throw if the assertion fails.</param>
-    static public void AssertObject(object instance, Exception onFailException) {
-      if (instance == null) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
-                                          onFailException);
-      } else if ((instance is string) && (String.IsNullOrWhiteSpace((string) instance))) {
-        throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
-                                          onFailException);
-      }
-    }
 
-    /// <summary>Checks if a value object is not empty and has a registered value too.</summary>
-    /// <param name="value">The IValueObject to check.</param>
-    /// <param name="messageOrFieldName">A message or the field name that holds the value object.</param>
-    static public void AssertRegistered(IValueObject value, string messageOrFieldName, params object[] args) {
-      if (!value.IsEmptyValue && value.IsRegistered) {
+    /// <summary>Precondition used to check if an object is not null.
+    /// Throws an AssertionFailException if the object is null.</summary>
+    /// <param name="requiredNotNullObject">The object to assert that is not null.</param>
+    /// <param name="messageOrName">The message or when the the instance variable.</param>
+    static public void Require(object instance, string messageOrName) {
+      if (instance != null) {
         return;
       }
-      string msg = String.Empty;
-      if (messageOrFieldName.Contains(" ")) {
-        msg = messageOrFieldName;
-      } else if (value.IsEmptyValue) {
-        msg = String.Format("{0} can't have an empty value.", messageOrFieldName);
+
+      string message;
+
+      if (messageOrName.Contains(" ")) {
+        message = messageOrName;
+
       } else {
-        msg = String.Format("Value '{1}' for field {0} is not registered.", messageOrFieldName, value);
+        message = String.Format("Object variable '{0}' should be distinct to null.",
+                                 messageOrName);
       }
 
-      throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, msg, args);
+      throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
+                                        message);
     }
 
-    #endregion Public methods
+
+    static public void RequireFail(string message) {
+      throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails, message);
+    }
+
+
+    static public void RequireRef(ref string instance, string messageOrName) {
+      Require(instance, messageOrName);
+
+      instance = EmpiriaString.Clean(instance);
+    }
+
+
+    #endregion Methods
 
   } //class Assertion
 
