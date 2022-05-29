@@ -45,7 +45,7 @@ namespace Empiria.Security {
     public string GetUpdatedHashCode() {
       int version = resource.CurrentDataIntegrityVersion;
 
-      Assertion.Ensure(1 <= version && version <= 16, "Invalid version number");
+      Assertion.Require(1 <= version && version <= 16, "Invalid version number");
 
       return version.ToString("X") + this.GetDIFHashCode(version);
     }

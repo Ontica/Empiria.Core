@@ -25,6 +25,15 @@ namespace Empiria {
 
     #region Methods
 
+    static public void Ensure(bool postcondition) {
+      if (postcondition) {
+        return;
+      }
+
+      throw new ProgrammingException(ProgrammingException.Msg.PostconditionFailed);
+    }
+
+
     static public void Ensure(bool postcondition, string message) {
       if (postcondition) {
         return;

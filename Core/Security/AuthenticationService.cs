@@ -44,7 +44,7 @@ namespace Empiria.Security {
 
       EmpiriaUser user = EmpiriaUser.Authenticate(username, password, entropy);
 
-      Assertion.Ensure(user, "user");
+      Assertion.Require(user, "user");
 
       var identity = new EmpiriaIdentity(user, AuthenticationMode.Basic);
 
@@ -60,7 +60,7 @@ namespace Empiria.Security {
 
       EmpiriaUser user = EmpiriaUser.AuthenticateAnonymous(anonymousUser);
 
-      Assertion.Ensure(user, "user");
+      Assertion.Require(user, "user");
 
       var identity = new EmpiriaIdentity(user, AuthenticationMode.Basic);
 
