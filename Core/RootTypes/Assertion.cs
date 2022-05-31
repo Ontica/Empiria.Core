@@ -14,7 +14,7 @@ namespace Empiria {
 
   public interface IInvariant {
 
-    bool Invariant();
+    void AssertInvariant();
 
   }
 
@@ -69,18 +69,6 @@ namespace Empiria {
                                        message);
       }
     }
-
-
-    static public void CheckInvariant(IInvariant instance, [CallerMemberName] string callerName = "") {
-      if (instance.Invariant()) {
-        return;
-      }
-
-      throw new ProgrammingException(ProgrammingException.Msg.InvariantFailed,
-                                     callerName);
-
-    }
-
 
     static public void EnsureFailed(string message) {
       throw new ProgrammingException(ProgrammingException.Msg.PostconditionFailed,
