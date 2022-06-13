@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Empiria.Json;
+
 namespace Empiria {
 
   /// <summary>Represents an entity with a unique ID and a name.</summary>
@@ -21,6 +23,37 @@ namespace Empiria {
     }
 
   }  // interface INamedEntity
+
+
+  /// <summary>Data transfer object for INamedEntity instances.</summary>
+  public class NamedEntity : INamedEntity {
+
+    public NamedEntity(INamedEntity entity) {
+      this.UID = entity.UID;
+      this.Name = entity.Name;
+    }
+
+    public NamedEntity(string uid, string name) {
+      this.UID = uid;
+      this.Name = name;
+    }
+
+    public NamedEntityDto Parse(JsonObject json) {
+      Assertion.Require(json, nameof(json));
+
+      return new NamedEntityDto(json.Get<string>("uid"),
+                                json.Get<string>("name"));
+    }
+
+    public string UID {
+      get; private set;
+    }
+
+    public string Name {
+      get; private set;
+    }
+
+  }  // class NamedEntity
 
 
   /// <summary>Data transfer object for INamedEntity instances.</summary>
