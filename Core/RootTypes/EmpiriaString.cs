@@ -20,7 +20,8 @@ namespace Empiria {
     #region Public methods
 
     static public string BuildKeywords(params string[] words) {
-      string temp = temp = String.Join(" ", words).ToLowerInvariant();
+      string temp = String.Join(" ", words).ToLowerInvariant();
+
       return BuildKeywords(temp, true);
     }
 
@@ -71,6 +72,7 @@ namespace Empiria {
       }
       return temp;
     }
+
 
     /// <summary>Trims all excesive whitespaces and removes any control characters.</summary>
     static public string Clean(string value) {
