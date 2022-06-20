@@ -133,7 +133,7 @@ namespace Empiria.DataTypes {
     }
 
     public override string ToString() {
-      return EmpiriaString.TrimAll(amount.ToString("#,#.00#") + " " + unit.Abbr);
+      return EmpiriaString.TrimAll(amount.ToString("#,##0.00######") + " " + unit.Abbr);
     }
 
     #endregion Public methods
