@@ -15,19 +15,27 @@ namespace Empiria.Storage {
   public class InputFile {
 
     public InputFile(Stream stream,
+                     string appContentType,
                      string mediaType,
                      string originalFileName) {
       Assertion.Require(stream, nameof(stream));
+      Assertion.Require(appContentType, nameof(appContentType));
       Assertion.Require(mediaType, nameof(mediaType));
       Assertion.Require(originalFileName, nameof(originalFileName));
 
       this.Stream = stream;
-      this.MediaType = MediaType;
+      this.AppContentType = appContentType;
+      this.MediaType = mediaType;
       this.OriginalFileName = originalFileName;
     }
 
 
     public Stream Stream {
+      get;
+    }
+
+
+    public string AppContentType {
       get;
     }
 
