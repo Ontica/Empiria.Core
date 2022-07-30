@@ -10,6 +10,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
+
 namespace Empiria.Storage {
 
   /// <summary>Represents a stored media object treated as a value type, so it must be related to other
@@ -31,6 +32,9 @@ namespace Empiria.Storage {
     static public new StorageContainer Parse(string uid) {
       return BaseObject.ParseKey<StorageContainer>(uid);
     }
+
+
+    static public StorageContainer Empty => BaseObject.ParseEmpty<StorageContainer>();
 
 
     #endregion Constructors and parsers
@@ -82,10 +86,6 @@ namespace Empiria.Storage {
 
     #region Methods
 
-    public StorageFile Add(InputFile inputFile) {
-      throw new NotImplementedException();
-    }
-
 
     public StorageFile GetFile(string fileUID) {
       throw new NotImplementedException();
@@ -100,6 +100,23 @@ namespace Empiria.Storage {
     public void Remove(StorageFile file) {
       throw new NotImplementedException();
     }
+
+
+    public StorageFile Store(string relativePath, string fileName, InputFile inputFile) {
+      Assertion.Require(relativePath, nameof(relativePath));
+      Assertion.Require(fileName, nameof(fileName));
+      Assertion.Require(inputFile, nameof(inputFile));
+
+      string fullPath = FileUtilities.CombinePath(this.BasePath, relativePath, fileName);
+
+      var fileInfo = FileUtilities.SaveFile(fullPath, inputFile);
+
+      // string hashcode = FileUtilities.CalculateStreamHashCode(inputFile.Stream);
+
+
+      return StorageFile.Register(this, inputFile, fileInfo.Name, relativePath);
+    }
+
 
     #endregion Methods
 
