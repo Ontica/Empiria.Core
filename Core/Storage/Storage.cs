@@ -33,6 +33,9 @@ namespace Empiria.Storage {
     }
 
 
+    static public Storage Empty => BaseObject.ParseEmpty<Storage>();
+
+
     #endregion Constructors and parsers
 
     #region Properties
@@ -53,6 +56,9 @@ namespace Empiria.Storage {
 
     public string BaseUrl {
       get {
+        if (this.IsEmptyInstance) {
+          return string.Empty;
+        }
         return this.ExtensionData.Get<string>("baseUrl");
       }
     }

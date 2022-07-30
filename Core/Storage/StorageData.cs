@@ -34,7 +34,7 @@ namespace Empiria.Storage {
       var op = DataOperation.Parse("writeEXFStorageItem",
                     o.Id, o.UID, o.GetEmpiriaType().Id,
                     o.AppContentType, o.MIMEContentType, o.Size,
-                    o.Container.Storage.Id, o.Container.Id, -1, o.FilePath,
+                    o.Container.Storage.Id, o.Container.Id, -1, o.RelativePath,
                     o.Name, o.OriginalFileName, o.Keywords, o.ExtensionData.ToString(),
                     o.HashCode, o.PostedBy.Id, o.PostingTime, (char) o.Status,
                     o.Integrity.GetUpdatedHashCode());
