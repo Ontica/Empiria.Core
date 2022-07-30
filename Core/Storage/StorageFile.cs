@@ -20,10 +20,12 @@ namespace Empiria.Storage {
 
     #region Constructors and parsers
 
-    protected StorageFile() {
+    internal protected StorageFile() {
       // Required by Empiria Framework
     }
 
+    public StorageFile(string filename, int size) : base(filename, size) {
+    }
 
     static public new StorageFile Parse(int id) {
       return BaseObject.ParseId<StorageFile>(id);
@@ -32,6 +34,31 @@ namespace Empiria.Storage {
 
     static public new StorageFile Parse(string uid) {
       return BaseObject.ParseKey<StorageFile>(uid);
+    }
+
+
+    static internal StorageFile Register(StorageContainer container,
+                                         InputFile inputFile,
+                                         string filename,
+                                         string relativePath = "",
+                                         string hashcode = "") {
+      Assertion.Require(container, nameof(container));
+      Assertion.Require(inputFile, nameof(inputFile));
+      Assertion.Require(filename, nameof(filename));
+      Assertion.Require(relativePath != null, nameof(relativePath));
+
+      var storageFile = new StorageFile(filename, (int) inputFile.MediaLength) {
+        AppContentType = inputFile.AppContentType,
+        MIMEContentType = inputFile.MediaType,
+        OriginalFileName = inputFile.OriginalFileName,
+        Container = container,
+        RelativePath = relativePath,
+        HashCode = hashcode
+      };
+
+      storageFile.Save();
+
+      return storageFile;
     }
 
 
@@ -60,7 +87,7 @@ namespace Empiria.Storage {
     }
 
 
-    [DataField("ContainerId", Default = "Empiria.Storage.Container.Default")]
+    [DataField("ContainerId")]
     public StorageContainer Container {
       get;
       private set;
@@ -68,7 +95,7 @@ namespace Empiria.Storage {
 
 
     [DataField("ItemPath")]
-    internal string FilePath {
+    internal string RelativePath {
       get;
       private set;
     }
@@ -76,7 +103,11 @@ namespace Empiria.Storage {
 
     public string FullPath {
       get {
-        return $"{this.Container.BasePath}/{this.FilePath}/{this.Name}";
+        if (RelativePath.Length != 0) {
+          return $"{this.Container.BasePath}\\{this.RelativePath}\\{this.Name}";
+        } else {
+          return $"{this.Container.BasePath}\\{this.Name}";
+        }
       }
     }
 
@@ -90,7 +121,7 @@ namespace Empiria.Storage {
 
     public string Url {
       get {
-        return $"{this.Container.BaseUrl}/{this.FilePath}/{this.Name}";
+        return $"{this.Container.BaseUrl}/{this.RelativePath}/{this.Name}";
       }
     }
 
@@ -115,11 +146,11 @@ namespace Empiria.Storage {
     object[] IProtected.GetDataIntegrityFieldValues(int version) {
       if (version == 1) {
         return new object[] {
-          1, "Id", "AppContentType", this.AppContentType, "MIMEContentType", this.MIMEContentType,
-          "ItemSize", this.Size, "Name", this.Name, "OriginalFileName", this.OriginalFileName,
-          "FilePath", this.FilePath, "ExtData", this.ExtensionData.ToString(),
-          "HashCode", this.HashCode, "PostingTime", this.PostingTime, "PostedById", this.PostedBy.Id,
-          "Status", (char) this.Status
+          1, "Id", Id,  "AppContentType", AppContentType, "MIMEContentType", MIMEContentType,
+          "ItemSize", Size, "Name", Name, "OriginalFileName", OriginalFileName,
+          "ExtData", ExtensionData.ToString(), "HashCode", HashCode,
+          "PostingTime", PostingTime, "PostedById", PostedBy.Id,
+          "Status", (char) Status
         };
       }
       throw new SecurityException(SecurityException.Msg.WrongDIFVersionRequested, version);
