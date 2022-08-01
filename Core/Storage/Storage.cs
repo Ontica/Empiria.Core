@@ -33,7 +33,7 @@ namespace Empiria.Storage {
     }
 
 
-    static public Storage Empty => BaseObject.ParseEmpty<Storage>();
+    static public new Storage Empty => BaseObject.ParseEmpty<Storage>();
 
 
     #endregion Constructors and parsers

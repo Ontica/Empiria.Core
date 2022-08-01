@@ -61,6 +61,7 @@ namespace Empiria.Storage {
       return storageFile;
     }
 
+    static public new StorageFile Empty => BaseObject.ParseEmpty<StorageFile>();
 
     #endregion Constructors and parsers
 

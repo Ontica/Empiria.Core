@@ -34,7 +34,7 @@ namespace Empiria.Storage {
     }
 
 
-    static public StorageContainer Empty => BaseObject.ParseEmpty<StorageContainer>();
+    static public new StorageContainer Empty => BaseObject.ParseEmpty<StorageContainer>();
 
 
     #endregion Constructors and parsers
@@ -111,8 +111,7 @@ namespace Empiria.Storage {
 
       var fileInfo = FileUtilities.SaveFile(fullPath, inputFile);
 
-      // string hashcode = FileUtilities.CalculateStreamHashCode(inputFile.Stream);
-
+      // string hashcode = FileUtilities.CalculateHashCode(inputFile.Stream);
 
       return StorageFile.Register(this, inputFile, fileInfo.Name, relativePath);
     }

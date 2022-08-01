@@ -42,6 +42,7 @@ namespace Empiria.Storage {
       return BaseObject.ParseKey<StorageItem>(uid);
     }
 
+    static public StorageItem Empty => StorageFile.Empty;
 
     #endregion Constructors and parsers
 
