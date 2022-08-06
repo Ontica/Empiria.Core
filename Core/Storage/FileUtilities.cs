@@ -19,19 +19,6 @@ namespace Empiria.Storage {
   static public class FileUtilities {
 
 
-    static public string CombinePath(string path1, string path2, string path3 = "") {
-      Assertion.Require(path1, nameof(path1));
-      Assertion.Require(path2, nameof(path2));
-      Assertion.Require(path3 != null, nameof(path3));
-
-      if (path3.Length == 0) {
-        return Path.Combine(path1, path2);
-      } else {
-        return Path.Combine(path1, path2, path3);
-      }
-    }
-
-
     static public string CalculateStreamHashCode(Stream stream) {
       Assertion.Require(stream, nameof(stream));
 
@@ -50,6 +37,35 @@ namespace Empiria.Storage {
       }
     }
 
+
+    static public string CombinePath(string path1, string path2, string path3 = "") {
+      Assertion.Require(path1, nameof(path1));
+      Assertion.Require(path2, nameof(path2));
+      Assertion.Require(path3 != null, nameof(path3));
+
+      if (path3.Length == 0) {
+        return Path.Combine(path1, path2);
+      } else {
+        return Path.Combine(path1, path2, path3);
+      }
+    }
+
+
+    static public string CombineUrl(string path1, string path2, string path3 = "") {
+      path1 = SetSlashChars(path1);
+      path2 = SetSlashChars(path2);
+      path3 = SetSlashChars(path3);
+
+      Assertion.Require(path1, nameof(path1));
+      Assertion.Require(path2, nameof(path2));
+
+      string temp = path1 + "/" + path2;
+
+      if (path3.Length != 0) {
+        temp += "/" + path3;
+      }
+      return temp;
+    }
 
 
     static public string GetFullPath(string fileName) {
@@ -75,8 +91,7 @@ namespace Empiria.Storage {
     }
 
 
-    internal static FileInfo SaveFile(string fullPath,
-                                      InputFile file) {
+    static internal FileInfo SaveFile(string fullPath, InputFile file) {
 
       EnsureExistsFolderForFullPath(fullPath);
 
@@ -124,12 +139,26 @@ namespace Empiria.Storage {
     }
 
 
-    static public byte[] StreamToArray(Stream stream) {
+    static private byte[] StreamToArray(Stream stream) {
       byte[] array = new byte[stream.Length];
 
       stream.Read(array, 0, (int) stream.Length);
 
       return array;
+    }
+
+
+    static private string SetSlashChars(string path) {
+      if (String.IsNullOrWhiteSpace(path)) {
+        return string.Empty;
+      }
+
+      string temp = path.TrimStart('/');
+      temp = temp.TrimEnd('\\');
+
+      temp = temp.Replace('\\', '/');
+
+      return temp;
     }
 
     #endregion Helpers

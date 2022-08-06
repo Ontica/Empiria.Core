@@ -122,7 +122,7 @@ namespace Empiria.Storage {
 
     public string Url {
       get {
-        return $"{this.Container.BaseUrl}/{this.RelativePath}/{this.Name}";
+        return FileUtilities.CombineUrl(this.Container.BaseUrl, this.RelativePath, this.Name);
       }
     }
 
