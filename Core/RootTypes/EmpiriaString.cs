@@ -806,6 +806,9 @@ namespace Empiria {
       if (source == null) {
         return String.Empty;
       }
+      if (source.Length == 0) {
+        return String.Empty;
+      }
       while (true) {
         if (source.IndexOf(pattern) >= 0) {
           source = source.Replace(pattern, replaceWith);
