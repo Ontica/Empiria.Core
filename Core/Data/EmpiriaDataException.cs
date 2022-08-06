@@ -65,7 +65,7 @@ namespace Empiria.Data {
     public EmpiriaDataException(Msg message, params object[] args)
       : base(message.ToString(), GetMessage(message, args)) {
       try {
-       // base.Publish();
+       base.Publish();
       } finally {
         // no-op
       }
@@ -80,7 +80,7 @@ namespace Empiria.Data {
                                 params object[] args)
       : base(message.ToString(), GetMessage(message, args), exception) {
       try {
-       // base.Publish();
+       base.Publish();
       } finally {
         // no-op
       }
