@@ -87,18 +87,22 @@ namespace Empiria.Storage {
     #region Methods
 
 
-    public StorageFile GetFile(string fileUID) {
-      throw new NotImplementedException();
-    }
-
-
     protected override void OnSave() {
       StorageData.WriteStorageContainer(this);
     }
 
 
     public void Remove(StorageFile file) {
-      throw new NotImplementedException();
+      Assertion.Require(file, nameof(file));
+
+      Assertion.Require(file.Container.Equals(this),
+                        $"File with uid {file.UID} does not belong to this container ({this.Name})");
+
+      file.Delete();
+
+      file.Save();
+
+      FileUtilities.MoveFile(file.FullPath, Storage.RecycleBinPath);
     }
 
 

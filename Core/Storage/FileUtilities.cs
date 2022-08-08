@@ -91,6 +91,19 @@ namespace Empiria.Storage {
     }
 
 
+    static internal void MoveFile(string fileFullPath, string targetPath) {
+      var file = new FileInfo(fileFullPath);
+
+      var targetFullPath = CombinePath(targetPath, file.Name);
+
+      EnsureExistsFolderForFullPath(targetFullPath);
+
+      file.CopyTo(targetFullPath);
+
+      file.Delete();
+    }
+
+
     static internal FileInfo SaveFile(string fullPath, InputFile file) {
 
       EnsureExistsFolderForFullPath(fullPath);
@@ -101,7 +114,6 @@ namespace Empiria.Storage {
 
       return new FileInfo(fullPath);
     }
-
 
 
     #region Helpers

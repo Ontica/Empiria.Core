@@ -64,6 +64,16 @@ namespace Empiria.Storage {
     }
 
 
+    public string RecycleBinPath {
+      get {
+        if (this.IsEmptyInstance) {
+          return string.Empty;
+        }
+        return this.ExtensionData.Get<string>("recycleBinPath");
+      }
+    }
+
+
     public string Keywords {
       get {
         return EmpiriaString.BuildKeywords(this.StorageType, this.Name);
