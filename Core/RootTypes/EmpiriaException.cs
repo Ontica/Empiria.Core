@@ -32,6 +32,7 @@ namespace Empiria {
     private string processId = String.Empty;
     private bool initialized = false;
 
+
     #endregion Fields
 
     #region Constructors and parsers
@@ -39,7 +40,7 @@ namespace Empiria {
     /// <summary>Initializes a new instance of EmpiriaException class with a specified error
     /// message.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
-    public EmpiriaException(string exceptionTag, string message) : base(message) {
+    protected EmpiriaException(string exceptionTag, string message) : base(message) {
       this.exceptionTag = exceptionTag;
       this.timestamp = DateTime.Now;
       InitializeEnvironmentInformation();
@@ -49,14 +50,14 @@ namespace Empiria {
     ///  message and a reference to the inner exception that is the cause of this exception.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
     /// <param name="innerException">The inner exception that throws this exception.</param>
-    public EmpiriaException(string exceptionTag, string message, Exception innerException) :
+    protected EmpiriaException(string exceptionTag, string message, Exception innerException) :
                             base(message, innerException) {
       this.exceptionTag = exceptionTag;
       this.timestamp = DateTime.Now;
       InitializeEnvironmentInformation();
     }
 
-    public EmpiriaException(SerializationInfo info, StreamingContext context) : base(info, context) {
+    protected EmpiriaException(SerializationInfo info, StreamingContext context) : base(info, context) {
 
     }
 
@@ -120,11 +121,6 @@ namespace Empiria {
       return temp;
     }
 
-    /// <summary>Publish this exception.</summary>
-    public void Publish() {
-      EmpiriaLog.Error(this);
-    }
-
     public string ToHtmlString() {
       return EmpiriaException.GetHTMLString(this);
     }
@@ -132,10 +128,6 @@ namespace Empiria {
     public override string ToString() {
       return EmpiriaException.GetTextString(this);
     }
-
-    #endregion Public methods
-
-    #region Protected methods
 
     static protected string BuildMessage(string message, params object[] args) {
       if (args != null && args.Length != 0) {
@@ -169,7 +161,64 @@ namespace Empiria {
       return temp;
     }
 
-    #endregion Protected methods
+    #endregion Public methods
+
+    #region Exception publishing
+
+    static private bool _publishErrors;
+    static private DateTime _publishingErrorsStoppedSince;
+
+    static EmpiriaException() {
+      EmpiriaException.StartPublishingNextErrors();
+    }
+
+    /// <summary>Publish this exception.</summary>
+    public void Publish() {
+      if (!MustPublishErrors()) {
+        // ToDo: Make something else with the error
+        return;
+      }
+
+      StopPublishingNextErrors();
+
+      try {
+
+        EmpiriaLog.Error(this);
+
+        StartPublishingNextErrors();
+
+      } catch {
+
+        StopPublishingNextErrors();
+
+        // ToDo: Make something else with the error
+      }
+
+    }
+
+
+    static private void StartPublishingNextErrors() {
+      _publishErrors = true;
+      _publishingErrorsStoppedSince = new DateTime(1900, 01, 01);
+    }
+
+
+    static private void StopPublishingNextErrors() {
+      _publishErrors = false;
+      _publishingErrorsStoppedSince = DateTime.Now;
+    }
+
+
+    static private bool MustPublishErrors() {
+      const int SECONDS_AFTER_RETRY = 10;
+
+      bool mustRetryPublishing =
+            _publishingErrorsStoppedSince.Add(TimeSpan.FromSeconds(SECONDS_AFTER_RETRY)) < DateTime.Now;
+
+      return _publishErrors || mustRetryPublishing;
+    }
+
+    #endregion Exception publishing
 
     #region Private methods
 
