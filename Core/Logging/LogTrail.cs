@@ -24,8 +24,6 @@ namespace Empiria.Logging {
     }
 
     public LogTrail(ClientApplication clientApplication) {
-      Assertion.Require(clientApplication, "clientApplication");
-
       this.ClientApplicationId = clientApplication.Id;
     }
 
@@ -42,22 +40,11 @@ namespace Empiria.Logging {
     #region Public methods
 
     public void Write(ILogEntry logEntry) {
-      Assertion.Require(logEntry, "logEntry");
-      logEntry.AssertIsValid();
-
       WriteLogEntry(logEntry);
     }
 
 
     public void Write(ILogEntry[] logEntries) {
-      Assertion.Require(logEntries, "logEntries");
-      Assertion.Require(logEntries.Length > 0,
-                       "logEntries can't be an empty array.");
-
-      foreach (var logEntry in logEntries) {
-        logEntry.AssertIsValid();
-      }
-
       if (logEntries.Length > 1) {
         WriteLogEntries(logEntries);
       } else {

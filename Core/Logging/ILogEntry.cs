@@ -42,12 +42,6 @@ namespace Empiria.Logging {
 
     #endregion Properties
 
-    #region Methods
-
-    void AssertIsValid();
-
-    #endregion Methods
-
   }  // interface ILogEntry
 
 }  // namespace Empiria.Logging

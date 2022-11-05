@@ -94,18 +94,29 @@ namespace Empiria {
 
 
     static private void CreateLogEntryInCurrentLogTrail(LogEntryType type, string data) {
-      try {
-        ILogTrail logTrail = GetDefaultLogTrail();
+      ILogTrail logTrail = GetDefaultLogTrail();
 
-        var logEntry = CreateLogEntry(type, data);
+      ILogEntry logEntry = CreateLogEntry(type, data);
+
+      try {
 
         logTrail.Write(logEntry);
 
       } catch {
-        // ToDo:
-        // Log the CreateLogEntry exception to another kind of log outside the database.
-        // Also log the original logEntry to the same chosen log technology.
+
+        TryWriteLogEntryToFile(logEntry);
+
+        // WARINING: Never try to catch this error without retrowing it, because it causes an inifinite loop in EmpiriaException.Publish()
+
+        throw;
       }
+    }
+
+
+    static private void TryWriteLogEntryToFile(ILogEntry logEntry) {
+      // Log the CreateLogEntry exception to another kind of log outside the database.
+      // Also log the original logEntry to the same chosen log technology.
+      // Catch any exception
     }
 
 
