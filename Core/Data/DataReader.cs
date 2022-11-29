@@ -190,6 +190,11 @@ namespace Empiria.Data {
     }
 
 
+    static public FixedList<T> GetFixedList<T>(DataOperation operation, bool reload) where T : BaseObject {
+      return GetList<T>(operation, reload).ToFixedList();
+    }
+
+
     static public EmpiriaHashTable<T> GetHashTable<T>(DataOperation operation,
                                                       Func<T, string> hashFunction) where T : BaseObject {
       Assertion.Require(operation, "operation");
@@ -207,6 +212,15 @@ namespace Empiria.Data {
       DataTable dataTable = DataReader.GetDataTable(operation);
 
       return BaseObject.ParseList<T>(dataTable);
+    }
+
+
+    static public List<T> GetList<T>(DataOperation operation, bool reload) where T : BaseObject {
+      Assertion.Require(operation, "operation");
+
+      DataTable dataTable = DataReader.GetDataTable(operation);
+
+      return BaseObject.ParseList<T>(dataTable, reload);
     }
 
 
