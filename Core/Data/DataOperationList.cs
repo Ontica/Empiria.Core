@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections.Generic;
+
 using Empiria.Collections;
 
 namespace Empiria.Data {
@@ -59,22 +60,18 @@ namespace Empiria.Data {
       base.Add(operation);
     }
 
+    public void Add(ICollection<DataOperation> operations) {
+      base.AddRange(operations);
+    }
+
 
     public void Add(DataOperationList operationList) {
-      if (operationList == null) {
-        return;
-      }
-
-      for (int i = 0, j = operationList.Count; i < j; i++) {
-        base.Add(operationList[i]);
-      }
+      base.AddRange(operationList);
     }
 
 
     internal void Add(IEnumerable<DataOperation> items) {
-      foreach (var item in items) {
-        base.Add(item);
-      }
+      base.AddRange(items);
     }
 
 

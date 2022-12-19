@@ -149,7 +149,7 @@ namespace Empiria.Collections {
     }
 
 
-    protected void AddRange(ICollection<T> collection) {
+    protected void AddRange(IEnumerable<T> collection) {
       if (isSynchronized) {
         lock (items) {
           items.AddRange(collection);
