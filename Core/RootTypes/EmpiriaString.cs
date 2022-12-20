@@ -19,6 +19,27 @@ namespace Empiria {
 
     #region Public methods
 
+
+    static public bool All(string source, string characterSet) {
+      for (int i = 0; i < source.Length; i++) {
+        if (!characterSet.Contains(source.Substring(i, 1))) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+
+    static public bool AllDigits(string value) {
+      foreach (char c in value) {
+        if (!Char.IsDigit(c)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+
     static public string BuildKeywords(params string[] words) {
       string temp = String.Join(" ", words).ToLowerInvariant();
 
@@ -615,17 +636,30 @@ namespace Empiria {
       return false;
     }
 
-    static public bool ToBoolean(string source) {
+    static public bool? TryToBoolean(string source) {
       source = source.ToUpperInvariant();
+
       if (source == "1" || source == "Y" || source == "T" || source == "S" || source == "V" ||
         source == "TRUE" || source == "SI" || source == "SÍ" || source == "VERDADERO") {
         return true;
       }
+
       if (source == "0" || source == "N" || source == "F" || source == "FALSE" ||
         source == "NO" || source == "FALSO") {
         return false;
       }
-      throw new Exception("No reconozco el valor " + source + " como del tipo de datos Boolean");
+
+      return null;
+    }
+
+    static public bool ToBoolean(string source) {
+      bool? value = TryToBoolean(source);
+
+      if (!value.HasValue) {
+        throw Assertion.EnsureNoReachThisCode($"No reconozco el valor '{source}' como del tipo de datos Boolean.");
+      }
+
+      return value.Value;
     }
 
     static public DateTime ToDate(string source) {
