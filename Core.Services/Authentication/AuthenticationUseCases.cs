@@ -7,8 +7,8 @@
 *  Summary  : Use cases for authenticate users.                                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-
 using System;
+
 using Empiria.Security;
 
 namespace Empiria.Services.Authentication {

@@ -23,6 +23,15 @@ namespace Empiria.Services.UserManagement {
     }
 
 
+    static internal FixedList<UserData> SearchUsers(string keywords) {
+      string sql = "SELECT * FROM Contacts " +
+                   "WHERE UserName IS NOT NULL OR UserName <> ''";
+
+
+      return DataReader.GetPlainObjectFixedList<UserData>(DataOperation.Parse(sql));
+    }
+
+
     static internal void ChangePassword(string username, string password) {
       if (ConfigurationData.Get("UseFormerPasswordEncryption", false)) {
         ChangePasswordUsingFormerEncryption(username, password);
