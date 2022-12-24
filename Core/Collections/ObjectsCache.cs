@@ -1,8 +1,8 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Ontology                          *
-*  Namespace : Empiria                                          License  : Please read LICENSE.txt file      *
-*  Type      : ObjectsCache                                     Pattern  : Cache Collection Class            *
+*  Module   : Empiria Collections                        Component : Empiria Core                            *
+*  Assembly : Empiria.Core.dll                           Pattern   : Information Holder                      *
+*  Type     : ObjectsCache                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary   : Dynamic cached collection of BaseObject instances.                                            *
 *                                                                                                            *
@@ -10,7 +10,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Empiria {
+namespace Empiria.Collections {
 
   /// <summary>Dynamic cached collection of BaseObject instances.</summary>
   internal sealed class ObjectsCache : ICollection<BaseObject> {
@@ -20,9 +20,9 @@ namespace Empiria {
     static private readonly int cacheSize =
                                 ConfigurationData.Get<int>(typeof(ObjectsCache), "ObjectCache.Size", 1048576);
 
-    private Dictionary<string, BaseObject> objects = null;
-    private Dictionary<string, BaseObject> namedObjects = null;
-    private Dictionary<string, long> lastAccess = null;
+    private readonly Dictionary<string, BaseObject> objects = null;
+    private readonly Dictionary<string, BaseObject> namedObjects = null;
+    private readonly Dictionary<string, long> lastAccess = null;
 
     #endregion Fields
 
@@ -252,4 +252,4 @@ namespace Empiria {
 
   } //class ObjectsCache
 
-} //namespace Empiria
+} //namespace Empiria.Collections

@@ -1,20 +1,21 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Kernel Types                      *
-*  Namespace : Empiria.Collections                              License  : Please read LICENSE.txt file      *
-*  Type      : EmpiriaIdAndKeyDictionary                        Pattern  : Collection class                  *
+*  Module   : Empiria Collections                        Component : Empiria Core                            *
+*  Assembly : Empiria.Core.dll                           Pattern   : Information Holder                      *
+*  Type     : IdentifiablesCache                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Sealed class that holds a double dictionary, by id and key hashes.                            *
+*  Summary  : Sealed class that holds a double dictionary (by id and key) for IIdentifiable objects.         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using System.Collections;
 using System.Collections.Generic;
 
 namespace Empiria.Collections {
 
-  /// <summary>Sealed class that holds a double dictionary, by id and key hashes.</summary>
-  public sealed class EmpiriaIdAndKeyDictionary<T> : IEnumerable<T> where T : class, IIdentifiable {
+  /// <summary>Sealed class that holds a double dictionary (by id and key) for IIdentifiable objects.</summary>
+  public sealed class IdentifiablesCache<T> : IEnumerable<T> where T : class, IIdentifiable {
 
     #region Fields
 
@@ -27,19 +28,19 @@ namespace Empiria.Collections {
 
     #region Constructors and parsers
 
-    public EmpiriaIdAndKeyDictionary() {
+    public IdentifiablesCache() {
       items = new Dictionary<int, T>();
       keys = new Dictionary<string, T>();
     }
 
-    public EmpiriaIdAndKeyDictionary(int capacity) {
+    public IdentifiablesCache(int capacity) {
       items = new Dictionary<int, T>(capacity);
       keys = new Dictionary<string, T>(capacity);
     }
 
     #endregion Constructors and parsers
 
-    #region Public properties
+    #region Properties
 
     public T this[int id] {
       get {
@@ -67,9 +68,9 @@ namespace Empiria.Collections {
       }
     }
 
-    #endregion Public properties
+    #endregion Properties
 
-    #region Public methods
+    #region Methods
 
     public bool ContainsId(int id) {
       return items.ContainsKey(id);
@@ -89,7 +90,7 @@ namespace Empiria.Collections {
     }
 
     IEnumerator IEnumerable.GetEnumerator() {
-      return (items as System.Collections.IEnumerable).GetEnumerator();
+      return (items as IEnumerable).GetEnumerator();
     }
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator() {
@@ -164,8 +165,8 @@ namespace Empiria.Collections {
       }
     }
 
-    #endregion Public methods
+    #endregion Methods
 
-  } // class DoubleKeyList
+  } // class IdentifiablesCache
 
 } // namespace Empiria.Collections
