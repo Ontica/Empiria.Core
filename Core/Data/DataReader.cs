@@ -197,12 +197,18 @@ namespace Empiria.Data {
 
     static public EmpiriaHashTable<T> GetHashTable<T>(DataOperation operation,
                                                       Func<T, string> hashFunction) where T : BaseObject {
+      return GetHashTable(operation, hashFunction, false);
+    }
+
+    static public EmpiriaHashTable<T> GetHashTable<T>(DataOperation operation,
+                                                      Func<T, string> hashFunction,
+                                                      bool reload) where T : BaseObject {
       Assertion.Require(operation, "operation");
       Assertion.Require(hashFunction, "hashFunction");
 
       DataTable dataTable = DataReader.GetDataTable(operation);
 
-      return BaseObject.ParseHashTable<T>(dataTable, hashFunction);
+      return BaseObject.ParseHashTable<T>(dataTable, hashFunction, reload);
     }
 
 
