@@ -124,14 +124,6 @@ namespace Empiria.Contacts {
 
     #region Public methods
 
-    public FixedList<T> GetContactsInRole<T>(string roleName) where T : Contact {
-      return base.GetLinks<T>(roleName);
-    }
-
-    public FixedList<T> GetContactsInRole<T>(string roleName, TimeFrame period) where T : Contact {
-      return base.GetLinks<T>(roleName, period);
-    }
-
     protected override void OnSave() {
       ContactsData.WriteContact(this);
     }

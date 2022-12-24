@@ -13,7 +13,6 @@ using System.Data;
 using System.Reflection;
 using System.Reflection.Emit;
 
-using Empiria.Collections;
 using Empiria.ORM;
 
 namespace Empiria.Ontology {
@@ -94,11 +93,6 @@ namespace Empiria.Ontology {
     #region Public properties
 
     [Newtonsoft.Json.JsonIgnore]
-    public new EmpiriaIdAndKeyDictionary<TypeAssociationInfo> Associations {
-      get { return base.Associations; }
-    }
-
-    [Newtonsoft.Json.JsonIgnore]
     public new ObjectTypeInfo BaseType {
       get { return (ObjectTypeInfo) base.BaseType; }
     }
@@ -120,10 +114,6 @@ namespace Empiria.Ontology {
       get {
         return false;
       }
-    }
-
-    public new TypeMethodInfo[] Methods {
-      get { return base.Methods; }
     }
 
     #endregion Public properties
@@ -330,6 +320,7 @@ namespace Empiria.Ontology {
       }
     }
 
+
     private DefaultConstructorDelegate GetDefaultConstructorDelegate() {
       ConstructorInfo constructor = this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance |
                                                                              BindingFlags.Public |
@@ -352,6 +343,7 @@ namespace Empiria.Ontology {
 
       return (DefaultConstructorDelegate) dynMethod.CreateDelegate(typeof(DefaultConstructorDelegate));
     }
+
 
     private PowertypeConstructorDelegate GetPowertypeConstructorDelegate() {
       var constructor = this.UnderlyingSystemType.GetConstructor(BindingFlags.Instance |

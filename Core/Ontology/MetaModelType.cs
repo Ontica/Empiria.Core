@@ -20,24 +20,26 @@ using Empiria.StateEnums;
 namespace Empiria.Ontology {
 
   public enum MetaModelTypeFamily {
+
     FundamentalType,
-    InterfaceType,
+
     MetaModelType,
-    MethodType,
+
     ObjectType,
+
     PartitionedType,
+
     PowerType,
-    RelationType,
-    RuleType,
-    StaticType,
+
     ValueType,
   }
+
 
   public abstract class MetaModelType : IIdentifiable {
 
     #region Fields
 
-    static private EmpiriaIdAndKeyDictionary<MetaModelType> cache = new EmpiriaIdAndKeyDictionary<MetaModelType>(256);
+    static private IdentifiablesCache<MetaModelType> cache = new IdentifiablesCache<MetaModelType>(256);
 
     private int id = 0;
     private string name = String.Empty;
@@ -55,7 +57,6 @@ namespace Empiria.Ontology {
     private bool femaleGenre = false;
     private string documentation = String.Empty;
     private JsonObject extensionData = JsonObject.Empty;
-    private string keywords = String.Empty;
     private string dataSource = String.Empty;
     private string idFieldName = String.Empty;
     private string typeIdFieldName = String.Empty;
@@ -66,10 +67,9 @@ namespace Empiria.Ontology {
     private EntityStatus status = EntityStatus.Active;
 
     private Type underlyingSystemType = null;
-    private EmpiriaIdAndKeyDictionary<TypeAssociationInfo> associationInfoList = null;
-    private TypeMethodInfo[] methodsArray = null;
 
     private readonly object _locker = new object();
+
     private static readonly object _static_locker = new object();
 
     #endregion Fields
@@ -155,19 +155,6 @@ namespace Empiria.Ontology {
     #region Public properties
 
 
-    protected internal EmpiriaIdAndKeyDictionary<TypeAssociationInfo> Associations {
-      get {
-        if (associationInfoList == null) {
-          lock (_locker) {
-            if (associationInfoList == null) {
-              LoadAssociations();
-            }
-          }
-        }
-        return associationInfoList;
-      }
-    }
-
     protected MetaModelType BaseType {
       get { return baseType; }
     }
@@ -236,18 +223,6 @@ namespace Empiria.Ontology {
       protected set { isSealed = value; }
     }
 
-    protected TypeMethodInfo[] Methods {
-      get {
-        if (methodsArray == null) {
-          lock (_locker) {
-            if (methodsArray == null) {
-              LoadMethods();
-            }
-          }
-        }
-        return methodsArray;
-      }
-    }
 
     public string Name {
       get { return name; }
@@ -401,12 +376,6 @@ namespace Empiria.Ontology {
         case MetaModelTypeFamily.ValueType:
           return ObjectFactory.CreateObject<ValueTypeInfo>();
 
-        case MetaModelTypeFamily.RuleType:
-          return ObjectFactory.CreateObject<RuleTypeInfo>();
-
-        case MetaModelTypeFamily.StaticType:
-          return ObjectFactory.CreateObject<StaticTypeInfo>();
-
         default:
           throw Assertion.EnsureNoReachThisCode();
       }
@@ -419,19 +388,6 @@ namespace Empiria.Ontology {
       return ObjectFactory.GetType(assembly, className);
     }
 
-    private void LoadAssociations() {
-      if (associationInfoList != null) {
-        return;
-      }
-
-      DataTable dataTable = OntologyData.GetTypeRelations(this.Name);
-      this.associationInfoList = new EmpiriaIdAndKeyDictionary<TypeAssociationInfo>(0);
-      foreach (DataRow dataRow in dataTable.Rows) {
-        RelationTypeFamily family = TypeRelationInfo.ParseRelationTypeFamily((string) dataRow["RelationTypeFamily"]);
-        TypeAssociationInfo associationInfo = TypeAssociationInfo.Parse(this, dataRow);
-        this.associationInfoList.Insert(associationInfo.Name, associationInfo);
-      }
-    }
 
     private void LoadDataRow(DataRow dataRow) {
       this.id = (int) dataRow["TypeId"];
@@ -447,7 +403,6 @@ namespace Empiria.Ontology {
       this.femaleGenre = Convert.ToBoolean(dataRow["FemaleGenre"]);
       this.documentation = EmpiriaString.ToString(dataRow["Documentation"]);
       this.extensionData = JsonObject.Parse(EmpiriaString.ToString(dataRow["TypeExtData"]));
-      this.keywords = EmpiriaString.ToString(dataRow["TypeKeywords"]);
       this.solutionName = EmpiriaString.ToString(dataRow["SolutionName"]);
       this.systemName = EmpiriaString.ToString(dataRow["SystemName"]);
       this.version = EmpiriaString.ToString(dataRow["Version"]);
@@ -462,23 +417,6 @@ namespace Empiria.Ontology {
       this.status = (EntityStatus) char.Parse((string) dataRow["TypeStatus"]);
     }
 
-    private void LoadMethods() {
-      if (methodsArray != null) {
-        return;
-      }
-
-      // There is no Methods table defined in this Empiria version 6.x,
-      // so just return an empty array.Future versions should remove this line
-      // and uncomment the code below.
-      this.methodsArray = new TypeMethodInfo[0];
-
-      //DataTable dataTable = OntologyData.GetTypeMethods(this.Id);
-
-      //this.methodsArray = new TypeMethodInfo[dataTable.Rows.Count];
-      //for (int i = 0, j = dataTable.Rows.Count; i < j; i++) {
-      //  this.methodsArray[i] = TypeMethodInfo.Parse(this, dataTable.Rows[i]);
-      //}
-    }
 
     static private MetaModelTypeFamily ParseMetaModelTypeFamily(string typeFamilyName) {
       try {
@@ -487,6 +425,7 @@ namespace Empiria.Ontology {
         throw new OntologyException(OntologyException.Msg.UndefinedTypeInfoFamily, typeFamilyName);
       }
     }
+
 
     private void SetBaseType() {
       if (this.IsPrimitive) {

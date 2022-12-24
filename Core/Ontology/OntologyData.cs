@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Data;
-using Empiria.DataTypes.Time;
 
 namespace Empiria.Ontology {
 
@@ -81,65 +80,6 @@ namespace Empiria.Ontology {
       return id;
     }
 
-    static internal int GetNextRelationId(TypeRelationInfo typeRelationInfo) {
-      return DataWriter.CreateId(typeRelationInfo.DataSource);
-    }
-
-    static internal DataRow GetObjectLinkDataRow(TypeRelationInfo typeRelation, IIdentifiable source) {
-      DataTable table = GetObjectLinksTable(typeRelation, source);
-
-      if (table.Rows.Count != 0) {
-        return table.Rows[0];
-      }
-      return null;
-    }
-
-    static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IIdentifiable source) {
-      string sql = "SELECT [{TARGET.TYPE.TABLE}].* FROM [{TARGET.TYPE.TABLE}] INNER JOIN [{LINKS.TABLE}] " +
-                   "ON [{TARGET.TYPE.TABLE}].[{TargetTableIdField}] = [{LINKS.TABLE}].[{TargetIdField}] " +
-                   "WHERE [{LINKS.TABLE}].[{TypeRelationIdField}] = {TypeRelationId} AND " +
-                   "[{LINKS.TABLE}].[{SourceIdField}] = {SourceId} AND " +
-                   "[{LINKS.TABLE}].LinkStatus = 'A' " +
-                   "ORDER BY [{LINKS.TABLE}].LinkIndex";
-
-      sql = sql.Replace("{LINKS.TABLE}", typeRelation.DataSource);
-      sql = sql.Replace("{TARGET.TYPE.TABLE}", typeRelation.TargetType.DataSource);
-      sql = sql.Replace("{TargetTableIdField}", typeRelation.TargetType.IdFieldName);
-      sql = sql.Replace("{TargetIdField}", typeRelation.TargetIdFieldName);
-      sql = sql.Replace("{TypeRelationIdField}", typeRelation.TypeRelationIdFieldName);
-      sql = sql.Replace("{TypeRelationId}", typeRelation.Id.ToString());
-      sql = sql.Replace("{SourceIdField}", typeRelation.SourceIdFieldName);
-      sql = sql.Replace("{SourceId}", source.Id.ToString());
-
-      return DataReader.GetDataTable(DataOperation.Parse(sql));
-    }
-
-    static internal DataTable GetObjectLinksTable(TypeRelationInfo typeRelation, IIdentifiable source,
-                                                  TimeFrame period) {
-      string sql = "SELECT [{TARGET.TYPE.TABLE}].* FROM [{TARGET.TYPE.TABLE}] INNER JOIN [{LINKS.TABLE}] " +
-                   "ON [{TARGET.TYPE.TABLE}].[{TargetTableIdField}] = [{LINKS.TABLE}].[{TargetIdField}] " +
-                   "WHERE [{LINKS.TABLE}].[{TypeRelationIdField}] = {TypeRelationId} AND " +
-                   "[{LINKS.TABLE}].[{SourceIdField}] = {SourceId} AND " +
-                   "([{LINKS.TABLE}].StartDate <= '{TimePeriodStart}' AND " +
-                    "[{LINKS.TABLE}].EndDate >= '{TimePeriodEnd}') AND " +
-                   "[{LINKS.TABLE}].LinkStatus = 'A' " +
-                   "ORDER BY [{LINKS.TABLE}].LinkIndex";
-
-      sql = sql.Replace("{LINKS.TABLE}", typeRelation.DataSource);
-      sql = sql.Replace("{TARGET.TYPE.TABLE}", typeRelation.TargetType.DataSource);
-      sql = sql.Replace("{TargetTableIdField}", typeRelation.TargetType.IdFieldName);
-      sql = sql.Replace("{TargetIdField}", typeRelation.TargetIdFieldName);
-      sql = sql.Replace("{TypeRelationIdField}", typeRelation.TypeRelationIdFieldName);
-      sql = sql.Replace("{TypeRelationId}", typeRelation.Id.ToString());
-      sql = sql.Replace("{SourceIdField}", typeRelation.SourceIdFieldName);
-      sql = sql.Replace("{SourceId}", source.Id.ToString());
-      sql = sql.Replace("{TimePeriodStart}", period.StartTime.ToString("yyyy-MM-dd"));
-      sql = sql.Replace("{TimePeriodEnd}", period.EndTime.ToString("yyyy-MM-dd"));
-
-      return DataReader.GetDataTable(DataOperation.Parse(sql));
-    }
-
-
     internal static List<T> GetBaseObjectList<T>(string filter = "", string sort = "") where T: BaseObject {
       var typeInfo = ObjectTypeInfo.Parse<T>();
 
@@ -156,28 +96,6 @@ namespace Empiria.Ontology {
 
       return BaseObject.ParseList<T>(table);
     }
-
-
-    static internal DataTable GetInverseObjectLinksTable(TypeRelationInfo typeRelation, IIdentifiable target) {
-      string sql = "SELECT {SOURCE.TYPE.TABLE}.* FROM {SOURCE.TYPE.TABLE} INNER JOIN {LINKS.TABLE} " +
-             "ON {SOURCE.TYPE.TABLE}.{SourceTableIdField} = {LINKS.TABLE}.{SourceIdField} " +
-             "WHERE {LINKS.TABLE}.{TypeRelationIdField} = {TypeRelationId} AND " +
-             "{LINKS.TABLE}.{TargetIdField} = {TargetId} AND " +
-             "{LINKS.TABLE}.LinkStatus = 'A' " +
-             "ORDER BY {LINKS.TABLE}.LinkIndex";
-
-      sql = sql.Replace("{LINKS.TABLE}", typeRelation.DataSource);
-      sql = sql.Replace("{SOURCE.TYPE.TABLE}", typeRelation.SourceType.DataSource);
-      sql = sql.Replace("{SourceTableIdField}", typeRelation.SourceType.IdFieldName);
-      sql = sql.Replace("{SourceIdField}", typeRelation.SourceIdFieldName);
-      sql = sql.Replace("{TypeRelationIdField}", typeRelation.TypeRelationIdFieldName);
-      sql = sql.Replace("{TypeRelationId}", typeRelation.Id.ToString());
-      sql = sql.Replace("{TargetIdField}", typeRelation.TargetIdFieldName);
-      sql = sql.Replace("{TargetId}", target.Id.ToString());
-
-      return DataReader.GetDataTable(DataOperation.Parse(sql));
-    }
-
 
     static internal DataRow GetTypeDataRow(int typeId) {
       DataRow row = GeneralDataOperations.GetEntityById("Types", "TypeId", typeId);
@@ -196,40 +114,6 @@ namespace Empiria.Ontology {
       } else {
         throw new OntologyException(OntologyException.Msg.TypeInfoNotFound, typeName);
       }
-    }
-
-
-    static internal DataRow GetTypeMethodDataRow(int typeMethodId) {
-      return GeneralDataOperations.GetEntityById("TypeMethods", "TypeMethodId", typeMethodId);
-    }
-
-
-    static internal DataTable GetTypeMethods(int typeId) {
-      try {
-        return GeneralDataOperations.GetEntitiesByField("TypeMethods", "SourceTypeId", typeId);
-      } catch (Exception e) {
-        throw new OntologyException(OntologyException.Msg.TypeMethodInfoNotFound, typeId, e);
-      }
-    }
-
-
-    static internal DataTable GetTypeMethodParameters(int typeMethodId) {
-      return GeneralDataOperations.GetEntitiesByField("TypeMethodsParameters", "TypeMethodId", typeMethodId);
-    }
-
-
-    static internal DataRow GetTypeRelation(int typeRelationId) {
-      return GeneralDataOperations.GetEntityById("TypeRelations", "TypeRelationId", typeRelationId);
-    }
-
-
-    static internal DataRow GetTypeRelation(string typeRelationName) {
-      return GeneralDataOperations.GetEntityByKey("TypeRelations", "RelationName", typeRelationName);
-    }
-
-
-    static internal DataTable GetTypeRelations(string typeName) {
-      return DataReader.GetDataTable(DataOperation.Parse("qryTypeRelations", typeName));
     }
 
 
@@ -262,15 +146,6 @@ namespace Empiria.Ontology {
       return null;
     }
 
-
-    static internal void WriteLink(TypeAssociationInfo assocationInfo, IIdentifiable source, IIdentifiable target) {
-      DataOperation operation = DataOperation.Parse("writeObjectLink", GetNextRelationId(assocationInfo),
-                                                    assocationInfo.Id, source.Id, target.Id, 0, String.Empty, String.Empty,
-                                                    ExecutionServer.CurrentUserId, "A", DateTime.Today,
-                                                    ExecutionServer.DateMaxValue);
-
-      DataWriter.Execute(operation);
-    }
 
     #endregion Internal methods
 

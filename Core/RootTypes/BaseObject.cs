@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Collections;
-using Empiria.DataTypes.Time;
+
 using Empiria.Ontology;
 
 namespace Empiria {
@@ -276,12 +276,6 @@ namespace Empiria {
 
     #region Public properties
 
-    protected AttributesBag AttributesBag {
-      get;
-      private set;
-    }
-
-
     public int Id {
       get { return this.objectId; }
       private set {
@@ -361,81 +355,6 @@ namespace Empiria {
 
     public override int GetHashCode() {
       return (this.objectTypeInfo.GetHashCode() ^ this.Id);
-    }
-
-
-    protected T GetLink<T>(string linkName) where T : BaseObject {
-      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
-
-      return association.GetLink<T>(this);
-    }
-
-
-    protected T GetLink<T>(string linkName, T defaultValue) where T : BaseObject {
-      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
-
-      return association.GetLink<T>(this, defaultValue);
-    }
-
-
-    protected T GetInverseLink<T>(string linkName) where T : BaseObject {
-      var association = TypeAssociationInfo.Parse(linkName);
-
-      return association.GetInverseLink<T>(this);
-    }
-
-
-    protected T GetInverseLink<T>(string linkName, T defaultValue) where T : BaseObject {
-      var association = TypeAssociationInfo.Parse(linkName);
-
-      return association.GetInverseLink<T>(this, defaultValue);
-    }
-
-
-    protected FixedList<T> GetLinks<T>(string linkName) where T : BaseObject {
-      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
-
-      return association.GetLinks<T>(this);
-    }
-
-
-    protected FixedList<T> GetLinks<T>(string linkName, Comparison<T> sort) where T : BaseObject {
-      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
-      FixedList<T> list = association.GetLinks<T>(this);
-
-      list.Sort(sort);
-
-      return list;
-    }
-
-
-    protected FixedList<T> GetLinks<T>(string linkName, TimeFrame period) where T : BaseObject {
-      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
-
-      return association.GetLinks<T>(this, period);
-    }
-
-
-    protected FixedList<T> GetLinks<T>(string linkName, TimeFrame period,
-                                       Comparison<T> sort) where T : BaseObject {
-      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
-      FixedList<T> list = association.GetLinks<T>(this, period);
-
-      list.Sort(sort);
-
-      return list;
-    }
-
-
-    protected FixedList<T> GetLinks<T>(string linkName, Predicate<T> predicate) where T : BaseObject {
-      TypeAssociationInfo association = objectTypeInfo.Associations[linkName];
-
-      return association.GetLinks<T>(this, predicate);
-    }
-
-
-    protected void LoadAttributesBag(DataRow row) {
-      this.AttributesBag = new AttributesBag(this, row);
     }
 
 
@@ -580,7 +499,8 @@ namespace Empiria {
       Assertion.Require(newType, "newType");
       Assertion.Require(!this.GetEmpiriaType().Equals(newType),
                        "newType should be distinct to the current one.");
-      //Assertion.Assert(this.GetEmpiriaType().UnderlyingSystemType.Equals(newType.UnderlyingSystemType),
+
+      // Assertion.Assert(this.GetEmpiriaType().UnderlyingSystemType.Equals(newType.UnderlyingSystemType),
       //                 "newType underlying system type should be the same to the current one's.");
       // Seek for a common ancestor (distinct than ObjectType) between types:
       // eg: if A is a mammal and B is a bird, should be possible to convert A to B or B to A because both are animals
@@ -595,10 +515,6 @@ namespace Empiria {
         cache.Insert(this);
       }
     }
-
-    //protected void Link(TypeAssociationInfo assocationInfo, IStorable value) {
-    //  OntologyData.WriteLink(assocationInfo, this, value);
-    //}
 
   } // class BaseObject
 
