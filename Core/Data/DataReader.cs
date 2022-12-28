@@ -12,27 +12,18 @@ using System.Collections.Generic;
 using System.Data;
 
 using Empiria.Collections;
-
-using Empiria.Data.Handlers;
-using Empiria.Data.Integration;
-
 using Empiria.Json;
 using Empiria.ORM;
 using Empiria.Reflection;
-using Empiria.Security;
+
+using Empiria.Data.Handlers;
 
 namespace Empiria.Data {
 
   /// <summary>Static class with methods that performs data reading operations.</summary>
   static public class DataReader {
 
-    #region Delegates
-
-    static private ReloadDataCallback OnReloadDataCallback = new ReloadDataCallback(OnReloadData);
-
-    #endregion Delegates
-
-    #region Public methods
+    #region Methods
 
     static public int Count(DataOperation operation) {
       Assertion.Require(operation, "operation");
@@ -47,11 +38,6 @@ namespace Empiria.Data {
       Assertion.Require(operation, "operation");
       Assertion.Require(fieldName, "fieldName");
 
-      if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
-        //return GetExternalBinaryFieldValue(operation);
-        throw new NotImplementedException();
-      }
-
       IDataHandler handler = GetDataHander(operation);
 
       return handler.GetBinaryFieldValue(operation, fieldName);
@@ -62,10 +48,6 @@ namespace Empiria.Data {
     /// <returns>A generic IDataReader interface object.</returns>
     static public IDataReader GetDataReader(DataOperation operation) {
       Assertion.Require(operation, "operation");
-
-      if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
-        throw new NotImplementedException();
-      }
 
       IDataHandler handler = GetDataHander(operation);
 
@@ -102,26 +84,13 @@ namespace Empiria.Data {
     }
 
 
-    static public DataTable GetDataTable(DataOperation operation, DataQuery query) {
-      var dataTable = DataReader.GetDataTable(operation, operation.Name);
-
-      return query.ApplyTo(dataTable);
-    }
-
-
     static public DataTable GetDataTable(DataOperation operation, string dataTableName) {
       Assertion.Require(operation, "operation");
       Assertion.Require(dataTableName, "dataTableName");
 
-      if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
-        return GetExternalDataTable(operation, dataTableName);
-      }
+      IDataHandler handler = GetDataHander(operation);
 
-      if (DataIntegrationRules.HasCachingRule(operation.SourceName)) {
-        return GetCachedDataTable(operation, dataTableName);
-      }
-
-      return GetInternalDataTable(operation, dataTableName);
+      return handler.GetDataTable(operation, dataTableName);
     }
 
 
@@ -152,10 +121,6 @@ namespace Empiria.Data {
     static public object GetFieldValue(DataOperation operation, string fieldName) {
       Assertion.Require(operation, "operation");
       Assertion.Require(fieldName, "fieldName");
-
-      if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
-        return GetExternalFieldValue(operation, fieldName);
-      }
 
       IDataHandler handler = GetDataHander(operation);
 
@@ -360,10 +325,6 @@ namespace Empiria.Data {
     static private object GetScalar(DataOperation operation) {
       Assertion.Require(operation, "operation");
 
-      if (DataIntegrationRules.HasReadRule(operation.SourceName)) {
-        return GetExternalScalar(operation);
-      }
-
       IDataHandler handler = GetDataHander(operation);
 
       return handler.GetScalar(operation);
@@ -374,16 +335,6 @@ namespace Empiria.Data {
       return (Count(operation) == 0);
     }
 
-    static public void Optimize() {
-      DataOperation dataOperation = DataOperation.Parse("doOptimization");
-      dataOperation.ExecutionTimeout = 200;
-      DataWriter.ExecuteInternal(dataOperation);
-
-      string message = "Se ejecutó satisfactoriamente el procedimiento de optimización " +
-                       "de índices para todas las bases de datos del sistema.";
-
-      EmpiriaLog.Info(message);
-    }
 
     static public T ReadValue<T>(DataRow row, string columnName, T defaultValue) {
       if (row[columnName] == null || row[columnName] == DBNull.Value) {
@@ -393,100 +344,15 @@ namespace Empiria.Data {
       }
     }
 
+    #endregion Methods
 
-    #endregion Public methods
-
-    #region Internal methods
-
-    static internal DataTable GetInternalDataTable(DataOperation operation, string dataTableName) {
-      IDataHandler handler = GetDataHander(operation);
-
-      return handler.GetDataTable(operation, dataTableName);
-    }
-
-    #endregion Internal methods
-
-    #region Private methods
-
-    static private DataTable GetCachedDataTable(DataOperation dataOperation, string dataTableName) {
-      DataTable table = DataCache.GetTable(dataTableName);
-      if (table == null) {
-        lock (DataCache.SyncRoot) {
-          table = DataCache.GetTable(dataTableName);
-          if (table == null) {
-            table = LoadDataTableIntoCache(dataOperation, dataTableName);
-          }
-        }
-      }
-      return table;
-    }
-
-    static private DataTable LoadDataTableIntoCache(DataOperation dataOperation, string dataTableName) {
-      DataTable table = DataReader.GetInternalDataTable(dataOperation, dataTableName);
-
-      DataCache.InsertTable(dataOperation, dataTableName, table,
-                            null, new TimeSpan(0, 4, 0, 0), System.Web.Caching.CacheItemPriority.NotRemovable, null);
-      return table;
-    }
-
-    static private object OnReloadData(DataOperation dataOperation, string dataTableName) {
-      return LoadDataTableIntoCache(dataOperation, dataTableName);
-    }
+    #region Helpers
 
     static private IDataHandler GetDataHander(DataOperation operation) {
       return operation.DataSource.GetDataHandler();
     }
 
-    static private int GetExternalCount(DataOperation dataOperation) {
-      WebServer targetServer = DataIntegrationRules.GetReadRuleServer(dataOperation.SourceName);
-
-      using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(targetServer)) {
-        return proxy.CountData(dataOperation.ToMessage());
-      }
-    }
-
-    static private DataRow GetExternalDataRow(DataOperation dataOperation) {
-      DataTable dataTable = GetExternalDataTable(dataOperation, dataOperation.SourceName);
-      if (dataTable.Rows.Count != 0) {
-        return dataTable.Rows[0];
-      } else {
-        return null;
-      }
-    }
-
-    static private DataTable GetExternalDataTable(DataOperation dataOperation, string dataTableName) {
-      WebServer targetServer = DataIntegrationRules.GetReadRuleServer(dataOperation.SourceName);
-
-      using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(targetServer)) {
-        return proxy.GetDataTable(dataOperation.ToMessage(), String.Empty, String.Empty);
-      }
-    }
-
-    static private DataView GetExternalDataView(DataOperation dataOperation, string filter, string sort) {
-      WebServer targetServer = DataIntegrationRules.GetReadRuleServer(dataOperation.SourceName);
-
-      using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(targetServer)) {
-        return proxy.GetDataTable(dataOperation.ToMessage(), filter, sort).DefaultView;
-      }
-    }
-
-    static private object GetExternalFieldValue(DataOperation dataOperation, string fieldName) {
-      WebServer targetServer = DataIntegrationRules.GetReadRuleServer(dataOperation.SourceName);
-
-      using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(targetServer)) {
-        return proxy.GetFieldValue(dataOperation.ToMessage(), fieldName);
-      }
-    }
-
-    static private object GetExternalScalar(DataOperation dataOperation) {
-      WebServer targetServer = DataIntegrationRules.GetReadRuleServer(dataOperation.SourceName);
-
-      using (DataIntegratorWSProxy proxy = new DataIntegratorWSProxy(targetServer)) {
-        return proxy.GetScalar(dataOperation.ToMessage());
-      }
-    }
-
-    #endregion Private methods
+    #endregion Helpers
 
   } //class DataReader
 
