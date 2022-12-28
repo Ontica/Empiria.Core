@@ -1,16 +1,17 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Contacts Management               *
-*  Namespace : Empiria.Contacts                                 License  : Please read LICENSE.txt file      *
-*  Type      : Organization                                     Pattern  : Ontology Object Type              *
+*  Module   : Contacts Management                          Component : Domain Layer                          *
+*  Assembly : Empiria.Core.dll                             Pattern   : Information Holder                    *
+*  Type     : Organization                                 License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Represents a government entity or agency, an enterprise or a non-profit organization.         *
+*  Summary  : Represents a government entity or agency, an enterprise or a non-profit organization.          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Contacts {
 
+  /// <summary>Represents a government entity or agency, an enterprise or a non-profit organization.</summary>
   public class Organization : Contact {
 
     #region Constructors and parsers
@@ -19,23 +20,17 @@ namespace Empiria.Contacts {
       // Required by Empiria Framework.
     }
 
+
     static public new Organization Parse(int id) {
       return BaseObject.ParseId<Organization>(id);
     }
 
-    static private readonly Organization _empty = BaseObject.ParseEmpty<Organization>();
-    static public new Organization Empty {
-      get {
-        return _empty.Clone<Organization>();
-      }
-    }
 
-    static private readonly Organization _unknown = BaseObject.ParseUnknown<Organization>();
-    static public Organization Unknown {
-      get {
-        return _unknown.Clone<Organization>();
-      }
-    }
+    static public new Organization Empty => BaseObject.ParseEmpty<Organization>();
+
+
+    static public Organization Unknown => BaseObject.ParseUnknown<Organization>();
+
 
     #endregion Constructors and parsers
 

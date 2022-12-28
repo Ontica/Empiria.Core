@@ -1,28 +1,18 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Contacts Management               *
-*  Namespace : Empiria.Contacts                                 License  : Please read LICENSE.txt file      *
-*  Type      : Person                                           Pattern  : Ontology Object Type              *
+*  Module   : Contacts Management                          Component : Domain Layer                          *
+*  Assembly : Empiria.Core.dll                             Pattern   : Information Holder                    *
+*  Type     : Person                                       License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Information specific to a person.                                                             *
+*  Summary  : Represents a human person.                                                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Contacts {
 
-
-  /// <summary>Information specific to a person.</summary>
+  /// <summary>Represents a human person.</summary>
   public class Person : Contact {
-
-    #region Fields
-
-    private string firstName = String.Empty;
-    private string lastName = String.Empty;
-    private string lastName2 = String.Empty;
-    private DateTime bornDate = ExecutionServer.DateMinValue;
-
-    #endregion Fields
 
     #region Constructors and parsers
 
@@ -30,91 +20,69 @@ namespace Empiria.Contacts {
       // Required by Empiria Framework.
     }
 
+
     static public new Person Parse(int id) {
       return BaseObject.ParseId<Person>(id);
     }
 
-    static private readonly Person _empty = BaseObject.ParseEmpty<Person>();
-    static public new Person Empty {
-      get {
-        return _empty.Clone<Person>();
-      }
-    }
 
-    static private readonly Person _unknown = BaseObject.ParseUnknown<Person>();
-    static public Person Unknown {
-      get {
-        return _unknown.Clone<Person>();
-      }
-    }
+    static public new Person Empty => BaseObject.ParseEmpty<Person>();
+
+
+    static public Person Unknown => BaseObject.ParseUnknown<Person>();
+
 
     #endregion Constructors and parsers
 
-    #region Public properties
+    #region Properties
 
-    [DataField("FirstName")]
     public string FirstName {
       get {
-        return firstName;
+        return base.ExtendedData.Get("person/firstName", string.Empty);
       }
-      set {
-        firstName = value;
+      private set {
+        base.ExtendedData.Set("person/firstName", EmpiriaString.TrimAll(value));
       }
     }
 
-    [DataField("LastName")]
+
     public string LastName {
       get {
-        return lastName;
+        return base.ExtendedData.Get("person/lastName", string.Empty);
       }
-      set {
-        lastName = value;
+      private set {
+        base.ExtendedData.Set("person/lastName", EmpiriaString.TrimAll(value));
       }
     }
 
 
-    [DataField("LastName2")]
     public string LastName2 {
       get {
-        return lastName2;
+        return base.ExtendedData.Get("person/lastName2", string.Empty);
       }
-      set {
-        lastName2 = value;
-      }
-    }
-
-
-    public string FamilyFullName {
-      get {
-        return EmpiriaString.TrimAll(this.LastName + " " + this.LastName2 + ", " + this.FirstName);
-      }
-    }
-
-
-    public new string FullName {
-      get {
-        if (base.FullName != String.Empty) {
-          return base.FullName;
-        }
-        return EmpiriaString.TrimAll(this.FirstName + " " + this.LastName + " " + this.LastName2);
+      private set {
+        base.ExtendedData.Set("person/lastName2", EmpiriaString.TrimAll(value));
       }
     }
 
 
     public string JobTitle {
       get {
-        return ExtendedData.Get("JobTitle", "No determinado");
+        return ExtendedData.Get("person/jobTitle", "No determinado");
+      }
+      private set {
+        ExtendedData.Set("person/jobTitle", EmpiriaString.TrimAll(value));
       }
     }
 
 
     public bool IsFemale {
       get {
-        return ExtendedData.Get("IsFemale", false);
+        return ExtendedData.Get("person/isFemale", false);
       }
     }
 
-    #endregion Public properties
+    #endregion Properties
 
   } // class Person
 

@@ -17,7 +17,6 @@ namespace Empiria.Contacts {
       get;
     }
 
-
   }  // interface IContact
 
 }  // namespace Empiria.Contacts

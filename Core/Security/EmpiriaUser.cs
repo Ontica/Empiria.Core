@@ -11,7 +11,6 @@ using System;
 using System.Data;
 
 using Empiria.Contacts;
-using Empiria.Json;
 using Empiria.StateEnums;
 
 using Empiria.Security.Claims;
@@ -99,6 +98,7 @@ namespace Empiria.Security {
       return user;
     }
 
+
     static internal EmpiriaUser Authenticate(EmpiriaSession activeSession) {
       Assertion.Require(activeSession, "activeSession");
 
@@ -154,27 +154,7 @@ namespace Empiria.Security {
       private set;
     }
 
-    public string FirstName {
-      get;
-      private set;
-    }
-
-    public string LastName {
-      get;
-      private set;
-    }
-
     public string EMail {
-      get;
-      private set;
-    }
-
-    public string OfficePhone {
-      get;
-      private set;
-    }
-
-    public string MobilePhone {
       get;
       private set;
     }
@@ -193,17 +173,6 @@ namespace Empiria.Security {
       return Contact.Parse(this.Id);
     }
 
-    internal JsonObject GetExtendedData() {
-      var json = new JsonObject();
-
-      json.Add("FirstName", this.FirstName);
-      json.Add("LastName", this.LastName);
-      json.Add("OfficePhone", this.OfficePhone);
-      json.Add("MobilePhone", this.MobilePhone);
-
-      return json;
-    }
-
     #endregion Public methods
 
     #region Private methods
@@ -216,21 +185,6 @@ namespace Empiria.Security {
       if (this.PasswordExpired) {
         throw new SecurityException(SecurityException.Msg.UserPasswordExpired, this.UserName);
       }
-    }
-
-    private void FillExtendedData(JsonObject extendedData) {
-      this.FirstName = String.Empty;
-      this.LastName = String.Empty;
-      this.OfficePhone = String.Empty;
-      this.MobilePhone = String.Empty;
-
-      if (extendedData == null || extendedData.IsEmptyInstance) {
-        return;
-      }
-      this.FirstName = extendedData.Get("FirstName", String.Empty);
-      this.LastName = extendedData.Get("LastName", String.Empty);
-      this.OfficePhone = extendedData.Get("OfficePhone", String.Empty);
-      this.MobilePhone = extendedData.Get("MobilePhone", String.Empty);
     }
 
 
@@ -248,9 +202,6 @@ namespace Empiria.Security {
       this.PasswordExpired = false;
       this.EMail = EmpiriaString.ToString(row["ContactEmail"]);
       this.FullName = EmpiriaString.ToString(row["ContactFullName"]);
-
-      var json = JsonObject.Parse(EmpiriaString.ToString(row["ContactExtData"]));
-      this.FillExtendedData(json);
     }
 
     #endregion Private methods

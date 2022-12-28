@@ -1,21 +1,22 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Contacts Management               *
-*  Namespace : Empiria.Contacts                                 License  : Please read LICENSE.txt file      *
-*  Type      : Contact                                          Pattern  : Empiria Semiabstract Object Type  *
+*  Module   : Contacts Management                          Component : Domain Layer                          *
+*  Assembly : Empiria.Core.dll                             Pattern   : Information Holder                    *
+*  Type     : Contact                                      License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Represents either a person, an organization or a group that has a meaningful name and can be  *
-*              contacted in some way and can play one or more roles.                                         *
+*  Summary  : Represents either a person, an organization or a group that has a meaningful name and can be   *
+*             contacted in some way and can play one or more roles.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.DataTypes.Time;
 using Empiria.Json;
 using Empiria.StateEnums;
 
 namespace Empiria.Contacts {
 
+  /// <summary>Represents either a person, an organization or a group that has a meaningful name
+  /// and can be contacted in some way and can play one or more roles.</summary>
   public class Contact : BaseObject, IContact, INamedEntity {
 
     #region Constructors and parsers
@@ -28,71 +29,18 @@ namespace Empiria.Contacts {
       return BaseObject.ParseId<Contact>(id);
     }
 
+
     static public Contact Parse(string uid) {
       return BaseObject.ParseKey<Contact>(uid);
     }
 
-    static private readonly Contact _empty = BaseObject.ParseEmpty<Contact>();
-    static public Contact Empty {
-      get {
-        return _empty.Clone<Contact>();
-      }
-    }
 
-    static public FixedList<Contact> GetList(string filter) {
-      return ContactsData.GetContacts(filter);
-    }
+    static public Contact Empty => BaseObject.ParseEmpty<Contact>();
+
 
     #endregion Constructors and parsers
 
-    #region Public properties
-
-    [Newtonsoft.Json.JsonIgnore]
-    public TempAddress Address {
-      get {
-        return this.ExtendedData.Get<TempAddress>("Address", TempAddress.Empty);
-      }
-    }
-
-    [DataField("ShortName")]
-    public string Alias {
-      get;
-      protected set;
-    }
-
-    [DataField("ContactEmail")]
-    public string EMail {
-      get;
-      set;
-    }
-
-    [Newtonsoft.Json.JsonIgnore]
-    public string TaxIDNumber {
-      get {
-        return this.ExtendedData.Get<string>("TaxIDNumber", String.Empty);
-      }
-    }
-
-    [Newtonsoft.Json.JsonIgnore]
-    public string FormattedTaxIDNumber {
-      get {
-        return EmpiriaString.FormatTaxTag(this.TaxIDNumber);
-      }
-    }
-
-    [Newtonsoft.Json.JsonIgnore]
-    public virtual string Keywords {
-      get {
-        return EmpiriaString.BuildKeywords(FullName, Alias, Nickname, EMail, TaxIDNumber);
-      }
-    }
-
-    [Newtonsoft.Json.JsonIgnore]
-    [DataField("ContactExtData")]
-    public JsonObject ExtendedData {
-      get;
-      private set;
-    }
+    #region Properties
 
     [DataField("ContactFullName")]
     public string FullName {
@@ -100,14 +48,42 @@ namespace Empiria.Contacts {
       protected set;
     }
 
-    [Newtonsoft.Json.JsonIgnore]
+
+    [DataField("ShortName")]
+    public string ShortName {
+      get;
+      protected set;
+    }
+
+
     [DataField("Nickname")]
     public string Nickname {
       get;
-      set;
+      protected set;
     }
 
-    [Newtonsoft.Json.JsonIgnore]
+
+    [DataField("ContactEmail")]
+    public string EMail {
+      get;
+      protected set;
+    }
+
+
+    [DataField("ContactExtData")]
+    public JsonObject ExtendedData {
+      get;
+      private set;
+    }
+
+
+    public virtual string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(FullName, ShortName, Nickname, EMail);
+      }
+    }
+
+
     [DataField("ContactStatus", Default = EntityStatus.Active)]
     public EntityStatus Status {
       get;
@@ -116,19 +92,11 @@ namespace Empiria.Contacts {
 
     string INamedEntity.Name {
       get {
-        return !String.IsNullOrWhiteSpace(this.Alias) ? this.Alias : this.FullName;
+        return !String.IsNullOrWhiteSpace(this.ShortName) ? this.ShortName : this.FullName;
       }
     }
 
-    #endregion Public properties
-
-    #region Public methods
-
-    protected override void OnSave() {
-      ContactsData.WriteContact(this);
-    }
-
-    #endregion Public methods
+    #endregion Properties
 
   } // class Contact
 
