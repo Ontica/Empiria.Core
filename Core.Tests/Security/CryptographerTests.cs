@@ -23,7 +23,7 @@ namespace Empiria.Tests.Security {
 
       string encrypted = Cryptographer.Encrypt(EncryptionMode.EntropyKey, secret, entropy);
 
-      Assert.NotEqual(encrypted, secret);
+      Assert.NotEqual(secret, encrypted);
 
       string decrypted = Cryptographer.Decrypt(encrypted, entropy);
 
@@ -38,7 +38,7 @@ namespace Empiria.Tests.Security {
 
       string encrypted = Cryptographer.Encrypt(EncryptionMode.EntropyHashCode, secret, entropy);
 
-      Assert.NotEqual(encrypted, secret);
+      Assert.NotEqual(secret, encrypted);
 
       string decrypted = Cryptographer.Decrypt(encrypted, entropy);
 
