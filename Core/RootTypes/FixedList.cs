@@ -138,6 +138,19 @@ namespace Empiria {
     }
 
 
+    public bool SameItems(IEnumerable<T> second) {
+      var copy = second.ToFixedList();
+
+      if (this.Count != copy.Count) {
+        return false;
+      }
+
+      var intersect = this.Intersect(copy);
+
+      return (intersect.Count == copy.Count);
+    }
+
+
     public new IEnumerable<TResult> Select<TResult>(Func<T, TResult> selector) {
       return base.Select<TResult>(selector);
     }
