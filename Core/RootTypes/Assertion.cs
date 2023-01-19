@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Runtime.CompilerServices;
 
 namespace Empiria {
 
@@ -124,6 +123,34 @@ namespace Empiria {
                                         message);
     }
 
+
+    /// <summary>Checks as a precondition if a DateTime has an empty value.
+    /// Throws an AssertionFailException if it fails.</summary>
+    /// <param name="instance">The date instance to check.</param>
+    /// <param name="messageOrName">A message or the variable name that holds the date object.</param>
+    static public void Require(DateTime date, string messageOrName) {
+
+      if (date != ExecutionServer.DateMinValue &&
+          date != ExecutionServer.DateMaxValue &&
+          date != DateTime.MinValue &&
+          date != DateTime.MaxValue &&
+          date != new DateTime()) {
+        return;
+      }
+
+      string message;
+
+      if (messageOrName.Contains(" ")) {
+        message = messageOrName;
+
+      } else {
+        message = String.Format("Date variable '{0}' has an empty value.",
+                                messageOrName);
+      }
+
+      throw new AssertionFailsException(AssertionFailsException.Msg.AssertFails,
+                                        message);
+    }
 
     /// <summary>Precondition used to check if an object is not null.
     /// Throws an AssertionFailException if the object is null.</summary>
