@@ -25,9 +25,14 @@ namespace Empiria {
 
 
     static public DateTime PatchField(DateTime newValue, DateTime defaultValue) {
-      if (newValue != ExecutionServer.DateMaxValue && newValue != ExecutionServer.DateMinValue) {
+      if (newValue != ExecutionServer.DateMaxValue &&
+          newValue != ExecutionServer.DateMinValue &&
+          newValue != DateTime.MinValue &&
+          newValue != DateTime.MaxValue &&
+          newValue != new DateTime()) {
         return newValue;
       }
+
       return defaultValue;
     }
 
