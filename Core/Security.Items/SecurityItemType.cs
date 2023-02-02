@@ -33,8 +33,11 @@ namespace Empiria.Security.Items {
       return ObjectTypeInfo.Parse<SecurityItemType>(typeName);
     }
 
+    static public SecurityItemType ClientAppRole
+                    => Parse("ObjectType.SecurityItem.Role.ClientAppRole");
 
-    static public SecurityItemType ClientAppRole => Parse("ObjectType.SecurityItem.ClientAppRole");
+    static public SecurityItemType ClientAppPermission
+                    => Parse("ObjectType.SecurityItem.Permission.ClientAppPermission");
 
     #endregion Constructors and parsers
 
