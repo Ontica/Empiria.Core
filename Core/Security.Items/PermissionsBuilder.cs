@@ -40,6 +40,9 @@ namespace Empiria.Security.Items {
 
       foreach (var role in roles) {
         permissions.AddRange(role.Grants);
+        foreach (var grant in role.Grants) {
+          permissions.AddRange(grant.Requires);
+        }
       }
 
       foreach (var role in roles) {
@@ -49,6 +52,7 @@ namespace Empiria.Security.Items {
       }
 
       return permissions.Select(x => x.Key)
+                        .Distinct()
                         .ToFixedList();
     }
 

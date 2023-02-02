@@ -71,9 +71,9 @@ namespace Empiria.Security.Items {
     }
 
 
-    public string[] Requires {
+    public Permission[] Requires {
       get {
-        return ExtensionData.GetList<string>("requires", false)
+        return ExtensionData.GetList<Permission>("requires", false)
                             .ToArray();
       }
     }
