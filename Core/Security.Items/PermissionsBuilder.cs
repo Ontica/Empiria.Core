@@ -36,7 +36,7 @@ namespace Empiria.Security.Items {
     private FixedList<string> GetPermissions() {
       FixedList<Role> roles = GetRoles();
 
-      List<string> permissions = new List<string>(64);
+      var permissions = new List<Permission>(64);
 
       foreach (var role in roles) {
         permissions.AddRange(role.Grants);
@@ -48,7 +48,8 @@ namespace Empiria.Security.Items {
         }
       }
 
-      return permissions.ToFixedList();
+      return permissions.Select(x => x.Key)
+                        .ToFixedList();
     }
 
 

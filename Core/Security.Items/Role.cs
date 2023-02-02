@@ -14,35 +14,38 @@ namespace Empiria.Security.Items {
   /// <summary>Represents an identity role that holds permissions.</summary>
   internal class Role : SecurityItem {
 
+    #region Constructors and parsers
+
     internal Role(SecurityItemType powerType) : base(powerType) {
       // Required by Empiria Framework for all partitioned types.
     }
 
-    static public new Role Parse(int id) {
+    static internal new Role Parse(int id) {
       return BaseObject.ParseId<Role>(id);
     }
 
-    internal static FixedList<Role> GetList(ClientApplication app) {
+    static internal FixedList<Role> GetList(ClientApplication app) {
       return SecurityItemsDataReader.GetSubjectSecurityItems<Role>(app, SecurityItemType.ClientAppRole);
     }
 
+    #endregion Constructors and parsers
+
     public string Name {
       get {
-        return ExtensionData.Get("roleName", base.Key);
+        return ExtensionData.Get("roleName", base.BaseKey);
       }
     }
 
-    internal string[] Grants {
+    internal Permission[] Grants {
       get {
-        return ExtensionData.GetList<string>("grants", false)
+        return ExtensionData.GetList<Permission>("grants", false)
                             .ToArray();
       }
     }
 
-
-    internal string[] Revokes {
+    internal Permission[] Revokes {
       get {
-        return ExtensionData.GetList<string>("revokes", false)
+        return ExtensionData.GetList<Permission>("revokes", false)
                             .ToArray();
       }
     }

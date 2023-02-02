@@ -56,7 +56,7 @@ namespace Empiria.Security.Items {
 
 
     [DataField("SecurityItemKey")]
-    protected string Key {
+    protected string BaseKey {
       get; private set;
     }
 
