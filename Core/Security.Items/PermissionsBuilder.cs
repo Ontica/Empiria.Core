@@ -59,9 +59,7 @@ namespace Empiria.Security.Items {
 
     private FixedList<Role> GetRoles() {
 
-      FixedList<Role> roles = Role.GetList(_clientApp);
-
-      return roles;
+      return Role.GetList(_clientApp, _identity);
     }
 
   }  // class PermissionsBuilder

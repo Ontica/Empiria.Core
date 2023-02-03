@@ -27,7 +27,14 @@ namespace Empiria.Security.Items {
 
 
     static internal FixedList<Role> GetList(ClientApplication app) {
-      return SecurityItemsDataReader.GetContextItems<Role>(app, SecurityItemType.ClientAppRole);
+      return SecurityItemsDataReader.GetContextItems<Role>(app,
+                                                           SecurityItemType.ClientAppRole);
+    }
+
+
+    static internal FixedList<Role> GetList(ClientApplication app, EmpiriaIdentity identity) {
+      return SecurityItemsDataReader.GetIdentityTargetItems<Role>(app, identity,
+                                                                  SecurityItemType.IdentityRole);
     }
 
     #endregion Constructors and parsers
