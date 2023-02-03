@@ -42,6 +42,9 @@ namespace Empiria.Security.Items {
         permissions.AddRange(role.Grants);
         foreach (var grant in role.Grants) {
           permissions.AddRange(grant.Requires);
+          foreach (var require in grant.Requires) {
+            permissions.AddRange(require.Requires);
+          }
         }
       }
 
