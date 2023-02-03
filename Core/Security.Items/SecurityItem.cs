@@ -49,9 +49,21 @@ namespace Empiria.Security.Items {
       }
     }
 
+    [DataField("ContextId")]
+    protected int ContextId {
+      get; private set;
+    }
+
+
     [DataField("SubjectId")]
     protected int SubjectId {
-      get; set;
+      get; private set;
+    }
+
+
+    [DataField("TargetId")]
+    protected int TargetId {
+      get; private set;
     }
 
 

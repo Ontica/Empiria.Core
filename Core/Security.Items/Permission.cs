@@ -38,12 +38,10 @@ namespace Empiria.Security.Items {
 
 
     static internal FixedList<Permission> GetList(ClientApplication app) {
-      return SecurityItemsDataReader.GetSubjectSecurityItems<Permission>(app, SecurityItemType.ClientAppPermission);
+      return SecurityItemsDataReader.GetContextItems<Permission>(app, SecurityItemType.ClientAppPermission);
     }
 
-
     public static Permission Empty => ParseEmpty<Permission>();
-
 
     #endregion Constructors and parsers
 

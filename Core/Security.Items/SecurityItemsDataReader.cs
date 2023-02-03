@@ -16,13 +16,13 @@ namespace Empiria.Security.Items {
   /// <summary>Reads security items data.</summary>
   static internal class SecurityItemsDataReader {
 
-    static internal FixedList<T> GetSubjectSecurityItems<T>(IIdentifiable subject,
-                                                            SecurityItemType itemType) where T : SecurityItem {
-      Assertion.Require(subject, "subject");
+    static internal FixedList<T> GetContextItems<T>(IIdentifiable context,
+                                                    SecurityItemType itemType) where T : SecurityItem {
+      Assertion.Require(context, "context");
       Assertion.Require(itemType, "itemType");
 
       string sql = $"SELECT * FROM SecurityItems " +
-                   $"WHERE SubjectId = {subject.Id} AND " +
+                   $"WHERE ContextId = {context.Id} AND " +
                    $"SecurityItemTypeId = {itemType.Id} AND " +
                    $"SecurityItemStatus = 'A'";
 

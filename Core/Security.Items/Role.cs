@@ -20,12 +20,14 @@ namespace Empiria.Security.Items {
       // Required by Empiria Framework for all partitioned types.
     }
 
+
     static internal new Role Parse(int id) {
       return BaseObject.ParseId<Role>(id);
     }
 
+
     static internal FixedList<Role> GetList(ClientApplication app) {
-      return SecurityItemsDataReader.GetSubjectSecurityItems<Role>(app, SecurityItemType.ClientAppRole);
+      return SecurityItemsDataReader.GetContextItems<Role>(app, SecurityItemType.ClientAppRole);
     }
 
     #endregion Constructors and parsers
