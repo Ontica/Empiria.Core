@@ -29,40 +29,69 @@ namespace Empiria.Security.Items {
 
 
     internal string[] Build() {
-      return GetPermissions().ToArray();
-    }
-
-
-    private FixedList<string> GetPermissions() {
-      FixedList<Role> roles = GetRoles();
 
       var permissions = new List<Permission>(64);
 
-      foreach (var role in roles) {
-        permissions.AddRange(role.Grants);
-        foreach (var grant in role.Grants) {
-          permissions.AddRange(grant.Requires);
-          foreach (var require in grant.Requires) {
-            permissions.AddRange(require.Requires);
-          }
-        }
-      }
+      FillIdentityPermissions(permissions);
 
-      foreach (var role in roles) {
-        foreach (var revoke in role.Revokes) {
-          permissions.Remove(revoke);
-        }
-      }
+      FixedList<Role> identityRoles = Role.GetList(_clientApp, _identity);
+
+      FillGrantedPermissions(permissions, identityRoles);
+
+      RemoveRevokedPermissions(permissions, identityRoles);
 
       return permissions.Select(x => x.Key)
                         .Distinct()
-                        .ToFixedList();
+                        .ToArray();
     }
 
 
-    private FixedList<Role> GetRoles() {
+    private void FillIdentityPermissions(List<Permission> list) {
+      FixedList<Permission> identityPermissions = Permission.GetList(_clientApp, _identity);
 
-      return Role.GetList(_clientApp, _identity);
+      list.AddRange(identityPermissions);
+
+      foreach (var permission in identityPermissions) {
+        list.AddRange(permission.Requires);
+
+        foreach (var require in permission.Requires) {
+          list.AddRange(require.Requires);
+
+          foreach (var item in require.Requires) {
+            list.AddRange(item.Requires);
+          }
+        }
+      }
+    }
+
+
+    private void FillGrantedPermissions(List<Permission> list,
+                                        FixedList<Role> roles) {
+      foreach (var role in roles) {
+        list.AddRange(role.Grants);
+
+        foreach (var grant in role.Grants) {
+          list.AddRange(grant.Requires);
+
+          foreach (var require in grant.Requires) {
+            list.AddRange(require.Requires);
+
+            foreach (var item in require.Requires) {
+              list.AddRange(item.Requires);
+            }
+          }
+        }
+      }
+    }
+
+
+    private void RemoveRevokedPermissions(List<Permission> list,
+                                          FixedList<Role> roles) {
+      foreach (var role in roles) {
+        foreach (var revoke in role.Revokes) {
+          list.Remove(revoke);
+        }
+      }
     }
 
   }  // class PermissionsBuilder
