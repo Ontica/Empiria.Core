@@ -11,6 +11,7 @@ using System;
 using System.Data;
 
 using Empiria.Data;
+using Empiria.Security.Items;
 
 namespace Empiria.Security {
 
@@ -54,30 +55,35 @@ namespace Empiria.Security {
       return new string[0];
     }
 
-    static internal DataRow GetUserWithCredentials(string userName, string password, string entropy) {
-      var operation = DataOperation.Parse("getContactWithUserName", userName);
+    static internal EmpiriaUser GetUserWithCredentials(ClientApplication clientApplication,
+                                                       string userName, string password,
+                                                       string entropy) {
 
-      var dataRow = DataReader.GetDataRow(operation);
+      var credentials = Claim.TryParseWithKey(SecurityItemType.IdentityCredentials,
+                                              clientApplication,
+                                              userName);
 
-      //No user/password found
-      if (dataRow == null) {
+      //No user found
+      if (credentials == null) {
         throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
       }
 
       bool useSecurityModelV3 = ConfigurationData.Get("UseSecurityModel.V3", false);
 
+      var storedPassword = credentials.GetAttribute<string>("password");
+
       string p;
 
       if (useSecurityModelV3) {
-        p = Cryptographer.Decrypt((string) dataRow["UserPassword"], userName);
+        p = Cryptographer.Decrypt(storedPassword, userName);
         p = Cryptographer.GetSHA256(p + entropy);
 
       } else if (!String.IsNullOrWhiteSpace(entropy)) {
-        p = FormerCryptographer.Decrypt((string) dataRow["UserPassword"], userName);
+        p = FormerCryptographer.Decrypt(storedPassword, userName);
         p = FormerCryptographer.GetMD5HashCode(p + entropy);
 
       } else {
-        p = FormerCryptographer.Decrypt((string) dataRow["UserPassword"], userName);
+        p = FormerCryptographer.Decrypt(storedPassword, userName);
       }
 
       //Invalid password
@@ -85,9 +91,7 @@ namespace Empiria.Security {
         throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
       }
 
-      dataRow.Table.Columns.Remove("UserPassword");
-
-      return dataRow;
+      return credentials.GetSubject<EmpiriaUser>();
     }
 
 
