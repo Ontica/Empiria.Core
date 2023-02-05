@@ -42,6 +42,10 @@ namespace Empiria.Security.Items {
                 => Parse("ObjectType.SecurityItem.Role.ClientAppRole");
 
 
+    static public SecurityItemType IdentityCredentials
+                => Parse("ObjectType.SecurityItem.Claim.IdentityCredentials");
+
+
     static public SecurityItemType IdentityPermission
                 => Parse("ObjectType.SecurityItem.Permission.IdentityPermission");
 

@@ -54,6 +54,25 @@ namespace Empiria.Security.Items {
                     .ToFixedList();
     }
 
+
+    static internal T TryGetSubjectItemWithKey<T>(IIdentifiable context,
+                                                  SecurityItemType itemType,
+                                                  string securityItemKey) where T : SecurityItem {
+      Assertion.Require(context, "context");
+      Assertion.Require(itemType, "itemType");
+      Assertion.Require(securityItemKey, "securityItemKey");
+
+      string sql = $"SELECT * FROM SecurityItems " +
+                   $"WHERE ContextId = {context.Id} AND " +
+                   $"SecurityItemTypeId = {itemType.Id} AND " +
+                   $"SecurityItemKey = '{securityItemKey}' AND " +
+                   $"SecurityItemStatus = 'A'";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetObject<T>(op, null);
+    }
+
   }  // class SecurityItemsDataReader
 
 }  // namespace Empiria.Security.Items
