@@ -30,10 +30,6 @@ namespace Empiria.Security {
       return BaseObject.ParseId<EmpiriaUser>(id);
     }
 
-    static private EmpiriaUser Parse(DataRow row) {
-      return BaseObject.ParseDataRow<EmpiriaUser>(row);
-    }
-
     static public EmpiriaUser Parse(string username, string email) {
       Assertion.Require(username, "username");
       Assertion.Require(email, "email");
@@ -85,13 +81,18 @@ namespace Empiria.Security {
 
     #region Authenticate methods
 
-    static internal EmpiriaUser Authenticate(string username, string password, string entropy) {
+    static internal EmpiriaUser Authenticate(ClientApplication clientApplication,
+                                             string username,
+                                             string password,
+                                             string entropy) {
+      Assertion.Require(clientApplication, "clientApplication");
       Assertion.Require(username, "username");
       Assertion.Require(password, "password");
-      Assertion.Require(entropy != null, "entropy can't be null.");
+      Assertion.Require(entropy, "entropy");
 
-      EmpiriaUser user = EmpiriaUser.GetUserWithCredentials(username, password, entropy);
-
+      EmpiriaUser user = SecurityData.GetUserWithCredentials(clientApplication,
+                                                             username, password,
+                                                             entropy);
       user.EnsureCanAuthenticate();
       user.IsAuthenticated = true;
 
@@ -185,13 +186,6 @@ namespace Empiria.Security {
       if (this.PasswordExpired) {
         throw new SecurityException(SecurityException.Msg.UserPasswordExpired, this.UserName);
       }
-    }
-
-
-    static private EmpiriaUser GetUserWithCredentials(string username, string password, string entropy) {
-      DataRow row = SecurityData.GetUserWithCredentials(username, password, entropy);
-
-      return EmpiriaUser.Parse(row);
     }
 
 
