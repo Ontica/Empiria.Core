@@ -4,14 +4,14 @@
 *  Assembly : Empiria.Core.dll                             Pattern   : Information holder                    *
 *  Type     : Role                                         License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Represents an identity role that holds permissions.                                            *
+*  Summary  : Represents an identity role that holds feature access permissions.                             *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria.Security.Items {
 
-  /// <summary>Represents an identity role that holds permissions.</summary>
+  /// <summary>Represents an identity role that holds feature access permissions.</summary>
   internal class Role : SecurityItem {
 
     #region Constructors and parsers
@@ -45,16 +45,16 @@ namespace Empiria.Security.Items {
       }
     }
 
-    internal Permission[] Grants {
+    internal Feature[] Grants {
       get {
-        return ExtensionData.GetList<Permission>("grants", false)
+        return ExtensionData.GetList<Feature>("grants", false)
                             .ToArray();
       }
     }
 
-    internal Permission[] Revokes {
+    internal Feature[] Revokes {
       get {
-        return ExtensionData.GetList<Permission>("revokes", false)
+        return ExtensionData.GetList<Feature>("revokes", false)
                             .ToArray();
       }
     }

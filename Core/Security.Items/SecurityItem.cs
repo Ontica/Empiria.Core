@@ -5,7 +5,7 @@
 *  Type     : SecurityItem                                 License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Abstract type that represents a security item. Security items are roles, user credentials,     *
-*             claims, permissions, application keys, or other objects used for authorization or              *
+*             claims, features, application keys, or other objects used for authorization or                 *
 *             authentication. SecurityItem is a partitioned type of SecurityItemType.                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
@@ -19,7 +19,7 @@ using Empiria.StateEnums;
 namespace Empiria.Security.Items {
 
   /// <summary>Abstract type that represents a security item. Security items are roles, user credentials,
-  /// claims, permissions, application keys, or other objects used for authorization or authentication.
+  /// claims, features, application keys, or other objects used for authorization or authentication.
   /// SecurityItem is a partitioned type of SecurityItemType.</summary>
   [PartitionedType(typeof(SecurityItemType))]
   abstract internal class SecurityItem : BaseObject {

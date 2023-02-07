@@ -30,31 +30,32 @@ namespace Empiria.Security.Items {
 
     internal string[] Build() {
 
-      var permissions = new List<Permission>(64);
+      var features = new List<Feature>(64);
 
-      FillIdentityPermissions(permissions);
+      FillIdentityFeatures(features);
 
       FixedList<Role> identityRoles = Role.GetList(_clientApp, _identity);
 
-      FillGrantedPermissions(permissions, identityRoles);
+      FillGrantedFeatures(features, identityRoles);
 
-      RemoveRevokedPermissions(permissions, identityRoles);
+      RemoveRevokedFeatures(features, identityRoles);
 
-      return permissions.Select(x => x.Key)
-                        .Distinct()
-                        .ToArray();
+      return features.Select(x => x.Key)
+                     .Distinct()
+                     .ToArray();
     }
 
 
-    private void FillIdentityPermissions(List<Permission> list) {
-      FixedList<Permission> identityPermissions = Permission.GetList(_clientApp, _identity);
+    private void FillIdentityFeatures(List<Feature> list) {
 
-      list.AddRange(identityPermissions);
+      FixedList<Feature> identityFeatures = Feature.GetList(_clientApp, _identity);
 
-      foreach (var permission in identityPermissions) {
-        list.AddRange(permission.Requires);
+      list.AddRange(identityFeatures);
 
-        foreach (var require in permission.Requires) {
+      foreach (var feature in identityFeatures) {
+        list.AddRange(feature.Requires);
+
+        foreach (var require in feature.Requires) {
           list.AddRange(require.Requires);
 
           foreach (var item in require.Requires) {
@@ -65,8 +66,8 @@ namespace Empiria.Security.Items {
     }
 
 
-    private void FillGrantedPermissions(List<Permission> list,
-                                        FixedList<Role> roles) {
+    private void FillGrantedFeatures(List<Feature> list,
+                                     FixedList<Role> roles) {
       foreach (var role in roles) {
         list.AddRange(role.Grants);
 
@@ -85,8 +86,8 @@ namespace Empiria.Security.Items {
     }
 
 
-    private void RemoveRevokedPermissions(List<Permission> list,
-                                          FixedList<Role> roles) {
+    private void RemoveRevokedFeatures(List<Feature> list,
+                                       FixedList<Role> roles) {
       foreach (var role in roles) {
         foreach (var revoke in role.Revokes) {
           list.Remove(revoke);
