@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Data;
 
 using Empiria.Contacts;
 using Empiria.StateEnums;
@@ -18,7 +17,7 @@ using Empiria.Security.Claims;
 namespace Empiria.Security {
 
   /// <summary>Represents a system's user.</summary>
-  public sealed class EmpiriaUser : BaseObject, IClaimsSubject {
+  public sealed class EmpiriaUser : IClaimsSubject {
 
     #region Constructors and parsers
 
@@ -26,15 +25,20 @@ namespace Empiria.Security {
       // Required by Empiria Framework
     }
 
-    static public EmpiriaUser Parse(int id) {
-      return BaseObject.ParseId<EmpiriaUser>(id);
+    internal static EmpiriaUser Parse(Items.Claim credentials) {
+      return new EmpiriaUser {
+        Contact = Contact.Parse(credentials.SubjectId),
+        UserName = credentials.Key,
+        Status = credentials.Status,
+      };
     }
 
     static public EmpiriaUser Parse(string username, string email) {
       Assertion.Require(username, "username");
       Assertion.Require(email, "email");
 
-      EmpiriaUser user = SecurityData.TryGetUserWithUserName(username);
+      EmpiriaUser user = SecurityData.TryGetUserWithUserName(ClientApplication.Current,
+                                                             username);
 
       if (user == null) {
         throw new SecurityException(SecurityException.Msg.UserWithEMailNotFound, username, email);
@@ -47,20 +51,13 @@ namespace Empiria.Security {
     }
 
 
-    static public EmpiriaUser Current {
-      get {
-        if (ExecutionServer.IsAuthenticated) {
-          return ExecutionServer.CurrentIdentity.User;
-        } else {
-          throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
-        }
-      }
-    }
-
     static public bool Exists(string userName) {
       Assertion.Require(userName, "userName");
 
-      return (SecurityData.TryGetUserWithUserName(userName) != null);
+      EmpiriaUser user = SecurityData.TryGetUserWithUserName(ClientApplication.Current,
+                                                             userName);
+
+      return (user != null);
     }
 
 
@@ -107,7 +104,7 @@ namespace Empiria.Security {
         throw new SecurityException(SecurityException.Msg.ExpiredSessionToken, activeSession.Token);
       }
 
-      EmpiriaUser user = EmpiriaUser.Parse(activeSession.UserId);
+      EmpiriaUser user = SecurityData.GetSessionUser(activeSession);
 
       user.EnsureCanAuthenticate();
       user.IsAuthenticated = true;
@@ -115,24 +112,14 @@ namespace Empiria.Security {
       return user;
     }
 
-
-    static internal EmpiriaUser AuthenticateAnonymous(AnonymousUser anonymousUser) {
-      var anonymous = EmpiriaUser.Parse((int) anonymousUser);
-
-      anonymous.EnsureCanAuthenticate();
-      anonymous.IsAuthenticated = true;
-
-      return anonymous;
-    }
-
-
     #endregion Authenticate methods
 
     #region Public propertiese
 
     public bool IsActive {
-      get;
-      private set;
+      get {
+        return this.Status == EntityStatus.Active;
+      }
     }
 
     public bool IsAuthenticated {
@@ -150,31 +137,37 @@ namespace Empiria.Security {
       private set;
     }
 
+
     public string FullName {
-      get;
-      private set;
-    }
-
-    public string EMail {
-      get;
-      private set;
-    }
-
-    string IClaimsSubject.ClaimsToken {
       get {
-        return this.AsContact().UID;
+        return this.Contact.FullName;
       }
     }
 
-    #endregion Public properties
-
-    #region Public methods
-
-    public Contact AsContact() {
-      return Contact.Parse(this.Id);
+    public string EMail {
+      get {
+        return this.Contact.EMail;
+      }
     }
 
-    #endregion Public methods
+
+    string IClaimsSubject.ClaimsToken {
+      get {
+        return this.Contact.UID;
+      }
+    }
+
+
+    internal Contact Contact {
+      get; private set;
+    }
+
+
+    private EntityStatus Status {
+      get; set;
+    }
+
+    #endregion Public properties
 
     #region Private methods
 
@@ -186,16 +179,6 @@ namespace Empiria.Security {
       if (this.PasswordExpired) {
         throw new SecurityException(SecurityException.Msg.UserPasswordExpired, this.UserName);
       }
-    }
-
-
-    internal protected override void OnLoadObjectData(DataRow row) {
-      this.UserName = EmpiriaString.ToString(row["UserName"]);
-      this.IsAuthenticated = false;
-      this.IsActive = ((EntityStatus) Convert.ToChar((string) row["ContactStatus"]) == EntityStatus.Active);
-      this.PasswordExpired = false;
-      this.EMail = EmpiriaString.ToString(row["ContactEmail"]);
-      this.FullName = EmpiriaString.ToString(row["ContactFullName"]);
     }
 
     #endregion Private methods

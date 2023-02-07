@@ -41,7 +41,7 @@ namespace Empiria.Security.Items {
 
       string sql = $"SELECT TargetId FROM SecurityItems " +
                    $"WHERE ContextId = {context.Id} AND " +
-                   $"SubjectId = {identity.User.Id} AND " +
+                   $"SubjectId = {identity.User.Contact.Id} AND " +
                    $"SecurityItemTypeId = {itemType.Id} AND " +
                    $"SecurityItemStatus = 'A'";
 
@@ -52,6 +52,24 @@ namespace Empiria.Security.Items {
       return targets.ToFixedList()
                     .Select(targetId => SecurityItem.Parse<T>(targetId))
                     .ToFixedList();
+    }
+
+    internal static T TryGetSubjectItemWithId<T>(IIdentifiable context,
+                                                 SecurityItemType itemType,
+                                                 int subjectId) where T : SecurityItem {
+      Assertion.Require(context, "context");
+      Assertion.Require(itemType, "itemType");
+      Assertion.Require(subjectId != -1, "subjectId");
+
+      string sql = $"SELECT * FROM SecurityItems " +
+                   $"WHERE ContextId = {context.Id} AND " +
+                   $"SecurityItemTypeId = {itemType.Id} AND " +
+                   $"SubjectId = {subjectId} AND " +
+                   $"SecurityItemStatus = 'A'";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetObject<T>(op, null);
     }
 
 

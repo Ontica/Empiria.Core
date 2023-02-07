@@ -55,6 +55,19 @@ namespace Empiria.Security {
       return new string[0];
     }
 
+    static internal EmpiriaUser GetSessionUser(EmpiriaSession activeSession) {
+      var credentials = Claim.TryParse(SecurityItemType.IdentityCredentials,
+                                       ClientApplication.Parse(activeSession.ClientAppId),
+                                       activeSession.UserId);
+
+      //No user found
+      if (credentials == null) {
+        throw new SecurityException(SecurityException.Msg.EnsureClaimFailed);
+      }
+
+      return EmpiriaUser.Parse(credentials);
+    }
+
     static internal EmpiriaUser GetUserWithCredentials(ClientApplication clientApplication,
                                                        string userName, string password,
                                                        string entropy) {
@@ -91,7 +104,7 @@ namespace Empiria.Security {
         throw new SecurityException(SecurityException.Msg.InvalidUserCredentials);
       }
 
-      return credentials.GetSubject<EmpiriaUser>();
+      return EmpiriaUser.Parse(credentials);
     }
 
 
@@ -100,15 +113,18 @@ namespace Empiria.Security {
     }
 
 
-    static internal EmpiriaUser TryGetUserWithUserName(string userName) {
-      var dataRow = DataReader.GetDataRow(DataOperation.Parse("getContactWithUserName", userName));
-
-      if (dataRow != null) {
-        return BaseObject.ParseDataRow<EmpiriaUser>(dataRow);
-      } else {
-        return null;
+    static internal EmpiriaUser TryGetUserWithUserName(ClientApplication clientApplication,
+                                                       string userName) {
+      var credentials = Claim.TryParseWithKey(SecurityItemType.IdentityCredentials,
+                                              clientApplication,
+                                              userName);
+      if (credentials != null) {
+        return EmpiriaUser.Parse(credentials);
       }
+
+      return null;
     }
+
 
     static internal long WriteAuditTrail(AuditTrail o) {
       var op = DataOperation.Parse("apdAuditTrail", o.Request.Guid, (char) o.AuditTrailType,

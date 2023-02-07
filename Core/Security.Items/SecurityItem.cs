@@ -56,7 +56,7 @@ namespace Empiria.Security.Items {
 
 
     [DataField("SubjectId")]
-    protected int SubjectId {
+    protected int BaseSubjectId {
       get; private set;
     }
 

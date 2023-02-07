@@ -27,6 +27,13 @@ namespace Empiria.Security.Items {
       return BaseObject.ParseId<Claim>(id);
     }
 
+    internal static Claim TryParse(SecurityItemType claimType,
+                                   IIdentifiable context,
+                                   int subjectId) {
+      return SecurityItemsDataReader.TryGetSubjectItemWithId<Claim>(context,
+                                                                    claimType,
+                                                                    subjectId);
+    }
 
     static internal Claim TryParseWithKey(SecurityItemType claimType,
                                           IIdentifiable context,
@@ -42,15 +49,24 @@ namespace Empiria.Security.Items {
 
     #region Properties
 
+    internal string Key {
+      get {
+        return base.BaseKey;
+      }
+    }
+
+
+    internal int SubjectId {
+      get {
+        return base.BaseSubjectId;
+      }
+    }
+
+
     internal T GetAttribute<T>(string attributeName) {
       Assertion.Require(attributeName, nameof(attributeName));
 
       return base.ExtensionData.Get<T>(attributeName);
-    }
-
-
-    internal T GetSubject<T>() where T : BaseObject {
-      return BaseObject.ParseId<T>(base.SubjectId);
     }
 
     #endregion Properties
