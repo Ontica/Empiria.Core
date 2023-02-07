@@ -21,12 +21,6 @@ namespace Empiria.Security {
       this.SetAuthenticationType(mode);
     }
 
-    static public EmpiriaIdentity Current {
-      get {
-        return ExecutionServer.CurrentIdentity as EmpiriaIdentity;
-      }
-    }
-
     #endregion Constructors and parsers
 
     #region Public properties
@@ -47,7 +41,7 @@ namespace Empiria.Security {
       }
     }
 
-    public EmpiriaUser User {
+    internal EmpiriaUser User {
       get;
       private set;
     }

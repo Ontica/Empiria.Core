@@ -34,7 +34,7 @@ namespace Empiria.Security {
       Assertion.Require(password, "password");
 
       var privateKeyFilePath =
-                    ClaimsService.GetClaimValue<string>(EmpiriaUser.Current,
+                    ClaimsService.GetClaimValue<string>(ExecutionServer.CurrentUser,
                                                         ClaimType.ElectronicSignPrivateKeyFilePath);
 
       RSAProvider.GetProvider(privateKeyFilePath, password);
@@ -55,7 +55,7 @@ namespace Empiria.Security {
 
 
     static public string CreateHashCode(string text, string salt = "") {
-      Assertion.Require(text, "text");
+      Assertion.Require(text, nameof(text));
       salt = salt ?? String.Empty;
 
       StartEngine();
@@ -70,10 +70,12 @@ namespace Empiria.Security {
 
 
     static public string CreateHashCode(byte[] bytesArray, string salt = "") {
-      Assertion.Require(bytesArray, "bytesArray");
+      Assertion.Require(bytesArray, nameof(bytesArray));
       Assertion.Require(bytesArray.Length != 0, "bytesArray can't be empty.");
 
-      return CreateHashCode(Encoding.UTF8.GetString(bytesArray, 0, bytesArray.Length), salt);
+      string encoded = Encoding.UTF8.GetString(bytesArray, 0, bytesArray.Length);
+
+      return CreateHashCode(encoded, salt);
     }
 
 
@@ -155,15 +157,18 @@ namespace Empiria.Security {
 
       SHA256 sha = SHA256.Create();
 
-      return ConvertToString(sha.ComputeHash(data));
+      byte[] hash = sha.ComputeHash(data);
+
+      return ConvertToString(hash);
     }
+
 
     static public string SignText(string text, SecureString password) {
       Assertion.Require(text, "text");
       Assertion.Require(password, "password");
 
       var privateKeyFilePath =
-                    ClaimsService.GetClaimValue<string>(EmpiriaUser.Current,
+                    ClaimsService.GetClaimValue<string>(ExecutionServer.CurrentUser,
                                                         ClaimType.ElectronicSignPrivateKeyFilePath);
 
       RSACryptoServiceProvider rsa = RSAProvider.GetProvider(privateKeyFilePath, password);

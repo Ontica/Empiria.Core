@@ -26,7 +26,7 @@ namespace Empiria.Security {
       Initialize();
       this.ServerId = ExecutionServer.ServerId;
       this.ClientAppId = principal.ClientApp.Id;
-      this.UserId = principal.Identity.User.Id;
+      this.UserId = principal.Identity.User.Contact.Id;
       if (contextData != null) {
         this.ExtendedData = contextData;
       }
@@ -107,8 +107,7 @@ namespace Empiria.Security {
     }
 
     public int ExpiresIn {
-      get;
-      set;
+      get; private set;
     }
 
     public int ServerId {

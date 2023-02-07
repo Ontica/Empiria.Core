@@ -30,7 +30,7 @@ namespace Empiria.Security.Authorization {
       this.ExternalObjectUID = externalObjectUID;
 
       this.RequestTime = DateTime.Now;
-      this.RequestedBy = EmpiriaUser.Current.AsContact();
+      this.RequestedBy = ExecutionServer.CurrentContact;
       this.Notes = notes ?? String.Empty;
     }
 

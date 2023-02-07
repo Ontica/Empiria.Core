@@ -11,6 +11,7 @@ using System;
 using System.Threading;
 
 using Empiria.Collections;
+using Empiria.Contacts;
 using Empiria.Reflection;
 using Empiria.Security;
 
@@ -120,11 +121,19 @@ namespace Empiria {
       }
     }
 
+    static public Contact CurrentContact {
+      get {
+        return ExecutionServer.CurrentIdentity.User.Contact;
+      }
+    }
+
+
     static public EmpiriaIdentity CurrentIdentity {
       get {
         return ExecutionServer.CurrentPrincipal.Identity;
       }
     }
+
 
     static public EmpiriaPrincipal CurrentPrincipal {
       get {
@@ -150,10 +159,16 @@ namespace Empiria {
     static public int CurrentUserId {
       get {
         if (IsAuthenticated) {
-          return CurrentIdentity.User.Id;
+          return CurrentUser.Contact.Id;
         } else {
           return -1;
         }
+      }
+    }
+
+    static public EmpiriaUser CurrentUser {
+      get {
+        return ExecutionServer.CurrentPrincipal.Identity.User;
       }
     }
 
@@ -211,7 +226,7 @@ namespace Empiria {
     }
     #endregion Other public properties
 
-      #region Static methods
+    #region Static methods
 
     static public string GetFullFileNameFromCurrentExecutionPath(string fileName) {
       string baseExecutionPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;

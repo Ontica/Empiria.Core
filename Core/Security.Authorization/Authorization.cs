@@ -169,10 +169,10 @@ namespace Empiria.Security.Authorization {
       Assertion.Require(0 <= expirationMinutes,
                        "Expiration minutes must be a positive number.");
       Assertion.Require(this.IsReadyToBeAuthorized,
-                       $"Authorization request '{this.UID}' is in status {this.Status.ToString()}, " +
+                       $"Authorization request '{this.UID}' is in status {this.Status}, " +
                        "so it can not be authorized.");
 
-      this.AuthorizedBy = EmpiriaUser.Current.AsContact();
+      this.AuthorizedBy = ExecutionServer.CurrentContact;
       this.AuthorizationTime = DateTime.Now;
       this.ExpirationTime = DateTime.Now.AddMinutes(expirationMinutes);
       this.AuthorizationNotes = notes ?? String.Empty;

@@ -19,7 +19,7 @@ namespace Empiria.Security.Authorization {
     #region Internal methods
 
     static internal FixedList<Authorization> GetPendingAuthorizations() {
-      int userId = EmpiriaUser.Current.Id;
+      int userId = ExecutionServer.CurrentUserId;
 
       string sql = $"SELECT * FROM Authorizations " +
                    $"WHERE (RequestedById = {userId} OR ApprovedById = {userId} OR AuthorizedById = {userId}) AND " +
@@ -38,7 +38,7 @@ namespace Empiria.Security.Authorization {
 
 
     static internal FixedList<Authorization> GetReadyToApplyAuthorizations() {
-      int userId = EmpiriaUser.Current.Id;
+      int userId = ExecutionServer.CurrentUserId;
 
       string sql = $"SELECT * FROM Authorizations " +
                    $"WHERE (RequestedById = {userId} OR ApprovedById = {userId} OR AuthorizedById = {userId}) AND " +

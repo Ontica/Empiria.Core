@@ -28,8 +28,6 @@ namespace Empiria.Security {
     static private EmpiriaDictionary<string, EmpiriaPrincipal> principalsCache =
                                         new EmpiriaDictionary<string, EmpiriaPrincipal>(128);
 
-    private string[] rolesArray = new string[0];
-
     #endregion Fields
 
     #region Constructors and parsers
@@ -106,11 +104,6 @@ namespace Empiria.Security {
       }
     }
 
-    public string[] RolesArray {
-      get {
-        return rolesArray;
-      }
-    }
 
     public EmpiriaSession Session {
       get;
@@ -155,7 +148,7 @@ namespace Empiria.Security {
         return true;
       }
 
-      return userIds.Contains(this.Identity.User.Id);
+      return userIds.Contains(this.Identity.User.Contact.Id);
     }
 
 
@@ -167,7 +160,7 @@ namespace Empiria.Security {
       string[] users = SecurityData.GetUsersInRole(role);
 
       for (int i = 0; i < users.Length; i++) {
-        if (users[i].Trim() == this.Identity.User.Id.ToString()) {
+        if (users[i].Trim() == this.Identity.User.Contact.Id.ToString()) {
           return true;
         }
       }
@@ -193,7 +186,6 @@ namespace Empiria.Security {
         this.Session = EmpiriaSession.Create(this, contextData);
       }
 
-      LoadRolesArray(identity.User.Id);
 
       this.PermissionsArray = GetPermissionsArray();
 
@@ -208,11 +200,6 @@ namespace Empiria.Security {
       var permissionsBuilder = new PermissionsBuilder(this.ClientApp, this.Identity);
 
       return permissionsBuilder.Build();
-    }
-
-
-    private void LoadRolesArray(int participantId) {
-      rolesArray = new string[0];
     }
 
     #endregion Private methods

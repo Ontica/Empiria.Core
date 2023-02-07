@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Xunit;
 
-using Empiria.Security;
 using Empiria.Security.Claims;
 
 namespace Empiria.Tests.Security {
@@ -21,7 +20,7 @@ namespace Empiria.Tests.Security {
     public void MustGetClaimValue() {
       CommonMethods.Authenticate();
 
-      var value = ClaimsService.GetClaimValue<string>(EmpiriaUser.Current,
+      var value = ClaimsService.GetClaimValue<string>(ExecutionServer.CurrentUser,
                                                       ClaimType.ElectronicSignPrivateKeyFilePath);
 
       Assert.NotEmpty(value);
@@ -32,7 +31,7 @@ namespace Empiria.Tests.Security {
     public void MustHaveClaimValue() {
       CommonMethods.Authenticate();
 
-      ClaimsService.EnsureClaim(EmpiriaUser.Current, ClaimType.UserRole, "Tester");
+      ClaimsService.EnsureClaim(ExecutionServer.CurrentUser, ClaimType.UserRole, "Tester");
 
       Assert.True(true);
     }

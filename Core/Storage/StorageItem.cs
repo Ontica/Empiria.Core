@@ -106,7 +106,7 @@ namespace Empiria.Storage {
 
     protected override void OnBeforeSave() {
       if (this.IsNew) {
-        PostedBy = ExecutionServer.CurrentIdentity.User.AsContact();
+        PostedBy = ExecutionServer.CurrentContact;
         PostingTime = DateTime.Now;
       }
     }

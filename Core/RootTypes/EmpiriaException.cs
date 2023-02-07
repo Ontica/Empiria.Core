@@ -28,7 +28,6 @@ namespace Empiria {
 
     private string exceptionTag = String.Empty;
     private DateTime timestamp = DateTime.Now;
-    private Guid userSessionGuid = Guid.Empty;
     private string processId = String.Empty;
     private bool initialized = false;
 
@@ -84,7 +83,7 @@ namespace Empiria {
     /// <summary>Session ID where the exception was occured.</summary>
     public string SessionID {
       get {
-        return Empiria.ExecutionServer.CurrentSessionToken;
+        return ExecutionServer.CurrentSessionToken;
       }
     }
 
@@ -258,7 +257,7 @@ namespace Empiria {
         }
         if (System.Environment.StackTrace != null) {
           stringBuilder.AppendFormat("{0}{0}<u>Environment Stack Trace:</u>{0}", Environment.NewLine);
-          stringBuilder.AppendFormat("{0}", System.Environment.StackTrace);
+          stringBuilder.AppendFormat("{0}", System.Environment.StackTrace ?? "Empty stack trace");
         }
       } catch {
         //no-op
