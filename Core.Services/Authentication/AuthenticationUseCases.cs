@@ -31,7 +31,7 @@ namespace Empiria.Services.Authentication {
     #region Use cases
 
     public EmpiriaPrincipal Authenticate(AuthenticationFields fields) {
-      Assertion.Require(fields, "fields");
+      Assertion.Require(fields, nameof(fields));
 
       var authenticator = new Authenticator(fields);
 

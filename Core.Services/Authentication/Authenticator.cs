@@ -21,7 +21,6 @@ namespace Empiria.Services.Authentication {
 
     private readonly AuthenticationFields _fields;
 
-
     internal Authenticator(AuthenticationFields fields) {
       Assertion.Require(fields, "fields");
 
@@ -30,7 +29,7 @@ namespace Empiria.Services.Authentication {
 
     #endregion Constructors and fields
 
-    #region Public methods
+    #region Methods
 
     internal EmpiriaPrincipal Authenticate() {
       _fields.AssertValidForAuthentication();
@@ -43,10 +42,8 @@ namespace Empiria.Services.Authentication {
 
       string token = Cryptographer.CreateHashCode(rawToken, tokenSalt);
 
-      EmpiriaPrincipal principal = AuthenticationService.Authenticate(_fields.AppKey,
-                                                                      _fields.UserID,
-                                                                      _fields.Password,
-                                                                      token);
+      EmpiriaPrincipal principal = AuthenticationService.Authenticate(_fields.AppKey, _fields.UserID,
+                                                                      _fields.Password, token);
 
       Assertion.Require(principal, "principal");
 
@@ -64,11 +61,9 @@ namespace Empiria.Services.Authentication {
       return Cryptographer.CreateHashCode(rawToken, tokenRandomSalt);
     }
 
+    #endregion Methods
 
-    #endregion Public methods
-
-
-    #region Token storage
+    #region Token storage helpers
 
     private static EmpiriaDictionary<string, TokenSalt> _tokens = new EmpiriaDictionary<string, TokenSalt>(64);
 
@@ -112,7 +107,7 @@ namespace Empiria.Services.Authentication {
 
     }  // class TokenSalt
 
-    #endregion Token storage
+    #endregion Token storage helpers
 
   }  // class Authenticator
 

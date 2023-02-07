@@ -7,6 +7,8 @@
 *  Summary  : Auxiliary common methods used by test cases.                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+using System.Threading;
+
 using Empiria.Security;
 
 namespace Empiria.Tests {
@@ -19,7 +21,9 @@ namespace Empiria.Tests {
     static internal void Authenticate() {
       string sessionToken = ConfigurationData.GetString("Testing.SessionToken");
 
-      System.Threading.Thread.CurrentPrincipal = AuthenticationService.Authenticate(sessionToken);
+      EmpiriaPrincipal principal = AuthenticationService.Authenticate(sessionToken);
+
+      Thread.CurrentPrincipal = principal;
     }
 
     #endregion Auxiliary methods

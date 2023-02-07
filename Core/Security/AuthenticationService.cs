@@ -57,22 +57,6 @@ namespace Empiria.Security {
       return new EmpiriaPrincipal(identity, clientApplication, contextData);
     }
 
-
-    static public EmpiriaPrincipal AuthenticateAnonymous(string clientAppKey, AnonymousUser anonymousUser,
-                                                         JsonObject contextData = null) {
-      Assertion.Require(clientAppKey, "clientAppKey");
-
-      var clientApplication = ClientApplication.ParseActive(clientAppKey);
-
-      EmpiriaUser user = EmpiriaUser.AuthenticateAnonymous(anonymousUser);
-
-      Assertion.Require(user, "user");
-
-      var identity = new EmpiriaIdentity(user, AuthenticationMode.Basic);
-
-      return new EmpiriaPrincipal(identity, clientApplication, contextData);
-    }
-
     #endregion Services
 
   } // class AuthenticationService
