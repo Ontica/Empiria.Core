@@ -110,9 +110,13 @@ namespace Empiria.Security {
       private set;
     }
 
-    public string[] PermissionsArray {
+    public FixedList<string> Permissions {
       get;
       private set;
+    }
+
+    private FixedList<ObjectAccessRule> ObjectAccessRules {
+      get; set;
     }
 
     #endregion Public properties
@@ -130,18 +134,25 @@ namespace Empiria.Security {
 
 
     public bool HasDataAccessTo<T>(T entity) where T : IIdentifiable {
+
+      var rules = ObjectAccessRules.FindAll(x => x.TypeName == entity.GetType().Name &&
+                                            x.ObjectsUIDs.Contains(entity.UID));
+      if (rules.Count != 0) {
+        return true;
+      }
+
+      rules = ObjectAccessRules.FindAll(x => x.TypeName == entity.GetType().Name &&
+                                            !x.ObjectsUIDs.Contains(entity.UID));
+
+      if (rules.Count != 0) {
+        return false;
+      }
+
       FixedList<int> userIds = SecurityData.GetUsersWithDataAccessTo(typeof(T), entity);
 
       if (entity.UID == "NivelacionCuentasCompraventa") {
+
         return EmpiriaMath.IsMemberOf(ExecutionServer.CurrentUserId, new[] { 135, 1002, 1003, 2006, 3512, 3548 });
-
-      } else if (entity.UID == "986e908e-cef5-4313-87f2-f2ba5510ca13") {
-        return EmpiriaMath.IsMemberOf(ExecutionServer.CurrentUserId, new[] { 690, 1002, 1003, 1005, 1882, 1949, 2007 });
-
-      } else if (entity.GetType().Name == "FinancialConceptGroup") {
-
-        return EmpiriaMath.IsMemberOf(ExecutionServer.CurrentUserId, new[] { 135, 307, 918, 1002, 1002, 1003, 1004, 1005,
-                                                                            1724, 1760, 1825, 1882, 1896, 1985, 3512, 3548 });
       }
 
       if (userIds.Count == 0) {
@@ -187,7 +198,9 @@ namespace Empiria.Security {
       }
 
 
-      this.PermissionsArray = GetPermissionsArray();
+      this.Permissions = GetFeaturesPermissions();
+
+      this.ObjectAccessRules = GetObjectAccessRules();
 
       principalsCache.Insert(this.Session.Token, this);
 
@@ -196,10 +209,19 @@ namespace Empiria.Security {
       this.RefreshBeforeReturn();
     }
 
-    private string[] GetPermissionsArray() {
+    private FixedList<string> GetFeaturesPermissions() {
       var permissionsBuilder = new PermissionsBuilder(this.ClientApp, this.Identity);
 
-      return permissionsBuilder.Build();
+      return permissionsBuilder.BuildFeatures()
+                               .Select(x => x.Key)
+                               .ToFixedList();
+    }
+
+
+    private FixedList<ObjectAccessRule> GetObjectAccessRules() {
+      var permissionsBuilder = new PermissionsBuilder(this.ClientApp, this.Identity);
+
+      return permissionsBuilder.BuildObjectAccessRules();
     }
 
     #endregion Private methods

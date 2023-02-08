@@ -24,7 +24,7 @@ namespace Empiria.Services.Authentication {
     }
 
 
-    public string[] Permissions {
+    public FixedList<string> Permissions {
       get; internal set;
     }
 

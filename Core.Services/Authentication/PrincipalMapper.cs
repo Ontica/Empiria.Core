@@ -19,7 +19,7 @@ namespace Empiria.Services.Authentication {
     internal static PrincipalDto Map(EmpiriaPrincipal principal) {
       return new PrincipalDto {
         Identity = MapIdentity(principal.Identity),
-        Permissions = principal.PermissionsArray
+        Permissions = principal.Permissions
       };
     }
 
