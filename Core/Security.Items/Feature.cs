@@ -74,6 +74,14 @@ namespace Empiria.Security.Items {
     }
 
 
+    public ObjectAccessRule[] ObjectsGrants {
+      get {
+        return ExtensionData.GetList<ObjectAccessRule>("objectsGrants", false)
+                            .ToArray();
+      }
+    }
+
+
     public Feature[] Requires {
       get {
         return ExtensionData.GetList<Feature>("requires", false)

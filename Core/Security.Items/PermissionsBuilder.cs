@@ -28,8 +28,7 @@ namespace Empiria.Security.Items {
     }
 
 
-    internal string[] Build() {
-
+    internal FixedList<Feature> BuildFeatures() {
       var features = new List<Feature>(64);
 
       FillIdentityFeatures(features);
@@ -40,11 +39,24 @@ namespace Empiria.Security.Items {
 
       RemoveRevokedFeatures(features, identityRoles);
 
-      return features.Select(x => x.Key)
-                     .Distinct()
-                     .ToArray();
+      return features.Distinct()
+                     .ToFixedList();
     }
 
+
+    internal FixedList<ObjectAccessRule> BuildObjectAccessRules() {
+
+      FixedList<Feature> features = BuildFeatures();
+
+      var objectRules = new List<ObjectAccessRule>(64);
+
+      foreach (var feature in features) {
+        objectRules.AddRange(feature.ObjectsGrants);
+      }
+
+      return objectRules.Distinct()
+                        .ToFixedList();
+    }
 
     private void FillIdentityFeatures(List<Feature> list) {
 
