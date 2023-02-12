@@ -119,6 +119,10 @@ namespace Empiria.Security {
       get; set;
     }
 
+    private FixedList<string> Roles {
+      get; set;
+    }
+
     #endregion Public properties
 
     #region Public methods
@@ -168,14 +172,7 @@ namespace Empiria.Security {
     /// <returns>true if the current principal is a member of the specified role in the current domain;
     /// otherwise, false.</returns>
     public bool IsInRole(string role) {
-      string[] users = SecurityData.GetUsersInRole(role);
-
-      for (int i = 0; i < users.Length; i++) {
-        if (users[i].Trim() == this.Identity.User.Contact.Id.ToString()) {
-          return true;
-        }
-      }
-      return false;
+      return this.Roles.Contains(role);
     }
 
 
@@ -197,6 +194,8 @@ namespace Empiria.Security {
         this.Session = EmpiriaSession.Create(this, contextData);
       }
 
+
+      this.Roles = GetRoles();
 
       this.Permissions = GetFeaturesPermissions();
 
@@ -222,6 +221,15 @@ namespace Empiria.Security {
       var permissionsBuilder = new PermissionsBuilder(this.ClientApp, this.Identity);
 
       return permissionsBuilder.BuildObjectAccessRules();
+    }
+
+
+    private FixedList<string> GetRoles() {
+      var permissionsBuilder = new PermissionsBuilder(this.ClientApp, this.Identity);
+
+      return permissionsBuilder.BuildRoles()
+                               .Select(x => x.Key)
+                               .ToFixedList();
     }
 
     #endregion Private methods

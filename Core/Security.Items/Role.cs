@@ -35,11 +35,17 @@ namespace Empiria.Security.Items {
 
     static internal FixedList<Role> GetList(ClientApplication app, IIdentifiable subject) {
       return SecurityItemsDataReader.GetSubjectTargetItems<Role>(app, subject,
-                                                                  SecurityItemType.SubjectRole);
+                                                                 SecurityItemType.SubjectRole);
     }
 
-
     #endregion Constructors and parsers
+
+    public string Key {
+      get {
+        return base.BaseKey;
+      }
+    }
+
 
     public string Name {
       get {
