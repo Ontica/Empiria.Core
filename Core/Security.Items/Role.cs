@@ -38,6 +38,15 @@ namespace Empiria.Security.Items {
                                                                  SecurityItemType.SubjectRole);
     }
 
+
+    static internal bool IsSubjectInRole(ClientApplication app,
+                                         IIdentifiable subject,
+                                         string roleKey) {
+      FixedList<Role> subjectRoles = GetList(app, subject);
+
+      return subjectRoles.Contains(x => x.Key == roleKey);
+    }
+
     #endregion Constructors and parsers
 
     public string Key {

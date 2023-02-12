@@ -13,6 +13,7 @@ using Empiria.Contacts;
 using Empiria.StateEnums;
 
 using Empiria.Security.Claims;
+using Empiria.Security.Items;
 
 namespace Empiria.Security {
 
@@ -63,14 +64,7 @@ namespace Empiria.Security {
 
     /// <summary>Determines whether a contact belongs to the specified role.</summary>
     static public bool IsInRole(Contact user, string role) {
-      string[] users = SecurityData.GetUsersInRole(role);
-
-      for (int i = 0; i < users.Length; i++) {
-        if (users[i].Trim() == user.Id.ToString()) {
-          return true;
-        }
-      }
-      return false;
+      return Role.IsSubjectInRole(ClientApplication.Current, user, role);
     }
 
 

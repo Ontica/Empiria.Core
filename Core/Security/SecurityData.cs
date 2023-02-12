@@ -47,16 +47,6 @@ namespace Empiria.Security {
     }
 
 
-    internal static string[] GetUsersInRole(string role) {
-      var roles = ConfigurationData.Get($"User.Role.{role}", string.Empty);
-
-      if (roles.Length != 0) {
-        return roles.Split('|');
-      }
-      return new string[0];
-    }
-
-
     static internal EmpiriaUser GetSessionUser(EmpiriaSession activeSession) {
       var credentials = Claim.TryParse(SecurityItemType.SubjectCredentials,
                                        ClientApplication.Parse(activeSession.ClientAppId),
