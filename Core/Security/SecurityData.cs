@@ -46,6 +46,7 @@ namespace Empiria.Security {
       return dataRow;
     }
 
+
     internal static string[] GetUsersInRole(string role) {
       var roles = ConfigurationData.Get($"User.Role.{role}", string.Empty);
 
@@ -55,8 +56,9 @@ namespace Empiria.Security {
       return new string[0];
     }
 
+
     static internal EmpiriaUser GetSessionUser(EmpiriaSession activeSession) {
-      var credentials = Claim.TryParse(SecurityItemType.IdentityCredentials,
+      var credentials = Claim.TryParse(SecurityItemType.SubjectCredentials,
                                        ClientApplication.Parse(activeSession.ClientAppId),
                                        activeSession.UserId);
 
@@ -72,7 +74,7 @@ namespace Empiria.Security {
                                                        string userName, string password,
                                                        string entropy) {
 
-      var credentials = Claim.TryParseWithKey(SecurityItemType.IdentityCredentials,
+      var credentials = Claim.TryParseWithKey(SecurityItemType.SubjectCredentials,
                                               clientApplication,
                                               userName);
 
@@ -115,7 +117,7 @@ namespace Empiria.Security {
 
     static internal EmpiriaUser TryGetUserWithUserName(ClientApplication clientApplication,
                                                        string userName) {
-      var credentials = Claim.TryParseWithKey(SecurityItemType.IdentityCredentials,
+      var credentials = Claim.TryParseWithKey(SecurityItemType.SubjectCredentials,
                                               clientApplication,
                                               userName);
       if (credentials != null) {

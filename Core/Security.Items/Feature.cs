@@ -42,9 +42,9 @@ namespace Empiria.Security.Items {
     }
 
 
-    static internal FixedList<Feature> GetList(ClientApplication app, EmpiriaIdentity identity) {
-      return SecurityItemsDataReader.GetIdentityTargetItems<Feature>(app, identity,
-                                                                     SecurityItemType.IdentityFeature);
+    static internal FixedList<Feature> GetList(ClientApplication app, IIdentifiable subject) {
+      return SecurityItemsDataReader.GetSubjectTargetItems<Feature>(app, subject,
+                                                                    SecurityItemType.SubjectFeature);
     }
 
     public static Feature Empty => ParseEmpty<Feature>();

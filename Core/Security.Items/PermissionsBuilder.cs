@@ -27,13 +27,14 @@ namespace Empiria.Security.Items {
       _identity = identity;
     }
 
+    #region Methods
 
     internal FixedList<Feature> BuildFeatures() {
       var features = new List<Feature>(64);
 
       FillIdentityFeatures(features);
 
-      FixedList<Role> identityRoles = Role.GetList(_clientApp, _identity);
+      FixedList<Role> identityRoles = Role.GetList(_clientApp, _identity.User.Contact);
 
       FillGrantedFeatures(features, identityRoles);
 
@@ -58,9 +59,19 @@ namespace Empiria.Security.Items {
                         .ToFixedList();
     }
 
+
+    internal FixedList<Role> BuildRoles() {
+      return Role.GetList(_clientApp, _identity.User.Contact);
+    }
+
+    #endregion Methods
+
+    #region Helpers
+
     private void FillIdentityFeatures(List<Feature> list) {
 
-      FixedList<Feature> identityFeatures = Feature.GetList(_clientApp, _identity);
+      FixedList<Feature> identityFeatures = Feature.GetList(_clientApp,
+                                                            _identity.User.Contact);
 
       list.AddRange(identityFeatures);
 
@@ -106,6 +117,8 @@ namespace Empiria.Security.Items {
         }
       }
     }
+
+    #endregion Helpers
 
   }  // class PermissionsBuilder
 

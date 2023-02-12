@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using Empiria.Contacts;
 
 namespace Empiria.Security.Items {
 
@@ -32,10 +33,11 @@ namespace Empiria.Security.Items {
     }
 
 
-    static internal FixedList<Role> GetList(ClientApplication app, EmpiriaIdentity identity) {
-      return SecurityItemsDataReader.GetIdentityTargetItems<Role>(app, identity,
-                                                                  SecurityItemType.IdentityRole);
+    static internal FixedList<Role> GetList(ClientApplication app, IIdentifiable subject) {
+      return SecurityItemsDataReader.GetSubjectTargetItems<Role>(app, subject,
+                                                                  SecurityItemType.SubjectRole);
     }
+
 
     #endregion Constructors and parsers
 
@@ -45,12 +47,14 @@ namespace Empiria.Security.Items {
       }
     }
 
+
     internal Feature[] Grants {
       get {
         return ExtensionData.GetList<Feature>("grants", false)
                             .ToArray();
       }
     }
+
 
     internal Feature[] Revokes {
       get {

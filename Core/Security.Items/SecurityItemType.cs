@@ -42,16 +42,16 @@ namespace Empiria.Security.Items {
                 => Parse("ObjectType.SecurityItem.Role.ClientAppRole");
 
 
-    static public SecurityItemType IdentityCredentials
-                => Parse("ObjectType.SecurityItem.Claim.IdentityCredentials");
+    static public SecurityItemType SubjectCredentials
+                => Parse("ObjectType.SecurityItem.Claim.SubjectCredentials");
 
 
-    static public SecurityItemType IdentityFeature
-                => Parse("ObjectType.SecurityItem.Feature.IdentityFeature");
+    static public SecurityItemType SubjectFeature
+                => Parse("ObjectType.SecurityItem.Feature.SubjectFeature");
 
 
-    static public SecurityItemType IdentityRole
-                => Parse("ObjectType.SecurityItem.Role.IdentityRole");
+    static public SecurityItemType SubjectRole
+                => Parse("ObjectType.SecurityItem.Role.SubjectRole");
 
 
     #endregion Constructors and parsers
