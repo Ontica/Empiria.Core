@@ -26,7 +26,10 @@ namespace Empiria.Security {
       // Required by Empiria Framework
     }
 
-    internal static EmpiriaUser Parse(Items.Claim credentials) {
+
+    static internal EmpiriaUser Parse(Items.Claim credentials) {
+      Assertion.Require(credentials, nameof(credentials));
+
       return new EmpiriaUser {
         Contact = Contact.Parse(credentials.SubjectId),
         UserName = credentials.Key,
@@ -34,9 +37,10 @@ namespace Empiria.Security {
       };
     }
 
+
     static public EmpiriaUser Parse(string username, string email) {
-      Assertion.Require(username, "username");
-      Assertion.Require(email, "email");
+      Assertion.Require(username, nameof(username));
+      Assertion.Require(email, nameof(email));
 
       EmpiriaUser user = SecurityData.TryGetUserWithUserName(ClientApplication.Current,
                                                              username);
@@ -52,11 +56,11 @@ namespace Empiria.Security {
     }
 
 
-    static public bool Exists(string userName) {
-      Assertion.Require(userName, "userName");
+    static public bool Exists(string username) {
+      Assertion.Require(username, nameof(username));
 
       EmpiriaUser user = SecurityData.TryGetUserWithUserName(ClientApplication.Current,
-                                                             userName);
+                                                             username);
 
       return (user != null);
     }
@@ -64,6 +68,9 @@ namespace Empiria.Security {
 
     /// <summary>Determines whether a contact belongs to the specified role.</summary>
     static public bool IsInRole(Contact user, string role) {
+      Assertion.Require(user, nameof(user));
+      Assertion.Require(role, nameof(role));
+
       return Role.IsSubjectInRole(ClientApplication.Current, user, role);
     }
 
@@ -72,16 +79,16 @@ namespace Empiria.Security {
 
     #region Authenticate methods
 
-    static internal EmpiriaUser Authenticate(ClientApplication clientApplication,
+    static internal EmpiriaUser Authenticate(ClientApplication app,
                                              string username,
                                              string password,
                                              string entropy) {
-      Assertion.Require(clientApplication, "clientApplication");
-      Assertion.Require(username, "username");
-      Assertion.Require(password, "password");
-      Assertion.Require(entropy, "entropy");
+      Assertion.Require(app, nameof(app));
+      Assertion.Require(username, nameof(username));
+      Assertion.Require(password, nameof(password));
+      Assertion.Require(entropy, nameof(entropy));
 
-      EmpiriaUser user = SecurityData.GetUserWithCredentials(clientApplication,
+      EmpiriaUser user = SecurityData.GetUserWithCredentials(app,
                                                              username, password,
                                                              entropy);
       user.EnsureCanAuthenticate();
@@ -91,14 +98,15 @@ namespace Empiria.Security {
     }
 
 
-    static internal EmpiriaUser Authenticate(EmpiriaSession activeSession) {
-      Assertion.Require(activeSession, "activeSession");
+    static internal EmpiriaUser Authenticate(EmpiriaSession session) {
+      Assertion.Require(session, nameof(session));
 
-      if (!activeSession.IsStillActive) {
-        throw new SecurityException(SecurityException.Msg.ExpiredSessionToken, activeSession.Token);
+      if (!session.IsStillActive) {
+        throw new SecurityException(SecurityException.Msg.ExpiredSessionToken,
+                                    session.Token);
       }
 
-      EmpiriaUser user = SecurityData.GetSessionUser(activeSession);
+      EmpiriaUser user = SecurityData.GetSessionUser(session);
 
       user.EnsureCanAuthenticate();
       user.IsAuthenticated = true;
@@ -137,6 +145,7 @@ namespace Empiria.Security {
         return this.Contact.FullName;
       }
     }
+
 
     public string EMail {
       get {
