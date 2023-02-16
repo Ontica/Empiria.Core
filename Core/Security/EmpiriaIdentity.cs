@@ -1,10 +1,10 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Security Services                 *
-*  Namespace : Empiria.Security                                 License  : Please read LICENSE.txt file      *
-*  Type      : EmpiriaIdentity                                  Pattern  : Standard Class                    *
+*  Module   : Security Items                               Component : Domain Layer                          *
+*  Assembly : Empiria.Core.dll                             Pattern   : Value type                            *
+*  Type     : EmpiriaIdentity                              License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Sealed class that represents a Empiria System identity.                                       *
+*  Summary  : Represents an authenticated user in Empiria Framework.                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -12,28 +12,53 @@ using System.Security.Principal;
 
 namespace Empiria.Security {
 
+  /// <summary>Describes authentication modes.</summary>
+  public enum AuthenticationMode {
+
+    None,
+
+    Basic,
+
+    Forms,
+
+    Realm,
+
+  }  // enum AuthenticationMode
+
+
+
+  /// <summary>Represents an authenticated user in Empiria Framework.</summary>
   public sealed class EmpiriaIdentity : IIdentity {
+
+    private readonly AuthenticationMode _authenticationMode;
 
     #region Constructors and parsers
 
     internal EmpiriaIdentity(EmpiriaUser user, AuthenticationMode mode) {
+      Assertion.Require(user, nameof(user));
+
       this.User = user;
-      this.SetAuthenticationType(mode);
+      _authenticationMode = mode;
     }
 
     #endregion Constructors and parsers
 
     #region Public properties
 
+
     public string AuthenticationType {
-      get;
-      private set;
+      get {
+        return _authenticationMode.ToString();
+      }
     }
 
+
     public bool IsAuthenticated {
-      get;
-      private set;
+      get {
+        return _authenticationMode != AuthenticationMode.None;
+      }
     }
+
 
     public string Name {
       get {
@@ -41,52 +66,12 @@ namespace Empiria.Security {
       }
     }
 
-    internal EmpiriaUser User {
+
+    public EmpiriaUser User {
       get;
-      private set;
     }
 
     #endregion Public properties
-
-    #region Private methods
-
-    private void EnsureValid() {
-      Assertion.Require(this.User != null,
-                       SecurityException.GetMessage(SecurityException.Msg.WrongAuthentication));
-
-      Assertion.Require(this.IsAuthenticated,
-                       SecurityException.GetMessage(SecurityException.Msg.WrongAuthentication));
-    }
-
-    private void SetAuthenticationType(AuthenticationMode authenticationMode) {
-      switch (authenticationMode) {
-
-        case AuthenticationMode.Basic:
-          this.AuthenticationType = "Basic";
-          this.IsAuthenticated = true;
-          return;
-
-        case AuthenticationMode.Realm:
-          this.AuthenticationType = "Realm";
-          this.IsAuthenticated = true;
-          return;
-
-        case AuthenticationMode.Forms:
-          this.AuthenticationType = "Forms";
-          this.IsAuthenticated = true;
-          return;
-
-        case AuthenticationMode.None:
-          this.AuthenticationType = "None";
-          this.IsAuthenticated = false;
-          return;
-
-        default:
-          throw Assertion.EnsureNoReachThisCode();
-      }
-    }
-
-    #endregion Private methods
 
   } // class EmpiriaIdentity
 
