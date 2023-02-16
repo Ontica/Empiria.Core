@@ -15,6 +15,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 using Empiria.Security.Claims;
+using Empiria.Security.Providers;
 
 namespace Empiria.Security {
 

@@ -1,22 +1,23 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Security                                     Component : Security Services                     *
-*  Assembly : Empiria.Core.dll                             Pattern   : Methods library                       *
-*  Type     : FormerCryptographer                          License   : Please read LICENSE.txt file          *
+*  Module   : Security                                     Component : Security Providers                    *
+*  Assembly : Empiria.Core.dll                             Pattern   : Static class                          *
+*  Type     : RSAProvider                                  License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Former cryptographic services for strings, objects and files.                                 *
+*  Summary  : Builds instances of RSACryptoServiceProvider using a private key file and a password.          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+
 using System.Security;
 using System.Security.Cryptography;
 
-namespace Empiria.Security {
+namespace Empiria.Security.Providers {
 
-  /// <summary>Former cryptographic services for strings, objects and files.</summary>
-    static internal class RSAProvider {
+  /// <summary>Builds instances of RSACryptoServiceProvider using a private key file and a password.</summary>
+  static internal class RSAProvider {
 
     #region Public methods
 
@@ -31,8 +32,8 @@ namespace Empiria.Security {
 
       Byte[] privateKeyFile = File.ReadAllBytes(privateKeyFilePath);
 
-      RSACryptoServiceProvider rsa = RSAProvider.TryDecodeEncryptedPrivateKeyInfo(privateKeyFile,
-                                                                                  password);
+      RSACryptoServiceProvider rsa = TryDecodeEncryptedPrivateKeyInfo(privateKeyFile,
+                                                                      password);
 
       if (rsa == null) {
         throw new SecurityException(SecurityException.Msg.CantDecodeEncryptedPrivateKey,
@@ -48,7 +49,7 @@ namespace Empiria.Security {
 
       SecureString privateKeyFilePassword = GetSystemPrivateKeyFilePassword();
 
-      return RSAProvider.GetProvider(privateKeyFilePath, privateKeyFilePassword);
+      return GetProvider(privateKeyFilePath, privateKeyFilePassword);
     }
 
     #endregion Public methods
