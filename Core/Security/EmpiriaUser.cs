@@ -13,7 +13,7 @@ using Empiria.Contacts;
 using Empiria.StateEnums;
 
 using Empiria.Security.Claims;
-using Empiria.Security.Items;
+using Empiria.Security.Providers;
 
 namespace Empiria.Security {
 
@@ -27,13 +27,13 @@ namespace Empiria.Security {
     }
 
 
-    static internal EmpiriaUser Parse(Items.Claim credentials) {
-      Assertion.Require(credentials, nameof(credentials));
+    static private EmpiriaUser Parse(ISubjectClaim userData) {
+      Assertion.Require(userData, nameof(userData));
 
       return new EmpiriaUser {
-        Contact = Contact.Parse(credentials.SubjectId),
-        UserName = credentials.Key,
-        Status = credentials.Status,
+        Contact = Contact.Parse(userData.SubjectId),
+        UserName = userData.Key,
+        Status = userData.Status,
       };
     }
 
@@ -42,12 +42,16 @@ namespace Empiria.Security {
       Assertion.Require(username, nameof(username));
       Assertion.Require(email, nameof(email));
 
-      EmpiriaUser user = SecurityData.TryGetUserWithUserName(ClientApplication.Current,
-                                                             username);
+      IAuthenticationProvider provider = SecurityProviders.AuthenticationProvider();
 
-      if (user == null) {
+      ISubjectClaim userData = provider.TryGetUserWithUserName(ClientApplication.Current, username);
+
+      if (userData == null) {
         throw new SecurityException(SecurityException.Msg.UserWithEMailNotFound, username, email);
       }
+
+      var user = EmpiriaUser.Parse(userData);
+
       if (user.EMail.Equals(email)) {
         return user;
       } else {
@@ -56,22 +60,14 @@ namespace Empiria.Security {
     }
 
 
-    static public bool Exists(string username) {
-      Assertion.Require(username, nameof(username));
-
-      EmpiriaUser user = SecurityData.TryGetUserWithUserName(ClientApplication.Current,
-                                                             username);
-
-      return (user != null);
-    }
-
-
     /// <summary>Determines whether a contact belongs to the specified role.</summary>
     static public bool IsInRole(Contact user, string role) {
       Assertion.Require(user, nameof(user));
       Assertion.Require(role, nameof(role));
 
-      return Role.IsSubjectInRole(ClientApplication.Current, user, role);
+      IPermissionsProvider provider = SecurityProviders.PermissionsProvider();
+
+      return provider.IsSubjectInRole(ClientApplication.Current, user, role);
     }
 
 
@@ -88,27 +84,43 @@ namespace Empiria.Security {
       Assertion.Require(password, nameof(password));
       Assertion.Require(entropy, nameof(entropy));
 
-      EmpiriaUser user = SecurityData.GetUserWithCredentials(app,
-                                                             username, password,
-                                                             entropy);
+      IAuthenticationProvider provider = SecurityProviders.AuthenticationProvider();
+
+      ISubjectClaim userData = provider.Authenticate(app,
+                                                     username, password,
+                                                     entropy);
+
+      var user = EmpiriaUser.Parse(userData);
+
       user.EnsureCanAuthenticate();
+
       user.IsAuthenticated = true;
 
       return user;
     }
 
 
-    static internal EmpiriaUser Authenticate(EmpiriaSession session) {
-      Assertion.Require(session, nameof(session));
+    static internal EmpiriaUser Authenticate(EmpiriaSession activeSession) {
+      Assertion.Require(activeSession, nameof(activeSession));
 
-      if (!session.IsStillActive) {
+      if (!activeSession.IsStillActive) {
         throw new SecurityException(SecurityException.Msg.ExpiredSessionToken,
-                                    session.Token);
+                                    activeSession.Token);
       }
 
-      EmpiriaUser user = SecurityData.GetSessionUser(session);
+      IAuthenticationProvider provider = SecurityProviders.AuthenticationProvider();
+
+      ISubjectClaim userData = provider.TryGetUser(ClientApplication.Parse(activeSession.ClientAppId),
+                                                   activeSession.UserId);
+
+      if (userData == null) {
+        throw new SecurityException(SecurityException.Msg.EnsureClaimFailed);
+      }
+
+      var user = EmpiriaUser.Parse(userData);
 
       user.EnsureCanAuthenticate();
+
       user.IsAuthenticated = true;
 
       return user;
@@ -161,7 +173,7 @@ namespace Empiria.Security {
     }
 
 
-    internal Contact Contact {
+    public Contact Contact {
       get; private set;
     }
 

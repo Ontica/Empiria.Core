@@ -1,20 +1,22 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Security Services                 *
-*  Namespace : Empiria.Security                                 License  : Please read LICENSE.txt file      *
-*  Type      : EmpiriaPrincipal                                 Pattern  : Standard Class                    *
+*  Module   : Security Items                               Component : Domain Layer                          *
+*  Assembly : Empiria.Core.dll                             Pattern   : Value type                            *
+*  Type     : EmpiriaPrincipal                             License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Represents the security context of the user or access account on whose behalf the Empiria     *
-*              framework code is running, including that user's identity (EmpiriaIdentity) and any domain    *
-*              roles to which they belong. This class can't be derived.                                      *
+*  Summary  : Represents the security context of the user or access account on whose behalf the Empiria      *
+*             framework code is running, including that user's identity (EmpiriaIdentity) and any domain     *
+*             roles to which they belong. This class can't be derived.                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Linq;
+
 using System.Security.Principal;
 
 using Empiria.Collections;
 
-using Empiria.Security.Items;
+using Empiria.Security.Providers;
 
 namespace Empiria.Security {
 
@@ -64,12 +66,15 @@ namespace Empiria.Security {
 
     static internal EmpiriaPrincipal TryParseWithToken(string sessionToken) {
       EmpiriaPrincipal principal = null;
+
       if (principalsCache.ContainsKey(sessionToken)) {
         principal = principalsCache[sessionToken];
         principal.RefreshBeforeReturn();
       }
+
       return principal;
     }
+
 
     private void RefreshBeforeReturn() {
       this.Session.UpdateEndTime();
@@ -98,6 +103,7 @@ namespace Empiria.Security {
       private set;
     }
 
+
     IIdentity IPrincipal.Identity {
       get {
         return this.Identity;
@@ -115,7 +121,7 @@ namespace Empiria.Security {
       private set;
     }
 
-    private FixedList<ObjectAccessRule> ObjectAccessRules {
+    private FixedList<IObjectAccessRule> ObjectAccessRules {
       get; set;
     }
 
@@ -152,18 +158,12 @@ namespace Empiria.Security {
         return false;
       }
 
-      FixedList<int> userIds = SecurityData.GetUsersWithDataAccessTo(typeof(T), entity);
-
       if (entity.UID == "NivelacionCuentasCompraventa") {
 
         return EmpiriaMath.IsMemberOf(ExecutionServer.CurrentUserId, new[] { 135, 1002, 1003, 2006, 3512, 3548 });
       }
 
-      if (userIds.Count == 0) {
-        return true;
-      }
-
-      return userIds.Contains(this.Identity.User.Contact.Id);
+      return true;
     }
 
 
@@ -194,12 +194,7 @@ namespace Empiria.Security {
         this.Session = EmpiriaSession.Create(this, contextData);
       }
 
-
-      this.Roles = GetRoles();
-
-      this.Permissions = GetFeaturesPermissions();
-
-      this.ObjectAccessRules = GetObjectAccessRules();
+      SetSecurityObjects();
 
       principalsCache.Insert(this.Session.Token, this);
 
@@ -208,28 +203,15 @@ namespace Empiria.Security {
       this.RefreshBeforeReturn();
     }
 
-    private FixedList<string> GetFeaturesPermissions() {
-      var permissionsBuilder = new PermissionsBuilder(this.ClientApp, this.Identity);
 
-      return permissionsBuilder.BuildFeatures()
-                               .Select(x => x.Key)
-                               .ToFixedList();
-    }
+    private void SetSecurityObjects() {
+      var provider = SecurityProviders.PermissionsProvider();
 
+      this.Roles = provider.GetRoles(this.ClientApp, this.Identity);
 
-    private FixedList<ObjectAccessRule> GetObjectAccessRules() {
-      var permissionsBuilder = new PermissionsBuilder(this.ClientApp, this.Identity);
+      this.Permissions = provider.GetFeaturesPermissions(this.ClientApp, this.Identity);
 
-      return permissionsBuilder.BuildObjectAccessRules();
-    }
-
-
-    private FixedList<string> GetRoles() {
-      var permissionsBuilder = new PermissionsBuilder(this.ClientApp, this.Identity);
-
-      return permissionsBuilder.BuildRoles()
-                               .Select(x => x.Key)
-                               .ToFixedList();
+      this.ObjectAccessRules = provider.GetObjectAccessRules(this.ClientApp, this.Identity);
     }
 
     #endregion Private methods
