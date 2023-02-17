@@ -97,30 +97,6 @@ namespace Empiria.Data {
     }
 
 
-    static internal int Execute(SingleSignOnToken token, DataOperation operation) {
-      Assertion.Require(token, "token");
-      Assertion.Require(operation, "operation");
-
-      return ExecuteInternal(operation);
-    }
-
-
-    static internal int Execute(SingleSignOnToken token, DataOperationList operationList) {
-      Assertion.Require(token, "token");
-      Assertion.Require(operationList, "operationList");
-
-      using (DataWriterContext context = DataWriter.CreateContext(operationList.Name)) {
-
-        ITransaction transaction = context.BeginTransaction();
-
-        context.Add(token, operationList);
-        context.Update();
-
-        return transaction.Commit();
-      }
-    }
-
-
     static internal int ExecuteInternal(DataOperation operation) {
       IDataHandler handler = GetDataHander(operation);
 

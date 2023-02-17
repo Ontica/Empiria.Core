@@ -123,21 +123,6 @@ namespace Empiria.Data {
     }
 
 
-    internal void Add(SingleSignOnToken token, DataOperationList operationList) {
-      if (operationList == null) {
-        return;
-      }
-
-      foreach (DataOperation operation in operationList) {
-        if (IsInTransaction) {
-          transactionalOp.Add(operation);
-        } else {
-          internalOp.Add(operation);
-        }
-      }
-    }
-
-
     public ITransaction BeginTransaction() {
       return BeginTransaction(IsolationLevel.ReadCommitted);
     }
