@@ -161,6 +161,14 @@ namespace Empiria {
     }
 
 
+    public T[] ToArray() {
+      var array = new T[this.Count];
+
+      base.CopyTo(array, 0);
+
+      return array;
+    }
+
     #endregion Public methods
 
   } // class FixedList
