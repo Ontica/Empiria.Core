@@ -15,6 +15,7 @@ using System.Linq;
 using System.Security.Principal;
 
 using Empiria.Collections;
+using Empiria.Json;
 
 using Empiria.Security.Providers;
 
@@ -30,39 +31,49 @@ namespace Empiria.Security {
     static private EmpiriaDictionary<string, EmpiriaPrincipal> principalsCache =
                                         new EmpiriaDictionary<string, EmpiriaPrincipal>(128);
 
+    private readonly Lazy<SecurityObjects> _securityObjects;
+
     #endregion Fields
 
     #region Constructors and parsers
 
     internal EmpiriaPrincipal(EmpiriaIdentity identity, EmpiriaSession session) {
-      Assertion.Require(session, "session");
-      Assertion.Require(identity, "identity");
+      Assertion.Require(identity, nameof(identity));
+      Assertion.Require(session, nameof(session));
 
       if (!identity.IsAuthenticated) {
         throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
       }
+
       this.Initialize(identity, ClientApplication.Parse(session.ClientAppId), session);
+
+      _securityObjects = new Lazy<SecurityObjects>(() => new SecurityObjects(this));
     }
 
     /// <summary>Initializes a new instance of the EmpiriaPrincipal class from an authenticated
     /// EmpiriaIdentity. Fails if identity represents a non authenticated EmpiriaIdentity.</summary>
     /// <param name="identity">Represents an authenticated Empiria user.</param>
     internal EmpiriaPrincipal(EmpiriaIdentity identity, ClientApplication clientApp,
-                              Json.JsonObject contextData = null) {
-      Assertion.Require(identity, "identity");
-      Assertion.Require(clientApp, "clientApp");
+                              JsonObject contextData = null) {
+      Assertion.Require(identity, nameof(identity));
+      Assertion.Require(clientApp, nameof(clientApp));
 
       if (!identity.IsAuthenticated) {
         throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
       }
+
       this.Initialize(identity, clientApp, contextData: contextData);
+
+      _securityObjects = new Lazy<SecurityObjects>(() => new SecurityObjects(this));
     }
+
 
     static public EmpiriaPrincipal Current {
       get {
         return ExecutionServer.CurrentPrincipal;
       }
     }
+
 
     static internal EmpiriaPrincipal TryParseWithToken(string sessionToken) {
       EmpiriaPrincipal principal = null;
@@ -75,14 +86,9 @@ namespace Empiria.Security {
       return principal;
     }
 
-
-    private void RefreshBeforeReturn() {
-      this.Session.UpdateEndTime();
-    }
-
     #endregion Constructors and parsers
 
-    #region Public properties
+    #region Properties
 
     /// <summary>Gets the ClientApplication of the current principal.</summary>
     public ClientApplication ClientApp {
@@ -111,27 +117,35 @@ namespace Empiria.Security {
     }
 
 
+    private FixedList<IObjectAccessRule> ObjectAccessRules {
+      get {
+        return _securityObjects.Value.ObjectAccessRules;
+      }
+    }
+
+
+    public FixedList<string> Permissions {
+      get {
+        return _securityObjects.Value.Permissions;
+      }
+    }
+
+
+    private FixedList<string> Roles {
+      get {
+        return _securityObjects.Value.Roles;
+      }
+    }
+
+
     public EmpiriaSession Session {
       get;
       private set;
     }
 
-    public FixedList<string> Permissions {
-      get;
-      private set;
-    }
+    #endregion Properties
 
-    private FixedList<IObjectAccessRule> ObjectAccessRules {
-      get; set;
-    }
-
-    private FixedList<string> Roles {
-      get; set;
-    }
-
-    #endregion Public properties
-
-    #region Public methods
+    #region Methods
 
     public void CloseSession() {
       try {
@@ -176,12 +190,12 @@ namespace Empiria.Security {
     }
 
 
-    #endregion Public methods
+    #endregion Methods
 
-    #region Private methods
+    #region Helpers
 
     private void Initialize(EmpiriaIdentity identity, ClientApplication clientApp = null,
-                            EmpiriaSession session = null, Json.JsonObject contextData = null) {
+                            EmpiriaSession session = null, JsonObject contextData = null) {
       this.Identity = identity;
 
       if (session != null) {
@@ -194,8 +208,6 @@ namespace Empiria.Security {
         this.Session = EmpiriaSession.Create(this, contextData);
       }
 
-      SetSecurityObjects();
-
       principalsCache.Insert(this.Session.Token, this);
 
       this.ContextItems = new AssortedDictionary();
@@ -203,18 +215,39 @@ namespace Empiria.Security {
       this.RefreshBeforeReturn();
     }
 
-
-    private void SetSecurityObjects() {
-      var provider = SecurityProviders.PermissionsProvider();
-
-      this.Roles = provider.GetRoles(this.ClientApp, this.Identity);
-
-      this.Permissions = provider.GetFeaturesPermissions(this.ClientApp, this.Identity);
-
-      this.ObjectAccessRules = provider.GetObjectAccessRules(this.ClientApp, this.Identity);
+    private void RefreshBeforeReturn() {
+      this.Session.UpdateEndTime();
     }
 
-    #endregion Private methods
+    #endregion Helpers
+
+
+    sealed private class SecurityObjects {
+
+      internal SecurityObjects(EmpiriaPrincipal principal) {
+        var provider = SecurityProviders.PermissionsProvider();
+
+        this.Roles = provider.GetRoles(principal.ClientApp, principal.Identity);
+
+        this.Permissions = provider.GetFeaturesPermissions(principal.ClientApp, principal.Identity);
+
+        this.ObjectAccessRules = provider.GetObjectAccessRules(principal.ClientApp, principal.Identity);
+      }
+
+
+      internal FixedList<IObjectAccessRule> ObjectAccessRules {
+        get;
+      }
+
+      internal FixedList<string> Permissions {
+        get;
+      }
+
+      internal FixedList<string> Roles {
+        get;
+      }
+
+    }  // inner class SecurityObjects
 
   } // class EmpiriaPrincipal
 

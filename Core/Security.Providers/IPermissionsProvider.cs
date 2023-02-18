@@ -14,7 +14,7 @@ using Empiria.StateEnums;
 namespace Empiria.Security.Providers {
 
   /// <summary>Interface for subject permissions service providers.</summary>
-  internal interface IPermissionsProvider {
+  public interface IPermissionsProvider {
 
     FixedList<string> GetFeaturesPermissions(ClientApplication app, EmpiriaIdentity subject);
 

@@ -12,7 +12,7 @@ using System;
 namespace Empiria.Security.Providers {
 
   /// <summary>Interface for authenticate and retrive users service providers.</summary>
-  internal interface IAuthenticationProvider {
+  public interface IAuthenticationProvider {
 
     ISubjectClaim Authenticate(ClientApplication app, string username,
                                string password, string entropy);
