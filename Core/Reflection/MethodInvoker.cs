@@ -1,10 +1,10 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Kernel Types                      *
-*  Namespace : Empiria.Reflection                               License  : Please read LICENSE.txt file      *
-*  Type      : MethodInvoker                                    Pattern  : Static Class                      *
+*  Module   : Empiria Core                                 Component : Reflection services                   *
+*  Assembly : Empiria.Core.dll                             Pattern   : Service provider                      *
+*  Type     : MethodInvoker                                License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Static class that provides services for Empiria method invocation.                            *
+*  Summary  : Provides services for execute type's methods invocation.                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,10 +13,10 @@ using System.Reflection.Emit;
 
 namespace Empiria.Reflection {
 
-  /// <summary>Static class that provides services for Empiria method invocation/// </summary>
+  /// <summary>Provides services for execute type's methods invocation.</summary>
   static public class MethodInvoker {
 
-    #region Public methods
+    #region Methods
 
     /// <summary>Executes an object instance method with no parameters.</summary>
     static public object Execute(object instance, string methodName) {
@@ -33,6 +33,7 @@ namespace Empiria.Reflection {
                                       instance.GetType().FullName + "." + methodName);
       }
     }
+
 
     /// <summary>Executes an object instance method with the given parameters.</summary>
     static public object Execute(object instance, string methodName, object[] parameters) {
@@ -55,6 +56,7 @@ namespace Empiria.Reflection {
       }
     }
 
+
     /// <summary>Executes a static method with no parameters.</summary>
     static public object Execute(Type type, string methodName) {
       MethodInfo method = type.GetMethod(methodName, new Type[0]);
@@ -68,6 +70,7 @@ namespace Empiria.Reflection {
                                       type.FullName + "." + methodName);
       }
     }
+
 
     /// <summary>Executes a static method with the given parameters.</summary>
     static public object Execute(Type type, string methodName, object[] parameters) {
@@ -89,51 +92,13 @@ namespace Empiria.Reflection {
       }
     }
 
+
     static public object ExecuteStaticProperty(Type type, string propertyName) {
       PropertyInfo property = GetStaticProperty(type, propertyName);
 
       return property.GetMethod.Invoke(null, null);
     }
 
-    static public Func<object, object> GetPropertyValueMethodDelegate(PropertyInfo propertyInfo) {
-      var dynMethod = new DynamicMethod("_get_" + propertyInfo.Name, typeof(object),
-                                        new Type[] { typeof(object) },
-                                        propertyInfo.DeclaringType.Module, true);
-
-      // Generate the intermediate language.
-      ILGenerator codeGenerator = dynMethod.GetILGenerator();
-      codeGenerator.Emit(OpCodes.Ldarg_0);
-      codeGenerator.Emit(OpCodes.Castclass, propertyInfo.DeclaringType);
-      codeGenerator.Emit(OpCodes.Call, propertyInfo.GetMethod);
-      if (propertyInfo.GetMethod.ReturnType.IsValueType) {
-        codeGenerator.Emit(OpCodes.Box, propertyInfo.GetMethod.ReturnType);
-      }
-      codeGenerator.Emit(OpCodes.Ret);
-
-      return (Func<object, object>) dynMethod.CreateDelegate(typeof(Func<object, object>));
-    }
-
-    static public Action<object, object> SetPropertyValueMethodDelegate(PropertyInfo propertyInfo) {
-      var argumentTypes = new Type[] { typeof(object), typeof(object) };
-
-      var dynMethod = new DynamicMethod("_set_" + propertyInfo.Name, null, argumentTypes,
-                                        propertyInfo.DeclaringType.Module, true);
-
-      // Generate the intermediate language.
-      ILGenerator codeGenerator = dynMethod.GetILGenerator();
-      codeGenerator.Emit(OpCodes.Ldarg_0);
-      codeGenerator.Emit(OpCodes.Castclass, propertyInfo.DeclaringType);
-      codeGenerator.Emit(OpCodes.Ldarg_1);
-      if (propertyInfo.PropertyType.IsValueType) {
-        codeGenerator.Emit(OpCodes.Unbox_Any, propertyInfo.PropertyType);
-      } else {
-        codeGenerator.Emit(OpCodes.Castclass, propertyInfo.PropertyType);
-      }
-      codeGenerator.Emit(OpCodes.Callvirt, propertyInfo.SetMethod);
-      codeGenerator.Emit(OpCodes.Ret);
-
-      return (Action<object, object>) dynMethod.CreateDelegate(typeof(Action<object, object>));
-    }
 
     static public Action<object, object> GetFieldValueSetMethodDelegate(FieldInfo fieldInfo) {
       var argumentTypes = new Type[] { typeof(object), typeof(object) };
@@ -157,6 +122,37 @@ namespace Empiria.Reflection {
       return (Action<object, object>) dynMethod.CreateDelegate(typeof(Action<object, object>));
     }
 
+
+    static public Func<object, object> GetPropertyValueMethodDelegate(PropertyInfo propertyInfo) {
+      var dynMethod = new DynamicMethod("_get_" + propertyInfo.Name, typeof(object),
+                                        new Type[] { typeof(object) },
+                                        propertyInfo.DeclaringType.Module, true);
+
+      // Generate the intermediate language.
+      ILGenerator codeGenerator = dynMethod.GetILGenerator();
+      codeGenerator.Emit(OpCodes.Ldarg_0);
+      codeGenerator.Emit(OpCodes.Castclass, propertyInfo.DeclaringType);
+      codeGenerator.Emit(OpCodes.Call, propertyInfo.GetMethod);
+      if (propertyInfo.GetMethod.ReturnType.IsValueType) {
+        codeGenerator.Emit(OpCodes.Box, propertyInfo.GetMethod.ReturnType);
+      }
+      codeGenerator.Emit(OpCodes.Ret);
+
+      return (Func<object, object>) dynMethod.CreateDelegate(typeof(Func<object, object>));
+    }
+
+
+    static public PropertyInfo GetStaticProperty(Type type, string propertyName) {
+      Assertion.Require(type, "type");
+      Assertion.Require(type, "propertyName");
+
+      PropertyInfo property = type.GetProperty(propertyName, BindingFlags.Static | BindingFlags.Public);
+      Assertion.Require(property,
+        $"Type {type.FullName} doesn't has a static property with name '{propertyName}'.");
+      return property;
+    }
+
+
     static public Func<object> GetStaticPropertyValueMethodDelegate(PropertyInfo propertyInfo) {
       var dynMethod = new DynamicMethod("_get_" + propertyInfo.Name, typeof(object),
                                         null, propertyInfo.DeclaringType.Module, true);
@@ -172,19 +168,32 @@ namespace Empiria.Reflection {
       return (Func<object>) dynMethod.CreateDelegate(typeof(Func<object>));
     }
 
-    static public PropertyInfo GetStaticProperty(Type type, string propertyName) {
-      Assertion.Require(type, "type");
-      Assertion.Require(type, "propertyName");
 
-      PropertyInfo property = type.GetProperty(propertyName, BindingFlags.Static | BindingFlags.Public);
-      Assertion.Require(property,
-        $"Type {type.FullName} doesn't has a static property with name '{propertyName}'.");
-      return property;
+    static public Action<object, object> SetPropertyValueMethodDelegate(PropertyInfo propertyInfo) {
+      var argumentTypes = new Type[] { typeof(object), typeof(object) };
+
+      var dynMethod = new DynamicMethod("_set_" + propertyInfo.Name, null, argumentTypes,
+                                        propertyInfo.DeclaringType.Module, true);
+
+      // Generate the intermediate language.
+      ILGenerator codeGenerator = dynMethod.GetILGenerator();
+      codeGenerator.Emit(OpCodes.Ldarg_0);
+      codeGenerator.Emit(OpCodes.Castclass, propertyInfo.DeclaringType);
+      codeGenerator.Emit(OpCodes.Ldarg_1);
+      if (propertyInfo.PropertyType.IsValueType) {
+        codeGenerator.Emit(OpCodes.Unbox_Any, propertyInfo.PropertyType);
+      } else {
+        codeGenerator.Emit(OpCodes.Castclass, propertyInfo.PropertyType);
+      }
+      codeGenerator.Emit(OpCodes.Callvirt, propertyInfo.SetMethod);
+      codeGenerator.Emit(OpCodes.Ret);
+
+      return (Action<object, object>) dynMethod.CreateDelegate(typeof(Action<object, object>));
     }
 
-    #endregion Public methods
+    #endregion Methods
 
-    #region Private methods
+    #region Helpers
 
     static private Type[] GetTypesArray(object[] objects) {
       Type[] parametersTypes = new Type[objects.Length];
@@ -196,8 +205,8 @@ namespace Empiria.Reflection {
       return parametersTypes;
     }
 
-    #endregion Private methods
+    #endregion Helpers
 
-  } // class ObjectFactory
+  } // class MethodInvoker
 
 } // namespace Empiria.Reflection

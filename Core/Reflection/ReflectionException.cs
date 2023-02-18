@@ -1,10 +1,10 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Kernel Types                      *
-*  Namespace : Empiria.Reflection                               License  : Please read LICENSE.txt file      *
-*  Type      : ReflectionException                              Pattern  : Exception Class                   *
+*  Module   : Empiria Core                                 Component : Reflection services                   *
+*  Assembly : Empiria.Core.dll                             Pattern   : Exception                             *
+*  Type     : ReflectionException                          License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : The exception that is thrown when a reflection service problem occurs.                        *
+*  Summary  : The exception that is thrown when a reflection service problem occurs.                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;

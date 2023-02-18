@@ -1,10 +1,10 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Kernel Types                      *
-*  Namespace : Empiria.Reflection                               License  : Please read LICENSE.txt file      *
-*  Type      : ObjectFactory                                    Pattern  : Static Class                      *
+*  Module   : Empiria Core                                 Component : Reflection services                   *
+*  Assembly : Empiria.Core.dll                             Pattern   : Service provider                      *
+*  Type     : ObjectFactory                                License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : This class provides services for a empiria type instance creation.                            *
+*  Summary  : Provides services for Empiria types instance creation.                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -16,9 +16,10 @@ using Empiria.Json;
 
 namespace Empiria.Reflection {
 
+  /// <summary>Provides services for Empiria types instance creation.</summary>
   static public class ObjectFactory {
 
-    #region Public methods
+    #region Methods
 
     static public T Convert<T>(object value) {
       var convertToType = typeof(T);
@@ -79,13 +80,16 @@ namespace Empiria.Reflection {
       }
     }
 
+
     static public object CreateObject(Type type) {
       return CreateObject(type, new Type[] { }, new object[] { });
     }
 
+
     static public T CreateObject<T>() {
       return (T) CreateObject(typeof(T), new Type[] { }, new object[] { });
     }
+
 
     static public object CreateObject(Type type, Type[] parametersTypes, object[] parameters) {
       try {
@@ -103,6 +107,7 @@ namespace Empiria.Reflection {
                                       innerException, type.FullName);
       }
     }
+
 
     static public object EmptyInstance(Type type) {
       try {
@@ -126,6 +131,12 @@ namespace Empiria.Reflection {
       }
     }
 
+
+    static public T GetEmptyInstance<T>() {
+      return (T) ObjectFactory.InvokeParseMethod(typeof(T), -1);
+    }
+
+
     static public object GetPropertyValue(object instance, string propertyName) {
       Type type = instance.GetType();
       PropertyInfo propertyInfo = type.GetProperty(propertyName);
@@ -139,55 +150,6 @@ namespace Empiria.Reflection {
       }
     }
 
-    static public Type GetType(string assemblyName, string typeName) {
-      Type type = Type.GetType(typeName);
-      if (type == null) {
-        Assembly assembly = Assembly.Load(assemblyName);
-        type = assembly.GetType(typeName, true, true);
-      }
-      return type;
-    }
-
-    static public bool HasEmptyInstance(Type type) {
-      return (ObjectFactory.TryGetEmptyInstanceProperty(type) != null);
-    }
-
-    static public bool HasParseWithIdMethod(Type type) {
-      return (ObjectFactory.TryGetParseWithIdMethod(type) != null);
-    }
-
-    static public bool HasParseWithStringMethod(Type type) {
-      return (ObjectFactory.TryGetParseStringMethod(type) != null);
-    }
-
-    static public bool IsConvertible(Type sourceType, Type targetType) {
-      try {
-        var instanceOfSourceType = Activator.CreateInstance(sourceType);
-
-        System.Convert.ChangeType(instanceOfSourceType, targetType);
-
-        return true;
-
-      } catch {
-        return false;
-      }
-    }
-
-    static public bool IsEmpiriaType(Type type) {
-      return type.FullName.StartsWith("Empiria.");
-    }
-
-    static public bool IsIdentifiable(Type type) {
-      return (type.GetInterface("Empiria.IIdentifiable") != null);
-    }
-
-    static public bool IsValueObject(Type type) {
-      return (type.GetInterface("Empiria.IValueObject`1") != null);
-    }
-
-    static public T GetEmptyInstance<T>() {
-      return (T) ObjectFactory.InvokeParseMethod(typeof(T), -1);
-    }
 
     static public Type GetType(string typeName) {
       Type type = Type.GetType(typeName);
@@ -199,25 +161,46 @@ namespace Empiria.Reflection {
       return type;
     }
 
+
+    static public Type GetType(string assemblyName, string typeName) {
+      Type type = Type.GetType(typeName);
+      if (type == null) {
+        Assembly assembly = Assembly.Load(assemblyName);
+        type = assembly.GetType(typeName, true, true);
+      }
+      return type;
+    }
+
+
+    static public bool HasEmptyInstance(Type type) {
+      return (ObjectFactory.TryGetEmptyInstanceProperty(type) != null);
+    }
+
+
     static public bool HasJsonParser(Type type) {
       return (ObjectFactory.TryGetParseJsonMethod(type) != null);
     }
+
+
+    static public bool HasParseWithIdMethod(Type type) {
+      return (ObjectFactory.TryGetParseWithIdMethod(type) != null);
+    }
+
+
+    static public bool HasParseWithStringMethod(Type type) {
+      return (ObjectFactory.TryGetParseStringMethod(type) != null);
+    }
+
 
     static public T InvokeParseMethod<T>(int objectId) {
       return (T) ObjectFactory.InvokeParseMethod(typeof(T), objectId);
     }
 
+
     static public T InvokeParseMethod<T>(string value) {
       return (T) ObjectFactory.InvokeParseMethod(typeof(T), value);
     }
 
-    static public T InvokeStaticMethod<T>(string methodName, string value) {
-      return (T) ObjectFactory.InvokeParseMethod(typeof(T), value);
-    }
-
-    static public T ParseEnumValue<T>(object value) {
-      return (T) Enum.Parse(typeof(T), (string) value);
-    }
 
     static public object InvokeParseMethod(Type type, int objectId) {
       try {
@@ -241,6 +224,7 @@ namespace Empiria.Reflection {
       }
     }
 
+
     static public object InvokeParseMethod(Type type, string value) {
       try {
         MethodInfo method = ObjectFactory.TryGetParseStringMethod(type);
@@ -255,9 +239,6 @@ namespace Empiria.Reflection {
 
       } catch (TargetInvocationException e) {
         throw e.InnerException ?? e;
-
-      } catch (Exception e) {
-        throw e;
 
       }
     }
@@ -278,8 +259,6 @@ namespace Empiria.Reflection {
       } catch (TargetInvocationException e) {
         throw e.InnerException ?? e;
 
-      } catch (Exception e) {
-        throw e;
       }
     }
 
@@ -307,14 +286,43 @@ namespace Empiria.Reflection {
       }
     }
 
-    #endregion Public methods
 
-    #region Private methods
+    static public bool IsConvertible(Type sourceType, Type targetType) {
+      try {
+        var instanceOfSourceType = Activator.CreateInstance(sourceType);
 
-    static public PropertyInfo TryGetEmptyInstanceProperty(Type type) {
-      return type.GetProperty("Empty", BindingFlags.ExactBinding | BindingFlags.Static |
-                                       BindingFlags.Public | BindingFlags.NonPublic);
+        System.Convert.ChangeType(instanceOfSourceType, targetType);
+
+        return true;
+
+      } catch {
+        return false;
+      }
     }
+
+
+    static public bool IsEmpiriaType(Type type) {
+      return type.FullName.StartsWith("Empiria.");
+    }
+
+
+    static public bool IsIdentifiable(Type type) {
+      return (type.GetInterface("Empiria.IIdentifiable") != null);
+    }
+
+
+    static public bool IsValueObject(Type type) {
+      return (type.GetInterface("Empiria.IValueObject`1") != null);
+    }
+
+
+    static public T ParseEnumValue<T>(object value) {
+      return (T) Enum.Parse(typeof(T), (string) value);
+    }
+
+    #endregion Methods
+
+    #region Helpers
 
     static public Delegate GetParseWithIdMethodDelegate(Type type) {
       MethodInfo parseMethod = TryGetParseWithIdMethod(type);
@@ -326,6 +334,7 @@ namespace Empiria.Reflection {
       return Expression.Lambda(body, param).Compile();
     }
 
+
     static public Delegate GetParseWithStringMethodDelegate(Type type) {
       MethodInfo parseMethod = TryGetParseStringMethod(type);
 
@@ -336,11 +345,12 @@ namespace Empiria.Reflection {
       return Expression.Lambda(body, param).Compile();
     }
 
-    static private Delegate GetPropertyGetDelegate(Type type, PropertyInfo property) {
-      var body = Expression.Call(property.GetMethod);
 
-      return Expression.Lambda(body).Compile();
+    static public PropertyInfo TryGetEmptyInstanceProperty(Type type) {
+      return type.GetProperty("Empty", BindingFlags.ExactBinding | BindingFlags.Static |
+                                       BindingFlags.Public | BindingFlags.NonPublic);
     }
+
 
     static public MethodInfo TryGetParseWithIdMethod(Type type) {
       if (!IsEmpiriaType(type)) {
@@ -351,6 +361,7 @@ namespace Empiria.Reflection {
                             null, CallingConventions.Any, new Type[] { typeof(int) }, null);
     }
 
+
     static private MethodInfo TryGetParseJsonMethod(Type type) {
       if (!IsEmpiriaType(type)) {
         return null;
@@ -359,6 +370,7 @@ namespace Empiria.Reflection {
                             BindingFlags.Public | BindingFlags.NonPublic,
                             null, CallingConventions.Any, new Type[] { typeof(Json.JsonObject) }, null);
     }
+
 
     static public MethodInfo TryGetParseStringMethod(Type type) {
       if (!IsEmpiriaType(type)) {
@@ -369,6 +381,7 @@ namespace Empiria.Reflection {
                             null, CallingConventions.Any, new Type[] { typeof(string) }, null);
     }
 
+
     static public MethodInfo TryGetTryParseStringMethod(Type type) {
       if (!IsEmpiriaType(type)) {
         return null;
@@ -378,7 +391,7 @@ namespace Empiria.Reflection {
                             null, CallingConventions.Any, new Type[] { typeof(string) }, null);
     }
 
-    #endregion Private methods
+    #endregion Helpers
 
   } // class ObjectFactory
 
