@@ -227,11 +227,11 @@ namespace Empiria.Security {
       internal SecurityObjects(EmpiriaPrincipal principal) {
         var provider = SecurityProviders.PermissionsProvider();
 
-        this.Roles = provider.GetRoles(principal.ClientApp, principal.Identity);
+        this.Roles = provider.GetRoles(principal.Identity, principal.ClientApp);
 
-        this.Permissions = provider.GetFeaturesPermissions(principal.ClientApp, principal.Identity);
+        this.Permissions = provider.GetFeaturesPermissions(principal.Identity, principal.ClientApp);
 
-        this.ObjectAccessRules = provider.GetObjectAccessRules(principal.ClientApp, principal.Identity);
+        this.ObjectAccessRules = provider.GetObjectAccessRules(principal.Identity, principal.ClientApp);
       }
 
 

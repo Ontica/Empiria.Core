@@ -67,7 +67,7 @@ namespace Empiria.Security {
 
       IPermissionsProvider provider = SecurityProviders.PermissionsProvider();
 
-      return provider.IsSubjectInRole(ClientApplication.Current, user, role);
+      return provider.IsSubjectInRole(user, ClientApplication.Current, role);
     }
 
 
