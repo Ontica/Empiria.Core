@@ -401,8 +401,12 @@ namespace Empiria.Collections {
     #region IEnumerator, IList and ICollection properties and methods
 
     T IList<T>.this[int index] {
-      get { return this[index]; }
-      set { this.SetItemAt(index, value); }
+      get {
+        return this[index];
+      }
+      set {
+        this.SetItemAt(index, value);
+      }
     }
 
 
@@ -418,28 +422,28 @@ namespace Empiria.Collections {
 
     public object SyncRoot {
       get {
-        throw new NotImplementedException();
+        return ((ICollection) items).SyncRoot;
       }
     }
 
 
-    void ICollection<T>.Add(T value) {
-      items.Add(value);
+    void ICollection<T>.Add(T item) {
+      items.Add(item);
     }
 
 
-    bool ICollection<T>.Contains(T value) {
-      return items.Contains(value);
+    bool ICollection<T>.Contains(T item) {
+      return items.Contains(item);
     }
 
 
-    int IList<T>.IndexOf(T value) {
-      return items.IndexOf(value);
+    int IList<T>.IndexOf(T item) {
+      return items.IndexOf(item);
     }
 
 
-    void IList<T>.Insert(int index, T value) {
-      items.Insert(index, value);
+    void IList<T>.Insert(int index, T item) {
+      items.Insert(index, item);
     }
 
 
@@ -460,8 +464,8 @@ namespace Empiria.Collections {
     }
 
 
-    bool ICollection<T>.Remove(T value) {
-      return items.Remove(value);
+    bool ICollection<T>.Remove(T item) {
+      return items.Remove(item);
     }
 
 
