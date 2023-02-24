@@ -144,7 +144,7 @@ namespace Empiria.Security.Authorization {
     public void Apply() {
       Assertion.Require(this.Status == AuthorizationStatus.Authorized,
                       $"Authorization request '{this.UID}' is in status {this.Status.ToString()}, " +
-                      "so it can not be applied.");
+                      "so it cannot be applied.");
 
       this.AssertNotExpired();
 
@@ -170,7 +170,7 @@ namespace Empiria.Security.Authorization {
                        "Expiration minutes must be a positive number.");
       Assertion.Require(this.IsReadyToBeAuthorized,
                        $"Authorization request '{this.UID}' is in status {this.Status}, " +
-                       "so it can not be authorized.");
+                       "so it cannot be authorized.");
 
       this.AuthorizedBy = ExecutionServer.CurrentContact;
       this.AuthorizationTime = DateTime.Now;

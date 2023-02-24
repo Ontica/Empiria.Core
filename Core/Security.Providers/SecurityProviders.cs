@@ -23,11 +23,11 @@ namespace Empiria.Security.Providers {
     }
 
 
-    static internal IPermissionsProvider PermissionsProvider() {
+    static internal IAuthorizationProvider AuthorizationProvider() {
       Type type = ObjectFactory.GetType("Empiria.OnePoint.Security",
-                                        "Empiria.OnePoint.Security.Services.PermissionsService");
+                                        "Empiria.OnePoint.Security.Services.AuthorizationService");
 
-      return (IPermissionsProvider) ObjectFactory.CreateObject(type);
+      return (IAuthorizationProvider) ObjectFactory.CreateObject(type);
     }
 
 
