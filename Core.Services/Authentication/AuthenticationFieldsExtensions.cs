@@ -7,8 +7,7 @@
 *  Summary  : Extension methods for AuthetnticationField instances.                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-
-using Empiria.Security;
+using Empiria;
 
 namespace Empiria.Services.Authentication {
 
@@ -19,8 +18,6 @@ namespace Empiria.Services.Authentication {
       AssertValidForTokenGeneration(fields);
 
       Assertion.Require(fields.Password, "Password");
-
-      ClientApplication.AssertIsActive(fields.AppKey);
     }
 
 

@@ -37,15 +37,16 @@ namespace Empiria.Security {
 
     #region Constructors and parsers
 
-    internal EmpiriaPrincipal(EmpiriaIdentity identity, EmpiriaSession session) {
+    internal EmpiriaPrincipal(EmpiriaIdentity identity, IClientApplication clientApp, EmpiriaSession session) {
       Assertion.Require(identity, nameof(identity));
+      Assertion.Require(clientApp, nameof(clientApp));
       Assertion.Require(session, nameof(session));
 
       if (!identity.IsAuthenticated) {
         throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
       }
 
-      this.Initialize(identity, ClientApplication.Parse(session.ClientAppId), session);
+      this.Initialize(identity, clientApp, session);
 
       _securityObjects = new Lazy<SecurityObjects>(() => new SecurityObjects(this));
     }
@@ -53,7 +54,7 @@ namespace Empiria.Security {
     /// <summary>Initializes a new instance of the EmpiriaPrincipal class from an authenticated
     /// EmpiriaIdentity. Fails if identity represents a non authenticated EmpiriaIdentity.</summary>
     /// <param name="identity">Represents an authenticated Empiria user.</param>
-    internal EmpiriaPrincipal(EmpiriaIdentity identity, ClientApplication clientApp,
+    internal EmpiriaPrincipal(EmpiriaIdentity identity, IClientApplication clientApp,
                               JsonObject contextData = null) {
       Assertion.Require(identity, nameof(identity));
       Assertion.Require(clientApp, nameof(clientApp));
@@ -62,7 +63,7 @@ namespace Empiria.Security {
         throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
       }
 
-      this.Initialize(identity, clientApp, contextData: contextData);
+      this.Initialize(identity, clientApp, contextData);
 
       _securityObjects = new Lazy<SecurityObjects>(() => new SecurityObjects(this));
     }
@@ -91,7 +92,7 @@ namespace Empiria.Security {
     #region Properties
 
     /// <summary>Gets the ClientApplication of the current principal.</summary>
-    public ClientApplication ClientApp {
+    public IClientApplication ClientApp {
       get;
       private set;
     }
@@ -194,19 +195,34 @@ namespace Empiria.Security {
 
     #region Helpers
 
-    private void Initialize(EmpiriaIdentity identity, ClientApplication clientApp = null,
-                            EmpiriaSession session = null, JsonObject contextData = null) {
+    private void Initialize(EmpiriaIdentity identity, IClientApplication clientApp,
+                            JsonObject contextData = null) {
+      Assertion.Require(identity, nameof(identity));
+      Assertion.Require(clientApp, nameof(clientApp));
+
+      this.Identity = identity;
+      this.ClientApp = clientApp;
+
+      this.Session = EmpiriaSession.Create(this, contextData);
+
+      principalsCache.Insert(this.Session.Token, this);
+
+      this.ContextItems = new AssortedDictionary();
+
+      this.RefreshBeforeReturn();
+    }
+
+
+    private void Initialize(EmpiriaIdentity identity, IClientApplication clientApp,
+                            EmpiriaSession session) {
+      Assertion.Require(identity, nameof(identity));
+      Assertion.Require(session, nameof(session));
+
       this.Identity = identity;
 
-      if (session != null) {
-        this.ClientApp = ClientApplication.Parse(session.ClientAppId);
-        this.Session = session;
+      this.ClientApp = clientApp;
 
-      } else {
-        Assertion.Require(clientApp, "clientApp");
-        this.ClientApp = clientApp;
-        this.Session = EmpiriaSession.Create(this, contextData);
-      }
+      this.Session = session;
 
       principalsCache.Insert(this.Session.Token, this);
 

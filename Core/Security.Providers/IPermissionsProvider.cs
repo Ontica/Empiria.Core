@@ -16,16 +16,16 @@ namespace Empiria.Security.Providers {
   /// <summary>Interface for subject permissions service providers.</summary>
   public interface IPermissionsProvider {
 
-    FixedList<string> GetFeaturesPermissions(EmpiriaIdentity subject, ClientApplication context);
+    FixedList<string> GetFeaturesPermissions(EmpiriaIdentity subject, IClientApplication context);
 
 
-    FixedList<IObjectAccessRule> GetObjectAccessRules(EmpiriaIdentity subject, ClientApplication context);
+    FixedList<IObjectAccessRule> GetObjectAccessRules(EmpiriaIdentity subject, IClientApplication context);
 
 
-    FixedList<string> GetRoles(EmpiriaIdentity subject, ClientApplication context);
+    FixedList<string> GetRoles(EmpiriaIdentity subject, IClientApplication context);
 
 
-    bool IsSubjectInRole(IIdentifiable subject, ClientApplication context, string role);
+    bool IsSubjectInRole(IIdentifiable subject, IClientApplication context, string role);
 
 
   }  // interface IPermissionsProvider

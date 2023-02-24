@@ -31,7 +31,7 @@ namespace Empiria.WebApi {
 
 
     /// <summary>Gets the full list of available Http API endpoints.</summary>
-    static public FixedList<EndpointConfig> GetList(ClientApplication clientApplication) {
+    static public FixedList<EndpointConfig> GetList(IClientApplication clientApplication) {
       var endpoints = BaseObject.GetList<EndpointConfig>();
 
       endpoints = EndpointConfig.GetFilteredListForClientApplication(endpoints, clientApplication);
@@ -41,7 +41,7 @@ namespace Empiria.WebApi {
 
 
     static private List<EndpointConfig> GetFilteredListForClientApplication(List<EndpointConfig> endpointsList,
-                                                                            ClientApplication clientApplication) {
+                                                                            IClientApplication clientApplication) {
       var defaultWebApiAddress = clientApplication.WebApiAddresses.Find((x) => x.Name == "Default");
 
       Assertion.Require(defaultWebApiAddress.Name,

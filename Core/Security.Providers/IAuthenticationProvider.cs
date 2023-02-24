@@ -14,15 +14,18 @@ namespace Empiria.Security.Providers {
   /// <summary>Interface for authenticate and retrive users service providers.</summary>
   public interface IAuthenticationProvider {
 
-    ISubjectClaim Authenticate(ClientApplication app, string username,
+    ISubjectClaim Authenticate(IClientApplication app, string username,
                                string password, string entropy);
 
 
-    ISubjectClaim TryGetUser(ClientApplication app, int userId);
+    IClientApplication AuthenticateClientApp(string clientAppKey);
+
+    IClientApplication TEMP_AuthenticateClientApp(int clientAppId);
+
+    ISubjectClaim TryGetUser(EmpiriaSession activeSession);
 
 
-    ISubjectClaim TryGetUserWithUserName(ClientApplication app, string username);
-
+    ISubjectClaim TryGetUserWithUserName(IClientApplication app, string username);
 
   }  // interface IAuthenticationProvider
 

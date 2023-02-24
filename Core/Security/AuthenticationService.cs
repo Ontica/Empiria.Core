@@ -10,6 +10,7 @@
 using System;
 
 using Empiria.Json;
+using Empiria.Security.Providers;
 
 namespace Empiria.Security {
 
@@ -33,7 +34,11 @@ namespace Empiria.Security {
 
       var identity = new EmpiriaIdentity(user, AuthenticationMode.Realm);
 
-      return new EmpiriaPrincipal(identity, session);
+      var provider = SecurityProviders.AuthenticationProvider();
+
+      IClientApplication clientApplication = provider.TEMP_AuthenticateClientApp(session.ClientAppId);
+
+      return new EmpiriaPrincipal(identity, clientApplication, session);
     }
 
 
@@ -44,8 +49,9 @@ namespace Empiria.Security {
       Assertion.Require(username, "username");
       Assertion.Require(password, "password");
 
+      var provider = SecurityProviders.AuthenticationProvider();
 
-      var clientApplication = ClientApplication.ParseActive(clientAppKey);
+      IClientApplication clientApplication = provider.AuthenticateClientApp(clientAppKey);
 
       EmpiriaUser user = EmpiriaUser.Authenticate(clientApplication,
                                                   username, password,
@@ -55,6 +61,13 @@ namespace Empiria.Security {
       var identity = new EmpiriaIdentity(user, AuthenticationMode.Basic);
 
       return new EmpiriaPrincipal(identity, clientApplication, contextData);
+    }
+
+
+    static public IClientApplication AuthenticateClientApp(string clientApplicationKey) {
+      var provider = SecurityProviders.AuthenticationProvider();
+
+      return provider.AuthenticateClientApp(clientApplicationKey);
     }
 
     #endregion Services

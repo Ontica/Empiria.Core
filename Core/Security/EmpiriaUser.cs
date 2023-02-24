@@ -44,7 +44,7 @@ namespace Empiria.Security {
 
       IAuthenticationProvider provider = SecurityProviders.AuthenticationProvider();
 
-      ISubjectClaim userData = provider.TryGetUserWithUserName(ClientApplication.Current, username);
+      ISubjectClaim userData = provider.TryGetUserWithUserName(EmpiriaPrincipal.Current.ClientApp, username);
 
       if (userData == null) {
         throw new SecurityException(SecurityException.Msg.UserWithEMailNotFound, username, email);
@@ -67,7 +67,7 @@ namespace Empiria.Security {
 
       IPermissionsProvider provider = SecurityProviders.PermissionsProvider();
 
-      return provider.IsSubjectInRole(user, ClientApplication.Current, role);
+      return provider.IsSubjectInRole(user, EmpiriaPrincipal.Current.ClientApp, role);
     }
 
 
@@ -75,7 +75,7 @@ namespace Empiria.Security {
 
     #region Authenticate methods
 
-    static internal EmpiriaUser Authenticate(ClientApplication app,
+    static internal EmpiriaUser Authenticate(IClientApplication app,
                                              string username,
                                              string password,
                                              string entropy) {
@@ -110,8 +110,7 @@ namespace Empiria.Security {
 
       IAuthenticationProvider provider = SecurityProviders.AuthenticationProvider();
 
-      ISubjectClaim userData = provider.TryGetUser(ClientApplication.Parse(activeSession.ClientAppId),
-                                                   activeSession.UserId);
+      ISubjectClaim userData = provider.TryGetUser(activeSession);
 
       if (userData == null) {
         throw new SecurityException(SecurityException.Msg.EnsureClaimFailed);

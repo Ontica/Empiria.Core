@@ -23,7 +23,7 @@ namespace Empiria.Logging {
 
     }
 
-    public LogTrail(ClientApplication clientApplication) {
+    public LogTrail(IClientApplication clientApplication) {
       this.ClientApplicationId = clientApplication.Id;
     }
 

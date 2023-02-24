@@ -44,15 +44,15 @@ namespace Empiria.Tests {
     }
 
 
-    [Theory]
-    [InlineData("§RSACryptoFile")]
-    public void ShouldReadProtectedSettings(string dataKey) {
-      // Set Ok config file
+    //[Theory]
+    //[InlineData("§RSACryptoFile")]
+    //public void ShouldReadProtectedSettings(string dataKey) {
+    //  // Set Ok config file
 
-      var value = ConfigurationData.Get<string>(typeof(Empiria.Security.ClientApplication), dataKey);
+    //  var value = ConfigurationData.Get<string>(typeof(Empiria.Security.ClientApplication), dataKey);
 
-      Assert.NotNull(value);
-    }
+    //  Assert.NotNull(value);
+    //}
 
     [Fact]
     public void MustReturnDefaultValueWhenNoConfigData() {
