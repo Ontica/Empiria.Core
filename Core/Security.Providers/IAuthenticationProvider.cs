@@ -19,10 +19,13 @@ namespace Empiria.Security.Providers {
                                string password, string entropy);
 
 
+    IEmpiriaPrincipal Authenticate(string sessionToken);
+
+    IEmpiriaPrincipal Authenticate(IUserCredentials credentials);
+
     IClientApplication AuthenticateClientApp(string clientAppKey);
 
-
-    IEmpiriaSession CreateSession(EmpiriaPrincipal principal, JsonObject contextData);
+    IEmpiriaSession CreateSession(IEmpiriaPrincipal principal, JsonObject contextData);
 
 
     IEmpiriaSession RetrieveActiveSession(string sessionToken);

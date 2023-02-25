@@ -1,7 +1,7 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Security                                     Component : Authentication Services               *
-*  Assembly : Empiria.Core.dll                             Pattern   : Domain service class                  *
+*  Module   : Security                                     Component : Authentication services               *
+*  Assembly : Empiria.Core.dll                             Pattern   : Service provider                      *
 *  Type     : AuthenticationService                        License   : Please read LICENSE.txt file          *
 *                                                                                                            *
 *  Summary  : Provides user authentication services.                                                         *
@@ -19,48 +19,21 @@ namespace Empiria.Security {
 
     #region Services
 
-    static public EmpiriaPrincipal Authenticate(string sessionToken) {
+    static public IEmpiriaPrincipal Authenticate(string sessionToken) {
       Assertion.Require(sessionToken, "sessionToken");
-
-      EmpiriaPrincipal principal = EmpiriaPrincipal.TryParseWithToken(sessionToken);
-
-      if (principal != null) {
-        return principal;
-      }
 
       var provider = SecurityProviders.AuthenticationProvider();
 
-      IEmpiriaSession session = provider.RetrieveActiveSession(sessionToken);
-
-      EmpiriaUser user = EmpiriaUser.Authenticate(session);
-
-      var identity = new EmpiriaIdentity(user, AuthenticationMode.Realm);
-
-      IClientApplication clientApplication = provider.TEMP_AuthenticateClientApp(session.ClientAppId);
-
-      return new EmpiriaPrincipal(identity, clientApplication, session);
+      return provider.Authenticate(sessionToken);
     }
 
 
-    static public EmpiriaPrincipal Authenticate(string clientAppKey, string username,
-                                                string password, string entropy,
-                                                JsonObject contextData = null) {
-      Assertion.Require(clientAppKey, "clientAppKey");
-      Assertion.Require(username, "username");
-      Assertion.Require(password, "password");
+    static public IEmpiriaPrincipal Authenticate(UserCredentialsDto credentials) {
+      Assertion.Require(credentials, nameof(credentials));
 
       var provider = SecurityProviders.AuthenticationProvider();
 
-      IClientApplication clientApplication = provider.AuthenticateClientApp(clientAppKey);
-
-      EmpiriaUser user = EmpiriaUser.Authenticate(clientApplication,
-                                                  username, password,
-                                                  entropy);
-      Assertion.Require(user, "user");
-
-      var identity = new EmpiriaIdentity(user, AuthenticationMode.Basic);
-
-      return new EmpiriaPrincipal(identity, clientApplication, contextData);
+      return provider.Authenticate(credentials);
     }
 
 

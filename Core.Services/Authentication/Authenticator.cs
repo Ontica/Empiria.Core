@@ -31,19 +31,17 @@ namespace Empiria.Services.Authentication {
 
     #region Methods
 
-    internal EmpiriaPrincipal Authenticate() {
+    internal IEmpiriaPrincipal Authenticate() {
       _fields.AssertValidForAuthentication();
 
-      string rawToken = _fields.GetRawToken();
+      var credentials = new UserCredentialsDto {
+        ClientAppKey = _fields.AppKey,
+        Username = _fields.UserID,
+        Password = _fields.Password,
+        Entropy = GetEntropyString()
+      };
 
-      string tokenSalt = GetSaltFromGeneratedTokens(rawToken);
-
-      RemoveTokenFromStore(rawToken);
-
-      string token = Cryptographer.CreateHashCode(rawToken, tokenSalt);
-
-      EmpiriaPrincipal principal = AuthenticationService.Authenticate(_fields.AppKey, _fields.UserID,
-                                                                      _fields.Password, token);
+      IEmpiriaPrincipal principal = AuthenticationService.Authenticate(credentials);
 
       Assertion.Require(principal, "principal");
 
@@ -59,6 +57,17 @@ namespace Empiria.Services.Authentication {
       var tokenRandomSalt = StoreToken(rawToken);
 
       return Cryptographer.CreateHashCode(rawToken, tokenRandomSalt);
+    }
+
+
+    private string GetEntropyString() {
+      string rawToken = _fields.GetRawToken();
+
+      string tokenSalt = GetSaltFromGeneratedTokens(rawToken);
+
+      RemoveTokenFromStore(rawToken);
+
+      return Cryptographer.CreateHashCode(rawToken, tokenSalt);
     }
 
     #endregion Methods
