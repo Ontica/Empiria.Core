@@ -37,7 +37,7 @@ namespace Empiria.Security {
 
     #region Constructors and parsers
 
-    internal EmpiriaPrincipal(EmpiriaIdentity identity, IClientApplication clientApp, EmpiriaSession session) {
+    internal EmpiriaPrincipal(EmpiriaIdentity identity, IClientApplication clientApp, IEmpiriaSession session) {
       Assertion.Require(identity, nameof(identity));
       Assertion.Require(clientApp, nameof(clientApp));
       Assertion.Require(session, nameof(session));
@@ -139,7 +139,7 @@ namespace Empiria.Security {
     }
 
 
-    public EmpiriaSession Session {
+    public IEmpiriaSession Session {
       get;
       private set;
     }
@@ -203,7 +203,9 @@ namespace Empiria.Security {
       this.Identity = identity;
       this.ClientApp = clientApp;
 
-      this.Session = EmpiriaSession.Create(this, contextData);
+      var provider = SecurityProviders.AuthenticationProvider();
+
+      this.Session = provider.CreateSession(this, contextData);
 
       principalsCache.Insert(this.Session.Token, this);
 
@@ -214,7 +216,7 @@ namespace Empiria.Security {
 
 
     private void Initialize(EmpiriaIdentity identity, IClientApplication clientApp,
-                            EmpiriaSession session) {
+                            IEmpiriaSession session) {
       Assertion.Require(identity, nameof(identity));
       Assertion.Require(session, nameof(session));
 

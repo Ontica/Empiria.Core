@@ -16,21 +16,6 @@ namespace Empiria.Security {
 
   static internal class SecurityData {
 
-     static internal void CloseSession(EmpiriaSession o) {
-      var op = DataOperation.Parse("doCloseUserSession", o.Token, o.EndTime);
-
-      DataWriter.Execute(op);
-    }
-
-    static internal int CreateSession(EmpiriaSession o) {
-      var op = DataOperation.Parse("apdUserSession", o.Token, o.ServerId,
-                                    o.ClientAppId, o.UserId, o.ExpiresIn,
-                                    o.RefreshToken, o.ExtendedData.ToString(),
-                                    o.StartTime, o.EndTime);
-      return DataWriter.Execute<int>(op);
-    }
-
-
     static internal int GetNextContactId() {
       return DataWriter.CreateId("Contacts");
     }

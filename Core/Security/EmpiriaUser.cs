@@ -100,7 +100,7 @@ namespace Empiria.Security {
     }
 
 
-    static internal EmpiriaUser Authenticate(EmpiriaSession activeSession) {
+    static internal EmpiriaUser Authenticate(IEmpiriaSession activeSession) {
       Assertion.Require(activeSession, nameof(activeSession));
 
       if (!activeSession.IsStillActive) {

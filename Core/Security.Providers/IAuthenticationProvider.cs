@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using Empiria.Json;
 
 namespace Empiria.Security.Providers {
 
@@ -20,9 +21,17 @@ namespace Empiria.Security.Providers {
 
     IClientApplication AuthenticateClientApp(string clientAppKey);
 
+
+    IEmpiriaSession CreateSession(EmpiriaPrincipal principal, JsonObject contextData);
+
+
+    IEmpiriaSession RetrieveActiveSession(string sessionToken);
+
+
     IClientApplication TEMP_AuthenticateClientApp(int clientAppId);
 
-    ISubjectClaim TryGetUser(EmpiriaSession activeSession);
+
+    ISubjectClaim TryGetUser(IEmpiriaSession activeSession);
 
 
     ISubjectClaim TryGetUserWithUserName(IClientApplication app, string username);

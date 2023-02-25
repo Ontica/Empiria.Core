@@ -28,13 +28,13 @@ namespace Empiria.Security {
         return principal;
       }
 
-      EmpiriaSession session = EmpiriaSession.ParseActive(sessionToken);
+      var provider = SecurityProviders.AuthenticationProvider();
+
+      IEmpiriaSession session = provider.RetrieveActiveSession(sessionToken);
 
       EmpiriaUser user = EmpiriaUser.Authenticate(session);
 
       var identity = new EmpiriaIdentity(user, AuthenticationMode.Realm);
-
-      var provider = SecurityProviders.AuthenticationProvider();
 
       IClientApplication clientApplication = provider.TEMP_AuthenticateClientApp(session.ClientAppId);
 
