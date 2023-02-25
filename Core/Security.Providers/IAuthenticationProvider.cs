@@ -14,7 +14,7 @@ namespace Empiria.Security.Providers {
   /// <summary>Interface for authenticate and retrive users service providers.</summary>
   public interface IAuthenticationProvider {
 
-    IEmpiriaPrincipal Authenticate(string sessionToken);
+    IEmpiriaPrincipal Authenticate(string sessionToken, string userHostAddress);
 
 
     IEmpiriaPrincipal Authenticate(IUserCredentials credentials);

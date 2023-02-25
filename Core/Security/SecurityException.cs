@@ -42,6 +42,7 @@ namespace Empiria.Security {
       InvalidResetPasswordToken,
       InvalidSingleSignOnToken,
       InvalidUserCredentials,
+      InvalidUserHostAddress,
       NotActiveUser,
       NotActiveClientAppKey,
       RequireExecuteMethod,

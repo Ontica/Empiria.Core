@@ -31,8 +31,12 @@ namespace Empiria.Security {
       get;
     }
 
-
     string TokenType {
+      get;
+    }
+
+
+    string UserHostAddress {
       get;
     }
 

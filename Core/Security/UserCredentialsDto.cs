@@ -25,7 +25,7 @@ namespace Empiria.Security {
       get;
     }
 
-    string IpAddress {
+    string UserHostAddress {
       get;
     }
 
@@ -59,7 +59,7 @@ namespace Empiria.Security {
     } = string.Empty;
 
 
-    public string IpAddress {
+    public string UserHostAddress {
       get; set;
     } = string.Empty;
 

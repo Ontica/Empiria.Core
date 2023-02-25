@@ -30,7 +30,7 @@ namespace Empiria.Services.Authentication {
 
 
     static internal string GetRawToken(this UserCredentialsDto credentials) {
-      return $"/{credentials.UserID}/{credentials.AppKey}/{credentials.IpAddress}/";
+      return $"/{credentials.UserID}/{credentials.AppKey}/{credentials.UserHostAddress}/";
     }
 
   }  // class UserCredentialsDtoExtensions

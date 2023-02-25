@@ -19,12 +19,13 @@ namespace Empiria.Security {
 
     #region Services
 
-    static public IEmpiriaPrincipal Authenticate(string sessionToken) {
-      Assertion.Require(sessionToken, "sessionToken");
+    static public IEmpiriaPrincipal Authenticate(string sessionToken, string userHostAddress) {
+      Assertion.Require(sessionToken, nameof(sessionToken));
+      Assertion.Require(userHostAddress, nameof(userHostAddress));
 
       var provider = SecurityProviders.AuthenticationProvider();
 
-      return provider.Authenticate(sessionToken);
+      return provider.Authenticate(sessionToken, userHostAddress);
     }
 
 

@@ -20,8 +20,9 @@ namespace Empiria.Tests {
 
     static internal void Authenticate() {
       string sessionToken = ConfigurationData.GetString("Testing.SessionToken");
+      string userHostAddress = ConfigurationData.GetString("Testing.UserHostAddress");
 
-      IEmpiriaPrincipal principal = AuthenticationService.Authenticate(sessionToken);
+      IEmpiriaPrincipal principal = AuthenticationService.Authenticate(sessionToken, userHostAddress);
 
       Thread.CurrentPrincipal = principal;
     }
