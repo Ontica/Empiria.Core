@@ -30,7 +30,7 @@ namespace Empiria.Services.Authentication {
 
     #region Use cases
 
-    public EmpiriaPrincipal Authenticate(AuthenticationFields fields) {
+    public IEmpiriaPrincipal Authenticate(AuthenticationFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       var authenticator = new Authenticator(fields);
@@ -49,14 +49,14 @@ namespace Empiria.Services.Authentication {
 
 
     public void Logout() {
-
+      // ToDo: Not implemented
     }
 
 
     public PrincipalDto PrincipalData() {
       Assertion.Require(ExecutionServer.IsAuthenticated, "Unauthenticated user.");
 
-      var principal = ExecutionServer.CurrentPrincipal;
+      IEmpiriaPrincipal principal = ExecutionServer.CurrentPrincipal;
 
       return PrincipalMapper.Map(principal);
     }

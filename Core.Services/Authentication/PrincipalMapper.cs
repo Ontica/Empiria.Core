@@ -16,7 +16,7 @@ namespace Empiria.Services.Authentication {
   /// <summary>Mapping methods for principal instances.</summary>
   static internal class PrincipalMapper {
 
-    internal static PrincipalDto Map(EmpiriaPrincipal principal) {
+    internal static PrincipalDto Map(IEmpiriaPrincipal principal) {
       return new PrincipalDto {
         Identity = MapIdentity(principal.Identity),
         Permissions = principal.Permissions
@@ -25,7 +25,7 @@ namespace Empiria.Services.Authentication {
 
     #region Helper methods
 
-    static private IdentityDto MapIdentity(EmpiriaIdentity identity) {
+    static private IdentityDto MapIdentity(IEmpiriaIdentity identity) {
       return new IdentityDto {
         Name = identity.Name
       };

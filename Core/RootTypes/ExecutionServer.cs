@@ -117,31 +117,33 @@ namespace Empiria {
 
     static public AssortedDictionary ContextItems {
       get {
-        return ExecutionServer.CurrentPrincipal.ContextItems;
+        return CurrentPrincipal.ContextItems;
       }
     }
+
 
     static public Contact CurrentContact {
       get {
-        return ExecutionServer.CurrentIdentity.User.Contact;
+        return CurrentIdentity.User.Contact;
       }
     }
 
 
-    static public EmpiriaIdentity CurrentIdentity {
+    static public IEmpiriaIdentity CurrentIdentity {
       get {
-        return ExecutionServer.CurrentPrincipal.Identity;
+        return CurrentPrincipal.Identity;
       }
     }
 
 
-    static public EmpiriaPrincipal CurrentPrincipal {
+    static public IEmpiriaPrincipal CurrentPrincipal {
       get {
         var principal = Thread.CurrentPrincipal;
 
-        if (principal is EmpiriaPrincipal) {
-          return (EmpiriaPrincipal) principal;
+        if (principal is IEmpiriaPrincipal) {
+          return (IEmpiriaPrincipal) principal;
         }
+
         throw new SecurityException(SecurityException.Msg.UnauthenticatedIdentity);
       }
     }
@@ -166,7 +168,7 @@ namespace Empiria {
       }
     }
 
-    static public EmpiriaUser CurrentUser {
+    static public IEmpiriaUser CurrentUser {
       get {
         return ExecutionServer.CurrentPrincipal.Identity.User;
       }
@@ -189,9 +191,9 @@ namespace Empiria {
       get {
         var principal = Thread.CurrentPrincipal;
 
-        return (principal?.Identity != null && principal is EmpiriaPrincipal &&
+        return (principal?.Identity != null && principal is IEmpiriaPrincipal &&
                 principal.Identity.IsAuthenticated &&
-                !String.IsNullOrWhiteSpace(((EmpiriaPrincipal) principal)?.Session?.Token));
+                !String.IsNullOrWhiteSpace(((IEmpiriaPrincipal) principal)?.Session?.Token));
       }
     }
 

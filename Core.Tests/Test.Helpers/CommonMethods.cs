@@ -21,7 +21,7 @@ namespace Empiria.Tests {
     static internal void Authenticate() {
       string sessionToken = ConfigurationData.GetString("Testing.SessionToken");
 
-      EmpiriaPrincipal principal = AuthenticationService.Authenticate(sessionToken);
+      IEmpiriaPrincipal principal = AuthenticationService.Authenticate(sessionToken);
 
       Thread.CurrentPrincipal = principal;
     }
