@@ -30,19 +30,19 @@ namespace Empiria.Services.Authentication {
 
     #region Use cases
 
-    public IEmpiriaPrincipal Authenticate(AuthenticationFields fields) {
-      Assertion.Require(fields, nameof(fields));
+    public IEmpiriaPrincipal Authenticate(UserCredentialsDto credentials) {
+      Assertion.Require(credentials, nameof(credentials));
 
-      var authenticator = new Authenticator(fields);
+      var authenticator = new Authenticator(credentials);
 
       return authenticator.Authenticate();
     }
 
 
-    public string GenerateAuthenticationToken(AuthenticationFields fields) {
-      Assertion.Require(fields, "fields");
+    public string GenerateAuthenticationToken(UserCredentialsDto credentials) {
+      Assertion.Require(credentials, nameof(credentials));
 
-      var authenticator = new Authenticator(fields);
+      var authenticator = new Authenticator(credentials);
 
       return authenticator.GenerateAuthenticationToken();
     }

@@ -19,12 +19,12 @@ namespace Empiria.Services.Authentication {
 
     #region Constructors and fields
 
-    private readonly AuthenticationFields _fields;
+    private readonly UserCredentialsDto _credentials;
 
-    internal Authenticator(AuthenticationFields fields) {
-      Assertion.Require(fields, "fields");
+    internal Authenticator(UserCredentialsDto credentials) {
+      Assertion.Require(credentials, nameof(credentials));
 
-      _fields = fields;
+      _credentials = credentials;
     }
 
     #endregion Constructors and fields
@@ -32,16 +32,11 @@ namespace Empiria.Services.Authentication {
     #region Methods
 
     internal IEmpiriaPrincipal Authenticate() {
-      _fields.AssertValidForAuthentication();
+      _credentials.AssertValidForAuthentication();
 
-      var credentials = new UserCredentialsDto {
-        ClientAppKey = _fields.AppKey,
-        Username = _fields.UserID,
-        Password = _fields.Password,
-        Entropy = GetEntropyString()
-      };
+      _credentials.Entropy = BuildEntropyString();
 
-      IEmpiriaPrincipal principal = AuthenticationService.Authenticate(credentials);
+      IEmpiriaPrincipal principal = AuthenticationService.Authenticate(_credentials);
 
       Assertion.Require(principal, "principal");
 
@@ -50,9 +45,9 @@ namespace Empiria.Services.Authentication {
 
 
     internal string GenerateAuthenticationToken() {
-      _fields.AssertValidForTokenGeneration();
+      _credentials.AssertValidForTokenGeneration();
 
-      string rawToken = _fields.GetRawToken();
+      string rawToken = _credentials.GetRawToken();
 
       var tokenRandomSalt = StoreToken(rawToken);
 
@@ -60,8 +55,8 @@ namespace Empiria.Services.Authentication {
     }
 
 
-    private string GetEntropyString() {
-      string rawToken = _fields.GetRawToken();
+    private string BuildEntropyString() {
+      string rawToken = _credentials.GetRawToken();
 
       string tokenSalt = GetSaltFromGeneratedTokens(rawToken);
 

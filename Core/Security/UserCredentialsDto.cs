@@ -11,14 +11,13 @@ using Empiria.Json;
 
 namespace Empiria.Security {
 
-
   public interface IUserCredentials {
 
-    string ClientAppKey {
+    string AppKey {
       get;
     }
 
-    string Username {
+    string UserID {
       get;
     }
 
@@ -26,11 +25,15 @@ namespace Empiria.Security {
       get;
     }
 
-    string Entropy {
+    string IpAddress {
       get;
     }
 
     JsonObject ContextData {
+      get;
+    }
+
+    string Entropy {
       get;
     }
 
@@ -41,12 +44,12 @@ namespace Empiria.Security {
   /// <summary>Holds user credentials data for authentication.</summary>
   public class UserCredentialsDto : IUserCredentials {
 
-    public string ClientAppKey {
+    public string AppKey {
       get; set;
     } = string.Empty;
 
 
-    public string Username {
+    public string UserID {
       get; set;
     } = string.Empty;
 
@@ -56,14 +59,19 @@ namespace Empiria.Security {
     } = string.Empty;
 
 
-    public string Entropy {
+    public string IpAddress {
       get; set;
     } = string.Empty;
 
 
     public JsonObject ContextData {
       get; set;
-    }
+    } = new JsonObject();
+
+
+    public string Entropy {
+      get; set;
+    } = string.Empty;
 
   }  // class UserCredentialsDto
 
