@@ -1,10 +1,10 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Security Services                 *
-*  Namespace : Empiria.Security                                 License  : Please read LICENSE.txt file      *
-*  Type      : AuditTrail                                       Pattern  : Standard Class                    *
+*  Module   : Security                                     Component : Logging services                      *
+*  Assembly : Empiria.Core.dll                             Pattern   : Information holder                    *
+*  Type     : AuditTrail                                   License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : Audit trail log information.                                                                  *
+*  Summary  : Audit trail log information.                                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -14,13 +14,21 @@ using Empiria.Json;
 namespace Empiria.Security {
 
   public enum AuditTrailType {
+
     Exception = 'E',
+
     FileSystem = 'F',
+
     Operation = 'O',
+
     Process = 'P',
+
     Security = 'S',
+
     WebApiCall = 'W',
+
     Unknown = 'U',
+
   }
 
   /// <summary>Audit trail log information.</summary>
@@ -29,43 +37,31 @@ namespace Empiria.Security {
     #region Constructors and parsers
 
     protected AuditTrail(IRequest request, AuditTrailType auditTrailType) {
-      Assertion.Require(request, "request");
+      Assertion.Require(request, nameof(request));
 
-      Initialize();
       this.Request = request;
       this.AuditTrailType = auditTrailType;
     }
 
-    private void Initialize() {
-      this.Id = -1;
-      this.SessionId = -1;
-      this.Event = String.Empty;
-      this.Operation = String.Empty;
-      this.OperationData = JsonObject.Empty;
-      this.ResponseCode = 0;
-      this.ResponseItems = 0;
-      this.ResponseData = JsonObject.Empty;
-      this.ResponseTime = 0m;
-    }
 
     #endregion Constructors and parsers
 
     #region Properties
 
     public long Id {
-      get;
-      private set;
-    }
+      get; private set;
+    } = -1;
+
 
     public IRequest Request {
-      get;
-      private set;
+      get; private set;
     }
 
+
     public AuditTrailType AuditTrailType {
-      get;
-      private set;
+      get; private set;
     }
+
 
     public DateTime Timestamp {
       get {
@@ -73,44 +69,49 @@ namespace Empiria.Security {
       }
     }
 
+
     public int SessionId {
-      get;
-      private set;
+      get; private set;
     }
+
+
+    public string UserHostAddress {
+      get; private set;
+    } = string.Empty;
+
 
     public string Event {
-      get;
-      private set;
-    }
+      get; private set;
+    } = string.Empty;
+
 
     public string Operation {
-      get;
-      private set;
-    }
+      get; private set;
+    } = string.Empty;
+
 
     public JsonObject OperationData {
-      get;
-      private set;
-    }
+      get; private set;
+    } = JsonObject.Empty;
+
 
     public int ResponseCode {
-      get;
-      private set;
+      get; private set;
     }
+
 
     public int ResponseItems {
-      get;
-      private set;
+      get; private set;
     }
+
 
     public JsonObject ResponseData {
-      get;
-      private set;
-    }
+      get; private set;
+    } = JsonObject.Empty;
+
 
     public decimal ResponseTime {
-      get;
-      private set;
+      get; private set;
     }
 
     #endregion Properties
@@ -121,25 +122,21 @@ namespace Empiria.Security {
       return Convert.ToDecimal(DateTime.Now.Subtract(this.Timestamp).TotalSeconds);
     }
 
+
     protected void SetOperationInfo(string eventTag, string operationName, JsonObject operationData) {
-      Assertion.Require(eventTag, "eventTag");
-      Assertion.Require(operationName, "operationName");
-      Assertion.Require(operationData, "operationData");
+      Assertion.Require(eventTag, nameof(eventTag));
+      Assertion.Require(operationName, nameof(operationName));
+      Assertion.Require(operationData, nameof(operationData));
 
       this.Event = eventTag;
       this.Operation = operationName;
       this.OperationData = operationData;
     }
 
-    private void SetResponse(int responseCode, Exception exception) {
-      this.ResponseCode = responseCode;
-      this.ResponseItems = 0;
-      this.ResponseData = EmpiriaException.ToJson(exception);
-      this.ResponseTime = this.GetResponseTime();
-    }
+
 
     protected void SetResponse(int responseCode, int responseItems, JsonObject responseData) {
-      Assertion.Require(responseData, "responseData");
+      Assertion.Require(responseData, nameof(responseData));
 
       this.ResponseCode = responseCode;
       this.ResponseItems = responseItems;
@@ -147,19 +144,32 @@ namespace Empiria.Security {
       this.ResponseTime = this.GetResponseTime();
     }
 
+
     private void TrySetSessionData() {
+
       if (ExecutionServer.IsAuthenticated) {
+
         this.SessionId = ExecutionServer.CurrentPrincipal.Session.Id;
+        this.UserHostAddress = ExecutionServer.CurrentPrincipal.Session.UserHostAddress;
+
       } else if (this.Request.Principal != null) {
+
         this.SessionId = this.Request.Principal.Session.Id;
+        this.UserHostAddress = this.Request.Principal.Session.UserHostAddress;
       }
     }
 
+
     protected void Write() {
+
       this.TrySetSessionData();
+
       try {
-        this.Id = SecurityData.WriteAuditTrail(this);
+
+        this.Id = AuditTrailData.WriteAuditTrail(this);
+
       } catch (Exception inner) {
+
         var e = new SecurityException(SecurityException.Msg.CantWriteAuditTrail, inner,
                                       this.Operation);
         EmpiriaLog.Critical(e);
