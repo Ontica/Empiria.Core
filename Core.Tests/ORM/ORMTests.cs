@@ -20,7 +20,7 @@ namespace Empiria.Tests {
     public void MustLoadObjectDataFields() {
       var contact = Contact.Parse(-3);
 
-      Assert.Equal("ADMIN", contact.Nickname);
+      Assert.Equal("ADMIN", contact.Initials);
     }
 
   }  // ORMTests

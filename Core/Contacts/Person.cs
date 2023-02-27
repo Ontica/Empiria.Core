@@ -68,10 +68,30 @@ namespace Empiria.Contacts {
 
     public string JobTitle {
       get {
-        return ExtendedData.Get("person/jobTitle", "No determinado");
+        return ExtendedData.Get("employee/jobTitle", string.Empty);
       }
       private set {
-        ExtendedData.Set("person/jobTitle", EmpiriaString.TrimAll(value));
+        ExtendedData.Set("employee/jobTitle", EmpiriaString.TrimAll(value));
+      }
+    }
+
+
+    public string JobPosition {
+      get {
+        return ExtendedData.Get("employee/position", string.Empty);
+      }
+      private set {
+        ExtendedData.Set("employee/position", EmpiriaString.TrimAll(value));
+      }
+    }
+
+
+    public string EmployeeNo {
+      get {
+        return ExtendedData.Get("employee/employeeNo", string.Empty);
+      }
+      private set {
+        ExtendedData.Set("employee/employeeNo", EmpiriaString.TrimAll(value));
       }
     }
 
@@ -80,7 +100,11 @@ namespace Empiria.Contacts {
       get {
         return ExtendedData.Get("person/isFemale", false);
       }
+      private set {
+        ExtendedData.Set("person/isFemale", value);
+      }
     }
+
 
     #endregion Properties
 

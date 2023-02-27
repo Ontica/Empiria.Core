@@ -56,8 +56,8 @@ namespace Empiria.Contacts {
     }
 
 
-    [DataField("Nickname")]
-    public string Nickname {
+    [DataField("Initials")]
+    public string Initials {
       get;
       protected set;
     }
@@ -70,6 +70,26 @@ namespace Empiria.Contacts {
     }
 
 
+    [DataField("OrganizationId")]
+    private int _organizationId {
+      get; set;
+    }
+
+
+    public Organization Organization {
+      get {
+        return Organization.Parse(_organizationId);
+      }
+    }
+
+
+    [DataField("ContactTags")]
+    public string Tags {
+      get;
+      private set;
+    }
+
+
     [DataField("ContactExtData")]
     public JsonObject ExtendedData {
       get;
@@ -79,7 +99,7 @@ namespace Empiria.Contacts {
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(FullName, ShortName, Nickname, EMail);
+        return EmpiriaString.BuildKeywords(FullName, ShortName, Initials, EMail);
       }
     }
 
@@ -89,6 +109,7 @@ namespace Empiria.Contacts {
       get;
       protected set;
     }
+
 
     string INamedEntity.Name {
       get {

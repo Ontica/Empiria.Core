@@ -25,6 +25,9 @@ namespace Empiria.Contacts {
       return BaseObject.ParseId<Organization>(id);
     }
 
+    static public new Organization Parse(string uid) {
+      return BaseObject.ParseKey<Organization>(uid);
+    }
 
     static public new Organization Empty => BaseObject.ParseEmpty<Organization>();
 
