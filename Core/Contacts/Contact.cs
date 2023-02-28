@@ -78,6 +78,9 @@ namespace Empiria.Contacts {
 
     public Organization Organization {
       get {
+        if (this.IsEmptyInstance && this is Organization org) {
+          return org;
+        }
         return Organization.Parse(_organizationId);
       }
     }
@@ -86,7 +89,7 @@ namespace Empiria.Contacts {
     [DataField("ContactTags")]
     public string Tags {
       get;
-      private set;
+      protected set;
     }
 
 
@@ -99,7 +102,7 @@ namespace Empiria.Contacts {
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(FullName, ShortName, Initials, EMail);
+        return EmpiriaString.BuildKeywords(FullName, ShortName, Initials, EMail, Tags);
       }
     }
 
@@ -118,6 +121,16 @@ namespace Empiria.Contacts {
     }
 
     #endregion Properties
+
+    #region Methods
+
+    protected void SetOrganization(Organization organization) {
+      Assertion.Require(organization, nameof(organization));
+
+      _organizationId = organization.Id;
+    }
+
+    #endregion Methods
 
   } // class Contact
 

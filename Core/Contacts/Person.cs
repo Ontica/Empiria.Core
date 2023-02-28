@@ -20,11 +20,15 @@ namespace Empiria.Contacts {
       // Required by Empiria Framework.
     }
 
+    public Person(PersonFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      Load(fields);
+    }
 
     static public new Person Parse(int id) {
       return BaseObject.ParseId<Person>(id);
     }
-
 
     static public new Person Empty => BaseObject.ParseEmpty<Person>();
 
@@ -106,7 +110,42 @@ namespace Empiria.Contacts {
     }
 
 
+    public override string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(base.Keywords, this.EmployeeNo,
+                                           this.JobTitle, this.JobPosition);
+      }
+    }
+
     #endregion Properties
+
+    #region Helpers
+
+    private void Load(PersonFields fields) {
+      this.FullName     = EmpiriaString.Clean(fields.FullName);
+      this.ShortName    = EmpiriaString.Clean(fields.ShortName);
+      this.FirstName    = EmpiriaString.Clean(fields.FirstName);
+      this.LastName     = EmpiriaString.Clean(fields.LastName);
+      this.LastName2    = EmpiriaString.Clean(fields.LastName2);
+      this.Initials     = EmpiriaString.Clean(fields.Initials);
+
+      this.EMail        = EmpiriaString.Clean(fields.EMail);
+      this.Tags         = EmpiriaString.Clean(fields.Tags);
+      this.JobPosition  = EmpiriaString.Clean(fields.JobPosition);
+      this.JobTitle     = EmpiriaString.Clean(fields.JobTitle);
+      this.EmployeeNo   = EmpiriaString.Clean(fields.EmployeeNo);
+
+      this.IsFemale = fields.IsFemale;
+
+      this.SetOrganization(fields.Organization);
+    }
+
+
+    protected override void OnSave() {
+      ContactsDataService.WriteContact(this);
+    }
+
+    #endregion Helpers
 
   } // class Person
 
