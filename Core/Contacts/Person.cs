@@ -20,15 +20,23 @@ namespace Empiria.Contacts {
       // Required by Empiria Framework.
     }
 
+
     public Person(PersonFields fields) {
       Assertion.Require(fields, nameof(fields));
 
       Load(fields);
     }
 
+
     static public new Person Parse(int id) {
       return BaseObject.ParseId<Person>(id);
     }
+
+
+    static public new Person Parse(string uid) {
+      return BaseObject.ParseKey<Person>(uid);
+    }
+
 
     static public new Person Empty => BaseObject.ParseEmpty<Person>();
 
@@ -119,30 +127,40 @@ namespace Empiria.Contacts {
 
     #endregion Properties
 
+    #region Methods
+
+
+    public void Update(PersonFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      Load(fields);
+    }
+
+    protected override void OnSave() {
+      ContactsDataService.WriteContact(this);
+    }
+
+    #endregion Methods
+
     #region Helpers
 
     private void Load(PersonFields fields) {
-      this.FullName     = EmpiriaString.Clean(fields.FullName);
-      this.ShortName    = EmpiriaString.Clean(fields.ShortName);
-      this.FirstName    = EmpiriaString.Clean(fields.FirstName);
-      this.LastName     = EmpiriaString.Clean(fields.LastName);
-      this.LastName2    = EmpiriaString.Clean(fields.LastName2);
-      this.Initials     = EmpiriaString.Clean(fields.Initials);
+      this.FullName     = PatchCleanField(fields.FullName,    FullName);
+      this.ShortName    = PatchCleanField(fields.ShortName,   ShortName);
+      this.FirstName    = PatchCleanField(fields.FirstName,   FirstName);
+      this.LastName     = PatchCleanField(fields.LastName,    LastName);
+      this.LastName2    = PatchCleanField(fields.LastName2,   LastName2);
+      this.Initials     = PatchCleanField(fields.Initials,    Initials);
 
-      this.EMail        = EmpiriaString.Clean(fields.EMail);
-      this.Tags         = EmpiriaString.Clean(fields.Tags);
-      this.JobPosition  = EmpiriaString.Clean(fields.JobPosition);
-      this.JobTitle     = EmpiriaString.Clean(fields.JobTitle);
-      this.EmployeeNo   = EmpiriaString.Clean(fields.EmployeeNo);
+      this.EMail        = PatchCleanField(fields.EMail,       EMail);
+      this.Tags         = PatchCleanField(fields.Tags,        Tags);
+      this.JobPosition  = PatchCleanField(fields.JobPosition, JobPosition);
+      this.JobTitle     = PatchCleanField(fields.JobTitle,    JobTitle);
+      this.EmployeeNo   = PatchCleanField(fields.EmployeeNo,  EmployeeNo);
 
       this.IsFemale = fields.IsFemale;
 
       this.SetOrganization(fields.Organization);
-    }
-
-
-    protected override void OnSave() {
-      ContactsDataService.WriteContact(this);
     }
 
     #endregion Helpers

@@ -124,6 +124,12 @@ namespace Empiria.Contacts {
 
     #region Methods
 
+
+    public void ChangeStatus(EntityStatus status) {
+      this.Status = status;
+    }
+
+
     protected void SetOrganization(Organization organization) {
       Assertion.Require(organization, nameof(organization));
 
