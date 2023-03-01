@@ -225,6 +225,8 @@ namespace Empiria {
             list.Add(BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow));
           }
         }
+
+
         return list;
 
       } catch (Exception e) {
@@ -392,6 +394,13 @@ namespace Empiria {
     /// <summary>Raised when Save() method is called and after objectId and object.uid generated.</summary>
     protected virtual void OnSave() {
       throw new NotImplementedException($"{this.GetType().Name}.OnSave() method.");
+    }
+
+
+    protected string PatchCleanField(string newValue, string defaultValue) {
+      string cleaned = EmpiriaString.Clean(newValue);
+
+      return PatchField(cleaned, defaultValue);
     }
 
 
