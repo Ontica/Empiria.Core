@@ -23,6 +23,12 @@ namespace Empiria.Contacts {
   /// <summary>Fields used to create or update Person instances.</summary>
   public class PersonFields {
 
+
+    public int FormerId {
+      get; set;
+    }
+
+
     public string FullName {
       get; set;
     } = string.Empty;

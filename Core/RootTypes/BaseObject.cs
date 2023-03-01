@@ -423,6 +423,12 @@ namespace Empiria {
       return FieldPatcher.PatchField(newValue, defaultValue);
     }
 
+    protected void PatchObjectId(int objectId) {
+      Assertion.Require(this.objectId == 0, "ObjectId already assigned");
+      Assertion.Require(this.IsNew && this.IsDirty, "Object is in an invalid status for objectId assingation.");
+
+      this.objectId = objectId;
+    }
 
 
     public void Save() {

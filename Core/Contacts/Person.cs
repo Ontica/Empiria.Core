@@ -25,6 +25,10 @@ namespace Empiria.Contacts {
       Assertion.Require(fields, nameof(fields));
 
       Load(fields);
+
+      if (fields.FormerId != 0) {
+        PatchObjectId(fields.FormerId);
+      }
     }
 
 
