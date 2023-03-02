@@ -76,11 +76,16 @@ namespace Empiria.Contacts {
     }
 
 
+    [Newtonsoft.Json.JsonIgnore]
     public Organization Organization {
       get {
         if (this.IsEmptyInstance && this is Organization org) {
           return org;
         }
+        if (this.Id == _organizationId) {
+          return (Organization) this;
+        }
+
         return Organization.Parse(_organizationId);
       }
     }
