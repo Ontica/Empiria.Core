@@ -161,6 +161,19 @@ namespace Empiria {
     }
 
 
+    public FixedList<T> Sublist(int index) {
+      Assertion.Require(index < this.Count, $"index out of bounds: {index}");
+
+      var sublist = new List<T>(this);
+
+      if (index > 0) {
+        sublist.RemoveRange(0, index);
+      }
+
+      return sublist.ToFixedList();
+    }
+
+
     public T[] ToArray() {
       var array = new T[this.Count];
 
