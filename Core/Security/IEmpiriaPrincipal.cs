@@ -14,8 +14,6 @@ using System.Security.Principal;
 using Empiria.Collections;
 using Empiria.Contacts;
 
-using Empiria.Security.Claims;
-
 namespace Empiria.Security {
 
   /// <summary>Defines an Empiria Framework security principal.</summary>
@@ -68,7 +66,7 @@ namespace Empiria.Security {
 
 
   /// <summary>Defines an Empiria Framework user.</summary>
-  public interface IEmpiriaUser : IClaimsSubject {
+  public interface IEmpiriaUser {
 
     Contact Contact {
       get;

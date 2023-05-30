@@ -11,11 +11,9 @@ using System;
 
 using Empiria.DataTypes;
 
-using Empiria.Security.Claims;
-
 namespace Empiria.Security {
 
-  public interface IClientApplication: IClaimsSubject, IIdentifiable {
+  public interface IClientApplication: IIdentifiable {
 
     string Key {
       get;
