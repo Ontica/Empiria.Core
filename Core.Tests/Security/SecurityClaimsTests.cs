@@ -8,8 +8,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Xunit;
+using System.Threading;
 
-using Empiria.Security.Claims;
+using Empiria.Security;
 
 namespace Empiria.Tests.Security {
 
@@ -17,24 +18,37 @@ namespace Empiria.Tests.Security {
   public class SecurityClaimsTests {
 
     [Fact]
-    public void MustGetClaimValue() {
-      CommonMethods.Authenticate();
+    public void Authenticate() {
+      string sessionToken = ConfigurationData.GetString("Testing.SessionToken");
+      string userHostAddress = ConfigurationData.GetString("Testing.UserHostAddress");
 
-      var value = ClaimsService.GetClaimValue<string>(ExecutionServer.CurrentUser,
-                                                      ClaimType.ElectronicSignPrivateKeyFilePath);
+      IEmpiriaPrincipal principal = AuthenticationService.Authenticate(sessionToken, userHostAddress);
 
-      Assert.NotEmpty(value);
+      Thread.CurrentPrincipal = principal;
+
+      Assert.NotNull(principal);
     }
 
 
-    [Fact]
-    public void MustHaveClaimValue() {
-      CommonMethods.Authenticate();
+    //[Fact]
+    //public void MustGetClaimValue() {
+    //  CommonMethods.Authenticate();
 
-      ClaimsService.EnsureClaim(ExecutionServer.CurrentUser, ClaimType.UserRole, "Tester");
+    //  var value = ClaimsService.GetClaimValue<string>(ExecutionServer.CurrentUser,
+    //                                                  ClaimType.ElectronicSignPrivateKeyFilePath);
 
-      Assert.True(true);
-    }
+    //  Assert.NotEmpty(value);
+    //}
+
+
+    //[Fact]
+    //public void MustHaveClaimValue() {
+    //  CommonMethods.Authenticate();
+
+    //  ClaimsService.EnsureClaim(ExecutionServer.CurrentUser, ClaimType.UserRole, "Tester");
+
+    //  Assert.True(true);
+    //}
 
   }  // SecurityClaimsTests
 

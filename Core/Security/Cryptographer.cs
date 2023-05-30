@@ -14,7 +14,6 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 
-using Empiria.Security.Claims;
 using Empiria.Security.Providers;
 
 namespace Empiria.Security {
@@ -34,11 +33,16 @@ namespace Empiria.Security {
     static public void AssertValidPrivateKeyPassword(SecureString password) {
       Assertion.Require(password, "password");
 
-      var privateKeyFilePath =
-                    ClaimsService.GetClaimValue<string>(ExecutionServer.CurrentUser,
-                                                        ClaimType.ElectronicSignPrivateKeyFilePath);
 
-      RSAProvider.GetProvider(privateKeyFilePath, password);
+      // ToDo: Update with new security model
+
+      //var privateKeyFilePath =
+      //              ClaimsService.GetClaimValue<string>(ExecutionServer.CurrentUser,
+      //                                                  ClaimType.ElectronicSignPrivateKeyFilePath);
+
+      throw new NotImplementedException();
+
+      // RSAProvider.GetProvider(privateKeyFilePath, password);
     }
 
 
@@ -168,21 +172,25 @@ namespace Empiria.Security {
       Assertion.Require(text, "text");
       Assertion.Require(password, "password");
 
-      var privateKeyFilePath =
-                    ClaimsService.GetClaimValue<string>(ExecutionServer.CurrentUser,
-                                                        ClaimType.ElectronicSignPrivateKeyFilePath);
+      /// ToDo Replace this code using a new security claim
+      ///
+      //var privateKeyFilePath =
+      //              ClaimsService.GetClaimValue<string>(ExecutionServer.CurrentUser,
+      //                                                  ClaimType.ElectronicSignPrivateKeyFilePath);
 
-      RSACryptoServiceProvider rsa = RSAProvider.GetProvider(privateKeyFilePath, password);
+      throw new NotImplementedException();
 
-      /// SHA256CryptoServiceProvider uses FIPS 140-2 (Federal Information Processing Standard)
-      /// validated Crypto Service Provider.
-      var hasher = new SHA256CryptoServiceProvider();
+      //RSACryptoServiceProvider rsa = RSAProvider.GetProvider(privateKeyFilePath, password);
 
-      byte[] textAsByteArray = Encoding.UTF8.GetBytes(text);
+      ///// SHA256CryptoServiceProvider uses FIPS 140-2 (Federal Information Processing Standard)
+      ///// validated Crypto Service Provider.
+      //var hasher = new SHA256CryptoServiceProvider();
 
-      byte[] signAsArray = rsa.SignData(textAsByteArray, hasher);
+      //byte[] textAsByteArray = Encoding.UTF8.GetBytes(text);
 
-      return Convert.ToBase64String(signAsArray);
+      //byte[] signAsArray = rsa.SignData(textAsByteArray, hasher);
+
+      //return Convert.ToBase64String(signAsArray);
     }
 
 
