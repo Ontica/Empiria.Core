@@ -1,6 +1,12 @@
 ﻿# Empiria Core Framework
 
-Empiria Core Framework provides the following services:
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b30e3d80e67e445f98bcdab345b7474e)](https://app.codacy.com/gh/Ontica/Empiria.Core/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) &nbsp; [![Maintainability](https://api.codeclimate.com/v1/badges/4ee0453a7394098b0ce4/maintainability)](https://codeclimate.com/github/Ontica/Empiria.Core/maintainability)
+
+Empiria Core Framework es un conjunto de componentes de infraestructura que proporcionan diversos servicios básicos a otras aplicaciones.
+
+Su propósito es lograr el desarrollo de soluciones construidas en .NET Framework más rápidamente y de mejor calidad.
+
+Entre sus servicios se encuentran:
 
 -  Assertion Management
 -  Data Access Services
@@ -8,9 +14,9 @@ Empiria Core Framework provides the following services:
 -  Storage Management
 -  Collections
 -  Data Types
--  Json types
+-  Json objects
 -  Logging
--  Metadata and Ontology
+-  Ontology and Metadata
 -  Object-relational mapping (ORM)
 -  Powertypes
 -  Security services
@@ -20,8 +26,8 @@ Empiria Core Framework provides the following services:
 
 ## License
 
-This system is distributed by the GNU AFFERO GENERAL PUBLIC LICENSE.
+Este conjunto de componentes se distribuye bajo la licencia GNU AFFERO GENERAL PUBLIC LICENSE.
 
 ## Copyright
 
-Copyright © 2002-2023. La Vía Óntica SC, Ontica LLC and colaborators.
+Copyright © 2002-2023. La Vía Óntica SC, Ontica LLC and colaboradores.
