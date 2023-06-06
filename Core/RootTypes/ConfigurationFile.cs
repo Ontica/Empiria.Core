@@ -114,7 +114,7 @@ namespace Empiria {
         keyValue = null;
       }
       if ((keyValue != null) && parameterName.StartsWith("§")) {
-        keyValue = FormerCryptographer.Decrypt(keyValue, ExecutionServer.LicenseName);
+        keyValue = Cryptographer.Decrypt(keyValue, ExecutionServer.LicenseName);
       }
       return keyValue;
     }

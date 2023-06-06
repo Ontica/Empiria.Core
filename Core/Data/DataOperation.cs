@@ -77,19 +77,6 @@ namespace Empiria.Data {
       }
     }
 
-    static public DataOperation ParseFromMessageProtected(string message) {
-      string sourceName = String.Empty;
-      object[] parameters = null;
-
-      OperationBase.ExtractFromMessageProtected(message, out sourceName, out parameters);
-
-      if (parameters != null) {
-        return new DataOperation(DataSource.Parse(sourceName), sourceName, parameters);
-      } else {
-        return new DataOperation(DataSource.Parse(sourceName), sourceName);
-      }
-    }
-
     #endregion Constructors and parsers
 
     #region Public properties

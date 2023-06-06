@@ -55,14 +55,6 @@ namespace Empiria {
       }
     }
 
-
-    static protected void ExtractFromMessageProtected(string message, out string name, out object[] parameters) {
-      Assertion.Require(message, "message");
-
-      message = FormerCryptographer.Decrypt(message);
-      ExtractFromMessage(message, out name, out parameters);
-    }
-
     #endregion Constructors and parsers
 
     #region Public properties
@@ -100,19 +92,10 @@ namespace Empiria {
     }
 
 
-    public string ParametersToStringProtected() {
-      return FormerCryptographer.Encrypt(EncryptionMode.Standard, this.ParametersToString());
-    }
-
-
     public string ToMessage() {
       return this.Name + "§" + this.ParametersToString();
     }
 
-
-    public string ToMessageProtected() {
-      return FormerCryptographer.Encrypt(EncryptionMode.Standard, this.ToMessage());
-    }
 
     #endregion Public methods
 

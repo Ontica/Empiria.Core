@@ -95,22 +95,6 @@ namespace Empiria.Security {
     }
 
 
-    /// <summary>Takes a plaintext string and encrypts it.</summary>
-    /// <param name="plainText">Text string to be encrypted.</param>
-    /// <param name="salt">Optional string to use as encryption salt.</param>
-    static public string Encrypt(string plainText, string salt = "") {
-      Assertion.Require(plainText, "plainText");
-
-      throw new NotImplementedException();
-
-      //if (protectionMode == EncryptionMode.Standard || protectionMode == EncryptionMode.HashCode) {
-      //  return Encrypt(protectionMode, plainText, String.Empty);
-      //} else {
-      //  throw new SecurityException(SecurityException.Msg.InvalidProtectionMode, protectionMode.ToString());
-      //}
-    }
-
-
     /// <summary>Takes a plaintext string and encrypts it with the giving public key.</summary>
     /// <param name="plainText">Text string to be encrypted.</param>
     /// <param name="entropy">The entropy string used to encrypt the text string.</param>
