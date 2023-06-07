@@ -11,16 +11,14 @@ using System;
 
 using Newtonsoft.Json;
 
-using Empiria.Security;
-
 namespace Empiria {
 
   /// <summary>Abstract class that represents a named operation with or without parameters.</summary>
-  public abstract class OperationBase {
+  public class OperationBase {
 
-    #region Constructors and parsers
+  #region Constructors and parsers
 
-    protected OperationBase(string name) {
+  protected OperationBase(string name) {
       Assertion.Require(name, "name");
 
       this.Name = name;

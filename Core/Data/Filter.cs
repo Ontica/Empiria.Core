@@ -20,7 +20,6 @@ namespace Empiria {
 
     #endregion Fields
 
-
     #region Public Members
 
     public Filter() {
