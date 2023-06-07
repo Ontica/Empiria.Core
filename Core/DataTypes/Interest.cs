@@ -12,7 +12,7 @@ using System;
 namespace Empiria.DataTypes {
 
   /// <summary>Contains data about a financial interest rate and term.</summary>
-  public class Interest : IExtensibleData {
+  public class Interest {
 
     #region Constructors and parsers
 
