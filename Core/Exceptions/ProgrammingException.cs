@@ -28,7 +28,7 @@ namespace Empiria {
 
     }
 
-    static private string resourceBaseName = "Empiria.RootTypes.KernelExceptionMsg";
+    static private string resourceBaseName = "Empiria.Exceptions.KernelExceptionMsg";
 
     #region Constructors and parsers
 
