@@ -7,9 +7,7 @@
 *  Summary  : Represents a named type.                                                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-
-using System.Collections.Generic;
-using System.Linq;
+using System;
 
 namespace Empiria {
 
