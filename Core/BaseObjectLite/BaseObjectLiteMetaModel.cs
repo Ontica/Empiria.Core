@@ -17,7 +17,7 @@ using Empiria.Data;
 
 namespace Empiria {
 
-  internal class MetaModel<T> where T : BaseObjectLite {
+  internal class BaseObjectLiteMetaModel<T> where T : BaseObjectLite {
 
     #region Delegates
 
@@ -27,25 +27,28 @@ namespace Empiria {
 
     #region Fields
 
-    private DefaultConstructorDelegate defaultConstructorDelegate;
-    private DataModelAttribute dataModel;
+    private readonly DefaultConstructorDelegate _defaultConstructorDelegate;
+    private readonly DataModelAttribute _dataModel;
 
     #endregion Fields
 
     #region Constructors and parsers
 
-    private MetaModel() {
+    private BaseObjectLiteMetaModel() {
       Type type = typeof(T);
-      defaultConstructorDelegate = GetDefaultConstructorDelegate(type);
+
+      _defaultConstructorDelegate = GetDefaultConstructorDelegate(type);
+
       var attribute = Attribute.GetCustomAttribute(type, typeof(DataModelAttribute));
 
       Assertion.Require(attribute, type.FullName + " has not defined the attribute DataModelAttribute.");
 
-      dataModel = (DataModelAttribute) attribute;
+      _dataModel = (DataModelAttribute) attribute;
     }
 
-    static public MetaModel<T> Parse() {
-      return new MetaModel<T>();
+
+    static public BaseObjectLiteMetaModel<T> Parse() {
+      return new BaseObjectLiteMetaModel<T>();
     }
 
     #endregion Constructors and parsers
@@ -54,21 +57,24 @@ namespace Empiria {
 
     public string DataSource {
       get {
-        return dataModel.SourceName;
+        return _dataModel.SourceName;
       }
     }
+
 
     public string DataSourceIdField {
       get {
-        return dataModel.IdFieldName;
+        return _dataModel.IdFieldName;
       }
     }
 
+
     public string DataSourceKeyField {
       get {
-        return dataModel.KeyFieldName;
+        return _dataModel.KeyFieldName;
       }
     }
+
 
     public Type UnderlyingType {
       get {
@@ -76,15 +82,16 @@ namespace Empiria {
       }
     }
 
+
     public bool UseInstancesCache {
       get {
-        return !dataModel.NoCache;
+        return !_dataModel.NoCache;
       }
     }
 
     #endregion Properties
 
-    #region Public methods
+    #region Methods
 
     internal FixedList<T> GetFixedList(string sql) {
       var dataTable = DataReader.GetDataTable(DataOperation.Parse(sql));
@@ -102,6 +109,7 @@ namespace Empiria {
       return list.ToFixedList();
     }
 
+
     internal T GetInstance(int id) {
       DataRow dataRow = this.TryGetInstanceDataRow(id);
 
@@ -118,6 +126,7 @@ namespace Empiria {
       return instance;
     }
 
+
     internal T GetInstance(string instanceUID) {
       DataRow dataRow = this.GetInstanceDataRow(instanceUID);
 
@@ -127,6 +136,7 @@ namespace Empiria {
 
       return instance;
     }
+
 
     internal T GetInstance(DataOperation dataOperation) {
       DataRow dataRow = this.GetInstanceDataRow(dataOperation);
@@ -138,6 +148,7 @@ namespace Empiria {
       return instance;
     }
 
+
     internal T GetInstance(DataRow dataRow) {
       int id = (int) dataRow[DataSourceIdField];
 
@@ -147,6 +158,7 @@ namespace Empiria {
 
       return instance;
     }
+
 
     internal T GetInstanceWithQuery(string query) {
       DataRow dataRow = this.TryGetInstanceDataRow(query);
@@ -160,9 +172,11 @@ namespace Empiria {
       }
     }
 
+
     internal int GetNextInstanceId() {
       return DataWriter.CreateId(this.DataSource);
     }
+
 
     internal T TryGetInstance(int id) {
       DataRow dataRow = this.TryGetInstanceDataRow(id);
@@ -178,6 +192,7 @@ namespace Empiria {
       return instance;
     }
 
+
     internal T TryGetInstance(string key) {
       string filter = "{0} = '{1}'";
 
@@ -190,6 +205,7 @@ namespace Empiria {
       }
     }
 
+
     internal T TryGetInstanceWithFilter(string filter) {
       DataRow dataRow = this.TryGetInstanceDataRow(filter);
 
@@ -200,9 +216,9 @@ namespace Empiria {
       }
     }
 
-    #endregion Public methods
+    #endregion Methods
 
-    #region Private methods
+    #region Helpers
 
     private DefaultConstructorDelegate GetDefaultConstructorDelegate(Type type) {
       ConstructorInfo constructor = type.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
@@ -219,6 +235,7 @@ namespace Empiria {
       return (DefaultConstructorDelegate) dynMethod.CreateDelegate(typeof(DefaultConstructorDelegate));
     }
 
+
     private DataRow TryGetInstanceDataRow(int id) {
       string sql = "SELECT * FROM {0} WHERE {1} = {2}";
 
@@ -226,6 +243,7 @@ namespace Empiria {
 
       return DataReader.GetDataRow(DataOperation.Parse(sql));
     }
+
 
     private DataRow GetInstanceDataRow(string instanceUID) {
       string sql = "SELECT * FROM {0} WHERE {1} = '{2}'";
@@ -242,6 +260,7 @@ namespace Empiria {
       return dataRow;
     }
 
+
     private DataRow GetInstanceDataRow(DataOperation dataOperation) {
       DataRow dataRow = DataReader.GetDataRow(dataOperation);
 
@@ -253,6 +272,7 @@ namespace Empiria {
       return dataRow;
     }
 
+
     private DataRow TryGetInstanceDataRow(string filter) {
       string sql = "SELECT * FROM {0} WHERE {1}";
 
@@ -261,16 +281,17 @@ namespace Empiria {
       return DataReader.GetDataRow(DataOperation.Parse(sql));
     }
 
+
     private T InvokeInstanceConstructor(int id) {
-      T instance = (T) defaultConstructorDelegate();
+      T instance = (T) _defaultConstructorDelegate();
 
       instance.Id = id;
 
       return instance;
     }
 
-    #endregion Private methods
+    #endregion Helpers
 
-  }  // class MetaModel
+  }  // class BaseObjectLiteMetaModel
 
 } // namespace Empiria

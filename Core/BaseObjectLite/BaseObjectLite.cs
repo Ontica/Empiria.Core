@@ -1,11 +1,11 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Ontology                          *
-*  Namespace : Empiria                                          License  : Please read LICENSE.txt file      *
-*  Type      : BaseObjectLite                                   Pattern  : Layer Supertype                   *
+*  Module   : Base Objects                                 Component : Domain Layer                          *
+*  Assembly : Empiria.Core.dll                             Pattern   : Information Holder                    *
+*  Type     : BaseObjectLite                               License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary   : BaseObjectLite is the root type of the object type hierarchy in Empiria Lite Framework.       *
-*              All object types that uses the framework must be descendants of this abstract type.           *
+*  Summary  : BaseObjectLite is the root type of the object type hierarchy in Empiria Lite Framework.        *
+*             All object types that uses the framework must be descendants of this abstract type.            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -18,7 +18,7 @@ namespace Empiria {
     #region Constructors and parsers
 
     protected BaseObjectLite() {
-
+      // no-op
     }
 
     #endregion Constructors and parsers
@@ -30,10 +30,12 @@ namespace Empiria {
       protected internal set;
     }
 
+
     public virtual string UID {
       get;
       protected internal set;
     }
+
 
     [Newtonsoft.Json.JsonIgnore]
     public bool IsEmptyInstance {
@@ -58,6 +60,7 @@ namespace Empiria {
       return !this.Equals(obj);
     }
 
+
     public override bool Equals(object obj) {
       if (obj == null || this.GetType() != obj.GetType()) {
         return false;
@@ -65,12 +68,14 @@ namespace Empiria {
       return base.Equals(obj) && (this.Id == ((BaseObjectLite) obj).Id);
     }
 
+
     public bool Equals(BaseObjectLite obj) {
       if (obj == null) {
         return false;
       }
       return (this.GetType() == obj.GetType()) && (this.Id == obj.Id);
     }
+
 
     public override int GetHashCode() {
       return (this.GetType().GetHashCode() ^ this.Id);
