@@ -27,6 +27,7 @@ namespace Empiria.Ontology {
                                                  objectTypeInfo.IdFieldName, objectId);
     }
 
+
     static internal DataRow GetBaseObjectDataRow(ObjectTypeInfo objectTypeInfo, string objectKey) {
       if (objectTypeInfo.DataSource.StartsWith("qry") || objectTypeInfo.DataSource.StartsWith("get")) {
         return DataReader.GetDataRow(DataOperation.Parse(objectTypeInfo.DataSource, objectKey));
@@ -46,9 +47,11 @@ namespace Empiria.Ontology {
       }
     }
 
-    internal static DataRow GetBaseObjectDataRow(ObjectTypeInfo objectTypeInfo, IFilter condition) {
+
+    static internal DataRow GetBaseObjectDataRow(ObjectTypeInfo objectTypeInfo, IFilter condition) {
       return GeneralDataOperations.GetEntity(objectTypeInfo.DataSource, condition);
     }
+
 
     static internal DataRow GetBaseObjectTypeInfoDataRowWithType(Type type) {
       var operation = DataOperation.Parse("getBaseTypeWithTypeName", type.FullName);
@@ -61,15 +64,20 @@ namespace Empiria.Ontology {
       }
     }
 
+
     static internal DataTable GetDerivedTypes(int baseTypeId) {
       return GeneralDataOperations.GetEntitiesByField("Types", "BaseTypeId", baseTypeId);
     }
 
-    static internal DataView GetSimpleObjects(ObjectTypeInfo objectTypeInfo, string filter = "", string sort = "") {
+
+    static internal FixedList<T> GetSimpleObjects<T>() where T: BaseObject {
+      ObjectTypeInfo objectTypeInfo = ObjectTypeInfo.Parse<T>();
+
       var operation = DataOperation.Parse("qrySimpleObjects", objectTypeInfo.Id);
 
-      return DataReader.GetDataView(operation, filter, sort);
+      return DataReader.GetFixedList<T>(operation);
     }
+
 
     static internal int GetNextObjectId(ObjectTypeInfo objectTypeInfo) {
       int id = DataWriter.CreateId(objectTypeInfo.DataSource);
@@ -80,7 +88,8 @@ namespace Empiria.Ontology {
       return id;
     }
 
-    internal static List<T> GetBaseObjectList<T>(string filter = "", string sort = "") where T: BaseObject {
+
+    static internal List<T> GetBaseObjectList<T>(string filter = "", string sort = "") where T: BaseObject {
       var typeInfo = ObjectTypeInfo.Parse<T>();
 
       string fullFilter = String.Empty;
@@ -96,6 +105,7 @@ namespace Empiria.Ontology {
 
       return BaseObject.ParseList<T>(table);
     }
+
 
     static internal DataRow GetTypeDataRow(int typeId) {
       DataRow row = GeneralDataOperations.GetEntityById("Types", "TypeId", typeId);

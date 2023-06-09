@@ -73,7 +73,7 @@ namespace Empiria {
     }
 
 
-    static public T ParseDataRow<T>(DataRow dataRow, bool reload = false) where T : BaseObject {
+    static internal T ParseDataRow<T>(DataRow dataRow, bool reload = false) where T : BaseObject {
       ObjectTypeInfo baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       if (!reload) {
@@ -185,6 +185,7 @@ namespace Empiria {
             hashTable.Insert(hashFunction.Invoke(instance), instance);
           }
         }
+
         return hashTable;
 
       } catch (Exception e) {
@@ -200,6 +201,7 @@ namespace Empiria {
       if (dataTable == null || dataTable.Rows.Count == 0) {
         return new List<T>();
       }
+
       var baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       int id = 0;
@@ -213,7 +215,7 @@ namespace Empiria {
           if (!reload) {
             T item = cache.TryGetItem<T>(baseTypeInfo.Name, id);
             if (item != null) {
-              list.Add(item);    // Only use dataRow when item is not in cache
+              list.Add(item);
             } else {
               ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
 
@@ -267,7 +269,7 @@ namespace Empiria {
       if (!reload) {
         T item = cache.TryGetItem<T>(typeInfo.Name, id);
         if (item != null) {
-          return item;    // Only use dataRow when item is not in cache
+          return item;
         }
       }
       return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
@@ -423,9 +425,10 @@ namespace Empiria {
       return FieldPatcher.PatchField(newValue, defaultValue);
     }
 
+
     protected void PatchObjectId(int objectId) {
       Assertion.Require(this.objectId == 0, "ObjectId already assigned");
-      Assertion.Require(this.IsNew && this.IsDirty, "Object is in an invalid status for objectId assingation.");
+      Assertion.Require(this.IsNew && this.IsDirty, "Object is in an invalid status for objectId assignation.");
 
       this.objectId = objectId;
     }

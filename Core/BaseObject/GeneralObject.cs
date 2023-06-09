@@ -36,15 +36,8 @@ namespace Empiria {
 
     /// ToDo: Replace this method by BaseObject.GetList<T>(filter, sort)
     ///       when that method will be able to return in the list derivated types of <T>.
-    static protected new FixedList<T> GetList<T>(string filter = "", string sort = "") where T : BaseObject {
-      ObjectTypeInfo objectTypeInfo = ObjectTypeInfo.Parse<T>();
-
-      DataView view = OntologyData.GetSimpleObjects(objectTypeInfo, filter, sort);
-      List<T> list = new List<T>(view.Count);
-      for (int i = 0; i < view.Count; i++) {
-        list.Add(BaseObject.ParseDataRow<T>(view[i].Row));
-      }
-      return list.ToFixedList();
+    static protected FixedList<T> GetList<T>() where T : BaseObject {
+      return OntologyData.GetSimpleObjects<T>();
     }
 
     #endregion Constructors and parsers
