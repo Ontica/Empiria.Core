@@ -1,8 +1,8 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Ontology                          *
-*  Namespace : Empiria.Ontology                                 License  : Please read LICENSE.txt file      *
-*  Type      : OntologyData                                     Pattern  : Data Services Static Class        *
+*  Module   : Empiria Ontology                           Component : Data Layer                              *
+*  Assembly : Empiria.Core.dll                           Pattern   : Data services                           *
+*  Type     : OntologyData                               License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary   : Provides data read methods for Empiria Ontology objects.                                      *
 *                                                                                                            *
@@ -23,7 +23,7 @@ namespace Empiria.Ontology {
       if (objectTypeInfo.DataSource.StartsWith("qry") || objectTypeInfo.DataSource.StartsWith("get")) {
         return DataReader.GetDataRow(DataOperation.Parse(objectTypeInfo.DataSource, objectId));
       }
-      return GeneralDataOperations.GetEntityById(objectTypeInfo.DataSource,
+      return OntologyDataHelpers.GetEntityById(objectTypeInfo.DataSource,
                                                  objectTypeInfo.IdFieldName, objectId);
     }
 
@@ -37,19 +37,19 @@ namespace Empiria.Ontology {
         var filter = $"({objectTypeInfo.DataSource}.{objectTypeInfo.NamedIdFieldName} = '{objectKey}') AND " +
                      $"(Types.TypeName = '{objectTypeInfo.Name}' OR Types.TypeName LIKE '{objectTypeInfo.Name}.%')";
 
-        DataTable table = GeneralDataOperations.GetEntitiesJoined(objectTypeInfo.DataSource, "Types",
+        DataTable table = OntologyDataHelpers.GetEntitiesJoined(objectTypeInfo.DataSource, "Types",
                                                                   objectTypeInfo.TypeIdFieldName, "TypeId",
                                                                   filter);
         return (table.Rows.Count == 1) ? table.Rows[0] : null;
       } else {
-        return GeneralDataOperations.GetEntityByKey(objectTypeInfo.DataSource,
+        return OntologyDataHelpers.GetEntityByKey(objectTypeInfo.DataSource,
                                                     objectTypeInfo.NamedIdFieldName, objectKey);
       }
     }
 
 
     static internal DataRow GetBaseObjectDataRow(ObjectTypeInfo objectTypeInfo, IFilter condition) {
-      return GeneralDataOperations.GetEntity(objectTypeInfo.DataSource, condition);
+      return OntologyDataHelpers.GetEntity(objectTypeInfo.DataSource, condition);
     }
 
 
@@ -66,7 +66,7 @@ namespace Empiria.Ontology {
 
 
     static internal DataTable GetDerivedTypes(int baseTypeId) {
-      return GeneralDataOperations.GetEntitiesByField("Types", "BaseTypeId", baseTypeId);
+      return OntologyDataHelpers.GetEntitiesByField("Types", "BaseTypeId", baseTypeId);
     }
 
 
@@ -97,16 +97,29 @@ namespace Empiria.Ontology {
       if (typeInfo.TypeIdFieldName.Length != 0) {
         fullFilter = $"{typeInfo.TypeIdFieldName} IN ({typeInfo.GetSubclassesFilter()})";
       }
-      if (filter.Length != 0) {
-        fullFilter = GeneralDataOperations.BuildSqlAndFilter(fullFilter, filter);
+
+      if (fullFilter.Length != 0 && filter.Length != 0) {
+        fullFilter = $"{fullFilter} AND {filter}";
+
+      } else if (fullFilter.Length != 0 && filter.Length == 0) {
+
+        // no-op
+
+      } else if (fullFilter.Length == 0 && filter.Length != 0) {
+        fullFilter = filter;
+
+      } else {
+
+        // no-op
+
       }
 
-      return GeneralDataOperations.GetList<T>(typeInfo.DataSource, fullFilter, sort);
+      return OntologyDataHelpers.GetList<T>(typeInfo.DataSource, fullFilter, sort);
     }
 
 
     static internal DataRow GetTypeDataRow(int typeId) {
-      DataRow row = GeneralDataOperations.GetEntityById("Types", "TypeId", typeId);
+      DataRow row = OntologyDataHelpers.GetEntityById("Types", "TypeId", typeId);
       if (row != null) {
         return row;
       } else {
@@ -116,7 +129,7 @@ namespace Empiria.Ontology {
 
 
     static internal DataRow GetTypeDataRow(string typeName) {
-      DataRow row = GeneralDataOperations.GetEntityByKey("Types", "TypeName", typeName);
+      DataRow row = OntologyDataHelpers.GetEntityByKey("Types", "TypeName", typeName);
       if (row != null) {
         return row;
       } else {
@@ -126,34 +139,40 @@ namespace Empiria.Ontology {
 
 
     static internal DataRow TryGetSystemTypeDataRow(string systemTypeName) {
-      string filter = String.Format("(TypeName = '{0}' OR ClassName LIKE '%{0}')", systemTypeName);
+      var sql = "SELECT * FROM Types " +
+                $"WHERE (TypeName = '{systemTypeName}' OR ClassName LIKE '%{systemTypeName}')";
 
-      DataTable table = GeneralDataOperations.GetEntitiesTable("Types", filter);
+      DataTable table = DataReader.GetDataTable(DataOperation.Parse(sql));
 
       if (table.Rows.Count == 0) {
         return null;
       } else if (table.Rows.Count == 1) {
         return table.Rows[0];
       }
+
       DataRow[] select = table.Select(String.Format("ClassName = '{0}'", systemTypeName));
+
       if (select.Length == 1) {
         return select[0];
       }
+
       select = table.Select(String.Format("TypeName = '{0}'", systemTypeName));
       if (select.Length == 1) {
         return select[0];
       }
+
       select = table.Select(String.Format("ClassName = 'System.{0}'", systemTypeName));
       if (select.Length == 1) {
         return select[0];
       }
+
       select = table.Select(String.Format("ClassName = 'Empiria.{0}'", systemTypeName));
       if (select.Length == 1) {
         return select[0];
       }
+
       return null;
     }
-
 
     #endregion Internal methods
 
