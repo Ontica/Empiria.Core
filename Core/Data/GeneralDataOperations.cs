@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Empiria.Data {
@@ -58,6 +59,7 @@ namespace Empiria.Data {
       return filter;
     }
 
+
     static public string BuildSqlInSetClause(string fieldName, int[] values) {
       if (values == null || values.Length == 0) {
         return String.Empty;
@@ -74,6 +76,7 @@ namespace Empiria.Data {
       }
       return fieldName + " IN (" + sql + ")";
     }
+
 
     static public string BuildSqlInSetClause(string fieldName, string[] values) {
       if (values == null || values.Length == 0) {
@@ -92,6 +95,7 @@ namespace Empiria.Data {
       return fieldName + " IN (" + sql + ")";
     }
 
+
     static public string BuildSqlNotInSetClause(string fieldName, string[] values) {
       if (values == null || values.Length == 0) {
         return String.Empty;
@@ -108,6 +112,7 @@ namespace Empiria.Data {
       }
       return fieldName + " NOT IN (" + sql + ")";
     }
+
 
     static public string BuildSqlOrFilter(string firstFilter, string secondFilter, params string[] otherFilters) {
       string filter = String.Empty;
@@ -162,32 +167,35 @@ namespace Empiria.Data {
       return String.IsNullOrWhiteSpace(sort) ? String.Empty : sort;
     }
 
-    static public DataTable GetEntities(string sourceName, string filterExpression = "",
-                                        string sortExpression = "") {
-      DataOperation operation = null;
 
-      if (String.IsNullOrWhiteSpace(filterExpression) &&
-          String.IsNullOrWhiteSpace(sortExpression)) {
-        operation = DataOperation.Parse("@qryEntities", sourceName);
+    static internal List<T> GetList<T>(string sourceName,
+                                       string filterExpression = "",
+                                       string sortExpression = "") where T : BaseObject {
 
-      } else if (!String.IsNullOrWhiteSpace(filterExpression) &&
-                 String.IsNullOrWhiteSpace(sortExpression)) {
-        operation = DataOperation.Parse("@qryEntitiesFiltered", sourceName, filterExpression);
+      DataOperation operation = GetEntitiesDataOperation(sourceName, filterExpression, sortExpression);
 
-      } else if (String.IsNullOrWhiteSpace(filterExpression) &&
-                 !String.IsNullOrWhiteSpace(sortExpression)) {
-        operation = DataOperation.Parse("@qryEntitiesSorted", sourceName, sortExpression);
+      return DataReader.GetList<T>(operation);
+    }
 
-      } else if (!String.IsNullOrWhiteSpace(filterExpression) &&
-                 !String.IsNullOrWhiteSpace(sortExpression)) {
-        operation = DataOperation.Parse("@qryEntitiesFilteredAndSorted", sourceName,
-                                        filterExpression, sortExpression);
 
-      } else {
-        Assertion.EnsureNoReachThisCode();
-      }
+    static internal DataTable GetEntitiesTable(string sourceName,
+                                               string filterExpression = "",
+                                               string sortExpression = "") {
+
+      DataOperation operation = GetEntitiesDataOperation(sourceName, filterExpression, sortExpression);
 
       return DataReader.GetDataTable(operation);
+    }
+
+
+    static public FixedList<T> GetFixedList<T>(string sourceName,
+                                               string filterExpression = "",
+                                               string sortExpression = "") where T : BaseObject {
+
+      DataOperation operation = GetEntitiesDataOperation(sourceName, filterExpression, sortExpression);
+
+      return DataReader.GetFixedList<T>(operation);
+
     }
 
 
@@ -196,6 +204,7 @@ namespace Empiria.Data {
                                                     searchFieldName + " = " + fieldValue.ToString());
       return DataReader.GetDataTable(operation);
     }
+
 
     static public DataTable GetEntitiesByField(string sourceName, string searchFieldName, string fieldValue) {
       DataOperation operation = DataOperation.Parse("@qryEntitiesFiltered", sourceName,
@@ -206,7 +215,7 @@ namespace Empiria.Data {
     static public DataTable GetEntitiesJoined(string sourceName, string joinedSourceName,
                                               string sourceJoinField, string joinedTargetField,
                                               string filterExpression = "", string sortExpression = "") {
-      DataOperation operation = null;
+      DataOperation operation;
 
       if (String.IsNullOrWhiteSpace(filterExpression) &&
           String.IsNullOrWhiteSpace(sortExpression)) {
@@ -225,8 +234,9 @@ namespace Empiria.Data {
         operation = DataOperation.Parse("@qryEntitiesJoinedFilteredAndSorted", sourceName, joinedSourceName,
                                         sourceJoinField, joinedTargetField, filterExpression, sortExpression);
       } else {
-        Assertion.EnsureNoReachThisCode();
+        throw Assertion.EnsureNoReachThisCode();
       }
+
       return DataReader.GetDataTable(operation);
     }
 
@@ -279,14 +289,19 @@ namespace Empiria.Data {
     }
 
     static public string GetFilterSortSqlString(string filter, string sort) {
+
       if (String.IsNullOrWhiteSpace(filter) && String.IsNullOrWhiteSpace(sort)) {
         return String.Empty;
+
       } else if (String.IsNullOrWhiteSpace(filter) && !String.IsNullOrWhiteSpace(sort)) {
-        return " ORDER BY " + sort;
+        return $" ORDER BY {sort}";
+
       } else if (!String.IsNullOrWhiteSpace(filter) && String.IsNullOrWhiteSpace(sort)) {
-        return " WHERE " + filter;
+        return $" WHERE {filter}";
+
       } else if (!String.IsNullOrWhiteSpace(filter) && !String.IsNullOrWhiteSpace(sort)) {
-        return " WHERE " + filter + " ORDER BY " + sort;
+        return $" WHERE {filter} ORDER BY {sort}";
+
       } else {
         throw Assertion.EnsureNoReachThisCode();
       }
@@ -298,6 +313,37 @@ namespace Empiria.Data {
     }
 
     #endregion Public methods
+
+
+    #region Helpers
+
+    static private DataOperation GetEntitiesDataOperation(string sourceName,
+                                                          string filterExpression = "",
+                                                          string sortExpression = "") {
+
+      if (String.IsNullOrWhiteSpace(filterExpression) &&
+          String.IsNullOrWhiteSpace(sortExpression)) {
+        return DataOperation.Parse("@qryEntities", sourceName);
+
+      } else if (!String.IsNullOrWhiteSpace(filterExpression) &&
+                 String.IsNullOrWhiteSpace(sortExpression)) {
+        return DataOperation.Parse("@qryEntitiesFiltered", sourceName, filterExpression);
+
+      } else if (String.IsNullOrWhiteSpace(filterExpression) &&
+                 !String.IsNullOrWhiteSpace(sortExpression)) {
+        return DataOperation.Parse("@qryEntitiesSorted", sourceName, sortExpression);
+
+      } else if (!String.IsNullOrWhiteSpace(filterExpression) &&
+                 !String.IsNullOrWhiteSpace(sortExpression)) {
+        return DataOperation.Parse("@qryEntitiesFilteredAndSorted", sourceName,
+                                        filterExpression, sortExpression);
+
+      } else {
+        throw Assertion.EnsureNoReachThisCode();
+      }
+    }
+
+    #endregion Helpers
 
   } // class GeneralDataOperations
 

@@ -96,11 +96,13 @@ namespace Empiria {
       return typeInfo.GetEmptyInstance<T>().Clone<T>();
     }
 
+
     static protected T ParseEmpty<T>(int emptyId) where T : BaseObject {
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       return typeInfo.GetEmptyInstance<T>(emptyId).Clone<T>();
     }
+
 
     static protected internal T ParseId<T>(int id, bool reload = false) where T : BaseObject {
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
@@ -197,7 +199,7 @@ namespace Empiria {
     }
 
 
-    static public List<T> ParseList<T>(DataTable dataTable, bool reload = false) where T : BaseObject {
+    static internal List<T> ParseList<T>(DataTable dataTable, bool reload = false) where T : BaseObject {
       if (dataTable == null || dataTable.Rows.Count == 0) {
         return new List<T>();
       }
@@ -467,9 +469,30 @@ namespace Empiria {
       }
     }
 
+    protected void ReclassifyAs(ObjectTypeInfo newType) {
+      Assertion.Require(newType, "newType");
+      Assertion.Require(!this.GetEmpiriaType().Equals(newType),
+                       "newType should be distinct to the current one.");
+
+      // Assertion.Assert(this.GetEmpiriaType().UnderlyingSystemType.Equals(newType.UnderlyingSystemType),
+      //                 "newType underlying system type should be the same to the current one's.");
+      // Seek for a common ancestor (distinct than ObjectType) between types:
+      // eg: if A is a mammal and B is a bird, should be possible to convert A to B or B to A because both are animals
+
+      cache.Remove(this);
+
+      this.objectTypeInfo = newType;
+
+      if (newType.UsesNamedKey) {
+        cache.Insert(this, this.UID);
+      } else {
+        cache.Insert(this);
+      }
+    }
+
     #endregion Public methods
 
-    #region Private methods
+    #region Helpers
 
     private void DataBind(DataRow row) {
       this.GetEmpiriaType().DataBind(this, row);
@@ -491,7 +514,8 @@ namespace Empiria {
         }
 
       } catch (Exception e) {
-        throw new NotSupportedException("No puedo hacer el parsing del objeto de tipo " + item.objectTypeInfo, e);
+        throw new NotSupportedException(
+              $"No pude hacer el parsing del objeto de tipo {item.objectTypeInfo}", e);
       }
       if (typeInfo.IsDataBound) {
         item.DataBind(dataRow);
@@ -511,28 +535,7 @@ namespace Empiria {
       return item;
     }
 
-    #endregion Private methods
-
-    protected void ReclassifyAs(ObjectTypeInfo newType) {
-      Assertion.Require(newType, "newType");
-      Assertion.Require(!this.GetEmpiriaType().Equals(newType),
-                       "newType should be distinct to the current one.");
-
-      // Assertion.Assert(this.GetEmpiriaType().UnderlyingSystemType.Equals(newType.UnderlyingSystemType),
-      //                 "newType underlying system type should be the same to the current one's.");
-      // Seek for a common ancestor (distinct than ObjectType) between types:
-      // eg: if A is a mammal and B is a bird, should be possible to convert A to B or B to A because both are animals
-
-      cache.Remove(this);
-
-      this.objectTypeInfo = newType;
-
-      if (newType.UsesNamedKey) {
-        cache.Insert(this, this.UID);
-      } else {
-        cache.Insert(this);
-      }
-    }
+    #endregion Helpers
 
   } // class BaseObject
 

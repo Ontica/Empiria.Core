@@ -101,9 +101,7 @@ namespace Empiria.Ontology {
         fullFilter = GeneralDataOperations.BuildSqlAndFilter(fullFilter, filter);
       }
 
-      var table = GeneralDataOperations.GetEntities(typeInfo.DataSource, fullFilter, sort);
-
-      return BaseObject.ParseList<T>(table);
+      return GeneralDataOperations.GetList<T>(typeInfo.DataSource, fullFilter, sort);
     }
 
 
@@ -130,7 +128,7 @@ namespace Empiria.Ontology {
     static internal DataRow TryGetSystemTypeDataRow(string systemTypeName) {
       string filter = String.Format("(TypeName = '{0}' OR ClassName LIKE '%{0}')", systemTypeName);
 
-      DataTable table = GeneralDataOperations.GetEntities("Types", filter);
+      DataTable table = GeneralDataOperations.GetEntitiesTable("Types", filter);
 
       if (table.Rows.Count == 0) {
         return null;
