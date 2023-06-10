@@ -20,7 +20,7 @@ namespace Empiria {
 
   /// <summary>BaseObject is the root type of the object type hierarchy in Empiria Framework.
   /// All object types that uses the framework must be descendants of this abstract type.</summary>
-  public abstract class BaseObject : IIdentifiable {
+  public abstract class BaseObject : IIdentifiable, IEquatable<BaseObject> {
 
     #region Fields
 
@@ -38,8 +38,6 @@ namespace Empiria {
     protected BaseObject() {
       objectTypeInfo = ObjectTypeInfo.Parse(this.GetType());
 
-      this.OnInitialize();
-
       if (objectTypeInfo.IsDataBound) {
         // Should call InitializeObject only when is not called through BaseObject.ParseEmpiriaObject.
         objectTypeInfo.InitializeObject(this);
@@ -49,8 +47,6 @@ namespace Empiria {
 
     protected BaseObject(ObjectTypeInfo powertype) {
       objectTypeInfo = powertype;
-
-      this.OnInitialize();
 
       if (objectTypeInfo.IsDataBound) {
         // Should call InitializeObject only when is not called through BaseObject.ParseEmpiriaObject.
@@ -366,13 +362,6 @@ namespace Empiria {
 
     protected void MarkAsDirty() {
       this.isDirtyFlag = true;
-    }
-
-
-    /// <summary>Raised for new and stored instances, after object creation and before
-    /// databinding if their type is marked as IsDatabounded.</summary>
-    protected virtual void OnInitialize() {
-      // no-op
     }
 
 
