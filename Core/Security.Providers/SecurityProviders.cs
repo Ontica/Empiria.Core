@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.Reflection;
 
 namespace Empiria.Security.Providers {
@@ -30,6 +31,13 @@ namespace Empiria.Security.Providers {
       return (IAuthorizationProvider) ObjectFactory.CreateObject(type);
     }
 
+
+    static internal ICryptoServiceProvider CryptoServiceProvider() {
+      Type type = ObjectFactory.GetType("Empiria.OnePoint.Security",
+                                        "Empiria.OnePoint.Security.Services.CryptoService");
+
+      return (ICryptoServiceProvider) ObjectFactory.CreateObject(type);
+    }
 
   }  // class SecurityProviders
 

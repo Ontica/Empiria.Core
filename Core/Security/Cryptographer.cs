@@ -153,12 +153,12 @@ namespace Empiria.Security {
 
 
     static public string SignText(string text, SecureString password) {
-      Assertion.Require(text, "text");
-      Assertion.Require(password, "password");
+      Assertion.Require(text, nameof(text));
+      Assertion.Require(password, nameof(password));
 
       /// ToDo Replace this code using a new security claim
       ///
-      //var privateKeyFilePath =
+      // var privateKeyFilePath =
       //              ClaimsService.GetClaimValue<string>(ExecutionServer.CurrentUser,
       //                                                  ClaimType.ElectronicSignPrivateKeyFilePath);
 
@@ -179,9 +179,11 @@ namespace Empiria.Security {
 
 
     static public string SignTextWithSystemCredentials(string text) {
-      Assertion.Require(text, "text");
+      Assertion.Require(text, nameof(text));
 
-      RSACryptoServiceProvider rsa = RSAProvider.GetSystemProvider();
+      ICryptoServiceProvider provider = SecurityProviders.CryptoServiceProvider();
+
+      RSACryptoServiceProvider rsa = provider.GetRSASystemProvider();
 
       /// SHA256CryptoServiceProvider uses FIPS 140-2 (Federal Information Processing Standard)
       /// validated Crypto Service Provider.
