@@ -1,10 +1,10 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Kernel Types                      *
-*  Namespace : Empiria                                          License  : Please read LICENSE.txt file      *
-*  Type      : EmpiriaString (Partial)                          Pattern  : Static Data Type                  *
+*  Module   : Empiria Strings                            Component : Services Layer                          *
+*  Assembly : Empiria.Core.dll                           Pattern   : Static methods library                  *
+*  Type     : EmpiriaString (partial)                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Represents a string data type.                                                                *
+*  Summary  : Static class with string distance methods using different algorithms.                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -12,7 +12,8 @@ using System.Text;
 
 namespace Empiria {
 
-  static public partial class EmpiriaString {
+  /// <summary>Static class with string distance methods using different algorithms.</summary>
+  static public class EmpiriaStringDistance {
 
     #region Enumerations
 
@@ -98,8 +99,8 @@ namespace Empiria {
     }
 
     static public decimal JaroWinklerProximityFactor(string stringA, string stringB) {
-      return JaroWinklerProximityFactor(stringA, stringB, EmpiriaString.jaroWinklerDefaultPrefixAdjustmentScale,
-                                        EmpiriaString.jaroWinklerDefaultMaxPrefixDistance);
+      return JaroWinklerProximityFactor(stringA, stringB, EmpiriaStringDistance.jaroWinklerDefaultPrefixAdjustmentScale,
+                                        EmpiriaStringDistance.jaroWinklerDefaultMaxPrefixDistance);
     }
 
     static public decimal JaroWinklerProximityFactor(string stringA, string stringB,
@@ -212,11 +213,11 @@ namespace Empiria {
     }
 
     static private string PrepareForDistance(string source) {
-      return TrimAll(RemoveNoiseExtended(source)).ToLowerInvariant();
+      return EmpiriaString.TrimAll(EmpiriaString.RemoveNoiseExtended(source)).ToLowerInvariant();
     }
 
     #endregion Private methods
 
-  }  // class EmpiriaString
+  }  // class EmpiriaStringDistance
 
 } // namespace Empiria

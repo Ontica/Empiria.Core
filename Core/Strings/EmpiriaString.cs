@@ -1,14 +1,13 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Kernel Types                      *
-*  Namespace : Empiria                                          License  : Please read LICENSE.txt file      *
-*  Type      : EmpiriaString                                    Pattern  : Static Data Type                  *
+*  Module   : Empiria Strings                            Component : Services Layer                          *
+*  Assembly : Empiria.Core.dll                           Pattern   : Static methods library                  *
+*  Type     : EmpiriaString                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Library for string manipulation.                                                              *
+*  Summary  : Static library for string manipulation.                                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-using System.Collections.Specialized;
 using System.Globalization;
 
 using Empiria.Json;
@@ -221,62 +220,6 @@ namespace Empiria {
     }
 
 
-    public static string EncodeAsUrlIdentifier(string identifier) {
-      Assertion.Require(identifier, "identifier");
-      Assertion.Require(!identifier.Contains("¯") &&
-                       !identifier.Contains("―") &&
-                       !identifier.Contains("¢") &&
-                       !identifier.Contains("§") &&
-                       !identifier.Contains("¿") &&
-                       !identifier.Contains("¤") &&
-                       !identifier.Contains("±") &&
-                       !identifier.Contains("÷") &&
-                       !identifier.Contains("¦"),
-                       "Identifier has one or more characters that makes it not suitable for encoding.");
-
-      identifier = identifier.Replace("_", "¯");   // Protect underscores with macrons
-      identifier = identifier.Replace("/", @"_");  // Replace slashes with underscores
-
-      identifier = identifier.Replace("-", "―");   // Protect hypens with horizontal bars (U+2015)
-      identifier = identifier.Replace(" ", "-");   // Replace spaces with hypens
-
-      identifier = identifier.Replace("%", "¢");   // Protect percentage with cent sign
-      identifier = identifier.Replace("&", "§");   // Replace ampersands with section signs
-      identifier = identifier.Replace("?", "¿");   // Replace question ma__rks with initial question marks
-      identifier = identifier.Replace("=", "¤");   // Replace equal with currency sign ¤
-      identifier = identifier.Replace("+", "±");   // Replace plus with currency plus-minus
-      identifier = identifier.Replace(":", "÷");   // Replace colons with division sign
-      identifier = identifier.Replace(@"\", "¦");  // Replace back slashes with broken bars
-
-      return identifier;
-    }
-
-    public static string DecodeUrlIdentifier(string identifier) {
-      Assertion.Require(identifier, "identifier");
-
-      // Identifiers that starts with a '!' are not encoded, so return them as is without the '!' char.
-      if (identifier.StartsWith("!")) {
-        return identifier.Substring(1);
-      }
-
-      identifier = identifier.Replace("¦", @"\");  // Replace broken bars with back slashes
-      identifier = identifier.Replace("÷", ":");   // Replace division sign with colons
-      identifier = identifier.Replace("±", "+");   // Replace currency plus-minus with plus sign
-      identifier = identifier.Replace("¤", "=");   // Replace currency sign ¤ with equal sign
-      identifier = identifier.Replace("¿", "?");   // Replace initial question marks with question marks
-      identifier = identifier.Replace("§", "&");   // Replace section signs with ampersands
-      identifier = identifier.Replace("¢", "%");   // Protect cent signs with percentage symbols
-
-      identifier = identifier.Replace("-", " ");   // Replace hypens with spaces
-      identifier = identifier.Replace("―", "-");   // Replace protected horizontal bars (U+2015) with hypens
-
-      identifier = identifier.Replace(@"_", "/");  // Replace underscores with slashes
-      identifier = identifier.Replace("¯", "_");   // Replace protected macrons with underscores
-
-      return identifier;
-    }
-
-
     static public string Exclude(string source, string excludeThis) {
       string[] excludeArray = excludeThis.Split(' ');
       int index = 0;
@@ -290,6 +233,7 @@ namespace Empiria {
       }
       return TrimAll(source);
     }
+
 
     static public string Format(string source, object[] arguments) {
       if (source != null && arguments != null && arguments.Length != 0) {
@@ -456,46 +400,6 @@ namespace Empiria {
     }
 
 
-    static public bool IsFloat(string source) {
-      try {
-        if (String.IsNullOrEmpty(source)) {
-          return false;
-        }
-        if (source.IndexOf(".") >= 0) {
-          source = source.TrimStart("0".ToCharArray());
-        }
-        if (source.StartsWith(".")) {
-          source = "0" + source;
-        }
-        float sourceValue = float.Parse(source);
-        return true;
-      } catch {
-        return false;
-      }
-    }
-
-    static public bool IsFloat(string source, string format) {
-      try {
-        if (String.IsNullOrEmpty(source)) {
-          return false;
-        }
-        if (source.IndexOf(".") >= 0) {
-          source = source.TrimStart("0".ToCharArray());
-        }
-        if (source.StartsWith(".")) {
-          source = "0" + source;
-        }
-        float sourceValue = float.Parse(source);
-        if (source == sourceValue.ToString(format)) {
-          return true;
-        } else {
-          return false;
-        }
-      } catch {
-        return false;
-      }
-    }
-
     static public bool IsInList(string source, string firstValue, params string[] moreValues) {
       Assertion.Require(source, "source");
       Assertion.Require(firstValue, "firstValue");
@@ -543,28 +447,6 @@ namespace Empiria {
       return IsCurrency(source.Substring(startSearchPosition));
     }
 
-    static public NameValueCollection ParseQueryString(string queryString) {
-      return ParseQueryString(queryString, '|', '=');
-    }
-
-    static public NameValueCollection ParseQueryString(string queryString, char itemsSeparator, char valuesSeparator) {
-      NameValueCollection pars = new NameValueCollection(8);
-
-      string[] stringItems = queryString.Split(itemsSeparator);
-      for (int i = 0; i < stringItems.Length; i++) {
-        pars.Add(stringItems[i].Split(valuesSeparator)[0], stringItems[i].Split(valuesSeparator)[1]);
-      }
-
-      return pars;
-    }
-
-    static public string Pluralize(int number, string singular, string plural) {
-      if (number == 1) {
-        return number.ToString("N0") + " " + singular;
-      } else {
-        return number.ToString("N0") + " " + plural;
-      }
-    }
 
     static public string RemoveAccents(string source) {
       source = source.Replace("ñ", "n");
@@ -681,7 +563,7 @@ namespace Empiria {
         source = source.Replace(".-", "-");
         return DateTime.ParseExact(source, format, new CultureInfo("es-US"));
       } catch {
-        throw new Exception("No reconozco el valor " + source + " como del tipo de datos fecha.");
+        throw new Exception($"No reconozco el valor {source} como del tipo de datos fecha.");
       }
     }
 
@@ -709,47 +591,7 @@ namespace Empiria {
           return 0m;
         }
       } catch {
-        throw new Exception("No reconozco el valor " + source + " como del tipo de datos decimal.");
-      }
-    }
-
-    static public double ToDouble(string source) {
-      try {
-        source = TrimAll(source, ",", String.Empty);
-        source = TrimAll(source, "$", String.Empty);
-        if (source.IndexOf(".") >= 0) {
-          source = source.TrimStart("0".ToCharArray());
-        }
-        if (source.StartsWith(".")) {
-          source = "0" + source;
-        }
-        if (source.Length != 0) {
-          return double.Parse(source);
-        } else {
-          return 0;
-        }
-      } catch {
-        throw new Exception("No reconozco el valor " + source + " como del tipo de datos double.");
-      }
-    }
-
-    static public float ToFloat(string source) {
-      try {
-        source = TrimAll(source, ",", String.Empty);
-        source = TrimAll(source, "$", String.Empty);
-        if (source.IndexOf(".") >= 0) {
-          source = source.TrimStart("0".ToCharArray());
-        }
-        if (source.StartsWith(".")) {
-          source = "0" + source;
-        }
-        if (source.Length != 0) {
-          return float.Parse(source);
-        } else {
-          return 0;
-        }
-      } catch {
-        throw new Exception("No reconozco el valor " + source + " como del tipo de datos float.");
+        throw new Exception($"No reconozco el valor {source} como del tipo de datos decimal.");
       }
     }
 
@@ -762,7 +604,7 @@ namespace Empiria {
           return 0;
         }
       } catch {
-        throw new Exception("No reconozco el valor " + source + " como del tipo de datos entero.");
+        throw new Exception($"No reconozco el valor {source} como del tipo de datos entero.");
       }
     }
 
@@ -784,16 +626,6 @@ namespace Empiria {
       return result;
     }
 
-    static public string TrimIfLongThan(string text, int maxLength) {
-      if (String.IsNullOrWhiteSpace(text)) {
-        return String.Empty;
-      }
-      if (text.Length > (maxLength - 3)) {
-        return text.Substring(0, maxLength - 4) + "...";
-      } else {
-        return text;
-      }
-    }
 
     static public string TrimAll(string source) {
       string temp = TrimAll(source, "  ", " ");
@@ -824,7 +656,6 @@ namespace Empiria {
       temp = temp.Replace("|", " ");
       temp = temp.Replace("<", " ");
       temp = temp.Replace(">", " ");
-      //temp = temp.Replace("&", " ");
       temp = temp.Replace("\"", "´");
       temp = temp.Replace("\'", "´");
 

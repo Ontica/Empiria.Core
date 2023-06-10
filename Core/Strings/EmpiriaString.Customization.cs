@@ -1,10 +1,10 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Kernel Types                      *
-*  Namespace : Empiria                                          License  : Please read LICENSE.txt file      *
-*  Type      : EmpiriaString                                    Pattern  : Static Data Type                  *
+*  Module   : Empiria Strings                            Component : Services Layer                          *
+*  Assembly : Empiria.Core.dll                           Pattern   : Static methods library                  *
+*  Type     : EmpiriaString (partial)                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Library for string manipulation.                                                              *
+*  Summary  : Static partial class with more methods for string manipulation.                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
@@ -13,6 +13,7 @@ using System.Text;
 
 namespace Empiria {
 
+  /// <summary>Static partial class with more methods for string manipulation.</summary>
   static public partial class EmpiriaString {
 
     #region Public methods

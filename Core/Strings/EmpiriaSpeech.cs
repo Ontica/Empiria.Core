@@ -1,18 +1,19 @@
-﻿/* Empiria Core  *********************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Kernel Types                      *
-*  Namespace : Empiria                                          License  : Please read LICENSE.txt file      *
-*  Type      : EmpiriaString (Partial)                          Pattern  : Static Data Type                  *
+*  Module   : Empiria Strings                            Component : Services Layer                          *
+*  Assembly : Empiria.Core.dll                           Pattern   : Static methods library                  *
+*  Type     : EmpiriaSpeech                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary   : Contains methods that gets textual representation of currencies, integers and dates.          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 
 namespace Empiria {
 
   /// <summary>Contains methods that gets textual representation of currencies, integers and dates.</summary>
-  static public partial class EmpiriaString {
+  static public class EmpiriaSpeech {
 
     #region Public methods
 
@@ -22,10 +23,10 @@ namespace Empiria {
       if (date.Day == 1) {
         temp = "Primero";
       } else {
-        temp = EmpiriaString.SpeechInteger(date.Day);
+        temp = SpeechInteger(date.Day);
       }
       temp += " de " + date.ToString("MMMM") + " del año ";
-      temp += EmpiriaString.SpeechInteger(date.Year);
+      temp += SpeechInteger(date.Year);
 
       return temp;
     }
@@ -95,16 +96,16 @@ namespace Empiria {
     static private string[,] LoadSpeechHundredsArray() {
       string[,] array = new string[10, 5];
 
-      array[0, 0] = ""; array[0, 1] = "Un"; array[0, 2] = "Cien"; array[0, 3] = "y"; array[0, 4] = "";
-      array[1, 0] = "Un"; array[1, 1] = "Diez"; array[1, 2] = "Ciento"; array[1, 3] = "Once"; array[1, 4] = "Veintiún";
-      array[2, 0] = "Dos"; array[2, 1] = "Veinte"; array[2, 2] = "Doscientos"; array[2, 3] = "Doce"; array[2, 4] = "Veintidós";
-      array[3, 0] = "Tres"; array[3, 1] = "Treinta"; array[3, 2] = "Trescientos"; array[3, 3] = "Trece"; array[3, 4] = "Veintitrés";
-      array[4, 0] = "Cuatro"; array[4, 1] = "Cuarenta"; array[4, 2] = "Cuatrocientos"; array[4, 3] = "Catorce"; array[4, 4] = "Veinticuatro";
-      array[5, 0] = "Cinco"; array[5, 1] = "Cincuenta"; array[5, 2] = "Quinientos"; array[5, 3] = "Quince"; array[5, 4] = "Veinticinco";
-      array[6, 0] = "Seis"; array[6, 1] = "Sesenta"; array[6, 2] = "Seiscientos"; array[6, 3] = "Dieciséis"; array[6, 4] = "Veintiséis";
-      array[7, 0] = "Siete"; array[7, 1] = "Setenta"; array[7, 2] = "Setecientos"; array[7, 3] = "Diecisiete"; array[7, 4] = "Veintisiete";
-      array[8, 0] = "Ocho"; array[8, 1] = "Ochenta"; array[8, 2] = "Ochocientos"; array[8, 3] = "Dieciocho"; array[8, 4] = "Veintiocho";
-      array[9, 0] = "Nueve"; array[9, 1] = "Noventa"; array[9, 2] = "Novecientos"; array[9, 3] = "Diecinueve"; array[9, 4] = "Veintinueve";
+      array[0, 0] = "";       array[0, 1] = "Un";         array[0, 2] = "Cien";           array[0, 3] = "y";          array[0, 4] = "";
+      array[1, 0] = "Un";     array[1, 1] = "Diez";       array[1, 2] = "Ciento";         array[1, 3] = "Once";       array[1, 4] = "Veintiún";
+      array[2, 0] = "Dos";    array[2, 1] = "Veinte";     array[2, 2] = "Doscientos";     array[2, 3] = "Doce";       array[2, 4] = "Veintidós";
+      array[3, 0] = "Tres";   array[3, 1] = "Treinta";    array[3, 2] = "Trescientos";    array[3, 3] = "Trece";      array[3, 4] = "Veintitrés";
+      array[4, 0] = "Cuatro"; array[4, 1] = "Cuarenta";   array[4, 2] = "Cuatrocientos";  array[4, 3] = "Catorce";    array[4, 4] = "Veinticuatro";
+      array[5, 0] = "Cinco";  array[5, 1] = "Cincuenta";  array[5, 2] = "Quinientos";     array[5, 3] = "Quince";     array[5, 4] = "Veinticinco";
+      array[6, 0] = "Seis";   array[6, 1] = "Sesenta";    array[6, 2] = "Seiscientos";    array[6, 3] = "Dieciséis";  array[6, 4] = "Veintiséis";
+      array[7, 0] = "Siete";  array[7, 1] = "Setenta";    array[7, 2] = "Setecientos";    array[7, 3] = "Diecisiete"; array[7, 4] = "Veintisiete";
+      array[8, 0] = "Ocho";   array[8, 1] = "Ochenta";    array[8, 2] = "Ochocientos";    array[8, 3] = "Dieciocho";  array[8, 4] = "Veintiocho";
+      array[9, 0] = "Nueve";  array[9, 1] = "Noventa";    array[9, 2] = "Novecientos";    array[9, 3] = "Diecinueve"; array[9, 4] = "Veintinueve";
 
       return array;
     }
@@ -149,11 +150,11 @@ namespace Empiria {
       if ((tens > 2) && (units == 0)) {
         return result + array[tens, 1];
       }
-      return result; // if ((tens == 0) && (units == 0) && (amount != 0))  OR OTHERS
+      return result;
     }
 
     #endregion Private methods
 
-  }  // class EmpiriaString (Speech)
+  }  // class EmpiriaSpeech
 
 } // namespace Empiria
