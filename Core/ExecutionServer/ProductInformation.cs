@@ -45,10 +45,6 @@ namespace Empiria {
       }
     }
 
-    static public string CopyrightUrl {
-      get { return "http://www.ontica.org/"; }
-    }
-
     static public string Description {
       get;
       private set;

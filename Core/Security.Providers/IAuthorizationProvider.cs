@@ -14,7 +14,7 @@ namespace Empiria.Security.Providers {
   /// <summary>Interface for subject authorization providers.</summary>
   public interface IAuthorizationProvider {
 
-    bool IsSubjectInRole(IIdentifiable subject, IClientApplication context, string role);
+    bool IsSubjectInRole(IIdentifiable subject, IClientApplication clientApp, string role);
 
   }  // interface IAuthorizationProvider
 

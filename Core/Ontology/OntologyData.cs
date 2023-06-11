@@ -150,23 +150,23 @@ namespace Empiria.Ontology {
         return table.Rows[0];
       }
 
-      DataRow[] select = table.Select(String.Format("ClassName = '{0}'", systemTypeName));
+      DataRow[] select = table.Select($"ClassName = '{systemTypeName}'");
 
       if (select.Length == 1) {
         return select[0];
       }
 
-      select = table.Select(String.Format("TypeName = '{0}'", systemTypeName));
+      select = table.Select($"TypeName = '{systemTypeName}'");
       if (select.Length == 1) {
         return select[0];
       }
 
-      select = table.Select(String.Format("ClassName = 'System.{0}'", systemTypeName));
+      select = table.Select($"ClassName = 'System.{systemTypeName}'");
       if (select.Length == 1) {
         return select[0];
       }
 
-      select = table.Select(String.Format("ClassName = 'Empiria.{0}'", systemTypeName));
+      select = table.Select("ClassName = 'Empiria.{systemTypeName}'");
       if (select.Length == 1) {
         return select[0];
       }

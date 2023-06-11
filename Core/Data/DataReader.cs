@@ -165,6 +165,7 @@ namespace Empiria.Data {
       return GetHashTable(operation, hashFunction, false);
     }
 
+
     static public EmpiriaHashTable<T> GetHashTable<T>(DataOperation operation,
                                                       Func<T, string> hashFunction,
                                                       bool reload) where T : BaseObject {

@@ -69,8 +69,8 @@ namespace Empiria.Ontology {
     }
 
 
-    static private Dictionary<int, ObjectTypeInfo> _cacheByUnderlyingType =
-                                                      new Dictionary<int, ObjectTypeInfo>();
+    static private readonly Dictionary<int, ObjectTypeInfo> _cacheByUnderlyingType =
+                                                                  new Dictionary<int, ObjectTypeInfo>();
 
 
     static internal ObjectTypeInfo Parse(Type type) {

@@ -34,7 +34,7 @@ namespace Empiria {
     private string systemName = string.Empty;
 
     private int serverId = -1;
-    private string supportUrl = String.Empty;
+
     private bool isDevelopmentServer = false;
 
     private bool isPassThroughServer = false;
@@ -215,12 +215,6 @@ namespace Empiria {
       }
     }
 
-    static public string SupportUrl {
-      get {
-        return Instance.supportUrl;
-      }
-    }
-
     static public string SystemName {
       get {
         return Instance.systemName;
@@ -235,6 +229,7 @@ namespace Empiria {
 
       return System.IO.Path.Combine(baseExecutionPath, fileName);
     }
+
 
     static public void Preload() {
       Thread thread = new Thread(new ThreadStart(DoPreload));
@@ -289,7 +284,6 @@ namespace Empiria {
         dateMinValue = ConfigurationData.Get(type, "DateTime.MinValue", DateTime.Parse("1900-01-01"));
 
         serverId = ConfigurationData.Get<int>(type, "Server.Id");
-        supportUrl = ConfigurationData.Get(type, "Support.Url", "http://empiria.ontica.org/support");
 
         isDevelopmentServer = ConfigurationData.Get(type, "IsDevelopmentServer", true);
         isPassThroughServer = ConfigurationData.Get(type, "IsPassThroughServer", false);

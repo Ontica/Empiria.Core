@@ -10,8 +10,6 @@
 using System;
 using System.Collections.Generic;
 
-using Empiria.Json;
-
 namespace Empiria.Ontology {
 
   /// <summary>Metatype used to describe ValueObject types.</summary>

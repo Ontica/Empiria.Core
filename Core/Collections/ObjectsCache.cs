@@ -162,8 +162,7 @@ namespace Empiria.Collections {
     internal T TryGetItem<T>(string itemTypeName, int id) where T : BaseObject {
       string objectKey = id.ToString() + "." + itemTypeName;
 
-      BaseObject value;
-      if (objects.TryGetValue(objectKey, out value)) {
+      if (objects.TryGetValue(objectKey, out BaseObject value)) {
         //lastAccess[objectKey] = DateTime.Now.Ticks;
         return (T) value;
       } else {
@@ -173,8 +172,8 @@ namespace Empiria.Collections {
 
     internal T TryGetItem<T>(string itemTypeName, string namedKey) where T: BaseObject {
       string objectKey = namedKey + "." + itemTypeName;
-      BaseObject value;
-      if (namedObjects.TryGetValue(objectKey, out value)) {
+
+      if (namedObjects.TryGetValue(objectKey, out BaseObject value)) {
         //lastAccess[objectKey] = DateTime.Now.Ticks;
         return (T) value;
       } else {
