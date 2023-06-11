@@ -39,36 +39,9 @@ namespace Empiria.Ontology {
 
     #region Fields
 
-    static private IdentifiablesCache<MetaModelType> cache = new IdentifiablesCache<MetaModelType>(256);
+    static readonly private IdentifiablesCache<MetaModelType> _cache = new IdentifiablesCache<MetaModelType>(256);
 
-    private int id = 0;
-    private string name = String.Empty;
-    private int baseTypeId = 0;
-    private MetaModelType baseType = null;
-    private MetaModelTypeFamily typeFamily = MetaModelTypeFamily.ObjectType;
-    private string assemblyName = String.Empty;
-    private string className = String.Empty;
-    private string solutionName = String.Empty;
-    private string systemName = String.Empty;
-    private string version = String.Empty;
-    private DateTime lastUpdate = DateTime.Now;
-    private string displayName = String.Empty;
-    private string displayPluralName = String.Empty;
-    private bool femaleGenre = false;
-    private string documentation = String.Empty;
-    private JsonObject extensionData = JsonObject.Empty;
-    private string dataSource = String.Empty;
-    private string idFieldName = String.Empty;
-    private string typeIdFieldName = String.Empty;
-    private string namedIdFieldName = String.Empty;
-    private bool isAbstract = false;
-    private bool isSealed = false;
-    private bool isHistorizable = false;
-    private EntityStatus status = EntityStatus.Active;
-
-    private Type underlyingSystemType = null;
-
-    private readonly object _locker = new object();
+    private Type _underlyingSystemType = null;
 
     private static readonly object _static_locker = new object();
 
@@ -77,11 +50,11 @@ namespace Empiria.Ontology {
     #region Constructors and parsers
 
     protected internal MetaModelType(MetaModelTypeFamily typeFamily) {
-      this.typeFamily = typeFamily;
+      this.TypeFamily = typeFamily;
     }
 
     static internal MetaModelType Parse(int typeId) {
-      var value = cache.TryGetValue(typeId);
+      var value = _cache.TryGetValue(typeId);
       if (value != null) {
         return value;
       } else {
@@ -90,7 +63,7 @@ namespace Empiria.Ontology {
     }
 
     static internal MetaModelType Parse(string empiriaTypeName) {
-      var value = cache.TryGetValue(empiriaTypeName);
+      var value = _cache.TryGetValue(empiriaTypeName);
       if (value != null) {
         return value;
       } else {
@@ -107,7 +80,7 @@ namespace Empiria.Ontology {
 
       instance.LoadDataRow(row);
 
-      cache.Insert(instance.Name, instance);
+      _cache.Insert(instance.Name, instance);
 
       instance.SetBaseType();
 
@@ -125,8 +98,8 @@ namespace Empiria.Ontology {
     }
 
     static internal T Parse<T>(string empiriaTypeName) where T : MetaModelType {
-      if (cache.ContainsKey(empiriaTypeName)) {
-        return (T) cache[empiriaTypeName];
+      if (_cache.ContainsKey(empiriaTypeName)) {
+        return (T) _cache[empiriaTypeName];
       } else {
         return (T) MetaModelType.Parse(OntologyData.GetTypeDataRow(empiriaTypeName));
       }
@@ -134,7 +107,7 @@ namespace Empiria.Ontology {
 
     static internal Type TryGetSystemType(string systemTypeName) {
       lock (_static_locker) {
-        MetaModelType empiriaType = cache.FirstOrDefault((x) => x.className == systemTypeName);
+        MetaModelType empiriaType = _cache.FirstOrDefault((x) => x.ClassName == systemTypeName);
         if (empiriaType != null) {
           return empiriaType.UnderlyingSystemType;
         }
@@ -156,41 +129,42 @@ namespace Empiria.Ontology {
 
 
     protected MetaModelType BaseType {
-      get { return baseType; }
+      get;
+      private set;
     }
 
     public string DataSource {
-      get { return dataSource; }
-      private set { dataSource = EmpiriaString.TrimAll(value); }
+      get;
+      private set;
     }
 
     public string DisplayName {
-      get { return displayName; }
-      protected set { displayName = EmpiriaString.TrimAll(value); }
+      get;
+      protected set;
     }
 
     public string DisplayPluralName {
-      get { return displayPluralName; }
-      protected set { displayPluralName = EmpiriaString.TrimAll(value); }
+      get;
+      protected set;
     }
 
     public string Documentation {
-      get { return documentation; }
-      protected set { documentation = EmpiriaString.TrimAll(value); }
+      get;
+      protected set;
     }
 
     public JsonObject ExtensionData {
-      get { return extensionData; }
-      protected set { extensionData = value; }
+      get;
+      protected set;
     }
 
     public bool FemaleGenre {
-      get { return femaleGenre; }
-      protected set { femaleGenre = value; }
+      get;
+      protected set;
     }
 
     public int Id {
-      get { return id; }
+      get; private set;
     }
 
     public string UID {
@@ -200,33 +174,48 @@ namespace Empiria.Ontology {
     }
 
     internal string IdFieldName {
-      get { return idFieldName; }
-      set { idFieldName = EmpiriaString.TrimAll(value); }
+      get;
+      set;
     }
 
     public bool IsAbstract {
-      get { return isAbstract; }
-      protected set { isAbstract = value; }
+      get;
+      protected set;
     }
 
     public bool IsHistorizable {
-      get { return isHistorizable; }
-      protected set { isHistorizable = value; }
+      get;
+      protected set;
     }
 
     public bool IsPrimitive {
-      get { return (this.id == this.baseTypeId); }
+      get { return (this.Id == this.BaseTypeId); }
     }
 
     public bool IsSealed {
-      get { return isSealed; }
-      protected set { isSealed = value; }
+      get;
+      protected set;
     }
 
 
     public string Name {
-      get { return name; }
-      protected set { name = EmpiriaString.TrimAll(value); }
+      get;
+      protected set;
+    }
+
+    public int BaseTypeId {
+      get;
+      private set;
+    }
+
+    public string AssemblyName {
+      get;
+      private set;
+    }
+
+    public string ClassName {
+      get;
+      private set;
     }
 
     public string NamedKey {
@@ -235,61 +224,62 @@ namespace Empiria.Ontology {
       }
     }
 
+
     public string NamedIdFieldName {
-      get { return namedIdFieldName; }
-      internal set { namedIdFieldName = EmpiriaString.TrimAll(value); }
+      get;
+      internal set;
     }
 
     protected EntityStatus Status {
-      get { return status; }
-      set { status = value; }
+      get;
+      set;
     }
 
     public string SolutionName {
-      get { return solutionName; }
-      protected set { solutionName = EmpiriaString.TrimAll(value); }
+      get;
+      protected set;
     }
 
     public string SystemName {
-      get { return systemName; }
-      protected set { systemName = EmpiriaString.TrimAll(value); }
+      get;
+      protected set;
     }
 
     public Type UnderlyingSystemType {
       get {
-        if (underlyingSystemType == null) {
+        if (_underlyingSystemType == null) {
           try {
-            underlyingSystemType = ObjectFactory.GetType(this.assemblyName, this.className);
+            _underlyingSystemType = ObjectFactory.GetType(this.AssemblyName, this.ClassName);
           } catch (Exception e) {
             throw new OntologyException(OntologyException.Msg.CannotGetUnderlyingSystemType, e,
-                                        this.Id, this.Name, this.assemblyName, this.className);
+                                        this.Id, this.Name, this.AssemblyName, this.ClassName);
           }
         }
-        return underlyingSystemType;
+        return _underlyingSystemType;
       }
     }
 
     public bool UsesNamedKey {
-      get { return (this.namedIdFieldName.Length != 0); }
+      get { return (this.NamedIdFieldName.Length != 0); }
     }
 
     public string Version {
-      get { return version; }
-      protected set { version = EmpiriaString.TrimAll(value); }
+      get;
+      protected set;
     }
 
     protected DateTime LastUpdate {
-      get { return lastUpdate; }
-      set { lastUpdate = value; }
+      get;
+      set;
     }
 
     public MetaModelTypeFamily TypeFamily {
-      get { return typeFamily; }
+      get; private set;
     }
 
     public string TypeIdFieldName {
-      get { return typeIdFieldName; }
-      internal set { typeIdFieldName = EmpiriaString.TrimAll(value); }
+      get;
+      internal set;
     }
 
     #endregion Public properties
@@ -300,7 +290,7 @@ namespace Empiria.Ontology {
       if (obj == null || GetType() != obj.GetType()) {
         return false;
       }
-      return base.Equals(obj) && (this.Id == ((MetaModelType) obj).Id);
+      return obj.Equals(this) && (this.Id == ((MetaModelType) obj).Id);
     }
 
     public bool Equals(MetaModelType obj) {
@@ -315,12 +305,12 @@ namespace Empiria.Ontology {
     }
 
     protected internal void Reload() {
-      cache.Remove(this.Name);
-      cache.Insert(this.Name, MetaModelType.Parse(this.Id));
+      _cache.Remove(this.Name);
+      _cache.Insert(this.Name, MetaModelType.Parse(this.Id));
     }
 
     public override string ToString() {
-      return this.name;
+      return this.Name;
     }
 
     #endregion Public methods
@@ -328,16 +318,17 @@ namespace Empiria.Ontology {
     #region Private methods
 
     private void AssertValidTypeFamily(MetaModelTypeFamily parametrizedTypeFamily) {
-      if (this.typeFamily == MetaModelTypeFamily.ObjectType &&
+      if (this.TypeFamily == MetaModelTypeFamily.ObjectType &&
           (parametrizedTypeFamily == MetaModelTypeFamily.PartitionedType ||
            parametrizedTypeFamily == MetaModelTypeFamily.PowerType)) {
         return;
       }
-      if (this.typeFamily != parametrizedTypeFamily) {
+      if (this.TypeFamily != parametrizedTypeFamily) {
         throw new OntologyException(OntologyException.Msg.TypeInfoFamilyNotMatch,
-                                    this.Id, this.typeFamily.ToString());
+                                    this.Id, this.TypeFamily.ToString());
       }
     }
+
 
     /// <summary> Factory method to create MetaModelType type instances.</summary>
     static private MetaModelType CreateInstance(MetaModelTypeFamily typeFamily,
@@ -356,7 +347,7 @@ namespace Empiria.Ontology {
           Type type = MetaModelType.GetType(dataRow);
 
           var powerType = (Powertype) ObjectFactory.CreateObject(type);
-          powerType.typeFamily = MetaModelTypeFamily.PowerType;
+          powerType.TypeFamily = MetaModelTypeFamily.PowerType;
           return powerType;
 
         case MetaModelTypeFamily.PartitionedType:
@@ -370,7 +361,7 @@ namespace Empiria.Ontology {
           }
 
           powerType = (Powertype) ObjectFactory.CreateObject(attribute.Powertype);
-          powerType.typeFamily = MetaModelTypeFamily.PartitionedType;
+          powerType.TypeFamily = MetaModelTypeFamily.PartitionedType;
           return powerType;
 
         case MetaModelTypeFamily.ValueType:
@@ -390,31 +381,31 @@ namespace Empiria.Ontology {
 
 
     private void LoadDataRow(DataRow dataRow) {
-      this.id = (int) dataRow["TypeId"];
+      this.Id = (int) dataRow["TypeId"];
 
       AssertValidTypeFamily(ParseMetaModelTypeFamily((string) dataRow["TypeFamily"]));
 
-      this.name = (string) dataRow["TypeName"];
-      this.baseTypeId = (int) dataRow["BaseTypeId"];
-      this.assemblyName = (string) dataRow["AssemblyName"];
-      this.className = (string) dataRow["ClassName"];
-      this.displayName = (string) dataRow["DisplayName"];
-      this.displayPluralName = EmpiriaString.ToString(dataRow["DisplayPluralName"]);
-      this.femaleGenre = Convert.ToBoolean(dataRow["FemaleGenre"]);
-      this.documentation = EmpiriaString.ToString(dataRow["Documentation"]);
-      this.extensionData = JsonObject.Parse(EmpiriaString.ToString(dataRow["TypeExtData"]));
-      this.solutionName = EmpiriaString.ToString(dataRow["SolutionName"]);
-      this.systemName = EmpiriaString.ToString(dataRow["SystemName"]);
-      this.version = EmpiriaString.ToString(dataRow["Version"]);
-      this.lastUpdate = (DateTime) dataRow["LastUpdate"];
-      this.dataSource = EmpiriaString.ToString(dataRow["TypeDataSource"]);
-      this.idFieldName = EmpiriaString.ToString(dataRow["IdFieldName"]);
-      this.namedIdFieldName = EmpiriaString.ToString(dataRow["NamedIdFieldName"]);
-      this.typeIdFieldName = EmpiriaString.ToString(dataRow["TypeIdFieldName"]);
-      this.isAbstract = Convert.ToBoolean(dataRow["IsAbstract"]);
-      this.isSealed = Convert.ToBoolean(dataRow["IsSealed"]);
-      this.isHistorizable = Convert.ToBoolean(dataRow["IsHistorizable"]);
-      this.status = (EntityStatus) char.Parse((string) dataRow["TypeStatus"]);
+      this.Name               = (string) dataRow["TypeName"];
+      this.BaseTypeId         = (int) dataRow["BaseTypeId"];
+      this.AssemblyName       = (string) dataRow["AssemblyName"];
+      this.ClassName          = (string) dataRow["ClassName"];
+      this.DisplayName        = (string) dataRow["DisplayName"];
+      this.DisplayPluralName  = EmpiriaString.ToString(dataRow["DisplayPluralName"]);
+      this.FemaleGenre        = Convert.ToBoolean(dataRow["FemaleGenre"]);
+      this.Documentation      = EmpiriaString.ToString(dataRow["Documentation"]);
+      this.ExtensionData      = JsonObject.Parse(EmpiriaString.ToString(dataRow["TypeExtData"]));
+      this.SolutionName       = EmpiriaString.ToString(dataRow["SolutionName"]);
+      this.SystemName         = EmpiriaString.ToString(dataRow["SystemName"]);
+      this.Version            = EmpiriaString.ToString(dataRow["Version"]);
+      this.LastUpdate         = (DateTime) dataRow["LastUpdate"];
+      this.DataSource         = EmpiriaString.ToString(dataRow["TypeDataSource"]);
+      this.IdFieldName        = EmpiriaString.ToString(dataRow["IdFieldName"]);
+      this.NamedIdFieldName   = EmpiriaString.ToString(dataRow["NamedIdFieldName"]);
+      this.TypeIdFieldName    = EmpiriaString.ToString(dataRow["TypeIdFieldName"]);
+      this.IsAbstract         = Convert.ToBoolean(dataRow["IsAbstract"]);
+      this.IsSealed           = Convert.ToBoolean(dataRow["IsSealed"]);
+      this.IsHistorizable     = Convert.ToBoolean(dataRow["IsHistorizable"]);
+      this.Status             = (EntityStatus) char.Parse((string) dataRow["TypeStatus"]);
     }
 
 
@@ -429,11 +420,11 @@ namespace Empiria.Ontology {
 
     private void SetBaseType() {
       if (this.IsPrimitive) {
-        baseType = this;
-      } else if (cache.ContainsId(this.baseTypeId)) {
-        baseType = cache[this.baseTypeId];
+        BaseType = this;
+      } else if (_cache.ContainsId(this.BaseTypeId)) {
+        BaseType = _cache[this.BaseTypeId];
       } else {
-        baseType = MetaModelType.Parse(this.baseTypeId);
+        BaseType = MetaModelType.Parse(this.BaseTypeId);
       }
     }
 
