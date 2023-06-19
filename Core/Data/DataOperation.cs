@@ -170,10 +170,8 @@ namespace Empiria.Data {
     static private CommandType GetCommandType(string sourceName) {
       if (sourceName.StartsWith("@") || sourceName.IndexOf(' ') != -1) {
         return CommandType.Text;
-      } else if (sourceName.StartsWith("qry") || sourceName.StartsWith("write") ||
-                 sourceName.StartsWith("get") || sourceName.StartsWith("set") ||
-                 sourceName.StartsWith("apd") || sourceName.StartsWith("upd") || sourceName.StartsWith("del") ||
-                 sourceName.StartsWith("do") || sourceName.StartsWith("rpt") || sourceName.StartsWith("val")) {
+      } else if (EmpiriaString.StartsWith(sourceName, "qry", "write", "get", "set",
+                                                      "apd", "upd", "del", "do", "rpt", "val")) {
         return CommandType.StoredProcedure;
       } else {
         return CommandType.TableDirect;

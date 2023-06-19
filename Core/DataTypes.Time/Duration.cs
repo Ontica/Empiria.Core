@@ -126,32 +126,32 @@ namespace Empiria.DataTypes.Time {
     private DurationType GetDurationType(string durationType) {
       durationType = durationType.ToLowerInvariant();
 
-      if (durationType == "hours" || durationType == "hour") {
+      if (EmpiriaString.IsInList(durationType, "hours", "hour")) {
         return DurationType.Hours;
 
-      } else if (durationType == "days" || durationType == "day" ||
-                 durationType == "calendarday" || durationType == "calendardays" ||
-                 durationType == "calendar-day" || durationType == "calendar-days") {
+      } else if (EmpiriaString.IsInList(durationType,
+                                  "days", "day", "calendarday", "calendardays",
+                                  "calendar-day", "calendar-days")) {
         return DurationType.CalendarDays;
 
-      } else if (durationType == "businessday" || durationType == "businessdays" ||
-                 durationType == "workday" || durationType == "workdays" ||
-                 durationType == "workingday" || durationType == "workingdays" ||
-                 durationType == "business-days" || durationType == "business-day" ||
-                 durationType == "work-days" || durationType == "work-day" ||
-                 durationType == "working-days" || durationType == "working-day") {
+      } else if (EmpiriaString.IsInList(durationType,
+                                  "businessday", "businessdays",
+                                  "workday", "workdays", "workingday", "workingdays",
+                                  "business-days", "business-day",
+                                  "work-days" , "work-day",
+                                  "working-days", "working-day")) {
         return DurationType.BusinessDays;
 
-      } else if (durationType == "months" || durationType == "month") {
+      } else if (EmpiriaString.IsInList(durationType, "months", "month")) {
         return DurationType.Months;
 
-      } else if (durationType == "years" || durationType == "year") {
+      } else if (EmpiriaString.IsInList("years", "year")) {
         return DurationType.Years;
 
       } else if (durationType == "unknown") {
         return DurationType.Unknown;
 
-      } else if (durationType == "not-available" || durationType == "NA") {
+      } else if (EmpiriaString.IsInList(durationType, "not-available", "NA")) {
         return DurationType.NA;
 
       } else {
