@@ -153,17 +153,6 @@ namespace Empiria {
       return source.Replace(Char.ConvertFromUtf32(0x000A), "\\n");
     }
 
-    static public string FormatTaxTag(string taxTag) {
-      string temp = taxTag.Replace("-", String.Empty);
-      temp = temp.Replace(" ", String.Empty);
-      temp = EmpiriaString.TrimSpacesAndControl(temp);
-      if (temp.Length == 12 || temp.Length == 13) {
-        return temp;
-      } else {
-        return "XAXX010101000";
-      }
-    }
-
     static public string TimeSpanString(double seconds) {
       TimeSpan timespan = TimeSpan.FromSeconds(seconds);
       if (timespan == TimeSpan.Zero) {
