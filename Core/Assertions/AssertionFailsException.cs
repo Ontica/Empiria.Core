@@ -34,7 +34,7 @@ namespace Empiria {
                                      base(msgType.ToString(), GetMessage(msgType)) {
       try {
         this.MethodName = this.GetSourceMethodName();
-        base.Publish();
+
       } finally {
         // no-op
       }
@@ -47,12 +47,8 @@ namespace Empiria {
     /// <param name="args">An optional array of objects to format into the exception message.</param>
     internal AssertionFailsException(Msg msgType, string message, params object[] args) :
                                      base(msgType.ToString(), BuildMessage(message, args)) {
-      try {
-        this.MethodName = this.GetSourceMethodName();
-        base.Publish();
-      } finally {
-        // no-op
-      }
+
+      this.MethodName = this.GetSourceMethodName();
     }
 
     /// <summary>Initializes a new instance of AssertionFailsException class with a specified error
@@ -61,12 +57,8 @@ namespace Empiria {
     /// <param name="innerException">This is the inner exception.</param>
     internal AssertionFailsException(Msg msgType, Exception innerException) :
                                      base(msgType.ToString(), GetMessage(msgType), innerException) {
-      try {
-        this.MethodName = this.GetSourceMethodName();
-        base.Publish();
-      } finally {
-        // no-op
-      }
+
+      this.MethodName = this.GetSourceMethodName();
     }
 
     #endregion Constructors and parsers
@@ -83,7 +75,11 @@ namespace Empiria {
     }
 
     private string GetSourceMethodName() {
-      return GetSourceMethodName(1);
+      try {
+        return GetSourceMethodName(1);
+      } catch {
+        return "Undetermined source method";
+      }
     }
 
     private string GetSourceMethodName(int skipFrames) {
