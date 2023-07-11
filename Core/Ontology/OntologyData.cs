@@ -166,7 +166,7 @@ namespace Empiria.Ontology {
         return select[0];
       }
 
-      select = table.Select("ClassName = 'Empiria.{systemTypeName}'");
+      select = table.Select($"ClassName = 'Empiria.{systemTypeName}'");
       if (select.Length == 1) {
         return select[0];
       }
