@@ -181,13 +181,13 @@
     <value>The user account '{0}' is not active.</value>
   </data>
   <data name="InvalidUserCredentials" xml:space="preserve">
-    <value>Username or password not found.</value>
+    <value>El nombre de usuario o la contraseña no son válidos.</value>
   </data>
   <data name="UserPasswordExpired" xml:space="preserve">
     <value>User password has expired for user '{0}'.</value>
   </data>
   <data name="ExpiredSessionToken" xml:space="preserve">
-    <value>The session with token '{0}' was expired.</value>
+    <value>Esta sesión de trabajo ya expiró.</value>
   </data>
   <data name="SessionTokenNotFound" xml:space="preserve">
     <value>There is not a registered system session with token '{0}'.</value>
