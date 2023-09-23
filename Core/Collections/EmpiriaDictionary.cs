@@ -111,6 +111,24 @@ namespace Empiria.Collections {
       return false;
     }
 
+
+    public void Remove(Predicate<ItemsType> itemsCondition) {
+
+      var enumerator = items.GetEnumerator();
+
+      List<KeyType> keysToRemove = new List<KeyType>();
+
+      while (enumerator.MoveNext()) {
+        if (itemsCondition.Invoke(enumerator.Current.Value)) {
+          keysToRemove.Add(enumerator.Current.Key);
+        }
+      }
+
+      foreach (var key in keysToRemove) {
+        Remove(key);
+      }
+    }
+
     #endregion Public methods
 
   } //class EmpiriaDictionary
