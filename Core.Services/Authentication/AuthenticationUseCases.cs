@@ -49,7 +49,10 @@ namespace Empiria.Services.Authentication {
 
 
     public void Logout() {
-      // ToDo: Not implemented
+      if (!ExecutionServer.IsAuthenticated) {
+        return;
+      }
+      ExecutionServer.CurrentPrincipal.Logout();
     }
 
 
