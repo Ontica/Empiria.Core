@@ -76,7 +76,7 @@ namespace Empiria.Security {
 
 
     public string UserHostAddress {
-      get; private set;
+      get; protected set;
     } = string.Empty;
 
 
@@ -156,6 +156,7 @@ namespace Empiria.Security {
 
         this.SessionId = this.Request.Principal.Session.Id;
         this.UserHostAddress = this.Request.Principal.Session.UserHostAddress;
+
       }
     }
 
