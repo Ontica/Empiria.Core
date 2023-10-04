@@ -8,14 +8,25 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
 using Empiria.Logging;
 
 namespace Empiria {
 
+
+  public enum LogOperationType {
+
+    Error = 'E',
+
+    Successful = 'S',
+
+    UserManagement = 'U',
+
+    PermissionsManagement = 'P'
+
+  }
+
   /// <summary>Public facade to invoke logging services.</summary>
   static public class EmpiriaLog {
-
 
     #region Properties
 
@@ -27,7 +38,6 @@ namespace Empiria {
 
     #endregion Properties
 
-
     #region Public  methods
 
     static public void Critical(string message) {
@@ -38,7 +48,6 @@ namespace Empiria {
     static public void Critical(Exception exception) {
       CreateLogEntryInCurrentLogTrail(LogEntryType.Critical, exception.ToString());
     }
-
 
     static public void Debug(string message) {
       CreateLogEntryInCurrentLogTrail(LogEntryType.Debug, message);
@@ -57,6 +66,44 @@ namespace Empiria {
 
     static public void Info(string message) {
       CreateLogEntryInCurrentLogTrail(LogEntryType.Info, message);
+    }
+
+
+    static public void Operation(string operation) {
+      CreateOperationLogEntry(LogOperationType.Successful, operation, string.Empty);
+    }
+
+
+    static public void Operation(string operation, Exception exception) {
+      CreateOperationLogEntry(LogOperationType.Error, operation, string.Empty, exception);
+    }
+
+
+    static public void Operation(LogOperationType logOperationType, string operation) {
+      CreateOperationLogEntry(logOperationType, operation, string.Empty);
+    }
+
+
+    static public void Operation(LogOperationType logOperationType, string operation,
+                                 string description) {
+      CreateOperationLogEntry(logOperationType, operation, description);
+    }
+
+
+    static private void CreateOperationLogEntry(LogOperationType logOperationType,
+                                                string operation, string description) {
+      var operationLog = new OperationLog(logOperationType, operation, description);
+
+      operationLog.Save();
+    }
+
+
+    static private void CreateOperationLogEntry(LogOperationType logOperationType,
+                                                string operation, string description,
+                                                Exception exception) {
+      var operationLog = new OperationLog(logOperationType, operation, description, exception);
+
+      operationLog.Save();
     }
 
 
@@ -135,9 +182,7 @@ namespace Empiria {
       return _defaultLogTrail;
     }
 
-
     #endregion Private methods
-
 
   } // class EmpiriaLog
 
