@@ -220,6 +220,12 @@ namespace Empiria {
         return Instance.systemName;
       }
     }
+
+    static public string UserHostAddress {
+      get;
+      set;
+    }
+
     #endregion Other public properties
 
     #region Static methods

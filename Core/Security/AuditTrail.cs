@@ -76,7 +76,7 @@ namespace Empiria.Security {
 
 
     public string UserHostAddress {
-      get; protected set;
+      get; private set;
     } = string.Empty;
 
 
@@ -86,6 +86,11 @@ namespace Empiria.Security {
 
 
     public string Operation {
+      get; private set;
+    } = string.Empty;
+
+
+    public string Content {
       get; private set;
     } = string.Empty;
 
@@ -123,7 +128,8 @@ namespace Empiria.Security {
     }
 
 
-    protected void SetOperationInfo(string eventTag, string operationName, JsonObject operationData) {
+    protected void SetOperationInfo(string eventTag, string operationName,
+                                    JsonObject operationData, string content) {
       Assertion.Require(eventTag, nameof(eventTag));
       Assertion.Require(operationName, nameof(operationName));
       Assertion.Require(operationData, nameof(operationData));
@@ -131,6 +137,7 @@ namespace Empiria.Security {
       this.Event = eventTag;
       this.Operation = operationName;
       this.OperationData = operationData;
+      this.Content = content;
     }
 
 
@@ -147,15 +154,15 @@ namespace Empiria.Security {
 
     private void TrySetSessionData() {
 
+      this.UserHostAddress = ExecutionServer.UserHostAddress;
+
       if (ExecutionServer.IsAuthenticated) {
 
         this.SessionId = ExecutionServer.CurrentPrincipal.Session.Id;
-        this.UserHostAddress = ExecutionServer.CurrentPrincipal.Session.UserHostAddress;
 
       } else if (this.Request.Principal != null) {
 
         this.SessionId = this.Request.Principal.Session.Id;
-        this.UserHostAddress = this.Request.Principal.Session.UserHostAddress;
 
       }
     }
