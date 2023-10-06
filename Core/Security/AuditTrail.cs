@@ -154,15 +154,20 @@ namespace Empiria.Security {
 
     private void TrySetSessionData() {
 
-      this.UserHostAddress = ExecutionServer.UserHostAddress;
-
       if (ExecutionServer.IsAuthenticated) {
 
         this.SessionId = ExecutionServer.CurrentPrincipal.Session.Id;
+        this.UserHostAddress = ExecutionServer.CurrentPrincipal.Session.UserHostAddress;
 
       } else if (this.Request.Principal != null) {
 
         this.SessionId = this.Request.Principal.Session.Id;
+        this.UserHostAddress = this.Request.Principal.Session.UserHostAddress;
+
+      } else {
+
+        this.SessionId = -1;
+        this.UserHostAddress = ExecutionServer.UserHostAddress;
 
       }
     }
