@@ -8,7 +8,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+using Empiria.Contacts;
 using Empiria.Logging;
+using Empiria.Security;
 
 namespace Empiria {
 
@@ -69,8 +71,8 @@ namespace Empiria {
     }
 
 
-    static public void Operation(string operation) {
-      CreateOperationLogEntry(LogOperationType.Successful, operation, string.Empty);
+    static public void Operation(string operation, string description) {
+      CreateOperationLogEntry(LogOperationType.Successful, operation, description);
     }
 
 
@@ -90,6 +92,29 @@ namespace Empiria {
     }
 
 
+    static public void Operation(IEmpiriaSession session, string operation,
+                                 string description, Exception exception) {
+      CreateOperationLogEntry(LogOperationType.Error, session, operation, description, exception);
+    }
+
+
+    static public void PermissionsLog(Contact subject, string operationName,
+                                      string subjectObject) {
+      var operationLog = new OperationLog(LogOperationType.PermissionsManagement,
+                                          subject, operationName, subjectObject);
+
+      operationLog.Save();
+    }
+
+    static public void UserManagementLog(Contact subject, string operationName) {
+      var operationLog = new OperationLog(LogOperationType.UserManagement,
+                                          subject, operationName);
+
+      operationLog.Save();
+    }
+
+
+
     static private void CreateOperationLogEntry(LogOperationType logOperationType,
                                                 string operation, string description) {
       var operationLog = new OperationLog(logOperationType, operation, description);
@@ -102,6 +127,15 @@ namespace Empiria {
                                                 string operation, string description,
                                                 Exception exception) {
       var operationLog = new OperationLog(logOperationType, operation, description, exception);
+
+      operationLog.Save();
+    }
+
+
+    private static void CreateOperationLogEntry(LogOperationType logOperationType, IEmpiriaSession session,
+                                                string operation, string description,
+                                                Exception exception) {
+      var operationLog = new OperationLog(logOperationType, session, operation, description, exception);
 
       operationLog.Save();
     }
@@ -120,7 +154,6 @@ namespace Empiria {
 
 
     #endregion Public methods
-
 
     #region Private methods
 
@@ -181,6 +214,7 @@ namespace Empiria {
 
       return _defaultLogTrail;
     }
+
 
     #endregion Private methods
 

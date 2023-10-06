@@ -8,8 +8,9 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
+using Empiria.Contacts;
 using Empiria.Data;
+using Empiria.Security;
 
 namespace Empiria {
 
@@ -20,16 +21,41 @@ namespace Empiria {
 
     internal OperationLog(LogOperationType logOperationType,
                           string operation, string description) {
-      this.LogOperationType = logOperationType;
-      this.Operation = operation;
-      this.Description = description;
+      LogOperationType = logOperationType;
+      Operation = operation;
+      Description = description;
+      SetSessionId();
+      SetUserId();
     }
-
 
     internal OperationLog(LogOperationType logOperationType,
                           string operation, string description,
                           Exception exception) : this(logOperationType, operation, description) {
-      this.Exception = exception.Message;
+      Exception = exception.Message;
+    }
+
+    public OperationLog(LogOperationType logOperationType,
+                        IEmpiriaSession session,
+                        string operation,
+                        string description,
+                        Exception exception) {
+      LogOperationType = logOperationType;
+      SessionId = session.Id;
+      UserId = session.UserId;
+      Operation = operation;
+      Description = description;
+      Exception = exception.Message;
+    }
+
+    public OperationLog(LogOperationType logOperationType, Contact subject,
+                        string operation, string subjectObject) : this(logOperationType, operation, string.Empty) {
+      SubjectId = subject.Id;
+      SubjectObject = subjectObject;
+    }
+
+    public OperationLog(LogOperationType logOperationType, Contact subject,
+                        string operation) : this(logOperationType, operation, string.Empty) {
+      SubjectId = subject.Id;
     }
 
     #endregion Constructors and parsers
@@ -42,22 +68,15 @@ namespace Empiria {
       }
     }
 
+
     internal int SessionId {
-      get {
-        if (!ExecutionServer.IsAuthenticated) {
-          return -1;
-        }
-        return ExecutionServer.CurrentPrincipal.Session.Id;
-      }
+      get;
+      private set;
     }
 
     internal int UserId {
-      get {
-        if (!ExecutionServer.IsAuthenticated) {
-          return -1;
-        }
-        return ExecutionServer.CurrentContact.Id;
-      }
+      get;
+      private set;
     }
 
     internal DateTime TimeStamp {
@@ -68,7 +87,11 @@ namespace Empiria {
 
     internal string UserHostAddress {
       get {
-        return ExecutionServer.UserHostAddress;
+        if (!ExecutionServer.IsAuthenticated) {
+          return ExecutionServer.UserHostAddress;
+        } else {
+          return ExecutionServer.CurrentPrincipal.Session.UserHostAddress;
+        }
       }
     }
 
@@ -93,6 +116,18 @@ namespace Empiria {
       private set;
     }
 
+    internal int SubjectId {
+      get;
+      private set;
+    } = -1;
+
+
+    internal string SubjectObject {
+      get;
+      private set;
+    } = string.Empty;
+
+
     #endregion Properties
 
     #region Methods
@@ -101,12 +136,39 @@ namespace Empiria {
       if (!ConfigurationData.Get("UseOperationsLog", false)) {
         return;
       }
+      if (UserId == -1 && SessionId == -1 && this.LogOperationType == LogOperationType.Successful) {
+        return;
+      }
+
+      if (Description.Length == 0) {
+        var systemOperation = SystemOperation.TryParse(this.Operation);
+        if (systemOperation != null) {
+          Description = systemOperation.Description;
+        }
+      }
+
       var op = DataOperation.Parse("apdOperationLog",
                     this.UID, this.LogOperationType.ToString(), this.SessionId,
                     this.UserId, this.TimeStamp, this.UserHostAddress, this.Operation,
-                    this.Description, this.Exception);
+                    this.Description, this.Exception, this.SubjectId, this.SubjectObject);
 
       DataWriter.Execute(op);
+    }
+
+    private void SetUserId() {
+      if (!ExecutionServer.IsAuthenticated) {
+        UserId = -1;
+      } else {
+        UserId = ExecutionServer.CurrentContact.Id;
+      }
+    }
+
+    private void SetSessionId() {
+      if (!ExecutionServer.IsAuthenticated) {
+        SessionId = -1;
+      } else {
+        SessionId = ExecutionServer.CurrentPrincipal.Session.Id;
+      }
     }
 
     #endregion Methods
