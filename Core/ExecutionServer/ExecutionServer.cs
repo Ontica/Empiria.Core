@@ -138,6 +138,7 @@ namespace Empiria {
 
     static public IEmpiriaPrincipal CurrentPrincipal {
       get {
+
         var principal = Thread.CurrentPrincipal;
 
         if (principal is IEmpiriaPrincipal) {
@@ -221,10 +222,8 @@ namespace Empiria {
       }
     }
 
-    static public string UserHostAddress {
-      get;
-      set;
-    }
+    [ThreadStatic]
+    static public string UserHostAddress;
 
     #endregion Other public properties
 
