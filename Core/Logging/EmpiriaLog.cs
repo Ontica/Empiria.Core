@@ -93,6 +93,11 @@ namespace Empiria {
 
 
     static public void Operation(IEmpiriaSession session, string operation,
+                                 string description) {
+      CreateOperationLogEntry(LogOperationType.Successful, session, operation, description);
+    }
+
+    static public void Operation(IEmpiriaSession session, string operation,
                                  string description, Exception exception) {
       CreateOperationLogEntry(LogOperationType.Error, session, operation, description, exception);
     }
@@ -131,6 +136,13 @@ namespace Empiria {
       operationLog.Save();
     }
 
+
+    private static void CreateOperationLogEntry(LogOperationType logOperationType, IEmpiriaSession session,
+                                                string operation, string description) {
+      var operationLog = new OperationLog(logOperationType, session, operation, description);
+
+      operationLog.Save();
+    }
 
     private static void CreateOperationLogEntry(LogOperationType logOperationType, IEmpiriaSession session,
                                                 string operation, string description,

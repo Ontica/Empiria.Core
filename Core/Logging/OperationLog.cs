@@ -58,6 +58,15 @@ namespace Empiria {
       SubjectId = subject.Id;
     }
 
+    public OperationLog(LogOperationType logOperationType, IEmpiriaSession session,
+                        string operation, string description) {
+      LogOperationType = logOperationType;
+      SessionId = session.Id;
+      UserId = session.UserId;
+      Operation = operation;
+      Description = description;
+    }
+
     #endregion Constructors and parsers
 
     #region Properties
@@ -88,7 +97,8 @@ namespace Empiria {
     internal string UserHostAddress {
       get {
         if (!ExecutionServer.IsAuthenticated) {
-          return ExecutionServer.UserHostAddress;
+          return ExecutionServer.UserHostAddress != null &&
+                 ExecutionServer.UserHostAddress.Length != 0 ? ExecutionServer.UserHostAddress : "0.0.0.0";
         } else {
           return ExecutionServer.CurrentPrincipal.Session.UserHostAddress;
         }
@@ -136,6 +146,7 @@ namespace Empiria {
       if (!ConfigurationData.Get("UseOperationsLog", false)) {
         return;
       }
+
       if (UserId == -1 && SessionId == -1 && this.LogOperationType == LogOperationType.Successful) {
         return;
       }
