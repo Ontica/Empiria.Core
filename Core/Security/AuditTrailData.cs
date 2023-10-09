@@ -21,7 +21,7 @@ namespace Empiria.Security {
                       o.Timestamp, o.SessionId, o.UserHostAddress,
                       o.Event, o.Operation, o.OperationData.ToString(),
                       o.Request.AppliedToId, o.ResponseCode, o.ResponseItems,
-                      o.ResponseTime, o.ResponseData.ToString(), o.Content);
+                      o.ResponseTime, o.ResponseData.ToString());
 
       return DataWriter.Execute<long>(op);
     }

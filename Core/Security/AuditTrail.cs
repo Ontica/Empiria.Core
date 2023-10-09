@@ -90,11 +90,6 @@ namespace Empiria.Security {
     } = string.Empty;
 
 
-    public string Content {
-      get; private set;
-    } = string.Empty;
-
-
     public JsonObject OperationData {
       get; private set;
     } = JsonObject.Empty;
@@ -129,7 +124,7 @@ namespace Empiria.Security {
 
 
     protected void SetOperationInfo(string eventTag, string operationName,
-                                    JsonObject operationData, string content) {
+                                    JsonObject operationData) {
       Assertion.Require(eventTag, nameof(eventTag));
       Assertion.Require(operationName, nameof(operationName));
       Assertion.Require(operationData, nameof(operationData));
@@ -137,7 +132,6 @@ namespace Empiria.Security {
       this.Event = eventTag;
       this.Operation = operationName;
       this.OperationData = operationData;
-      this.Content = content;
     }
 
 
