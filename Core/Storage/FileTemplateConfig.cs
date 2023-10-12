@@ -133,6 +133,12 @@ namespace Empiria.Storage {
     }
 
 
+    public string SubTitleCell {
+      get {
+        return base.ExtendedDataField.Get<string>("subTitleCell", string.Empty);
+      }
+    }
+
     #endregion Properties
 
     #region Methods
