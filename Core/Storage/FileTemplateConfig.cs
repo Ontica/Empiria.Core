@@ -126,6 +126,18 @@ namespace Empiria.Storage {
     }
 
 
+    public string ReportFooterCell {
+      get {
+        return base.ExtendedDataField.Get<string>("reportFooterCell", string.Empty);
+      }
+    }
+
+    public string ReportFooterFormat {
+      get {
+        return base.ExtendedDataField.Get<string>("reportFooterFormat", string.Empty);
+      }
+    }
+
     public string TitleCell {
       get {
         return base.ExtendedDataField.Get<string>("titleCell", string.Empty);
