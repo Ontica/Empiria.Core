@@ -31,6 +31,18 @@ namespace Empiria.Storage {
       };
     }
 
+    public static FixedList<ExportToDto> Map(FixedList<FileType> exportTo) {
+      return exportTo.Select(x => Map(x))
+                     .ToFixedList();
+    }
+
+    private static ExportToDto Map(FileType fileType) {
+      return new ExportToDto {
+        UID = fileType.ToString(),
+        Name = fileType.ToString(),
+        FileType = fileType.ToString(),
+      };
+    }
 
     static public FixedList<ExportToDto> MapWithCalculatedUID(FixedList<ExportTo> exportTo) {
       return exportTo.Select(x => MapWithCalculatedUID(x))
