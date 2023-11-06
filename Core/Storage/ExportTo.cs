@@ -16,6 +16,9 @@ namespace Empiria.Storage {
   /// <summary>DTO version of ExportTo type.</summary>
   public class ExportToDto {
 
+    static public readonly DateTime DEFAULT_START_DATE = new DateTime(2000, 01, 01);
+    static public readonly DateTime DEFAULT_END_DATE = new DateTime(2049, 12, 31);
+
     internal ExportToDto() {
       // no-op
     }
@@ -38,11 +41,12 @@ namespace Empiria.Storage {
 
     public DateTime StartDate {
       get; internal set;
-    }
+    } = DEFAULT_START_DATE;
+
 
     public DateTime EndDate {
       get; internal set;
-    }
+    } = DEFAULT_END_DATE;
 
   }  // class ExportToDto
 
@@ -64,8 +68,8 @@ namespace Empiria.Storage {
         CsvBuilder = json.Get<string>("csvBuilder", string.Empty),
         TemplateId = json.Get<int>("templateId", -1),
         Dataset = json.Get<string>("dataset", "Default"),
-        StartDate = json.Get<DateTime>("startDate", new DateTime(2022, 1, 1)),
-        EndDate = json.Get<DateTime>("endDate", new DateTime(2049, 12, 31)),
+        StartDate = json.Get<DateTime>("startDate", ExportToDto.DEFAULT_START_DATE),
+        EndDate = json.Get<DateTime>("endDate", ExportToDto.DEFAULT_END_DATE),
       };
     }
 
@@ -120,12 +124,12 @@ namespace Empiria.Storage {
 
     public DateTime StartDate {
       get; private set;
-    }
+    } = ExportToDto.DEFAULT_START_DATE;
 
 
     public DateTime EndDate {
       get; private set;
-    }
+    } = ExportToDto.DEFAULT_END_DATE;
 
   }  // class ExportTo
 
