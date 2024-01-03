@@ -30,4 +30,4 @@ Este conjunto de componentes se distribuye bajo la licencia GNU AFFERO GENERAL P
 
 ## Copyright
 
-Copyright © 2002-2023. La Vía Óntica SC, Ontica LLC and colaboradores.
+Copyright © 2002-2024. La Vía Óntica SC, Ontica LLC and colaboradores.
