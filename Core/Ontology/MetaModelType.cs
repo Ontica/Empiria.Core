@@ -290,7 +290,7 @@ namespace Empiria.Ontology {
       if (obj == null || GetType() != obj.GetType()) {
         return false;
       }
-      return obj.Equals(this) && (this.Id == ((MetaModelType) obj).Id);
+      return base.Equals(obj) && (this.Id == ((MetaModelType) obj).Id);
     }
 
     public bool Equals(MetaModelType obj) {
