@@ -286,22 +286,23 @@ namespace Empiria.Ontology {
 
     #region Public methods
 
-    public override bool Equals(object obj) {
-      if (obj == null || GetType() != obj.GetType()) {
-        return false;
-      }
-      return base.Equals(obj) && (this.Id == ((MetaModelType) obj).Id);
-    }
+    public override bool Equals(object obj) => this.Equals(obj as MetaModelType);
 
     public bool Equals(MetaModelType obj) {
       if (obj == null) {
+        return false;
+      }
+      if (Object.ReferenceEquals(this, obj)) {
+        return true;
+      }
+      if (this.GetType() != obj.GetType()) {
         return false;
       }
       return (this.Id == obj.Id);
     }
 
     public override int GetHashCode() {
-      return this.Id;
+      return (this.Id).GetHashCode();
     }
 
     protected internal void Reload() {
