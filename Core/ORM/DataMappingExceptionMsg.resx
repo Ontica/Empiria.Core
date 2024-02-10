@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!--
-    Microsoft ResX Schema
+  <!-- 
+    Microsoft ResX Schema 
+    
     Version 2.0
-
-    The primary goals of this format is to allow a simple XML format
-    that is mostly human readable. The generation and parsing of the
-    various data types are done through the TypeConverter classes
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
     associated with the data types.
-
+    
     Example:
-
+    
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -25,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-
-    There are any number of "resheader" rows that contain simple
+                
+    There are any number of "resheader" rows that contain simple 
     name/value pairs.
-
-    Each data row contains a name, and value. The row also contains a
-    type or mimetype. Type corresponds to a .NET class that support
-    text/value conversion through the TypeConverter architecture.
-    Classes that don't support this are serialized and stored with the
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
     mimetype set.
-
-    The mimetype is used for serialized objects, and tells the
-    ResXResourceReader how to depersist the object. This is currently not
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
     extensible. For a given mimetype the value must be set accordingly:
-
-    Note - application/x-microsoft.net.object.binary.base64 is the format
-    that the ResXResourceWriter will generate, however the reader can
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
     read any of the formats listed below.
-
+    
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with
+    value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-
+    
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with
+    value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array
+    value   : The object must be serialized into a byte array 
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -116,45 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="TypeInfoFamilyNotMatch" xml:space="preserve">
-    <value>According to defined system's metadata, type '{0}' belongs to a type family other than '{1}'.</value>
-  </data>
-  <data name="TypeInfoNotFound" xml:space="preserve">
-    <value>The system has not metadata defined for type {0}.</value>
-  </data>
-  <data name="TypeAssociationInfoNotFound" xml:space="preserve">
-    <value>The system has not metadata defined for association {0} belonging to type {1}.</value>
-  </data>
-  <data name="UndefinedTypeInfoFamily" xml:space="preserve">
-    <value>The ontology system has not defined the type family '{0}'.</value>
-  </data>
-  <data name="ObjectIdNotFound" xml:space="preserve">
-    <value>An object of type {1} and id = {0} doesn't exist. (Hint: This problem generally is caused by wrong database values.)</value>
-  </data>
-  <data name="ConvertionToTargetTypeFails" xml:space="preserve">
-    <value>There was a problem trying to convert value '{0}' to data type {1}.</value>
-  </data>
-  <data name="TypeMethodInfoNotFound" xml:space="preserve">
-    <value>The system has not metadata defined for method {0}.</value>
-  </data>
-  <data name="TypeNamedIdFieldNameNotDefined" xml:space="preserve">
-    <value>Type '{0}' has not defined the data field used to retrieve the named object key. Detected by instance with key: '{1}'. </value>
-  </data>
-  <data name="ObjectNotFound" xml:space="preserve">
-    <value>An object of type {1} that meets condition '{0}' doesn't exist.\n (Hint: This problem generally is caused by wrong database values.)</value>
-  </data>
-  <data name="RelationMemberNameNotFound" xml:space="preserve">
-    <value>The system has not metadata defined for relation {0} belonging to type {1}.</value>
-  </data>
-  <data name="TryToParseZeroObjectId" xml:space="preserve">
-    <value>An attempt was made to parse an object with id equals to zero for type {}. For new objects please use a type constructor instead.</value>
-  </data>
-  <data name="CannotParseObjectWithDataRow" xml:space="preserve">
-    <value>There was a problem trying to parse an object of type '{0}' using the provided DataRow.</value>
-  </data>
-  <data name="WrongAssociatedObjectFound" xml:space="preserve">
-    <value>Instance of type {1} and id {0} is wrong related with other object according to relation {2}. It's possible that this object's type is not the same as the target type defined for the relation, or also, that the object ID is not in the data set defined for that type.</value>
-  </data>
   <data name="CannotMapDataValue" xml:space="preserve">
     <value>There was a problem trying to map an instance field or property with the data source:\n{0}</value>
   </data>
@@ -172,20 +134,5 @@
   </data>
   <data name="TypeMemberMappingFails" xml:space="preserve">
     <value>There was a problem trying to map the data field rules for member '{1}' of type {0}.</value>
-  </data>
-  <data name="WrongDefaultValueType" xml:space="preserve">
-    <value>There was a problem trying to convert the default value of member '{1}' of type {0} from type {2} to type {3}.</value>
-  </data>
-  <data name="CannotGetUnderlyingSystemType" xml:space="preserve">
-    <value>There was a problem trying to get the underlying system type of Empiria Type '{1}' (id = {0}) using their defined assemblyName '{2}' and className '{3}' values.</value>
-  </data>
-  <data name="UnderlyingTypeNotFound" xml:space="preserve">
-    <value>There is none Empiria Type defined matching the underlying system type '{0}'.</value>
-  </data>
-  <data name="LinkNotFoundForSource" xml:space="preserve">
-    <value>There are not a relation (link) of type {3} (id = {2})) for the instance with id {0} of type {1}.</value>
-  </data>
-  <data name="LinkNotFoundForTarget" xml:space="preserve">
-    <value>There are not an inverse relation (link) of type {3} (id = {2})) for the instance with id  {0} of type {1}.</value>
   </data>
 </root>

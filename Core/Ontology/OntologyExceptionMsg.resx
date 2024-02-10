@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!--
-    Microsoft ResX Schema
+  <!-- 
+    Microsoft ResX Schema 
+    
     Version 2.0
-
-    The primary goals of this format is to allow a simple XML format
-    that is mostly human readable. The generation and parsing of the
-    various data types are done through the TypeConverter classes
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
     associated with the data types.
-
+    
     Example:
-
+    
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -25,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-
-    There are any number of "resheader" rows that contain simple
+                
+    There are any number of "resheader" rows that contain simple 
     name/value pairs.
-
-    Each data row contains a name, and value. The row also contains a
-    type or mimetype. Type corresponds to a .NET class that support
-    text/value conversion through the TypeConverter architecture.
-    Classes that don't support this are serialized and stored with the
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
     mimetype set.
-
-    The mimetype is used for serialized objects, and tells the
-    ResXResourceReader how to depersist the object. This is currently not
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
     extensible. For a given mimetype the value must be set accordingly:
-
-    Note - application/x-microsoft.net.object.binary.base64 is the format
-    that the ResXResourceWriter will generate, however the reader can
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
     read any of the formats listed below.
-
+    
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with
+    value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-
+    
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with
+    value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array
+    value   : The object must be serialized into a byte array 
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -122,29 +123,14 @@
   <data name="TypeInfoNotFound" xml:space="preserve">
     <value>Los metadatos del tipo '{0}' no han sido definidos en el sistema.</value>
   </data>
-  <data name="TypeAssociationInfoNotFound" xml:space="preserve">
-    <value>Los metadatos de la asociación '{0}' sobre el tipo '{1}' no han sido definidos en el sistema.</value>
-  </data>
   <data name="UndefinedTypeInfoFamily" xml:space="preserve">
     <value>El sistema ontológico no tiene definida la familia de tipos '{0}'.</value>
   </data>
   <data name="ObjectIdNotFound" xml:space="preserve">
     <value>An object of type {1} and id = {0} doesn't exist. (Hint: This problem generally is caused by wrong database values.)</value>
   </data>
-  <data name="ConvertionToTargetTypeFails" xml:space="preserve">
-    <value>No puede convertir el valor '{0}' al tipo de datos {1}.</value>
-  </data>
-  <data name="TypeMethodInfoNotFound" xml:space="preserve">
-    <value>There was a problem reading the methods for type '{0}'.</value>
-  </data>
-  <data name="TypeNamedIdFieldNameNotDefined" xml:space="preserve">
-    <value>El tipo '{0}' no tiene definido el nombre del campo de donde se debe leer el nombre identificador del objeto '{1}'. </value>
-  </data>
   <data name="ObjectNamedKeyNotFound" xml:space="preserve">
     <value>An object of type {0} and named identificator '{1}' doesn't exist.\n (Hint: This problem generally is caused by wrong database values.)</value>
-  </data>
-  <data name="RelationMemberNameNotFound" xml:space="preserve">
-    <value>El tipo '{0}' no tiene definida una relación con el nombre '{1}'.</value>
   </data>
   <data name="TryToParseZeroObjectId" xml:space="preserve">
     <value>An attempt was made to parse an object with id equals to zero for type {}. For new objects please use a type constructor instead.</value>
@@ -152,47 +138,11 @@
   <data name="CannotParseObjectWithDataRow" xml:space="preserve">
     <value>No pude hacer el parsing del objeto del tipo '{0}' e identificador '{1}' utilizando el dataRow proporcionado.</value>
   </data>
-  <data name="WrongAssociatedObjectFound" xml:space="preserve">
-    <value>El objeto con id {0} del tipo {1} (source) está incorrectamente relacionado con otro objeto usando la relación {2}. Es posible que el tipo de dicho objeto relacionado no sea del tipo que indica el tipo target de la relación, o bien, que no se encuentre en la tabla donde se almacenan los objetos de ese tipo.</value>
-  </data>
-  <data name="CannotMapDataValue" xml:space="preserve">
-    <value>There was a problem trying to map an instance field or property with the data source:\n{0}</value>
-  </data>
-  <data name="MappingDataColumnNotFound" xml:space="preserve">
-    <value>The datarow doesn't contains a column with name '{2}', so the data mapping engine can't parse the value of the type member {1} belonging to type {0}.</value>
-  </data>
-  <data name="CannotGetDefaultValueforType" xml:space="preserve">
-    <value>There are not a default value defined for objects of type {0}.</value>
-  </data>
-  <data name="CannotParsePropertyForDefaultValue" xml:space="preserve">
-    <value>There was a problem trying to get the default value = '{2}' for member '{1}' of type {0}.</value>
-  </data>
-  <data name="CannotInitializeObject" xml:space="preserve">
-    <value>There was a problem trying to initialize an object with their default values using the data field mapping rules:\n{0}</value>
-  </data>
-  <data name="TypeMemberMappingFails" xml:space="preserve">
-    <value>There was a problem trying to map the data field rules for member '{1}' of type {0}.</value>
-  </data>
-  <data name="WrongDefaultValueType" xml:space="preserve">
-    <value>There was a problem trying to convert the default value of member '{1}' of type {0} from type {2} to type {3}.</value>
-  </data>
   <data name="CannotGetUnderlyingSystemType" xml:space="preserve">
     <value>There was a problem trying to get the underlying system type of Empiria Type '{1}' (id = {0}) using their defined assemblyName '{2}' and className '{3}' values.</value>
   </data>
   <data name="UnderlyingTypeNotFound" xml:space="preserve">
     <value>There is none Empiria Type defined matching the underlying system type '{0}'.</value>
-  </data>
-  <data name="LinkNotFoundForSource" xml:space="preserve">
-    <value>No existe una relación (link) del tipo {3} (id = {2})) del objeto con id {0} del tipo {1}.</value>
-  </data>
-  <data name="LinkNotFoundForTarget" xml:space="preserve">
-    <value>No existe una relación (link) inversa del tipo {3} (id = {2})) del objeto con id {0} del tipo {1}.</value>
-  </data>
-  <data name="ObjectWithConditionNotFound" xml:space="preserve">
-    <value>There is not any object of type '{0}' that match the condition '{1}'.</value>
-  </data>
-  <data name="MultipleLinksFoundForTarget" xml:space="preserve">
-    <value>Existen varias relaciones (links) inversas del tipo {3} (id = {2})) del objeto con id {0} del tipo {1}. Se esperaba sólo una.</value>
   </data>
   <data name="PartitionedTypeAttributeMissed" xml:space="preserve">
     <value>Partitioned type {0} must have defined a PartitionedTypeAttribute.</value>

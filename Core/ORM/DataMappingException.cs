@@ -18,26 +18,11 @@ namespace Empiria.ORM {
 
     public enum Msg {
       CannotGetDefaultValueforType,
-      CannotGetUnderlyingSystemType,
       CannotInitializeObject,
       CannotMapDataValue,
       CannotParsePropertyForDefaultValue,
-      ConvertionToTargetTypeFails,
-      LinkNotFoundForSource,
-      LinkNotFoundForTarget,
       MappingDataColumnNotFound,
-      RelationMemberNameNotFound,
-      TryToParseZeroObjectId,
-      TypeAssociationInfoNotFound,
-      TypeInfoFamilyNotMatch,
-      TypeInfoNotFound,
       TypeMemberMappingFails,
-      TypeMethodInfoNotFound,
-      TypeNamedIdFieldNameNotDefined,
-      UndefinedTypeInfoFamily,
-      UnderlyingTypeNotFound,
-      WrongAssociatedObjectFound,
-      WrongDefaultValueType,
     }
 
     static private string resourceBaseName = "Empiria.ORM.DataMappingExceptionMsg";
@@ -66,26 +51,26 @@ namespace Empiria.ORM {
 
     static internal DataMappingException GetDataValueMappingException(object instance, DataMapping rule,
                                                                       Exception innerException) {
-      throw new DataMappingException(DataMappingException.Msg.CannotMapDataValue, innerException,
-                                     DataMappingException.GetExecutionData(instance, rule));
+      throw new DataMappingException(Msg.CannotMapDataValue, innerException,
+                                     GetExecutionData(instance, rule));
     }
 
     static internal DataMappingException GetDataValueMappingException(object instance, DataObjectMapping rule,
                                                                       Exception innerException) {
-      throw new DataMappingException(DataMappingException.Msg.CannotMapDataValue, innerException,
-                                     DataMappingException.GetExecutionData(instance, rule));
+      throw new DataMappingException(Msg.CannotMapDataValue, innerException,
+                                     GetExecutionData(instance, rule));
     }
 
     static internal DataMappingException GetInitializeObjectException(object instance, DataMapping rule,
                                                                       Exception innerException) {
-      throw new DataMappingException(DataMappingException.Msg.CannotInitializeObject, innerException,
-                                     DataMappingException.GetExecutionData(instance, rule));
+      throw new DataMappingException(Msg.CannotInitializeObject, innerException,
+                                     GetExecutionData(instance, rule));
     }
 
     static internal DataMappingException GetInitializeObjectException(object instance, DataObjectMapping rule,
                                                                   Exception innerException) {
-      throw new DataMappingException(DataMappingException.Msg.CannotInitializeObject, innerException,
-                                     DataMappingException.GetExecutionData(instance, rule));
+      throw new DataMappingException(Msg.CannotInitializeObject, innerException,
+                                     GetExecutionData(instance, rule));
     }
 
     #endregion Constructors and parsers
