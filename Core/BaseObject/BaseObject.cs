@@ -452,10 +452,12 @@ namespace Empiria {
 
       this.OnSave();
 
+      if (isNewFlag) {
+        InsertIntoCache(this);
+      }
+
       this.isNewFlag = false;
       this.isDirtyFlag = false;
-
-      InsertIntoCache(this);
     }
 
     protected void ReclassifyAs(ObjectTypeInfo newType) {
