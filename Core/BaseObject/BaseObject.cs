@@ -11,7 +11,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-
 using Empiria.Collections;
 
 using Empiria.Ontology;
@@ -24,7 +23,7 @@ namespace Empiria {
 
     #region Fields
 
-    static private ObjectsCache cache = new ObjectsCache();
+    static private readonly ObjectsCache _cache = new ObjectsCache();
 
     private ObjectTypeInfo objectTypeInfo = null;
     private int objectId = 0;
@@ -74,7 +73,7 @@ namespace Empiria {
 
       if (!reload) {
         int id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
-        T item = cache.TryGetItem<T>(baseTypeInfo.Name, id);
+        T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
         if (item != null) {
           return item;    // Only use dataRow when item is not in cache
         }
@@ -120,7 +119,7 @@ namespace Empiria {
         throw new OntologyException(OntologyException.Msg.TryToParseZeroObjectId, typeInfo.Name);
       }
       if (!reload) {
-        T item = cache.TryGetItem<T>(typeInfo.Name, id);
+        T item = _cache.TryGetItem<T>(typeInfo.Name, id);
         if (item != null) {
           return item;
         }
@@ -135,7 +134,7 @@ namespace Empiria {
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       if (!reload) {
-        T item = cache.TryGetItem<T>(typeInfo.Name, namedKey);
+        T item = _cache.TryGetItem<T>(typeInfo.Name, namedKey);
         if (item != null) {
           return item;
         }
@@ -165,7 +164,7 @@ namespace Empiria {
           id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
 
           if (!reload) {
-            T item = cache.TryGetItem<T>(baseTypeInfo.Name, id);
+            T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
             if (item != null) {
               hashTable.Insert(hashFunction.Invoke(item), item);    // Only use dataRow when item is not in cache
             } else {
@@ -211,7 +210,7 @@ namespace Empiria {
           id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
 
           if (!reload) {
-            T item = cache.TryGetItem<T>(baseTypeInfo.Name, id);
+            T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
             if (item != null) {
               list.Add(item);
             } else {
@@ -265,7 +264,7 @@ namespace Empiria {
       int id = Convert.ToInt32(objectData.Item2[typeInfo.IdFieldName]);
 
       if (!reload) {
-        T item = cache.TryGetItem<T>(typeInfo.Name, id);
+        T item = _cache.TryGetItem<T>(typeInfo.Name, id);
         if (item != null) {
           return item;
         }
@@ -279,7 +278,9 @@ namespace Empiria {
     #region Public properties
 
     public int Id {
-      get { return this.objectId; }
+      get {
+        return this.objectId;
+      }
       private set {
         this.objectId = value;
       }
@@ -292,7 +293,9 @@ namespace Empiria {
 
 
     protected bool IsDirty {
-      get { return this.isDirtyFlag || this.IsNew; }
+      get {
+        return this.isDirtyFlag || this.IsNew;
+      }
     }
 
 
@@ -306,7 +309,9 @@ namespace Empiria {
 
     [Newtonsoft.Json.JsonIgnore]
     public bool IsNew {
-      get { return (this.objectId == 0 || isNewFlag); }
+      get {
+        return (this.objectId == 0 || isNewFlag);
+      }
     }
 
 
@@ -450,12 +455,7 @@ namespace Empiria {
       this.isNewFlag = false;
       this.isDirtyFlag = false;
 
-
-      if (this.objectTypeInfo.UsesNamedKey) {
-        cache.Insert(this, this.UID);
-      } else {
-        cache.Insert(this);
-      }
+      InsertIntoCache(this);
     }
 
     protected void ReclassifyAs(ObjectTypeInfo newType) {
@@ -468,15 +468,11 @@ namespace Empiria {
       // Seek for a common ancestor (distinct than ObjectType) between types:
       // eg: if A is a mammal and B is a bird, should be possible to convert A to B or B to A because both are animals
 
-      cache.Remove(this);
+      _cache.Remove(this);
 
       this.objectTypeInfo = newType;
 
-      if (newType.UsesNamedKey) {
-        cache.Insert(this, this.UID);
-      } else {
-        cache.Insert(this);
-      }
+      InsertIntoCache(this);
     }
 
     #endregion Public methods
@@ -515,13 +511,16 @@ namespace Empiria {
       item.OnLoad();
       item.isDirtyFlag = false;
 
-      if (typeInfo.UsesNamedKey) {
-        cache.Insert(item, item.UID);
-      } else {
-        cache.Insert(item);
-      }
+      InsertIntoCache(item);
 
       return item;
+    }
+
+    static void InsertIntoCache<T>(T item) where T : BaseObject {
+      if (item.objectTypeInfo.UsesNamedKey) {
+        _cache.Insert(item, item.UID);
+      }
+      _cache.Insert(item);
     }
 
     #endregion Helpers

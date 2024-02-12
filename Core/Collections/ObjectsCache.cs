@@ -78,10 +78,6 @@ namespace Empiria.Collections {
       return objects.ContainsValue(item);
     }
 
-    private bool ContainsKey(string key) {
-      return objects.ContainsKey(key);
-    }
-
     void ICollection<BaseObject>.CopyTo(BaseObject[] array, int index) {
       IEnumerator<BaseObject> enumerator = objects.Values.GetEnumerator();
       int i = 0;
@@ -198,7 +194,6 @@ namespace Empiria.Collections {
       string key = namedKey + "." + itemTypeName;
       lock (objects) {
         namedObjects[key] = item;
-        this.ExecuteInsert(itemTypeName, item);
       } // lock
     }
 
