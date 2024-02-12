@@ -155,26 +155,14 @@ namespace Empiria.Data {
     }
 
 
-    static public FixedList<T> GetFixedList<T>(DataOperation operation, bool reload) where T : BaseObject {
-      return GetList<T>(operation, reload).ToFixedList();
-    }
-
-
     static public EmpiriaHashTable<T> GetHashTable<T>(DataOperation operation,
                                                       Func<T, string> hashFunction) where T : BaseObject {
-      return GetHashTable(operation, hashFunction, false);
-    }
-
-
-    static public EmpiriaHashTable<T> GetHashTable<T>(DataOperation operation,
-                                                      Func<T, string> hashFunction,
-                                                      bool reload) where T : BaseObject {
       Assertion.Require(operation, "operation");
       Assertion.Require(hashFunction, "hashFunction");
 
       DataTable dataTable = DataReader.GetDataTable(operation);
 
-      return BaseObject.ParseHashTable<T>(dataTable, hashFunction, reload);
+      return BaseObject.ParseHashTable<T>(dataTable, hashFunction);
     }
 
 
@@ -184,15 +172,6 @@ namespace Empiria.Data {
       DataTable dataTable = DataReader.GetDataTable(operation);
 
       return BaseObject.ParseList<T>(dataTable);
-    }
-
-
-    static public List<T> GetList<T>(DataOperation operation, bool reload) where T : BaseObject {
-      Assertion.Require(operation, "operation");
-
-      DataTable dataTable = DataReader.GetDataTable(operation);
-
-      return BaseObject.ParseList<T>(dataTable, reload);
     }
 
 
@@ -211,6 +190,9 @@ namespace Empiria.Data {
 
       DataRow dataRow = DataReader.GetDataRow(operation);
 
+      if (dataRow == null) {
+        Assertion.Require(dataRow, $"dataRow can't be the null instance. Operation: {operation.AsText()}");
+      }
       return BaseObject.ParseDataRow<T>(dataRow);
     }
 
@@ -232,6 +214,10 @@ namespace Empiria.Data {
       var rules = DataMappingRules.Parse(typeof(T));
 
       DataRow dataRow = DataReader.GetDataRow(operation);
+
+      if (dataRow == null) {
+        Assertion.Require(dataRow, $"dataRow can't be the null instance. Operation: {operation.AsText()}");
+      }
 
       T instance = ObjectFactory.CreateObject<T>();
 
