@@ -68,15 +68,13 @@ namespace Empiria {
     }
 
 
-    static internal T ParseDataRow<T>(DataRow dataRow, bool reload = false) where T : BaseObject {
+    static internal T ParseDataRow<T>(DataRow dataRow) where T : BaseObject {
       ObjectTypeInfo baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-      if (!reload) {
-        int id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
-        T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
-        if (item != null) {
-          return item;    // Only use dataRow when item is not in cache
-        }
+      int id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
+      T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
+      if (item != null) {
+        return item;    // Only use dataRow when item is not in cache
       }
 
       ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
@@ -99,6 +97,7 @@ namespace Empiria {
     }
 
 
+    // TODO: Remove reload flag when it is possible
     static protected internal T ParseId<T>(int id, bool reload = false) where T : BaseObject {
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
@@ -113,6 +112,7 @@ namespace Empiria {
     }
 
 
+    // TODO: Remove reload flag when it is possible
     static internal T ParseIdInternal<T>(ObjectTypeInfo typeInfo,
                                          int id, bool reload, bool acceptZeros = false) where T : BaseObject {
       if (!acceptZeros && id == 0) {
@@ -130,15 +130,14 @@ namespace Empiria {
     }
 
 
-    static protected internal T ParseKey<T>(string namedKey, bool reload = false) where T : BaseObject {
+    static protected internal T ParseKey<T>(string namedKey) where T : BaseObject {
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-      if (!reload) {
-        T item = _cache.TryGetItem<T>(typeInfo.Name, namedKey);
-        if (item != null) {
-          return item;
-        }
+      T item = _cache.TryGetItem<T>(typeInfo.Name, namedKey);
+      if (item != null) {
+        return item;
       }
+
       Tuple<ObjectTypeInfo, DataRow> objectData = typeInfo.GetObjectTypeAndDataRow(namedKey);
 
       return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
@@ -146,8 +145,7 @@ namespace Empiria {
 
 
     static internal EmpiriaHashTable<T> ParseHashTable<T>(DataTable dataTable,
-                                                          Func<T, string> hashFunction,
-                                                          bool reload = false) where T : BaseObject {
+                                                          Func<T, string> hashFunction) where T : BaseObject {
 
       if (dataTable == null || dataTable.Rows.Count == 0) {
         return new EmpiriaHashTable<T>();
@@ -163,17 +161,9 @@ namespace Empiria {
         foreach (DataRow dataRow in dataTable.Rows) {
           id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
 
-          if (!reload) {
-            T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
-            if (item != null) {
-              hashTable.Insert(hashFunction.Invoke(item), item);    // Only use dataRow when item is not in cache
-            } else {
-              ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
-
-              var instance = BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow);
-
-              hashTable.Insert(hashFunction.Invoke(instance), instance);
-            }
+          T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
+          if (item != null) {
+            hashTable.Insert(hashFunction.Invoke(item), item);    // Only use dataRow when item is not in cache
           } else {
             ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
 
@@ -194,7 +184,7 @@ namespace Empiria {
     }
 
 
-    static internal List<T> ParseList<T>(DataTable dataTable, bool reload = false) where T : BaseObject {
+    static internal List<T> ParseList<T>(DataTable dataTable) where T : BaseObject {
       if (dataTable == null || dataTable.Rows.Count == 0) {
         return new List<T>();
       }
@@ -209,15 +199,9 @@ namespace Empiria {
         foreach (DataRow dataRow in dataTable.Rows) {
           id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
 
-          if (!reload) {
-            T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
-            if (item != null) {
-              list.Add(item);
-            } else {
-              ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
-
-              list.Add(BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow));
-            }
+          T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
+          if (item != null) {
+            list.Add(item);
           } else {
             ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
 
@@ -244,18 +228,13 @@ namespace Empiria {
     }
 
 
+    // TODO: Remove reload flag when it is possible
     static protected T TryParse<T>(string condition, bool reload = false) where T : BaseObject {
-      var sqlFilter = Empiria.Data.SqlFilter.Parse(condition);
+      IFilter filter = Empiria.Data.SqlFilter.Parse(condition);
 
-      return TryParse<T>(sqlFilter, reload);
-    }
-
-
-    static protected T TryParse<T>(IFilter condition,
-                                   bool reload = false) where T : BaseObject {
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-      Tuple<ObjectTypeInfo, DataRow> objectData = typeInfo.TryGetObjectTypeAndDataRow(condition);
+      Tuple<ObjectTypeInfo, DataRow> objectData = typeInfo.TryGetObjectTypeAndDataRow(filter);
 
       if (objectData == null) {
         return null;
