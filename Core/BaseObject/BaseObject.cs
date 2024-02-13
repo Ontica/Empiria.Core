@@ -176,10 +176,8 @@ namespace Empiria {
         return hashTable;
 
       } catch (Exception e) {
-        var exception = new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
-                                              e, baseTypeInfo.Name, id);
-        exception.Publish();
-        throw exception;
+        throw new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
+                                    e, baseTypeInfo.Name, id);
       }
     }
 
@@ -213,10 +211,8 @@ namespace Empiria {
         return list;
 
       } catch (Exception e) {
-        var exception = new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
-                                              e, baseTypeInfo.Name, id);
-        exception.Publish();
-        throw exception;
+        throw new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
+                                    e, baseTypeInfo.Name, id);
       }
     }
 
