@@ -337,7 +337,7 @@ namespace Empiria {
 
 
     public override int GetHashCode() {
-      return (this.objectTypeInfo.GetHashCode() ^ this.Id);
+      return (this.objectTypeInfo.Id, this.Id).GetHashCode();
     }
 
 
