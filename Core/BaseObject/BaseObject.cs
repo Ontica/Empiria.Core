@@ -318,19 +318,20 @@ namespace Empiria {
     }
 
 
-    public override bool Equals(object obj) {
-      if (obj == null || this.GetType() != obj.GetType()) {
-        return false;
-      }
-      return base.Equals(obj) && (this.Id == ((BaseObject) obj).Id);
-    }
-
+    public override bool Equals(object obj) => this.Equals(obj as BaseObject);
 
     public bool Equals(BaseObject obj) {
       if (obj == null) {
         return false;
       }
-      return objectTypeInfo.Equals(obj.objectTypeInfo) && (this.Id == obj.Id);
+      if (Object.ReferenceEquals(this, obj)) {
+        return true;
+      }
+      if (this.GetType() != obj.GetType()) {
+        return false;
+      }
+
+      return this.Id == obj.Id && this.GetEmpiriaType().Equals(obj.GetEmpiriaType());
     }
 
 
