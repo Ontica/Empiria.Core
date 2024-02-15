@@ -71,19 +71,23 @@ namespace Empiria.Collections {
 
 
     public bool Contains(string itemTypeName, int id) {
-      return objects.ContainsKey(id.ToString() + "." + itemTypeName);
+      lock (_locker) {
+        return objects.ContainsKey(id.ToString() + "." + itemTypeName);
+      }
     }
 
 
     public bool Contains(string itemTypeName, string namedKey) {
-      return namedObjects.ContainsKey(namedKey + "." + itemTypeName);
+      lock (_locker) {
+        return namedObjects.ContainsKey(namedKey + "." + itemTypeName);
+      }
     }
-
 
     public bool Contains(BaseObject item) {
-      return objects.ContainsValue(item);
+      lock (_locker) {
+        return objects.ContainsValue(item);
+      }
     }
-
 
     void ICollection<BaseObject>.CopyTo(BaseObject[] array, int index) {
       IEnumerator<BaseObject> enumerator = objects.Values.GetEnumerator();
@@ -110,57 +114,63 @@ namespace Empiria.Collections {
     internal void Insert(BaseObject item) {
       string typeInfoName = item.GetEmpiriaType().Name;
 
-      // Empty and Unknown instances are unique per type, so don't create their base objects inside
-      // the inheritance hierarchy.
-      // Example: ReadItem.Book.Fiction.Empty generates only one item in the cache
-      // ('-1.ReadItem.Book.Fiction'), but not '-1.ReadItem.Book'. That's because
-      // ReadItem.Book.Empty could be defined and also it will use the same id but for its own type:
-      // '-1.ReadItem.Book' of type Book. SpecialCase instances are unique and static per type
-      if (item.IsSpecialCase) {
-        this.ExecuteInsert(typeInfoName, item);
-        return;
-      }
-
-      // Stores item object into the objects cache and additionally insert it again for each
-      // parent class defined on that item's inheritance hierarchy.
-      // Example: An object with typeInfoName = 'ReadItem.Book.Fiction' and Id = 1001 generates
-      // three items in the cache: '1001.ReadItem.Book.Fiction', '1001.ReadItem.Book' and '1001.ReadItem'
-      while (true) {
-        if (typeInfoName.LastIndexOf('.') > 0) {
+      lock (_locker) {
+        // Empty and Unknown instances are unique per type, so don't create their base objects inside
+        // the inheritance hierarchy.
+        // Example: ReadItem.Book.Fiction.Empty generates only one item in the cache
+        // ('-1.ReadItem.Book.Fiction'), but not '-1.ReadItem.Book'. That's because
+        // ReadItem.Book.Empty could be defined and also it will use the same id but for its own type:
+        // '-1.ReadItem.Book' of type Book. SpecialCase instances are unique and static per type
+        if (item.IsSpecialCase) {
           this.ExecuteInsert(typeInfoName, item);
-          typeInfoName = typeInfoName.Substring(0, typeInfoName.LastIndexOf('.'));
-        } else {
-          break;
+          return;
         }
-      }
+
+        // Stores item object into the objects cache and additionally insert it again for each
+        // parent class defined on that item's inheritance hierarchy.
+        // Example: An object with typeInfoName = 'ReadItem.Book.Fiction' and Id = 1001 generates
+        // three items in the cache: '1001.ReadItem.Book.Fiction', '1001.ReadItem.Book' and '1001.ReadItem'
+        while (true) {
+          if (typeInfoName.LastIndexOf('.') > 0) {
+            this.ExecuteInsert(typeInfoName, item);
+            typeInfoName = typeInfoName.Substring(0, typeInfoName.LastIndexOf('.'));
+          } else {
+            break;
+          }
+        }
+      }  // locker
     }
 
 
     internal void Insert(BaseObject item, string namedKey) {
       string typeInfoName = item.GetEmpiriaType().Name;
 
-      while (true) {
-        if (typeInfoName.LastIndexOf('.') > 0) {
-          this.ExecuteInsert(typeInfoName, namedKey, item);
-          typeInfoName = typeInfoName.Substring(0, typeInfoName.LastIndexOf('.'));
-        } else {
-          break;
+      lock (_locker) {
+        while (true) {
+          if (typeInfoName.LastIndexOf('.') > 0) {
+            this.ExecuteInsert(typeInfoName, namedKey, item);
+            typeInfoName = typeInfoName.Substring(0, typeInfoName.LastIndexOf('.'));
+          } else {
+            break;
+          }
         }
-      }
+      }  // locker
     }
 
 
     internal void Remove(BaseObject item) {
       string typeInfoName = item.GetEmpiriaType().Name;
 
-      while (true) {
-        if (typeInfoName.LastIndexOf('.') > 0) {
-          this.ExecuteRemove(typeInfoName, item);
-          typeInfoName = typeInfoName.Substring(0, typeInfoName.LastIndexOf('.'));
-        } else {
-          break;
+      lock (_locker) {
+        while (true) {
+          if (typeInfoName.LastIndexOf('.') > 0) {
+            this.ExecuteRemove(typeInfoName, item);
+            typeInfoName = typeInfoName.Substring(0, typeInfoName.LastIndexOf('.'));
+          } else {
+            break;
+          }
         }
-      }
+      }  // locker
     }
 
 
@@ -172,11 +182,13 @@ namespace Empiria.Collections {
     internal T TryGetItem<T>(string itemTypeName, int id) where T : BaseObject {
       string objectKey = id.ToString() + "." + itemTypeName;
 
-      if (objects.TryGetValue(objectKey, out BaseObject value)) {
-        //lastAccess[objectKey] = DateTime.Now.Ticks;
-        return (T) value;
-      } else {
-        return null;
+      lock (_locker) {
+        if (objects.TryGetValue(objectKey, out BaseObject value)) {
+          //lastAccess[objectKey] = DateTime.Now.Ticks;
+          return (T) value;
+        } else {
+          return null;
+        }
       }
     }
 
@@ -184,11 +196,13 @@ namespace Empiria.Collections {
     internal T TryGetItem<T>(string itemTypeName, string namedKey) where T: BaseObject {
       string objectKey = namedKey + "." + itemTypeName;
 
-      if (namedObjects.TryGetValue(objectKey, out BaseObject value)) {
-        //lastAccess[objectKey] = DateTime.Now.Ticks;
-        return (T) value;
-      } else {
-        return null;
+      lock (_locker) {
+        if (namedObjects.TryGetValue(objectKey, out BaseObject value)) {
+          //lastAccess[objectKey] = DateTime.Now.Ticks;
+          return (T) value;
+        } else {
+          return null;
+        }
       }
     }
 
@@ -199,29 +213,25 @@ namespace Empiria.Collections {
     private void ExecuteInsert(string itemTypeName, BaseObject item) {
       string objectKey = item.Id.ToString() + "." + itemTypeName;
 
-      lock (_locker) {
-        objects[objectKey] = item;
-        //lastAccess[objectKey] = DateTime.Now.Ticks;
-        this.TrimToSize();
-      } // lock
+      objects[objectKey] = item;
+      //lastAccess[objectKey] = DateTime.Now.Ticks;
+      this.TrimToSize();
     }
+
 
     private void ExecuteInsert(string itemTypeName, string namedKey, BaseObject item) {
       string key = namedKey + "." + itemTypeName;
 
-      lock (_locker) {
-        namedObjects[key] = item;
-      } // lock
+      namedObjects[key] = item;
     }
+
 
     private void ExecuteRemove(string itemTypeName, BaseObject item) {
       string objectKey = item.Id.ToString() + "." + itemTypeName;
 
-      lock (_locker) {
-        objects.Remove(objectKey);
-        //lastAccess[objectKey] = DateTime.Now.Ticks;
-      } // lock
+      objects.Remove(objectKey);
     }
+
 
     private void TrimToSize() {
       if (lastAccess.Count <= cacheSize) {
