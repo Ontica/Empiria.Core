@@ -24,6 +24,8 @@ namespace Empiria.Collections {
     private readonly Dictionary<string, BaseObject> namedObjects = null;
     private readonly Dictionary<string, long> lastAccess = null;
 
+    private readonly object _locker = new object();
+
     #endregion Fields
 
     #region Constructors and parsers
@@ -36,7 +38,11 @@ namespace Empiria.Collections {
 
     #endregion Constructors and parsers
 
-    #region Public properties
+    #region Properties
+
+    void ICollection<BaseObject>.Add(BaseObject item) {
+      throw new NotImplementedException();
+    }
 
     public int Count {
       get { return objects.Count; }
@@ -46,40 +52,42 @@ namespace Empiria.Collections {
       get { return false; }
     }
 
-    #endregion Public properties
+    #endregion Properties
 
-    #region Public methods
-
-    void ICollection<BaseObject>.Add(BaseObject item) {
-      throw new NotImplementedException();
-    }
+    #region Methods
 
     internal void Clear() {
-      lock (objects) {
+      lock (_locker) {
         objects.Clear();
         namedObjects.Clear();
         lastAccess.Clear();
       }
     }
 
+
     void ICollection<BaseObject>.Clear() {
       this.Clear();
     }
+
 
     public bool Contains(string itemTypeName, int id) {
       return objects.ContainsKey(id.ToString() + "." + itemTypeName);
     }
 
+
     public bool Contains(string itemTypeName, string namedKey) {
       return namedObjects.ContainsKey(namedKey + "." + itemTypeName);
     }
+
 
     public bool Contains(BaseObject item) {
       return objects.ContainsValue(item);
     }
 
+
     void ICollection<BaseObject>.CopyTo(BaseObject[] array, int index) {
       IEnumerator<BaseObject> enumerator = objects.Values.GetEnumerator();
+
       int i = 0;
       while (enumerator.MoveNext()) {
         if (i >= index) {
@@ -92,10 +100,12 @@ namespace Empiria.Collections {
       return objects.Values.GetEnumerator();
     }
 
+
     /// <summary>Gets an IEnumerator that can iterate through the Collection.</summary>
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
       return objects.Values.GetEnumerator();
     }
+
 
     internal void Insert(BaseObject item) {
       string typeInfoName = item.GetEmpiriaType().Name;
@@ -125,6 +135,7 @@ namespace Empiria.Collections {
       }
     }
 
+
     internal void Insert(BaseObject item, string namedKey) {
       string typeInfoName = item.GetEmpiriaType().Name;
 
@@ -137,6 +148,7 @@ namespace Empiria.Collections {
         }
       }
     }
+
 
     internal void Remove(BaseObject item) {
       string typeInfoName = item.GetEmpiriaType().Name;
@@ -151,9 +163,11 @@ namespace Empiria.Collections {
       }
     }
 
+
     bool ICollection<BaseObject>.Remove(BaseObject item) {
       throw new NotImplementedException();
     }
+
 
     internal T TryGetItem<T>(string itemTypeName, int id) where T : BaseObject {
       string objectKey = id.ToString() + "." + itemTypeName;
@@ -166,6 +180,7 @@ namespace Empiria.Collections {
       }
     }
 
+
     internal T TryGetItem<T>(string itemTypeName, string namedKey) where T: BaseObject {
       string objectKey = namedKey + "." + itemTypeName;
 
@@ -177,13 +192,14 @@ namespace Empiria.Collections {
       }
     }
 
-    #endregion Public methods
+    #endregion Methods
 
-    #region Private methods
+    #region Helpers
 
     private void ExecuteInsert(string itemTypeName, BaseObject item) {
       string objectKey = item.Id.ToString() + "." + itemTypeName;
-      lock (objects) {
+
+      lock (_locker) {
         objects[objectKey] = item;
         //lastAccess[objectKey] = DateTime.Now.Ticks;
         this.TrimToSize();
@@ -192,14 +208,16 @@ namespace Empiria.Collections {
 
     private void ExecuteInsert(string itemTypeName, string namedKey, BaseObject item) {
       string key = namedKey + "." + itemTypeName;
-      lock (objects) {
+
+      lock (_locker) {
         namedObjects[key] = item;
       } // lock
     }
 
     private void ExecuteRemove(string itemTypeName, BaseObject item) {
       string objectKey = item.Id.ToString() + "." + itemTypeName;
-      lock (objects) {
+
+      lock (_locker) {
         objects.Remove(objectKey);
         //lastAccess[objectKey] = DateTime.Now.Ticks;
       } // lock
@@ -209,7 +227,8 @@ namespace Empiria.Collections {
       if (lastAccess.Count <= cacheSize) {
         return;
       }
-      lock (objects) {
+
+      lock (_locker) {
         List<long> sortedList = new List<long>(lastAccess.Values);
 
         int toDeleteItems = lastAccess.Count / 4;   // Remove 25 percent of old accessed objects
@@ -242,7 +261,7 @@ namespace Empiria.Collections {
       } // lock
     }
 
-    #endregion Private methods
+    #endregion Helpers
 
   } //class ObjectsCache
 
