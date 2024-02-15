@@ -105,8 +105,7 @@ namespace Empiria {
     }
 
 
-    // TODO: Remove reload flag when it is possible
-    static protected internal T ParseId<T>(int id, bool reload = false) where T : BaseObject {
+    static protected internal T ParseId<T>(int id) where T : BaseObject {
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       if (id == ObjectTypeInfo.EmptyInstanceId || id == 0) {    // To Do: Allow zeros using a flag
@@ -116,23 +115,20 @@ namespace Empiria {
         return typeInfo.GetUnknownInstance<T>().Clone<T>();
       }
 
-      return BaseObject.ParseIdInternal<T>(typeInfo, id, reload);
+      return BaseObject.ParseIdInternal<T>(typeInfo, id);
     }
 
 
-    // TODO: Remove reload flag when it is possible
     static internal T ParseIdInternal<T>(ObjectTypeInfo typeInfo,
-                                         int id, bool reload, bool acceptZeros = false) where T : BaseObject {
+                                         int id, bool acceptZeros = false) where T : BaseObject {
       if (!acceptZeros && id == 0) {
         throw new OntologyException(OntologyException.Msg.TryToParseZeroObjectId, typeInfo.Name);
       }
 
       if (_useCache) {
-        if (!reload) {
-          T item = _cache.TryGetItem<T>(typeInfo.Name, id);
-          if (item != null) {
-            return item;
-          }
+        T item = _cache.TryGetItem<T>(typeInfo.Name, id);
+        if (item != null) {
+          return item;
         }
       }
 
@@ -250,8 +246,7 @@ namespace Empiria {
     }
 
 
-    // TODO: Remove reload flag when it is possible
-    static protected T TryParse<T>(string condition, bool reload = false) where T : BaseObject {
+    static protected T TryParse<T>(string condition) where T : BaseObject {
       IFilter filter = Empiria.Data.SqlFilter.Parse(condition);
 
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
@@ -265,11 +260,9 @@ namespace Empiria {
       int id = Convert.ToInt32(objectData.Item2[typeInfo.IdFieldName]);
 
       if (_useCache) {
-        if (!reload) {
-          T item = _cache.TryGetItem<T>(typeInfo.Name, id);
-          if (item != null) {
-            return item;
-          }
+        T item = _cache.TryGetItem<T>(typeInfo.Name, id);
+        if (item != null) {
+          return item;
         }
       }
 
