@@ -71,22 +71,19 @@ namespace Empiria {
 
 
     static internal T ParseDataRow<T>(DataRow dataRow) where T : BaseObject {
-      lock (_cacheLock) {
 
-        ObjectTypeInfo baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
+      ObjectTypeInfo baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-        int id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
+      int id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
 
-        T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
-        if (item != null) {
-          return item;    // Only use dataRow when item is not in cache
-        }
-
-        ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
-
-        return BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow);
-
+      T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
+      if (item != null) {
+        return item;
       }
+
+      ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
+
+      return BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow);
     }
 
 
@@ -126,37 +123,30 @@ namespace Empiria {
         throw new OntologyException(OntologyException.Msg.TryToParseZeroObjectId, typeInfo.Name);
       }
 
-      lock (_cacheLock) {
-
-        if (!reload) {
-          T item = _cache.TryGetItem<T>(typeInfo.Name, id);
-          if (item != null) {
-            return item;
-          }
+      if (!reload) {
+        T item = _cache.TryGetItem<T>(typeInfo.Name, id);
+        if (item != null) {
+          return item;
         }
-        Tuple<ObjectTypeInfo, DataRow> objectData = typeInfo.GetObjectTypeAndDataRow(id);
+      }
 
-        return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
+      Tuple<ObjectTypeInfo, DataRow> objectData = typeInfo.GetObjectTypeAndDataRow(id);
 
-      }  // lock
+      return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
     }
 
 
     static protected internal T ParseKey<T>(string namedKey) where T : BaseObject {
-      lock (_cacheLock) {
+      var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-        var typeInfo = ObjectTypeInfo.Parse(typeof(T));
+      T item = _cache.TryGetItem<T>(typeInfo.Name, namedKey);
+      if (item != null) {
+        return item;
+      }
 
-        T item = _cache.TryGetItem<T>(typeInfo.Name, namedKey);
-        if (item != null) {
-          return item;
-        }
+      Tuple<ObjectTypeInfo, DataRow> objectData = typeInfo.GetObjectTypeAndDataRow(namedKey);
 
-        Tuple<ObjectTypeInfo, DataRow> objectData = typeInfo.GetObjectTypeAndDataRow(namedKey);
-
-        return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
-
-      }  // lock
+      return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
     }
 
 
@@ -167,40 +157,38 @@ namespace Empiria {
         return new EmpiriaHashTable<T>();
       }
 
-      lock (_cacheLock) {
+      var baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-        var baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
+      int id = 0;
 
-        int id = 0;
+      try {
+        var hashTable = new EmpiriaHashTable<T>(dataTable.Rows.Count);
 
-        try {
-          var hashTable = new EmpiriaHashTable<T>(dataTable.Rows.Count);
+        foreach (DataRow dataRow in dataTable.Rows) {
 
+          id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
 
+          T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
 
-            foreach (DataRow dataRow in dataTable.Rows) {
-              id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
+          if (item != null) {
+            hashTable.Insert(hashFunction.Invoke(item), item);
+            continue;
+          }
 
-              T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
-              if (item != null) {
-                hashTable.Insert(hashFunction.Invoke(item), item);    // Only use dataRow when item is not in cache
-              } else {
-                ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
+          ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
 
-                var instance = BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow);
+          var instance = BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow);
 
-                hashTable.Insert(hashFunction.Invoke(instance), instance);
-              }
-            }
+          hashTable.Insert(hashFunction.Invoke(instance), instance);
 
-            return hashTable;
+        }  // foreach
 
-        } catch (Exception e) {
-          throw new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
-                                      e, baseTypeInfo.Name, id);
-        }
+        return hashTable;
 
-      } // lock
+      } catch (Exception e) {
+        throw new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
+                                    e, baseTypeInfo.Name, id);
+      }
     }
 
 
@@ -209,36 +197,37 @@ namespace Empiria {
         return new List<T>();
       }
 
-      lock (_cacheLock) {
+      var baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-        var baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
+      int id = 0;
 
-        int id = 0;
+      try {
 
-        try {
+        List<T> list = new List<T>(dataTable.Rows.Count);
 
-            List<T> list = new List<T>(dataTable.Rows.Count);
+        foreach (DataRow dataRow in dataTable.Rows) {
+          id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
 
-            foreach (DataRow dataRow in dataTable.Rows) {
-              id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
+          T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
 
-              T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
-              if (item != null) {
-                list.Add(item);
-              } else {
-                ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
+          if (item != null) {
+            list.Add(item);
+            continue;
+          }
 
-                list.Add(BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow));
-              }
-            }  // foreach
+          ObjectTypeInfo derivedTypeInfo = baseTypeInfo.GetDerivedType(dataRow);
 
-            return list;
+          list.Add(BaseObject.ParseEmpiriaObject<T>(derivedTypeInfo, dataRow));
 
-        } catch (Exception e) {
-          throw new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
-                                      e, baseTypeInfo.Name, id);
-        }
-      }  // lock
+        }  // foreach
+
+        return list;
+
+      } catch (Exception e) {
+        throw new OntologyException(OntologyException.Msg.CannotParseObjectWithDataRow,
+                                    e, baseTypeInfo.Name, id);
+      }
+
     }
 
 
@@ -253,28 +242,24 @@ namespace Empiria {
     static protected T TryParse<T>(string condition, bool reload = false) where T : BaseObject {
       IFilter filter = Empiria.Data.SqlFilter.Parse(condition);
 
-      lock (_cacheLock) {
+      var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-        var typeInfo = ObjectTypeInfo.Parse(typeof(T));
+      Tuple<ObjectTypeInfo, DataRow> objectData = typeInfo.TryGetObjectTypeAndDataRow(filter);
 
-        Tuple<ObjectTypeInfo, DataRow> objectData = typeInfo.TryGetObjectTypeAndDataRow(filter);
+      if (objectData == null) {
+        return null;
+      }
 
-        if (objectData == null) {
-          return null;
+      int id = Convert.ToInt32(objectData.Item2[typeInfo.IdFieldName]);
+
+      if (!reload) {
+        T item = _cache.TryGetItem<T>(typeInfo.Name, id);
+        if (item != null) {
+          return item;
         }
+      }
 
-        int id = Convert.ToInt32(objectData.Item2[typeInfo.IdFieldName]);
-
-        if (!reload) {
-          T item = _cache.TryGetItem<T>(typeInfo.Name, id);
-          if (item != null) {
-            return item;
-          }
-        }
-
-        return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
-
-      } // lock
+      return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
     }
 
 
@@ -519,25 +504,25 @@ namespace Empiria {
       item.OnLoad();
       item.isDirtyFlag = false;
 
-      if (typeInfo.UsesNamedKey) {
-        if (!item.IsSpecialCase && _cache.Contains(item.GetEmpiriaType().Name, item.UID)) {
-          EmpiriaLog.Critical($"WARNING UID DUPLICATE CACHED INSTANCES: {item.GetEmpiriaType().Name} / {item.Id} / {item.UID} ");
-        }
-      }
-      if (!item.IsSpecialCase && _cache.Contains(item.GetEmpiriaType().Name, item.Id)) {
-        Assertion.RequireFail($"DUPLICATED ID CACHED INSTANCE: {item.GetEmpiriaType().Name} / {item.Id} / {item.UID} ");
-      }
-
-      InsertIntoCache(item);
-
-      return item;
+      return InsertIntoCache(item);
     }
 
-    static void InsertIntoCache<T>(T item) where T : BaseObject {
-      if (item.objectTypeInfo.UsesNamedKey) {
-        _cache.Insert(item, item.UID);
+    static T InsertIntoCache<T>(T item) where T : BaseObject {
+      lock (_cacheLock) {
+        var cachedItem = _cache.TryGetItem<T>(item.objectTypeInfo.Name, item.Id);
+
+        if (cachedItem != null) {
+          EmpiriaLog.Critical($"DISCARTED ITEM WITH ID: {item.GetEmpiriaType().Name} / {item.Id} / {item.UID} ");
+          return cachedItem;
+        }
+
+        if (item.objectTypeInfo.UsesNamedKey) {
+          _cache.Insert(item, item.UID);
+        }
+        _cache.Insert(item);
+
+        return item;
       }
-      _cache.Insert(item);
     }
 
     #endregion Helpers
