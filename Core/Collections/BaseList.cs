@@ -23,6 +23,7 @@ namespace Empiria.Collections {
 
     private readonly List<T> items = null;
     private readonly bool isSynchronized = false;
+    private readonly object _lock = new object();
 
     #endregion Fields
 
@@ -140,7 +141,7 @@ namespace Empiria.Collections {
 
     protected void Add(T item) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           items.Add(item);
         }
       } else {
@@ -151,7 +152,7 @@ namespace Empiria.Collections {
 
     protected void AddRange(IEnumerable<T> collection) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           items.AddRange(collection);
         }
       } else {
@@ -167,7 +168,7 @@ namespace Empiria.Collections {
 
     protected void Clear() {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           items.Clear();
         }
       } else {
@@ -177,19 +178,13 @@ namespace Empiria.Collections {
 
 
     protected bool Contains(T item) {
-      if (isSynchronized) {
-        lock (items) {
-          return items.Contains(item);
-        }
-      } else {
-        return items.Contains(item);
-      }
+      return items.Contains(item);
     }
 
 
     public List<TOutput> ConvertAll<TOutput>(Converter<T, TOutput> converter) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           return items.ConvertAll(converter);
         }
       } else {
@@ -200,7 +195,7 @@ namespace Empiria.Collections {
 
     protected T Find(Predicate<T> match) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           return items.Find(match);
         }
       } else {
@@ -216,7 +211,7 @@ namespace Empiria.Collections {
 
     protected List<T> FindAll(Predicate<T> match) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           return items.FindAll(match);
         }
       } else {
@@ -227,7 +222,7 @@ namespace Empiria.Collections {
 
     protected T FindLast(Predicate<T> match) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           return items.FindLast(match);
         }
       } else {
@@ -238,7 +233,7 @@ namespace Empiria.Collections {
 
     protected void Insert(int index, T item) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           items.Insert(index, item);
         }
       } else {
@@ -249,7 +244,7 @@ namespace Empiria.Collections {
 
     protected void Load(DataTable table, string valueField) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           Clear();
           for (int i = 0; i < table.Rows.Count; i++) {
             Add((T) table.Rows[i][valueField]);
@@ -266,7 +261,7 @@ namespace Empiria.Collections {
 
     protected void Load(DataView view, string valueField) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           Clear();
           for (int i = 0; i < view.Count; i++) {
             Add((T) view[i][valueField]);
@@ -283,7 +278,7 @@ namespace Empiria.Collections {
 
     protected bool Remove(T item) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           return items.Remove(item);
         }
       } else {
@@ -294,7 +289,7 @@ namespace Empiria.Collections {
 
     protected int RemoveAll(Predicate<T> match) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           return items.RemoveAll(match);
         }
       } else {
@@ -305,7 +300,7 @@ namespace Empiria.Collections {
 
     protected T RemoveAt(int index) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           T item = items[index];
           items.RemoveAt(index);
           return item;
@@ -320,7 +315,7 @@ namespace Empiria.Collections {
 
     protected void RemoveLast(int count) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           items.RemoveRange(items.Count - count, count);
         }
       } else {
@@ -331,7 +326,7 @@ namespace Empiria.Collections {
 
     protected void RemoveRange(int index, int count) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           items.RemoveRange(index, count);
         }
       } else {
@@ -342,7 +337,7 @@ namespace Empiria.Collections {
 
     protected void Reverse() {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           items.Reverse();
         }
       } else {
@@ -353,7 +348,7 @@ namespace Empiria.Collections {
 
     protected IEnumerable<TResult> Select<TResult>(Func<T, TResult> selector) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           return items.Select<T, TResult>(selector);
         }
       } else {
@@ -367,7 +362,7 @@ namespace Empiria.Collections {
     /// <param name="item">The new item to set at the given index.</param>
     protected void SetItemAt(int index, T item) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           if ((0 <= index) && (index <= items.Count)) {
             items[index] = item;
           } else {
@@ -386,7 +381,7 @@ namespace Empiria.Collections {
 
     protected void Sort(Comparison<T> comparison) {
       if (isSynchronized) {
-        lock (items) {
+        lock (_lock) {
           items.Sort(comparison);
         }
       } else {
