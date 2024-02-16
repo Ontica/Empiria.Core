@@ -205,7 +205,7 @@ namespace Empiria.Ontology {
     /// <summary>Return the empty instance for this type.</summary>
     internal T GetEmptyInstance<T>(int emptyId = EmptyInstanceId) where T : BaseObject {
       if (_emptyInstance == null) {
-        _emptyInstance = BaseObject.ParseIdInternal<T>(this, emptyId, false, true);
+        _emptyInstance = BaseObject.ParseIdInternal<T>(this, emptyId, true);
       }
       return (T) _emptyInstance;
     }
@@ -244,7 +244,7 @@ namespace Empiria.Ontology {
     private BaseObject _unknownInstance = null;
     internal T GetUnknownInstance<T>() where T : BaseObject {
       if (_unknownInstance == null) {
-        _unknownInstance = BaseObject.ParseIdInternal<T>(this, UnknownInstanceId, false);
+        _unknownInstance = BaseObject.ParseIdInternal<T>(this, UnknownInstanceId);
       }
       return (T) _unknownInstance;
     }
