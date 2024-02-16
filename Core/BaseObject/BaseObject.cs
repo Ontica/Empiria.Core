@@ -349,9 +349,12 @@ namespace Empiria {
         return false;
       }
 
-      return this.Id == obj.Id && this.GetEmpiriaType().Equals(obj.GetEmpiriaType());
+      return this.Id == obj.Id && this.objectTypeInfo.Equals(obj.objectTypeInfo);
     }
 
+    public bool Distinct(BaseObject obj) {
+      return !Equals(obj);
+    }
 
     public ObjectTypeInfo GetEmpiriaType() {
       return this.objectTypeInfo;
