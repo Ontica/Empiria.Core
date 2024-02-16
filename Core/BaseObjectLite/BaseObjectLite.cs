@@ -61,24 +61,25 @@ namespace Empiria {
     }
 
 
-    public override bool Equals(object obj) {
-      if (obj == null || this.GetType() != obj.GetType()) {
-        return false;
-      }
-      return base.Equals(obj) && (this.Id == ((BaseObjectLite) obj).Id);
-    }
-
+    public override bool Equals(object obj) => this.Equals(obj as BaseObjectLite);
 
     public bool Equals(BaseObjectLite obj) {
       if (obj == null) {
         return false;
       }
-      return (this.GetType() == obj.GetType()) && (this.Id == obj.Id);
+      if (Object.ReferenceEquals(this, obj)) {
+        return true;
+      }
+      if (this.GetType() != obj.GetType()) {
+        return false;
+      }
+
+      return (this.Id == obj.Id);
     }
 
 
     public override int GetHashCode() {
-      return (this.GetType().GetHashCode() ^ this.Id);
+      return (this.GetType().GetHashCode(), this.Id).GetHashCode();
     }
 
     /// <summary>Raised after initialization and after databinding if their type is
