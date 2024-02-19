@@ -701,9 +701,20 @@ namespace Empiria.Json {
     }
 
 
-    public override bool Equals(object obj) {
-      return obj is JsonObject json &&
-             json.GetHashCode() == this.GetHashCode();
+    public override bool Equals(object obj) => Equals(obj as JsonObject);
+
+    public bool Equals(JsonObject jsonObject) {
+      if (jsonObject == null) {
+        return false;
+      }
+      if (Object.ReferenceEquals(this, jsonObject)) {
+        return true;
+      }
+      if (this.GetType() != jsonObject.GetType()) {
+        return false;
+      }
+
+      return this.GetHashCode() == jsonObject.GetHashCode();
     }
 
 
