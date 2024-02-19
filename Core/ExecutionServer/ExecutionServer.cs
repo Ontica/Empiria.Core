@@ -39,13 +39,15 @@ namespace Empiria {
 
     private bool isPassThroughServer = false;
 
+    static private ExecutionServer _instance;
+
+    static private object _syncRoot = new Object();
+
+    private readonly Exception _startFailedException;
+
     #endregion Fields
 
     #region Constructors and parsers
-
-    static private volatile ExecutionServer _instance;
-    static private object _syncRoot = new Object();
-    private readonly Exception _startFailedException;
 
     static private ExecutionServer Instance {
       get {
@@ -197,6 +199,7 @@ namespace Empiria {
                 !String.IsNullOrWhiteSpace(((IEmpiriaPrincipal) principal)?.Session?.Token));
       }
     }
+
 
     static public bool IsDevelopmentServer {
       get {
