@@ -11,7 +11,6 @@ using System;
 using System.Data;
 
 using Empiria.Data.Handlers;
-using Empiria.Security;
 
 namespace Empiria.Data {
 

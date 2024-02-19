@@ -45,11 +45,13 @@ namespace Empiria {
     #region Public methods
 
     public FixedList<T> GetItems<T>() {
-      return base.ExtendedDataField.GetList<T>("ListItems").ToFixedList();
+      return base.ExtendedDataField.GetList<T>("ListItems")
+                                   .ToFixedList();
     }
 
     public FixedList<T> GetItems<T>(Comparison<T> sort) {
       var list = base.ExtendedDataField.GetList<T>("ListItems");
+
       list.Sort(sort);
 
       return list.ToFixedList();

@@ -141,10 +141,10 @@ namespace Empiria {
 
 
     static private string Format(object fieldValue) {
-      if (fieldValue.GetType() == Type.GetType("System.String")) {
+      if (fieldValue.GetType() == typeof(string)) {
         return $"'{Prepare((string) fieldValue)}'";
 
-      } else if (fieldValue.GetType() == Type.GetType("System.DateTime")) {
+      } else if (fieldValue.GetType() == typeof(DateTime)) {
         return $"#{fieldValue}#";
 
       } else {
