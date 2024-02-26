@@ -88,8 +88,11 @@ namespace Empiria.Security {
     /// <param name="cipherText">Text string to be decrypted.</param>
     /// <param name="entropy">The entropy or salt string used to decrypt the text string.</param>
     static public string Decrypt(string cipherText, string entropy = "") {
-      Assertion.Require(cipherText, "cipherText");
-      entropy = entropy ?? "";
+      if (String.IsNullOrEmpty(cipherText)) {
+        return string.Empty;
+      }
+
+      entropy = entropy ?? String.Empty;
 
       return DecryptString(cipherText, entropy + ExecutionServer.LicenseNumber);
     }
@@ -100,8 +103,11 @@ namespace Empiria.Security {
     /// <param name="entropy">The entropy string used to encrypt the text string.</param>
     static public string Encrypt(EncryptionMode protectionMode,
                                  string plainText, string entropy = "") {
-      Assertion.Require(plainText, "plainText");
-      entropy = entropy ?? "";
+      if (String.IsNullOrEmpty(plainText)) {
+        return string.Empty;
+      }
+
+      entropy = entropy ?? String.Empty;
 
       if (entropy.Length != 0 &&
          (protectionMode == EncryptionMode.Standard || protectionMode == EncryptionMode.HashCode)) {
