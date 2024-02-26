@@ -32,7 +32,7 @@ namespace Empiria {
       XmlConfigurationFileNotExists,
     }
 
-    static private string resourceBaseName = "Empiria.RootTypes.KernelExceptionMsg";
+    static private string resourceBaseName = "Empiria.Exceptions.KernelExceptionMsg";
 
     #region Constructors
 
