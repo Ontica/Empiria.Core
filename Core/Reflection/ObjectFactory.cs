@@ -317,7 +317,11 @@ namespace Empiria.Reflection {
 
 
     static public T ParseEnumValue<T>(object value) {
-      return (T) Enum.Parse(typeof(T), (string) value);
+      if (value is string) {
+        return (T) Enum.Parse(typeof(T), (string) value);
+      } else {
+        return (T) Enum.Parse(typeof(T), ((long) value).ToString());
+      }
     }
 
     #endregion Methods
