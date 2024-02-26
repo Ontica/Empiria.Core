@@ -23,6 +23,7 @@ namespace Empiria {
       this.IsOptional = true;
       this.Default = null;
       this.ConvertFrom = null;
+      this.IsEncrypted = false;
     }
 
     /// <summary>The name of the data item to map to the property or field.</summary>
@@ -45,12 +46,21 @@ namespace Empiria {
       set;
     }
 
+
+    /// <summary>Indicates if the data field is encrypted so its value should be
+    /// descrypted at loading. IsEncrypted default value is false.</summary>
+    public bool IsEncrypted {
+      get;
+      set;
+    }
+
     /// <summary>Indicates that the data field must be converted from this type to the type
     /// of the property of field.
     public Type ConvertFrom {
       get;
       set;
     }
+
 
 
   }  // class DataFieldAttribute

@@ -16,6 +16,7 @@ using System.Reflection;
 using Empiria.Json;
 using Empiria.Reflection;
 using Empiria.Ontology;
+using Empiria.Security;
 
 namespace Empiria.ORM {
 
@@ -233,6 +234,11 @@ namespace Empiria.ORM {
       if (jsonStringValue.Length == 0) {
         return;   // If not value, do nothing?
       }
+
+      if (DataFieldAttribute.IsEncrypted) {
+        jsonStringValue = Cryptographer.Decrypt(jsonStringValue);
+      }
+
       JsonObject jsonObject = GetJsonObject(jsonObjectsCache, jsonStringValue);
 
       if (this.JsonInnerFieldName.Length != 0) {
@@ -251,6 +257,11 @@ namespace Empiria.ORM {
     /// <summary>Set instance member value according to this DataMapping rule.
     /// Only for use when MapToJsonItem is false.</summary>
     internal void SetNoJsonValue(object instance, object value) {
+
+      if (DataFieldAttribute.IsEncrypted && value is string) {
+        value = Cryptographer.Decrypt((string) value);
+      }
+
       object memberValue = this.TransformDataStoredValueBeforeAssignToMember(value);
 
       this.ImplementsSetValue(instance, memberValue);
