@@ -31,26 +31,6 @@ namespace Empiria.DataTypes {
       get { return BaseObject.ParseEmpty<Unit>(); }
     }
 
-    static public Unit Percentage {
-      get { return Unit.Parse("Unit.Percentage"); }
-    }
-
-    static public Unit SquareMeters {
-      get { return Unit.Parse("AreaUnit.SquareMeters"); }
-    }
-
-    static public Unit FullUnit {
-      get { return Unit.Parse("Unit.Full"); }
-    }
-
-    static public Unit UndividedUnit {
-      get { return Unit.Parse("Unit.Undivided"); }
-    }
-
-    static public Unit Unknown {
-      get { return BaseObject.ParseUnknown<Unit>(); }
-    }
-
     #endregion Constructors and parsers
 
     #region Properties
@@ -69,8 +49,14 @@ namespace Empiria.DataTypes {
     }
 
 
-    [DataField(GeneralObject.ExtensionDataFieldName  + ".Abbr", IsOptional = true)]
+    [DataField(ExtensionDataFieldName + ".Abbr", IsOptional = true)]
     public string Abbr {
+      get;
+      private set;
+    }
+
+    [DataField(ExtensionDataFieldName + ".IsIndivisible", IsOptional = true)]
+    public bool IsIndivisible {
       get;
       private set;
     }
