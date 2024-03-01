@@ -178,13 +178,13 @@
     <value>The server received an invalid application key: '{0}'.</value>
   </data>
   <data name="NotActiveUser" xml:space="preserve">
-    <value>The user account '{0}' is not active.</value>
+    <value>La cuenta de usuario '{0}' no está activa. Para poder ingresar se requiere que una persona administradora de la seguridad del sistema le reactive la cuenta.</value>
   </data>
   <data name="InvalidUserCredentials" xml:space="preserve">
     <value>El nombre de usuario o la contraseña no son válidos.</value>
   </data>
   <data name="UserPasswordExpired" xml:space="preserve">
-    <value>User password has expired for user '{0}'.</value>
+    <value>La contraseña de usuario '{0}' ya expiró. Se requiere cambiarla por una nueva, distinta a la contraseña actual.</value>
   </data>
   <data name="ExpiredSessionToken" xml:space="preserve">
     <value>Esta sesión de trabajo ya expiró.</value>
@@ -239,5 +239,8 @@
   </data>
   <data name="InvalidUserHostAddress" xml:space="preserve">
     <value>A SERIOUS SECURITY PROBLEM WAS DETECTED:\n We received an authentication request with a valid session token but coming from an unrecognized user host address '{0}'.\nThis issue can represent a serious security concern.\nPlease report this problem to your technical support area.</value>
+  </data>
+  <data name="MustChangePassword" xml:space="preserve">
+    <value>El usuario '{0}' require cambiar su contraseña por una distinta a la que se le entregó o envió por correo.</value>
   </data>
 </root>
