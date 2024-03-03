@@ -235,6 +235,12 @@ namespace Empiria.Ontology {
       set;
     }
 
+    public bool StoreInstancesInCache {
+      get {
+        return this.ExtensionData.Get<bool>("storeInstancesInCache", true);
+      }
+    }
+
     public string SolutionName {
       get;
       protected set;

@@ -23,7 +23,7 @@ namespace Empiria {
 
     #region Fields
 
-    static private readonly bool _useCache = ConfigurationData.Get<bool>("UseBaseObjectCache", true);
+    static private readonly bool USE_CACHE_FLAG = ConfigurationData.Get<bool>("UseBaseObjectCache", true);
 
     static private readonly object _cacheLock = new object();
 
@@ -78,7 +78,7 @@ namespace Empiria {
 
       int id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
 
-      if (_useCache) {
+      if (USE_CACHE_FLAG && baseTypeInfo.StoreInstancesInCache) {
         T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
         if (item != null) {
           return item;
@@ -125,7 +125,7 @@ namespace Empiria {
         throw new OntologyException(OntologyException.Msg.TryToParseZeroObjectId, typeInfo.Name);
       }
 
-      if (_useCache) {
+      if (USE_CACHE_FLAG && typeInfo.StoreInstancesInCache) {
         T item = _cache.TryGetItem<T>(typeInfo.Name, id);
         if (item != null) {
           return item;
@@ -141,7 +141,7 @@ namespace Empiria {
     static protected internal T ParseKey<T>(string namedKey) where T : BaseObject {
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-      if (_useCache) {
+      if (USE_CACHE_FLAG && typeInfo.StoreInstancesInCache) {
         T item = _cache.TryGetItem<T>(typeInfo.Name, namedKey);
         if (item != null) {
           return item;
@@ -172,7 +172,7 @@ namespace Empiria {
 
           id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
 
-          if (_useCache) {
+          if (USE_CACHE_FLAG && baseTypeInfo.StoreInstancesInCache) {
             T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
 
             if (item != null) {
@@ -214,7 +214,7 @@ namespace Empiria {
         foreach (DataRow dataRow in dataTable.Rows) {
           id = Convert.ToInt32(dataRow[baseTypeInfo.IdFieldName]);
 
-          if (_useCache) {
+          if (USE_CACHE_FLAG && baseTypeInfo.StoreInstancesInCache) {
             T item = _cache.TryGetItem<T>(baseTypeInfo.Name, id);
 
             if (item != null) {
@@ -259,7 +259,7 @@ namespace Empiria {
 
       int id = Convert.ToInt32(objectData.Item2[typeInfo.IdFieldName]);
 
-      if (_useCache) {
+      if (USE_CACHE_FLAG && typeInfo.StoreInstancesInCache) {
         T item = _cache.TryGetItem<T>(typeInfo.Name, id);
         if (item != null) {
           return item;
@@ -453,7 +453,7 @@ namespace Empiria {
 
       this.OnSave();
 
-      if (isNewFlag && _useCache) {
+      if (isNewFlag && USE_CACHE_FLAG && this.objectTypeInfo.StoreInstancesInCache) {
         InsertIntoCache(this);
       }
 
@@ -462,8 +462,8 @@ namespace Empiria {
     }
 
     protected void ReclassifyAs(ObjectTypeInfo newType) {
-      Assertion.Require(newType, "newType");
-      Assertion.Require(!this.GetEmpiriaType().Equals(newType),
+      Assertion.Require(newType, nameof(newType));
+      Assertion.Require(!this.objectTypeInfo.Equals(newType),
                        "newType should be distinct to the current one.");
 
       // Assertion.Assert(this.GetEmpiriaType().UnderlyingSystemType.Equals(newType.UnderlyingSystemType),
@@ -471,13 +471,13 @@ namespace Empiria {
       // Seek for a common ancestor (distinct than ObjectType) between types:
       // eg: if A is a mammal and B is a bird, should be possible to convert A to B or B to A because both are animals
 
-      if (_useCache) {
+      if (USE_CACHE_FLAG && this.objectTypeInfo.StoreInstancesInCache) {
         _cache.Remove(this);
       }
 
       this.objectTypeInfo = newType;
 
-      if (_useCache) {
+      if (USE_CACHE_FLAG && newType.StoreInstancesInCache) {
         InsertIntoCache(this);
       }
     }
@@ -518,15 +518,15 @@ namespace Empiria {
       item.OnLoad();
       item.isDirtyFlag = false;
 
-      if (!_useCache) {
-        return item;
-      } else {
+      if (USE_CACHE_FLAG && typeInfo.StoreInstancesInCache) {
         return InsertIntoCache(item);
+      } else {
+        return item;
       }
     }
 
     static T InsertIntoCache<T>(T item) where T : BaseObject {
-      if (!_useCache) {
+      if (!USE_CACHE_FLAG || !item.objectTypeInfo.StoreInstancesInCache) {
         return item;
       }
 
@@ -534,7 +534,7 @@ namespace Empiria {
         var cachedItem = _cache.TryGetItem<T>(item.objectTypeInfo.Name, item.Id);
 
         if (cachedItem != null) {
-          EmpiriaLog.Critical($"DISCARTED ITEM WITH ID: {item.GetEmpiriaType().Name} / {item.Id} / {item.UID} ");
+          EmpiriaLog.Info($"DISCARDED ITEM WITH ID: {item.objectTypeInfo.Name} / {item.Id} / {item.UID} ");
           return cachedItem;
         }
 
