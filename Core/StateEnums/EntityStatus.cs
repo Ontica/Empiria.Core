@@ -28,4 +28,36 @@ namespace Empiria.StateEnums {
 
   } // EntityStatus
 
+
+
+  /// <summary>Extension methods for EntityStatus.</summary>
+  static public class EntityStatusEnumExtensions {
+
+    static public string GetName(this EntityStatus status) {
+      switch (status) {
+        case EntityStatus.Pending:
+          return "Pendiente";
+
+        case EntityStatus.Active:
+          return "Activo";
+
+        case EntityStatus.OnReview:
+          return "En revisión";
+
+        case EntityStatus.Suspended:
+          return "Suspendido";
+
+        case EntityStatus.Discontinued:
+          return "Descontinuado";
+
+        case EntityStatus.Deleted:
+          return "Eliminado";
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unrecognized status {status}");
+      }
+    }
+
+  }  // class EntityStatusEnumExtensions
+
 } // namespace Empiria.StateEnums
