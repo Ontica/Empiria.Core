@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
-
 using Empiria.Security;
 
 namespace Empiria.Services.Authentication {
@@ -35,7 +34,12 @@ namespace Empiria.Services.Authentication {
 
       var authenticator = new Authenticator(credentials);
 
-      return authenticator.Authenticate();
+      IEmpiriaPrincipal principal = authenticator.Authenticate();
+
+      EmpiriaLog.Operation(principal.Session, "UserAuthentication",
+                           $"El usuario ingresó al sistema.");
+
+      return principal;
     }
 
 
