@@ -87,14 +87,19 @@ namespace Empiria.Security {
     /// <summary>Takes a ciphertext string and decrypts it using the giving public key.</summary>
     /// <param name="cipherText">Text string to be decrypted.</param>
     /// <param name="entropy">The entropy or salt string used to decrypt the text string.</param>
-    static public string Decrypt(string cipherText, string entropy = "") {
+    /// <param name="pure">Indicates if the .</param>///
+    static public string Decrypt(string cipherText, string entropy = "", bool pure = false) {
       if (String.IsNullOrEmpty(cipherText)) {
         return string.Empty;
       }
 
       entropy = entropy ?? String.Empty;
 
-      return DecryptString(cipherText, entropy + ExecutionServer.LicenseNumber);
+      if (!pure) {
+        entropy = entropy + ExecutionServer.LicenseNumber;
+      }
+
+      return DecryptString(cipherText, entropy, pure);
     }
 
 
@@ -119,25 +124,30 @@ namespace Empiria.Security {
 
       switch (protectionMode) {
         case EncryptionMode.Standard:
-          return EncryptString(plainText, ExecutionServer.LicenseNumber);
+          return EncryptString(plainText, ExecutionServer.LicenseNumber, false);
 
         case EncryptionMode.HashCode:
-          s = EncryptString(plainText, ExecutionServer.LicenseNumber);
+          s = EncryptString(plainText, ExecutionServer.LicenseNumber, false);
 
-          return EncryptString(s, ExecutionServer.LicenseNumber);
+          return EncryptString(s, ExecutionServer.LicenseNumber, false);
 
         case EncryptionMode.EntropyKey:
-          Assertion.Require(entropy, "entropy");
+          Assertion.Require(entropy, nameof(entropy));
 
-          return EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
+          return EncryptString(plainText, entropy + ExecutionServer.LicenseNumber, false);
 
         case EncryptionMode.EntropyHashCode:
-          Assertion.Require(entropy, "entropy");
+          Assertion.Require(entropy, nameof(entropy));
 
-          s = EncryptString(plainText, entropy + ExecutionServer.LicenseNumber);
+          s = EncryptString(plainText, entropy + ExecutionServer.LicenseNumber, false);
           s = CreateHashCode(s, entropy);
 
-          return EncryptString(s, entropy + ExecutionServer.LicenseNumber);
+          return EncryptString(s, entropy + ExecutionServer.LicenseNumber, false);
+
+        case EncryptionMode.Pure:
+          Assertion.Require(entropy, nameof(entropy));
+
+          return EncryptString(plainText, entropy, true);
 
         default:
           throw new SecurityException(SecurityException.Msg.InvalidProtectionMode, protectionMode.ToString());
@@ -276,15 +286,23 @@ namespace Empiria.Security {
     }
 
 
-    static private string DecryptString(string cipherText, string entropy) {
-      var textConverter = new UTF8Encoding();
-      var rijndael = new RijndaelManaged();
-
+    static private string DecryptString(string cipherText, string entropy, bool pure) {
       StartEngine();
 
-      rijndael.Padding = PaddingMode.Zeros;
-      rijndael.Key = ConstructKey(entropy);
-      rijndael.IV = ConstructIV(entropy);
+      var textConverter = new UTF8Encoding();
+
+      var rijndael = new RijndaelManaged();
+
+      if (!pure) {
+        rijndael.Padding = PaddingMode.Zeros;
+        rijndael.Key = ConstructKey(entropy);
+        rijndael.IV = ConstructIV(entropy);
+      } else {
+        rijndael.Padding = PaddingMode.PKCS7;
+        rijndael.Key = textConverter.GetBytes(entropy);
+        rijndael.IV = textConverter.GetBytes(entropy.Substring(0, 16));
+        rijndael.FeedbackSize = 128;
+      }
 
       ICryptoTransform decryptor = rijndael.CreateDecryptor();
 
@@ -297,19 +315,29 @@ namespace Empiria.Security {
       return textConverter.GetString(cipherTextArray).Trim('\0');
     }
 
-    static private string EncryptString(string plainText, string salt) {
-      var textConverter = new UTF8Encoding();
-      var rijndael = new RijndaelManaged();
 
+    static private string EncryptString(string plainText, string salt, bool pure) {
       StartEngine();
 
-      rijndael.Padding = PaddingMode.Zeros;
-      rijndael.Key = ConstructKey(salt);
-      rijndael.IV = ConstructIV(salt);
+      var textConverter = new UTF8Encoding();
+
+      var rijndael = new RijndaelManaged();
+
+      if (!pure) {
+        rijndael.Padding = PaddingMode.Zeros;
+        rijndael.Key = ConstructKey(salt);
+        rijndael.IV = ConstructIV(salt);
+      } else {
+        rijndael.Padding = PaddingMode.PKCS7;
+        rijndael.Key = textConverter.GetBytes(salt);
+        rijndael.IV = textConverter.GetBytes(salt.Substring(0, 16));
+        rijndael.FeedbackSize = 128;
+      }
 
       ICryptoTransform encryptor = rijndael.CreateEncryptor();
 
       var memoryStream = new MemoryStream();
+
       var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
 
       byte[] plainTextArray = textConverter.GetBytes(plainText);
@@ -319,6 +347,7 @@ namespace Empiria.Security {
 
       return Convert.ToBase64String(memoryStream.ToArray());
     }
+
 
     static private string GetLicenseHashCode(string license) {
       char[] licenseArray = license.ToCharArray();

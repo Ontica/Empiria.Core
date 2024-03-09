@@ -23,6 +23,9 @@ namespace Empiria.Security {
     HashCode = 3,
 
     EntropyHashCode = 4,
+
+    Pure = 5,
+
   }
 
 } // namespace Empiria.Security

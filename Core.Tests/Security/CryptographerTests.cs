@@ -49,6 +49,20 @@ namespace Empiria.Tests.Security {
       Assert.Equal(expected, decrypted);
     }
 
+    [Fact]
+    public void MustEncryptATextUsingPureAES() {
+      const string secret = "My protected message";
+      const string entropy = "Zw-@61737323313233ABCDEFGHZBwDEF";
+
+      string encrypted = Cryptographer.Encrypt(EncryptionMode.Pure, secret, entropy);
+
+      Assert.NotEqual(secret, encrypted);
+
+      string decrypted = Cryptographer.Decrypt(encrypted, entropy, true);
+
+      Assert.Equal(secret, decrypted);
+    }
+
   }  // SecurityClaimsTests
 
 }  // namespace Empiria.Tests.Security
