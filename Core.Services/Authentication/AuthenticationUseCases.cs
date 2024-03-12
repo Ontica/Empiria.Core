@@ -46,9 +46,14 @@ namespace Empiria.Services.Authentication {
     public string GenerateAuthenticationToken(UserCredentialsDto credentials) {
       Assertion.Require(credentials, nameof(credentials));
 
-      var authenticator = new Authenticator(credentials);
+      return SecurityTokenGenerator.GenerateAuthenticationToken(credentials);
+    }
 
-      return authenticator.GenerateAuthenticationToken();
+
+    public string GenerateNewCredentialsToken(UserCredentialsDto credentials) {
+      Assertion.Require(credentials, nameof(credentials));
+
+      return SecurityTokenGenerator.GenerateNewCredentialsToken(credentials);
     }
 
 
