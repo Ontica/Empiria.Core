@@ -28,11 +28,6 @@ namespace Empiria.Services.Authentication {
       Assertion.Require(credentials.AppKey, "AppKey");
     }
 
-
-    static internal string GetRawToken(this UserCredentialsDto credentials) {
-      return $"/{credentials.UserID}/{credentials.AppKey}/{credentials.UserHostAddress}/";
-    }
-
   }  // class UserCredentialsDtoExtensions
 
 } // namespace Empiria.Services.Authentication

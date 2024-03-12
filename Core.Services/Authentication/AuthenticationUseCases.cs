@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.Security;
 
 namespace Empiria.Services.Authentication {
@@ -46,14 +47,14 @@ namespace Empiria.Services.Authentication {
     public string GenerateAuthenticationToken(UserCredentialsDto credentials) {
       Assertion.Require(credentials, nameof(credentials));
 
-      return SecurityTokenGenerator.GenerateAuthenticationToken(credentials);
+      return SecurityTokenGenerator.GenerateToken(credentials, SecurityTokenType.Login);
     }
 
 
     public string GenerateNewCredentialsToken(UserCredentialsDto credentials) {
       Assertion.Require(credentials, nameof(credentials));
 
-      return SecurityTokenGenerator.GenerateNewCredentialsToken(credentials);
+      return SecurityTokenGenerator.GenerateToken(credentials, SecurityTokenType.UpdateCredentials);
     }
 
 

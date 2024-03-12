@@ -14,19 +14,31 @@ using Empiria.Security;
 
 namespace Empiria.Services.Authentication {
 
+  /// <summary>Describes a security token type.</summary>
+  internal enum SecurityTokenType {
+
+    Login,
+
+    ElectronicSign,
+
+    UpdateCredentials
+
+  }
+
+
   /// <summary>Generates time-based tokens for authentication and other security-sensitive operations.</summary>
   internal class SecurityTokenGenerator {
 
-    private static readonly int TOKEN_EXPIRATION_SECONDS = 20;
+    private static readonly int TOKEN_EXPIRATION_SECONDS =
+                                          ConfigurationData.Get("SecurityToken.ExpirationSeconds", 10);
 
-    private static readonly EmpiriaDictionary<string, TokenSalt> _tokens = new EmpiriaDictionary<string, TokenSalt>(64);
+    private static readonly EmpiriaDictionary<string, TokenSalt> _tokens =
+                                          new EmpiriaDictionary<string, TokenSalt>(64);
 
     #region Methods
 
-    static internal string GenerateAuthenticationToken(UserCredentialsDto credentials) {
-      credentials.AssertValidForTokenGeneration();
-
-      string rawToken = credentials.GetRawToken();
+    static internal string GenerateToken(UserCredentialsDto credentials, SecurityTokenType tokenType) {
+      string rawToken = GetRawToken(credentials, tokenType);
 
       var tokenRandomSalt = StoreToken(rawToken);
 
@@ -34,24 +46,29 @@ namespace Empiria.Services.Authentication {
     }
 
 
-    static internal string GenerateNewCredentialsToken(UserCredentialsDto credentials) {
-      throw new NotImplementedException();
-    }
-
-
-    static internal void SetEntropyString(UserCredentialsDto credentials) {
-      string rawToken = credentials.GetRawToken();
+    static internal string PopToken(UserCredentialsDto credentials, SecurityTokenType tokenType) {
+      string rawToken = GetRawToken(credentials, tokenType);
 
       string tokenSalt = GetSaltFromGeneratedTokens(rawToken);
 
       RemoveTokenFromStore(rawToken);
 
-      credentials.Entropy = Cryptographer.CreateHashCode(rawToken, tokenSalt);
+      return Cryptographer.CreateHashCode(rawToken, tokenSalt);
     }
 
     #endregion Methods
 
     #region Helpers
+
+    static private string GetRawToken(UserCredentialsDto credentials, SecurityTokenType tokenType) {
+      Assertion.Require(credentials, nameof(credentials));
+      Assertion.Require(credentials.AppKey, nameof(credentials.AppKey));
+      Assertion.Require(credentials.UserID, nameof(credentials.UserID));
+      Assertion.Require(credentials.UserHostAddress, nameof(credentials.UserHostAddress));
+
+      return $"/{tokenType}/{credentials.AppKey}/{credentials.UserID}/{credentials.UserHostAddress}/";
+    }
+
 
     static private string GetSaltFromGeneratedTokens(string rawToken) {
       Assertion.Require(_tokens.ContainsKey(rawToken), $"token '{rawToken}' not found.");

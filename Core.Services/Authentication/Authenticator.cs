@@ -33,7 +33,7 @@ namespace Empiria.Services.Authentication {
     internal IEmpiriaPrincipal Authenticate() {
       _credentials.AssertValidForAuthentication();
 
-      SecurityTokenGenerator.SetEntropyString(_credentials);
+      _credentials.Entropy = SecurityTokenGenerator.PopToken(_credentials, SecurityTokenType.Login);
 
       IEmpiriaPrincipal principal = AuthenticationService.Authenticate(_credentials);
 
