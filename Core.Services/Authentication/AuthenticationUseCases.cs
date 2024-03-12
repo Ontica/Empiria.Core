@@ -33,9 +33,11 @@ namespace Empiria.Services.Authentication {
     public IEmpiriaPrincipal Authenticate(UserCredentialsDto credentials) {
       Assertion.Require(credentials, nameof(credentials));
 
-      var authenticator = new Authenticator(credentials);
+      credentials.Entropy = SecurityTokenGenerator.PopToken(credentials, SecurityTokenType.Login);
 
-      IEmpiriaPrincipal principal = authenticator.Authenticate();
+      IEmpiriaPrincipal principal = AuthenticationService.Authenticate(credentials);
+
+      Assertion.Require(principal, nameof(principal));
 
       EmpiriaLog.Operation(principal.Session, "UserAuthentication",
                            $"El usuario ingresó al sistema.");
