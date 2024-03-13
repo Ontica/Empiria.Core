@@ -1,7 +1,7 @@
 ﻿/* Empiria Land **********************************************************************************************
 *                                                                                                            *
-*  Module   : Authentication Services                    Component : Domain Layer                            *
-*  Assembly : Empiria.Core.Services.dll                  Pattern   : Service provider                        *
+*  Module   : Security Services                          Component : Domain Layer                            *
+*  Assembly : Empiria.Core.dll                           Pattern   : Service provider                        *
 *  Type     : SecurityTokenGenerator                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Generates time-based tokens for authentication and other security-sensitive operations.        *
@@ -12,10 +12,10 @@ using System;
 using Empiria.Collections;
 using Empiria.Security;
 
-namespace Empiria.Services.Authentication {
+namespace Empiria.Security {
 
   /// <summary>Describes a security token type.</summary>
-  internal enum SecurityTokenType {
+  public enum SecurityTokenType {
 
     Login,
 
@@ -27,7 +27,7 @@ namespace Empiria.Services.Authentication {
 
 
   /// <summary>Generates time-based tokens for authentication and other security-sensitive operations.</summary>
-  internal class SecurityTokenGenerator {
+  public class SecurityTokenGenerator {
 
     private static readonly int TOKEN_EXPIRATION_SECONDS =
                                           ConfigurationData.Get("SecurityToken.ExpirationSeconds", 10);
@@ -37,7 +37,7 @@ namespace Empiria.Services.Authentication {
 
     #region Methods
 
-    static internal string GenerateToken(UserCredentialsDto credentials, SecurityTokenType tokenType) {
+    static public string GenerateToken(UserCredentialsDto credentials, SecurityTokenType tokenType) {
       string rawToken = GetRawToken(credentials, tokenType);
 
       var tokenRandomSalt = StoreToken(rawToken);
@@ -46,7 +46,7 @@ namespace Empiria.Services.Authentication {
     }
 
 
-    static internal string PopToken(UserCredentialsDto credentials, SecurityTokenType tokenType) {
+    static public string PopToken(UserCredentialsDto credentials, SecurityTokenType tokenType) {
       string rawToken = GetRawToken(credentials, tokenType);
 
       string tokenSalt = GetSaltFromGeneratedTokens(rawToken);
@@ -115,4 +115,4 @@ namespace Empiria.Services.Authentication {
 
   }  // class SecurityTokenGenerator
 
-}  // namespace Empiria.Services.Authentication
+}  // namespace Empiria.Security
