@@ -40,9 +40,8 @@ namespace Empiria.Security {
   }  // interface IUserCredentials
 
 
-
   /// <summary>Holds user credentials data for authentication.</summary>
-  public class UserCredentialsDto : IUserCredentials {
+  public class UserCredentialsDto : IUserCredentials, ISecurityTokenData {
 
     public string AppKey {
       get; set;

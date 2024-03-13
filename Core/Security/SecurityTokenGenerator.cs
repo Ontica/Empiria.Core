@@ -10,7 +10,6 @@
 using System;
 
 using Empiria.Collections;
-using Empiria.Security;
 
 namespace Empiria.Security {
 
@@ -26,6 +25,18 @@ namespace Empiria.Security {
   }
 
 
+  /// <summary>Interface that holds data used to generate security tokens.</summary>
+  public interface ISecurityTokenData {
+
+    string AppKey { get; }
+
+    string UserID { get; }
+
+    string UserHostAddress { get; }
+
+  }
+
+
   /// <summary>Generates time-based tokens for authentication and other security-sensitive operations.</summary>
   public class SecurityTokenGenerator {
 
@@ -37,8 +48,8 @@ namespace Empiria.Security {
 
     #region Methods
 
-    static public string GenerateToken(UserCredentialsDto credentials, SecurityTokenType tokenType) {
-      string rawToken = GetRawToken(credentials, tokenType);
+    static public string GenerateToken(ISecurityTokenData tokenData, SecurityTokenType tokenType) {
+      string rawToken = GetRawToken(tokenData, tokenType);
 
       var tokenRandomSalt = StoreToken(rawToken);
 
@@ -46,8 +57,8 @@ namespace Empiria.Security {
     }
 
 
-    static public string PopToken(UserCredentialsDto credentials, SecurityTokenType tokenType) {
-      string rawToken = GetRawToken(credentials, tokenType);
+    static public string PopToken(ISecurityTokenData tokenData, SecurityTokenType tokenType) {
+      string rawToken = GetRawToken(tokenData, tokenType);
 
       string tokenSalt = GetSaltFromGeneratedTokens(rawToken);
 
@@ -60,13 +71,13 @@ namespace Empiria.Security {
 
     #region Helpers
 
-    static private string GetRawToken(UserCredentialsDto credentials, SecurityTokenType tokenType) {
-      Assertion.Require(credentials, nameof(credentials));
-      Assertion.Require(credentials.AppKey, nameof(credentials.AppKey));
-      Assertion.Require(credentials.UserID, nameof(credentials.UserID));
-      Assertion.Require(credentials.UserHostAddress, nameof(credentials.UserHostAddress));
+    static private string GetRawToken(ISecurityTokenData tokenData, SecurityTokenType tokenType) {
+      Assertion.Require(tokenData, nameof(tokenData));
+      Assertion.Require(tokenData.AppKey, nameof(tokenData.AppKey));
+      Assertion.Require(tokenData.UserID, nameof(tokenData.UserID));
+      Assertion.Require(tokenData.UserHostAddress, nameof(tokenData.UserHostAddress));
 
-      return $"/{tokenType}/{credentials.AppKey}/{credentials.UserID}/{credentials.UserHostAddress}/";
+      return $"/{tokenType}/{tokenData.AppKey}/{tokenData.UserID}/{tokenData.UserHostAddress}/";
     }
 
 
