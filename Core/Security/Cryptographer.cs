@@ -298,8 +298,10 @@ namespace Empiria.Security {
         rijndael.Key = ConstructKey(entropy);
         rijndael.IV = ConstructIV(entropy);
       } else {
+        Assertion.Require(entropy.Length >= 32, "entropy string must be at least 32 in length.");
+
         rijndael.Padding = PaddingMode.PKCS7;
-        rijndael.Key = textConverter.GetBytes(entropy);
+        rijndael.Key = textConverter.GetBytes(entropy.Substring(entropy.Length - 32, 32));
         rijndael.IV = textConverter.GetBytes(entropy.Substring(0, 16));
         rijndael.FeedbackSize = 128;
       }
@@ -316,7 +318,7 @@ namespace Empiria.Security {
     }
 
 
-    static private string EncryptString(string plainText, string salt, bool pure) {
+    static private string EncryptString(string plainText, string entropy, bool pure) {
       StartEngine();
 
       var textConverter = new UTF8Encoding();
@@ -325,12 +327,14 @@ namespace Empiria.Security {
 
       if (!pure) {
         rijndael.Padding = PaddingMode.Zeros;
-        rijndael.Key = ConstructKey(salt);
-        rijndael.IV = ConstructIV(salt);
+        rijndael.Key = ConstructKey(entropy);
+        rijndael.IV = ConstructIV(entropy);
       } else {
+        Assertion.Require(entropy.Length >= 32, "entropy string must be at least 32 in length.");
+
         rijndael.Padding = PaddingMode.PKCS7;
-        rijndael.Key = textConverter.GetBytes(salt);
-        rijndael.IV = textConverter.GetBytes(salt.Substring(0, 16));
+        rijndael.Key = textConverter.GetBytes(entropy.Substring(entropy.Length - 32, 32));
+        rijndael.IV = textConverter.GetBytes(entropy.Substring(0, 16));
         rijndael.FeedbackSize = 128;
       }
 

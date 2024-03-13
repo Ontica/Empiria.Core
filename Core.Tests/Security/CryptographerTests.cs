@@ -52,7 +52,7 @@ namespace Empiria.Tests.Security {
     [Fact]
     public void MustEncryptATextUsingPureAES() {
       const string secret = "My protected message";
-      const string entropy = "Zw-@61737323313233ABCDEFGHZBwDEF";
+      const string entropy = "Zw-@61737323313233ABCDEFGHZBwDEF12y3ABC-79134-YU5141";
 
       string encrypted = Cryptographer.Encrypt(EncryptionMode.Pure, secret, entropy);
 
