@@ -53,13 +53,6 @@ namespace Empiria.Services.Authentication {
     }
 
 
-    public string GenerateNewCredentialsToken(UserCredentialsDto credentials) {
-      Assertion.Require(credentials, nameof(credentials));
-
-      return SecurityTokenGenerator.GenerateToken(credentials, SecurityTokenType.UpdateCredentials);
-    }
-
-
     public void Logout() {
       if (!ExecutionServer.IsAuthenticated) {
         return;
