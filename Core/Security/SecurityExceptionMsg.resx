@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!--
-    Microsoft ResX Schema
-
+  <!-- 
+    Microsoft ResX Schema 
+    
     Version 2.0
-
-    The primary goals of this format is to allow a simple XML format
-    that is mostly human readable. The generation and parsing of the
-    various data types are done through the TypeConverter classes
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
     associated with the data types.
-
+    
     Example:
-
+    
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-
-    There are any number of "resheader" rows that contain simple
+                
+    There are any number of "resheader" rows that contain simple 
     name/value pairs.
-
-    Each data row contains a name, and value. The row also contains a
-    type or mimetype. Type corresponds to a .NET class that support
-    text/value conversion through the TypeConverter architecture.
-    Classes that don't support this are serialized and stored with the
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
     mimetype set.
-
-    The mimetype is used for serialized objects, and tells the
-    ResXResourceReader how to depersist the object. This is currently not
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
     extensible. For a given mimetype the value must be set accordingly:
-
-    Note - application/x-microsoft.net.object.binary.base64 is the format
-    that the ResXResourceWriter will generate, however the reader can
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
     read any of the formats listed below.
-
+    
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with
+    value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-
+    
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with
+    value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array
+    value   : The object must be serialized into a byte array 
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -117,47 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="InvalidHttpMethod" xml:space="preserve">
-    <value>User authentication attempt failed: Only POST Http method is allowed.</value>
-  </data>
-  <data name="InvalidRequestPath" xml:space="preserve">
-    <value>Attempt to access the system from an unauthorized web site or IP address.</value>
-  </data>
-  <data name="CantEncryptString" xml:space="preserve">
-    <value>There was a problem trying to encrypt the string value.</value>
-  </data>
-  <data name="CantDecryptString" xml:space="preserve">
-    <value>There was a problem trying to decrypt the string value.</value>
-  </data>
-  <data name="EncryptedObjectWasAltered" xml:space="preserve">
-    <value>The encrypted object has been modified intentionally by an unknown program or by a person.\n\nIMPORTANT: This issue can represent a serious security concern.\nPlease report this problem to your technical support area.</value>
-  </data>
-  <data name="InvalidAuthenticationClient" xml:space="preserve">
-    <value>Attempt to access the system from an unauthorized application, web site or IP address.</value>
-  </data>
-  <data name="RequireExecuteMethod" xml:space="preserve">
-    <value>The user has not execution privileges for operation {0} on the application domain {1}.</value>
-  </data>
   <data name="UnauthenticatedIdentity" xml:space="preserve">
     <value>The current user is not authenticated.</value>
-  </data>
-  <data name="WrongAuthentication" xml:space="preserve">
-    <value>User authentication failed.</value>
-  </data>
-  <data name="CantCloseSession" xml:space="preserve">
-    <value>There was a problem trying to close the user's session with ID {0}.</value>
-  </data>
-  <data name="CantChangePasswordOnUnauthenticatedUser" xml:space="preserve">
-    <value>An attempt to modify a user's pasword using another user account was made. This operation can be executed only over the same user that is authenticated.\n\nIMPORTANT: This issue can represent a serious security concern.\nPlease report this problem to your technical support area.</value>
-  </data>
-  <data name="CantVerifyPasswordOnUnauthenticatedUser" xml:space="preserve">
-    <value>An attempt to verify a user's password using another user account was made. This operation can be executed only over the same user that is authenticated.\n\nIMPORTANT:This issue can represent a serious security concern.\nPlease report this problem to your technical support area.</value>
-  </data>
-  <data name="InvalidSingleSignOnToken" xml:space="preserve">
-    <value>An attempt was made to invoke a system operation using an invalid SignOn token .\n\nIMPORTANT: This issue can represent a serious security concern.\nPlease report this problem to your technical support area.</value>
-  </data>
-  <data name="GuestUserNotFound" xml:space="preserve">
-    <value>Guest user is inactive or is not defined in the system.</value>
   </data>
   <data name="WrongImpersonationToken" xml:space="preserve">
     <value>An attempt was made to access the system with an undefined security impersonation token.\n\nIMPORTANT: This issue can represent a serious security concern.\nPlease report this problem to your technical support area.</value>
@@ -171,20 +132,14 @@
   <data name="InvalidDIFDataItemDataType" xml:space="preserve">
     <value>The protected type '{0}' returns a data item with a value ({1}) that has an invalid or unrecognized type ({2}), in the position {3} using the Data Integrity Field version number {4}. The resource Id was {5}.</value>
   </data>
-  <data name="IntegrityValidatorAssertFails" xml:space="preserve">
-    <value>A SERIOUS SECURITY PROBLEM WAS DETECTED:\n Some PROTECTED DATA could have been modified by an external source or person.\n\n This issue can represent a serious security concern.\nPlease report this problem to your technical support area. Hint [{0}, {1}]</value>
-  </data>
   <data name="InvalidClientAppKey" xml:space="preserve">
     <value>The server received an invalid application key: '{0}'.</value>
   </data>
-  <data name="NotActiveUser" xml:space="preserve">
-    <value>La cuenta de usuario '{0}' no está activa. Para poder ingresar se requiere que una persona administradora de la seguridad del sistema reactive la cuenta.</value>
-  </data>
   <data name="InvalidUserCredentials" xml:space="preserve">
-    <value>El nombre de usuario o la contraseña no son válidos.</value>
+    <value>El nombre de la cuenta o la contraseña no son válidos.</value>
   </data>
   <data name="UserPasswordExpired" xml:space="preserve">
-    <value>La contraseña de usuario '{0}' ya expiró. Se requiere cambiarla por una nueva, distinta a la contraseña actual.</value>
+    <value>La contraseña de la cuenta '{0}' ya expiró. Se requiere cambiarla por una nueva, distinta a la contraseña actual.</value>
   </data>
   <data name="ExpiredSessionToken" xml:space="preserve">
     <value>Esta sesión de trabajo ya expiró.</value>
@@ -192,38 +147,14 @@
   <data name="SessionTokenNotFound" xml:space="preserve">
     <value>There is not a registered system session with token '{0}'.</value>
   </data>
-  <data name="NotActiveClientAppKey" xml:space="preserve">
-    <value>The application key '{0}' is not active.</value>
-  </data>
-  <data name="CantExecuteOperationOnOtherUser" xml:space="preserve">
-    <value>Operation '{0}' for user '{1}' failed: This operation can be executed only over the same user that is authenticated.</value>
-  </data>
-  <data name="SubjectClaimTypeIsMultiValue" xml:space="preserve">
-    <value>Security claim type '{0}' has multiple value instances, so is not possible to retrieve their values using this method.</value>
-  </data>
-  <data name="SubjectClaimTypeNotFound" xml:space="preserve">
-    <value>Resource with id {1} has not defined any security claim of type '{0}'.</value>
+  <data name="ClientAppKeyIsSuspended" xml:space="preserve">
+    <value>The application key '{0}' is suspended.</value>
   </data>
   <data name="UserWithEMailNotFound" xml:space="preserve">
     <value>There is not a user registered with UserID = '{0}' and email account {1}.</value>
   </data>
-  <data name="InvalidActivationToken" xml:space="preserve">
-    <value>User's activation token is invalid: '{0}'.</value>
-  </data>
-  <data name="SubjectClaimNotFound" xml:space="preserve">
-    <value>Resource with id {1} has not defined any security claim of type '{0}' and value '{2}'</value>
-  </data>
-  <data name="InvalidResetPasswordToken" xml:space="preserve">
-    <value>The reset password token is invalid: {0}</value>
-  </data>
   <data name="CantWriteAuditTrail" xml:space="preserve">
     <value>There was a problem writing on the audit log. The requested operation was '{0}'.</value>
-  </data>
-  <data name="UserNotFound" xml:space="preserve">
-    <value>There is not a registered user with UserID = '{0}'.</value>
-  </data>
-  <data name="UserNotInRole" xml:space="preserve">
-    <value>To execute this operation the current user must belong to at least one of the following roles: {0}.</value>
   </data>
   <data name="EnsureClaimFailed" xml:space="preserve">
     <value>{0}</value>
@@ -235,15 +166,18 @@
     <value>La contraseña para ejecutar la operación de firmado de documentos o cifrado de información no es correcta.</value>
   </data>
   <data name="PrivateKeyFileNotExists" xml:space="preserve">
-    <value>El archivo con la llave privada para la operación de firmado de documentos o cifrado de información no existe. Compruebe que la ruta sea correcta: {0}.</value>
+    <value>El archivo con la llave privada para la operación de firmado de documentos o cifrado de información no existe. Se requiere comprobar que la ruta sea correcta: {0}.</value>
   </data>
   <data name="InvalidUserHostAddress" xml:space="preserve">
     <value>A SERIOUS SECURITY PROBLEM WAS DETECTED:\n We received an authentication request with a valid session token but coming from an unrecognized user host address '{0}'.\nThis issue can represent a serious security concern.\nPlease report this problem to your technical support area.</value>
   </data>
   <data name="MustChangePassword" xml:space="preserve">
-    <value>El usuario '{0}' require cambiar su contraseña por una distinta a la que se le entregó o envió por correo.</value>
+    <value>Se require cambiar la contraseña de la cuenta '{0}' por una distinta a la que se entregó o envió por correo.</value>
   </data>
   <data name="UserAccountHasBeenBlocked" xml:space="preserve">
-    <value>La cuenta de usuario ha sido bloqueda debido a que se intentó ingresar varias veces con una contraseña incorrecta.</value>
+    <value>La cuenta ha sido bloqueda debido a que se intentó ingresar varias veces con una contraseña incorrecta.</value>
+  </data>
+  <data name="UserAccountIsSuspended" xml:space="preserve">
+    <value>La cuenta '{0}' está suspendida. Para poder ingresar se requiere que una persona administradora de la seguridad del sistema reactive la cuenta.</value>
   </data>
 </root>
