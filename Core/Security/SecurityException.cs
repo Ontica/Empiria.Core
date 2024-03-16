@@ -52,6 +52,7 @@ namespace Empiria.Security {
       SubjectClaimTypeIsMultiValue,
       SessionTokenNotFound,
       UnauthenticatedIdentity,
+      UserAccountHasBeenBlocked,
       UserPasswordExpired,
       UserNotFound,
       UserNotInRole,
