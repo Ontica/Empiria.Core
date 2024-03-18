@@ -35,7 +35,6 @@ namespace Empiria.Security {
       UserAccountHasBeenBlocked,
       UserAccountIsSuspended,
       UserPasswordExpired,
-      UserWithEMailNotFound,
       WrongDIFVersionRequested,
       WrongImpersonationToken,
     }

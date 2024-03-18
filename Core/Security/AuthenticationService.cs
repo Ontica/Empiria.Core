@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
-using Empiria.Json;
 using Empiria.Security.Providers;
 
 namespace Empiria.Security {
@@ -29,7 +28,7 @@ namespace Empiria.Security {
     }
 
 
-    static public IEmpiriaPrincipal Authenticate(UserCredentialsDto credentials) {
+    static public IEmpiriaPrincipal Authenticate(IUserCredentials credentials) {
       Assertion.Require(credentials, nameof(credentials));
 
       var provider = SecurityProviders.AuthenticationProvider();
@@ -39,10 +38,13 @@ namespace Empiria.Security {
 
 
     static public IClientApplication AuthenticateClientApp(string clientApplicationKey) {
+      Assertion.Require(clientApplicationKey, nameof(clientApplicationKey));
+
       var provider = SecurityProviders.AuthenticationProvider();
 
       return provider.AuthenticateClientApp(clientApplicationKey);
     }
+
 
     #endregion Services
 

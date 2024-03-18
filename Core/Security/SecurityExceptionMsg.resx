@@ -150,9 +150,6 @@
   <data name="ClientAppKeyIsSuspended" xml:space="preserve">
     <value>The application key '{0}' is suspended.</value>
   </data>
-  <data name="UserWithEMailNotFound" xml:space="preserve">
-    <value>There is not a user registered with UserID = '{0}' and email account {1}.</value>
-  </data>
   <data name="CantWriteAuditTrail" xml:space="preserve">
     <value>There was a problem writing on the audit log. The requested operation was '{0}'.</value>
   </data>
