@@ -47,8 +47,9 @@ namespace Empiria.Security {
     bool HasDataAccessTo<T>(T entity) where T : IIdentifiable;
 
 
-    void Logout();
+    bool HasPermission(string permissionID);
 
+    void Logout();
 
   }  // interface IEmpiriaPrincipal
 
