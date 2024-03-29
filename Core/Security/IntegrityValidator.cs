@@ -59,7 +59,7 @@ namespace Empiria.Security {
         } else if (item is Int32) {
           dif += ((int) item).ToString();
         } else if (item is DateTime) {
-          dif += ((DateTime) item).ToString("yyyy-MM-dd HH:mm:ss");
+          dif += ((DateTime) item).ToString("yyyy-MM-dd HH:mm:ss.fff");
         } else if (item is Boolean) {
           dif += ((Boolean) item).ToString();
         } else if (item is decimal) {
@@ -76,6 +76,8 @@ namespace Empiria.Security {
         }
         dif += "|";
       }
+      EmpiriaLog.Debug("Dif string: " + dif + "|");
+
       return dif + "|";
     }
 
