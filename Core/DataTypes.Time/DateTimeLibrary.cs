@@ -17,37 +17,6 @@ namespace Empiria.DataTypes.Time {
 
     #region Public methods
 
-    static public int DaysTo(this DateTime fromDate, DateTime toDate) {
-      if (fromDate <= toDate) {
-        return toDate.Date.Subtract(fromDate.Date).Days;
-      } else {
-        return fromDate.Date.Subtract(toDate.Date).Days;
-      }
-    }
-
-    static public int HoursTo(DateTime fromDate, DateTime toDate) {
-      if (fromDate <= toDate) {
-        return toDate.Subtract(fromDate).Hours;
-      } else {
-        return fromDate.Subtract(toDate).Hours;
-      }
-    }
-
-    static public bool IsDateTime(string source, string format) {
-      try {
-        if (String.IsNullOrEmpty(source)) {
-          return false;
-        }
-
-        DateTime.ParseExact(source, format, DateTimeFormatInfo.InvariantInfo);
-
-        return true;
-
-      } catch {
-        return false;
-      }
-    }
-
     static public bool IsWeekendDate(this DateTime date) {
       return IsWeekendDate(date, EmpiriaCalendar.Default);
     }
@@ -64,15 +33,6 @@ namespace Empiria.DataTypes.Time {
       Assertion.Require(calendar, "calendar");
 
       return (calendar.IsWeekendDay(date) || calendar.IsHoliday(date));
-    }
-
-
-    static public DateTime ToDateTime(string source, string format) {
-      try {
-        return DateTime.ParseExact(source, format, DateTimeFormatInfo.InvariantInfo);
-      } catch {
-        throw new Exception("No reconozco el valor de " + source + " como del tipo de datos fecha.");
-      }
     }
 
     #endregion Public methods
