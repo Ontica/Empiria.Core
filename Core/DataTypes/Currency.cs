@@ -51,13 +51,40 @@ namespace Empiria.DataTypes {
 
     #endregion Constructors and parsers
 
-    #region Public properties
+    #region Properties
 
     public string Abbreviation {
       get { return base.NamedKey; }
     }
 
-    #endregion Public properties
+
+    public bool HasSymbol {
+      get {
+        return !string.IsNullOrEmpty(Symbol);
+      }
+    }
+
+
+    public string Symbol {
+      get {
+        return base.ExtendedDataField.Get<string>("symbol", string.Empty);
+      }
+    }
+
+    #endregion Properties
+
+    #region Methods
+
+    public string Format(decimal amount) {
+      if (HasSymbol) {
+        return $"{Symbol}{amount.ToString("#,##0.00")} {Name}";
+      } else {
+        return $"{amount.ToString("#,##0.####")} {Name}";
+      }
+    }
+
+
+    #endregion Methods
 
   } // class Currency
 
