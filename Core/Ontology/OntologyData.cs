@@ -73,7 +73,11 @@ namespace Empiria.Ontology {
     static internal FixedList<T> GetSimpleObjects<T>() where T: BaseObject {
       ObjectTypeInfo objectTypeInfo = ObjectTypeInfo.Parse<T>();
 
-      var operation = DataOperation.Parse("qrySimpleObjects", objectTypeInfo.Id);
+      var sql = "SELECT * FROM SimpleObjects " +
+               $"WHERE (ObjectTypeId = {objectTypeInfo.Id} AND ObjectStatus <> 'X') " +
+               $"ORDER BY ObjectName";
+
+      var operation = DataOperation.Parse(sql);
 
       return DataReader.GetFixedList<T>(operation);
     }

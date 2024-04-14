@@ -171,17 +171,22 @@ namespace Empiria.Data {
       #region Private methods
 
       static private DataRow GetDataRuleRow(string sourceName, int typeId) {
-        DataOperation operation = DataOperation.Parse("qryDBRule", 'I', ExecutionServer.ServerId, sourceName, typeId);
+        var sql = "SELECT * FROM DBRules " +
+                 $"WHERE TypeId = {typeId} AND SourceName = '{sourceName}' AND DbRuleType = 'I' AND " +
+                 $"ServerId = {ExecutionServer.ServerId} AND TargetServerId = {ExecutionServer.ServerId}";
+
+        DataOperation operation = DataOperation.Parse(sql);
 
         return DataReader.GetDataRow(operation);
       }
 
-      static private int RetriveCurrentId(DataRow ruleDataRow) {
-        string idFieldName = (string) ruleDataRow["IdFieldName"];
 
-        string sql = $"SELECT MAX({idFieldName}) FROM {(string) ruleDataRow["SourceName"]} " +
-                     $"WHERE ({idFieldName} >= {Convert.ToInt32(ruleDataRow["LowerIdValue"])}) AND " +
-                     $"({idFieldName} <= {Convert.ToInt32(ruleDataRow["UpperIdValue"])})";
+      static private int RetriveCurrentId(DataRow ruleDataRow) {
+        var idFieldName = (string) ruleDataRow["IdFieldName"];
+
+        var sql = $"SELECT MAX({idFieldName}) FROM {(string) ruleDataRow["SourceName"]} " +
+                  $"WHERE ({idFieldName} >= {Convert.ToInt32(ruleDataRow["LowerIdValue"])}) AND " +
+                  $"({idFieldName} <= {Convert.ToInt32(ruleDataRow["UpperIdValue"])})";
 
         if (Convert.ToInt32(ruleDataRow["TypeId"]) != 0) {
           sql += $" AND ({(string) ruleDataRow["IdTypeFieldName"]} = {Convert.ToInt32(ruleDataRow["TypeId"])})";

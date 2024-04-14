@@ -195,7 +195,11 @@ namespace Empiria.Data {
 
     static private string ReadDataSourceText(string sourceName) {
       try {
-        DataOperation operation = DataOperation.Parse("qryDBQueryString", sourceName);
+        var sql = $"SELECT * FROM DBQueryStrings " +
+                  $"WHERE QueryName = '{sourceName}'";
+
+        DataOperation operation = DataOperation.Parse(sql);
+
         string text = String.Empty;
         switch (operation.DataSource.Technology) {
           case DataTechnology.SqlServer:
