@@ -40,7 +40,7 @@ namespace Empiria.Services.Authentication {
       Assertion.Require(principal, nameof(principal));
 
       EmpiriaLog.Operation(principal.Session, "UserAuthentication",
-                           $"El usuario ingresó al sistema.");
+                           $"La persona usuaria ingresó al sistema.");
 
       return principal;
     }

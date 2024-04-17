@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
+  <!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="UnauthenticatedIdentity" xml:space="preserve">
-    <value>The current user is not authenticated.</value>
+    <value>La persona usuaria no ha sido autenticada.</value>
   </data>
   <data name="WrongImpersonationToken" xml:space="preserve">
     <value>An attempt was made to access the system with an undefined security impersonation token.\n\nIMPORTANT: This issue can represent a serious security concern.\nPlease report this problem to your technical support area.</value>
@@ -133,7 +133,7 @@
     <value>The protected type '{0}' returns a data item with a value ({1}) that has an invalid or unrecognized type ({2}), in the position {3} using the Data Integrity Field version number {4}. The resource Id was {5}.</value>
   </data>
   <data name="InvalidClientAppKey" xml:space="preserve">
-    <value>The server received an invalid application key: '{0}'.</value>
+    <value>Se está intentado acceder al sistema mediante una llave de aplicación (application key) inválida: '{0}'.</value>
   </data>
   <data name="InvalidUserCredentials" xml:space="preserve">
     <value>El nombre de la cuenta o la contraseña no son válidos.</value>
@@ -142,10 +142,10 @@
     <value>La contraseña de la cuenta '{0}' ya expiró. Se requiere cambiarla por una nueva, distinta a la contraseña actual.</value>
   </data>
   <data name="ExpiredSessionToken" xml:space="preserve">
-    <value>Esta sesión de trabajo ya expiró.</value>
+    <value>La sesión de trabajo ya expiró.</value>
   </data>
   <data name="SessionTokenNotFound" xml:space="preserve">
-    <value>There is not a registered system session with token '{0}'.</value>
+    <value>MUY IMPORTANTE: Se está intentado acceder al sistema con un token de sesión que no ha sido registrado. El token fue '{0}'.</value>
   </data>
   <data name="ClientAppKeyIsSuspended" xml:space="preserve">
     <value>The application key '{0}' is suspended.</value>
