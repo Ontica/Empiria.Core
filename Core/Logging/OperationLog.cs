@@ -57,7 +57,6 @@ namespace Empiria {
         UserId = subject.Id;
       }
       SubjectId = subject.Id;
-      Description = operation;
     }
 
     public OperationLog(LogOperationType logOperationType, IEmpiriaSession session,
