@@ -8,6 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
+
 using Empiria.Contacts;
 using Empiria.Data;
 using Empiria.Security;
@@ -16,6 +17,8 @@ namespace Empiria {
 
   /// <summary>Stores an operation log.</summary>
   internal class OperationLog {
+
+    static internal readonly bool OPERATION_LOG_IS_ACTIVE = ConfigurationData.Get("UseOperationsLog", false);
 
     #region Constructors and parsers
 
@@ -34,6 +37,7 @@ namespace Empiria {
       Exception = exception.Message;
     }
 
+
     public OperationLog(LogOperationType logOperationType,
                         IEmpiriaSession session,
                         string operation,
@@ -48,14 +52,12 @@ namespace Empiria {
     }
 
     public OperationLog(LogOperationType logOperationType, Contact subject,
-                        string operation, string subjectObject) : this(logOperationType, operation, string.Empty) {
+                        string operation, string description = "") : this(logOperationType, operation, description) {
+      if (UserId == -1) {
+        UserId = subject.Id;
+      }
       SubjectId = subject.Id;
-      SubjectObject = subjectObject;
-    }
-
-    public OperationLog(LogOperationType logOperationType, Contact subject,
-                        string operation) : this(logOperationType, operation, string.Empty) {
-      SubjectId = subject.Id;
+      Description = operation;
     }
 
     public OperationLog(LogOperationType logOperationType, IEmpiriaSession session,
@@ -96,11 +98,11 @@ namespace Empiria {
 
     internal string UserHostAddress {
       get {
-        if (!ExecutionServer.IsAuthenticated) {
-          return ExecutionServer.UserHostAddress != null &&
-                 ExecutionServer.UserHostAddress.Length != 0 ? ExecutionServer.UserHostAddress : "0.0.0.0";
-        } else {
+        if (ExecutionServer.IsAuthenticated) {
           return ExecutionServer.CurrentPrincipal.Session.UserHostAddress;
+        } else {
+          return !String.IsNullOrWhiteSpace(ExecutionServer.UserHostAddress) ?
+                                        ExecutionServer.UserHostAddress : "0.0.0.0";
         }
       }
     }
@@ -143,7 +145,7 @@ namespace Empiria {
     #region Methods
 
     internal void Save() {
-      if (!ConfigurationData.Get("UseOperationsLog", false)) {
+      if (!OPERATION_LOG_IS_ACTIVE) {
         return;
       }
 
@@ -167,18 +169,18 @@ namespace Empiria {
     }
 
     private void SetUserId() {
-      if (!ExecutionServer.IsAuthenticated) {
-        UserId = -1;
-      } else {
+      if (ExecutionServer.IsAuthenticated) {
         UserId = ExecutionServer.CurrentContact.Id;
+      } else {
+        UserId = -1;
       }
     }
 
     private void SetSessionId() {
-      if (!ExecutionServer.IsAuthenticated) {
-        SessionId = -1;
-      } else {
+      if (ExecutionServer.IsAuthenticated) {
         SessionId = ExecutionServer.CurrentPrincipal.Session.Id;
+      } else {
+        SessionId = -1;
       }
     }
 

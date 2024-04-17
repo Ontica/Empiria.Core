@@ -40,7 +40,7 @@ namespace Empiria {
 
     #endregion Properties
 
-    #region Public  methods
+    #region Methods
 
     static public void Critical(string message) {
       CreateLogEntryInCurrentLogTrail(LogEntryType.Critical, message);
@@ -66,6 +66,28 @@ namespace Empiria {
     }
 
 
+    static public void FailedOperationLog(string operationName, string description) {
+      CreateOperationLogEntry(LogOperationType.Error, operationName, description);
+    }
+
+
+    static public void FailedOperationLog(string operationName, Exception exception) {
+      CreateOperationLogEntry(LogOperationType.Error, operationName, string.Empty, exception);
+    }
+
+
+    static public void FailedOperationLog(Contact subject, string operationName, string description) {
+      var operationLog = new OperationLog(LogOperationType.Error,
+                                          subject, operationName, description);
+
+      operationLog.Save();
+    }
+
+
+    static public void FailedOperationLog(IEmpiriaSession session, string operationName, string description) {
+      CreateOperationLogEntry(LogOperationType.Error, session, operationName, description);
+    }
+
     static public void Info(string message) {
       CreateLogEntryInCurrentLogTrail(LogEntryType.Info, message);
     }
@@ -76,30 +98,9 @@ namespace Empiria {
     }
 
 
-    static public void Operation(string operation, Exception exception) {
-      CreateOperationLogEntry(LogOperationType.Error, operation, string.Empty, exception);
-    }
-
-
-    static public void Operation(LogOperationType logOperationType, string operation) {
-      CreateOperationLogEntry(logOperationType, operation, string.Empty);
-    }
-
-
-    static public void Operation(LogOperationType logOperationType, string operation,
-                                 string description) {
-      CreateOperationLogEntry(logOperationType, operation, description);
-    }
-
-
     static public void Operation(IEmpiriaSession session, string operation,
                                  string description) {
       CreateOperationLogEntry(LogOperationType.Successful, session, operation, description);
-    }
-
-    static public void Operation(IEmpiriaSession session, string operation,
-                                 string description, Exception exception) {
-      CreateOperationLogEntry(LogOperationType.Error, session, operation, description, exception);
     }
 
 
@@ -111,43 +112,10 @@ namespace Empiria {
       operationLog.Save();
     }
 
-    static public void UserManagementLog(Contact subject, string operationName) {
+
+    static public void UserManagementLog(Contact subject, string operationName, string description = "") {
       var operationLog = new OperationLog(LogOperationType.UserManagement,
-                                          subject, operationName);
-
-      operationLog.Save();
-    }
-
-
-
-    static private void CreateOperationLogEntry(LogOperationType logOperationType,
-                                                string operation, string description) {
-      var operationLog = new OperationLog(logOperationType, operation, description);
-
-      operationLog.Save();
-    }
-
-
-    static private void CreateOperationLogEntry(LogOperationType logOperationType,
-                                                string operation, string description,
-                                                Exception exception) {
-      var operationLog = new OperationLog(logOperationType, operation, description, exception);
-
-      operationLog.Save();
-    }
-
-
-    private static void CreateOperationLogEntry(LogOperationType logOperationType, IEmpiriaSession session,
-                                                string operation, string description) {
-      var operationLog = new OperationLog(logOperationType, session, operation, description);
-
-      operationLog.Save();
-    }
-
-    private static void CreateOperationLogEntry(LogOperationType logOperationType, IEmpiriaSession session,
-                                                string operation, string description,
-                                                Exception exception) {
-      var operationLog = new OperationLog(logOperationType, session, operation, description, exception);
+                                          subject, operationName, description);
 
       operationLog.Save();
     }
@@ -165,10 +133,9 @@ namespace Empiria {
     }
 
 
-    #endregion Public methods
+    #endregion Methods
 
-    #region Private methods
-
+    #region Helpers
 
     static private ILogEntry CreateLogEntry(LogEntryType type, string data) {
       var logEntry = new LogEntryModel();
@@ -205,6 +172,31 @@ namespace Empiria {
     }
 
 
+    static private void CreateOperationLogEntry(LogOperationType logOperationType,
+                                        string operation, string description) {
+      var operationLog = new OperationLog(logOperationType, operation, description);
+
+      operationLog.Save();
+    }
+
+
+    static private void CreateOperationLogEntry(LogOperationType logOperationType,
+                                                string operation, string description,
+                                                Exception exception) {
+      var operationLog = new OperationLog(logOperationType, operation, description, exception);
+
+      operationLog.Save();
+    }
+
+
+    static private void CreateOperationLogEntry(LogOperationType logOperationType, IEmpiriaSession session,
+                                                string operation, string description) {
+      var operationLog = new OperationLog(logOperationType, session, operation, description);
+
+      operationLog.Save();
+    }
+
+
     static private void TryWriteLogEntryToFile(ILogEntry logEntry) {
       // Log the CreateLogEntry exception to another kind of log outside the database.
       // Also log the original logEntry to the same chosen log technology.
@@ -228,7 +220,7 @@ namespace Empiria {
     }
 
 
-    #endregion Private methods
+    #endregion Helpers
 
   } // class EmpiriaLog
 
