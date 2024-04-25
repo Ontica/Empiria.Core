@@ -26,6 +26,8 @@ namespace Empiria.StateEnums {
 
     Deleted = 'X',
 
+    All = '*',
+
   } // EntityStatus
 
 
@@ -35,6 +37,7 @@ namespace Empiria.StateEnums {
 
     static public string GetName(this EntityStatus status) {
       switch (status) {
+
         case EntityStatus.Pending:
           return "Pendiente";
 
@@ -52,6 +55,9 @@ namespace Empiria.StateEnums {
 
         case EntityStatus.Deleted:
           return "Eliminado";
+
+        case EntityStatus.All:
+          return "Todos";
 
         default:
           throw Assertion.EnsureNoReachThisCode($"Unrecognized status {status}");
