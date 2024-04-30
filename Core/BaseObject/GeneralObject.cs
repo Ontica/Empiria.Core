@@ -28,6 +28,10 @@ namespace Empiria {
 
     #region Constructors and parsers
 
+    protected GeneralObject(Powertype powertype) : base(powertype) {
+      // Used by partitioned derived types.
+    }
+
     protected GeneralObject() {
       // Required by Empiria Framework.
     }
