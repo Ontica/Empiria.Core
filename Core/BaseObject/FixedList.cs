@@ -122,8 +122,10 @@ namespace Empiria {
     }
 
 
-    public new void Reverse() {
+    public new FixedList<T> Reverse() {
       base.Reverse();
+
+      return this;
     }
 
 
@@ -156,8 +158,10 @@ namespace Empiria {
     }
 
 
-    public new void Sort(Comparison<T> comparison) {
+    public new FixedList<T> Sort(Comparison<T> comparison) {
       base.Sort(comparison);
+
+      return this;
     }
 
 
