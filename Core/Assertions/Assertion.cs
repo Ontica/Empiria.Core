@@ -11,12 +11,6 @@ using System;
 
 namespace Empiria {
 
-  public interface IInvariant {
-
-    void AssertInvariant();
-
-  }
-
 
   /// <summary>Static library that allows assertion checking and automatic publishing
   ///of assertions fails.</summary>
