@@ -64,6 +64,13 @@ namespace Empiria {
       this.Name = entity.Name;
     }
 
+    static public NamedEntityDto Parse(JsonObject json) {
+      Assertion.Require(json, nameof(json));
+
+      return new NamedEntityDto(json.Get<string>("uid"),
+                                json.Get<string>("name"));
+    }
+
     public NamedEntityDto(string uid, string name) {
       this.UID = uid;
       this.Name = name;
