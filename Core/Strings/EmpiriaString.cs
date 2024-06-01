@@ -42,7 +42,13 @@ namespace Empiria {
     static public string BuildKeywords(params string[] words) {
       string temp = String.Join(" ", words).ToLowerInvariant();
 
-      return BuildKeywords(temp, true);
+      var keywords = EmpiriaString.BuildKeywords(temp, true);
+
+      if (keywords.Length < 4000) {
+        return keywords;
+      } else {
+        return keywords.Substring(0, 4000);
+      }
     }
 
     static public string BuildKeywords(string words, bool removeNoiseStrings) {
