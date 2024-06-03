@@ -245,9 +245,10 @@ namespace Empiria.Ontology {
     public ObjectTypeInfo[] GetAllSubclasses() {
       var allSubclasses = new List<ObjectTypeInfo>(16);
 
-      allSubclasses.AddRange(GetSubclasses());
+      var subclasses = this.GetSubclasses();
 
-      foreach (var subclass in allSubclasses) {
+      foreach (var subclass in subclasses) {
+        allSubclasses.Add(subclass);
         allSubclasses.AddRange(subclass.GetAllSubclasses());
       }
 
