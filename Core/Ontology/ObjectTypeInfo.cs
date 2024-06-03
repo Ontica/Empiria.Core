@@ -241,6 +241,31 @@ namespace Empiria.Ontology {
       return subclassesFilter;
     }
 
+
+    public ObjectTypeInfo[] GetAllSubclasses() {
+      var allSubclasses = new List<ObjectTypeInfo>(16);
+
+      allSubclasses.AddRange(GetSubclasses());
+
+      foreach (var subclass in allSubclasses) {
+        allSubclasses.AddRange(subclass.GetAllSubclasses());
+      }
+
+      return allSubclasses.ToArray();
+    }
+
+
+    public string GetAllSubclassesFilter() {
+      ObjectTypeInfo[] allSubClasses = this.GetAllSubclasses();
+
+      string subclassesFilter = this.Id.ToString();
+      foreach (var subclassType in allSubClasses) {
+        subclassesFilter += "," + subclassType.Id.ToString();
+      }
+      return subclassesFilter;
+    }
+
+
     private BaseObject _unknownInstance = null;
     internal T GetUnknownInstance<T>() where T : BaseObject {
       if (_unknownInstance == null) {

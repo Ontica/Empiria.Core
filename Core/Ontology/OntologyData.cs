@@ -122,6 +122,36 @@ namespace Empiria.Ontology {
     }
 
 
+    static internal FixedList<T> GetFullBaseObjectList<T>(string filter = "", string sort = "") where T : BaseObject {
+      var typeInfo = ObjectTypeInfo.Parse<T>();
+
+      string fullFilter = String.Empty;
+
+      if (typeInfo.TypeIdFieldName.Length != 0) {
+        fullFilter = $"{typeInfo.TypeIdFieldName} IN ({typeInfo.GetAllSubclassesFilter()})";
+      }
+
+      if (fullFilter.Length != 0 && filter.Length != 0) {
+        fullFilter = $"{fullFilter} AND {filter}";
+
+      } else if (fullFilter.Length != 0 && filter.Length == 0) {
+
+        // no-op
+
+      } else if (fullFilter.Length == 0 && filter.Length != 0) {
+        fullFilter = filter;
+
+      } else {
+
+        // no-op
+
+      }
+
+      return OntologyDataHelpers.GetList<T>(typeInfo.DataSource, fullFilter, sort)
+                                .ToFixedList();
+    }
+
+
     static internal DataRow GetTypeDataRow(int typeId) {
       DataRow row = OntologyDataHelpers.GetEntityById("Types", "TypeId", typeId);
       if (row != null) {

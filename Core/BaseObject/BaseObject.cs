@@ -72,6 +72,11 @@ namespace Empiria {
     }
 
 
+    static public FixedList<T> GetFullList<T>(string filter = "", string sort = "") where T : BaseObject {
+      return OntologyData.GetFullBaseObjectList<T>(filter, sort);
+    }
+
+
     static internal T ParseDataRow<T>(DataRow dataRow) where T : BaseObject {
 
       ObjectTypeInfo baseTypeInfo = ObjectTypeInfo.Parse(typeof(T));
