@@ -44,12 +44,9 @@ namespace Empiria {
 
       var keywords = EmpiriaString.BuildKeywords(temp, true);
 
-      if (keywords.Length < 4000) {
-        return keywords;
-      } else {
-        return keywords.Substring(0, 4000);
-      }
+      return Truncate(keywords, 4000);
     }
+
 
     static public string BuildKeywords(string words, bool removeNoiseStrings) {
       words = TrimAll(words);
@@ -509,6 +506,7 @@ namespace Empiria {
       return (stringA.Equals(stringB));
     }
 
+
     static public bool StartsWith(string source, string firstValue, params string[] moreValues) {
       Assertion.Require(source, "source");
       Assertion.Require(firstValue, "firstValue");
@@ -523,6 +521,19 @@ namespace Empiria {
       }
       return false;
     }
+
+
+    static public string Truncate(string source, int maxLength) {
+      if (String.IsNullOrEmpty(source)) {
+        return source;
+      }
+      if (source.Length > maxLength) {
+        return source.Substring(0, maxLength);
+      } else {
+        return source;
+      }
+    }
+
 
     static public bool? TryToBoolean(string source) {
       source = source.ToUpperInvariant();
