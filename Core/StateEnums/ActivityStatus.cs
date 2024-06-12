@@ -21,8 +21,6 @@ namespace Empiria.StateEnums {
 
     Suspended = 'S',
 
-    Review = 'R',
-
     Completed = 'C',
 
     Canceled = 'L',
@@ -42,16 +40,13 @@ namespace Empiria.StateEnums {
       switch (status) {
 
         case ActivityStatus.Active:
-          return "Activa";
+          return "En proceso";
 
         case ActivityStatus.Pending:
           return "Pendiente";
 
         case ActivityStatus.Completed:
           return "Terminada";
-
-        case ActivityStatus.Review:
-          return "En revisión";
 
         case ActivityStatus.Suspended:
           return "Suspendida";
@@ -75,16 +70,13 @@ namespace Empiria.StateEnums {
       switch (status) {
 
         case ActivityStatus.Active:
-          return "Activas";
+          return "En proceso";
 
         case ActivityStatus.Pending:
           return "Pendientes";
 
         case ActivityStatus.Completed:
           return "Terminadas";
-
-        case ActivityStatus.Review:
-          return "En revisión";
 
         case ActivityStatus.Suspended:
           return "Suspendidas";
