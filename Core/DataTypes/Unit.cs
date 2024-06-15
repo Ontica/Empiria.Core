@@ -61,6 +61,12 @@ namespace Empiria.DataTypes {
       private set;
     }
 
+    [DataField(ExtensionDataFieldName + ".Format", IsOptional = true)]
+    public string Format {
+      get;
+      private set;
+    }
+
     #endregion Properties
 
   } // class Unit

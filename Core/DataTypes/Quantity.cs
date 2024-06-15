@@ -133,7 +133,18 @@ namespace Empiria.DataTypes {
     }
 
     public override string ToString() {
+      if (Unit.Format == "Hectareas") {
+        return FormatToHectareasString();
+      }
       return EmpiriaString.TrimAll(amount.ToString("#,##0.00######") + " " + unit.Abbr);
+    }
+
+    private string FormatToHectareasString() {
+      var ha = Math.Truncate(amount);
+      var area = Math.Truncate((amount - ha) * 100);
+      var meters = (amount - ha - (area / 100)) * 10000;
+
+      return $"{ha}-{area}-{meters.ToString("#,##0.00######")} {unit.Abbr}";
     }
 
     #endregion Public methods
