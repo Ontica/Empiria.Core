@@ -49,6 +49,12 @@ namespace Empiria.Parties {
       }
     }
 
+    public string FullName {
+      get {
+        return $"{Code} - {Name}";
+      }
+    }
+
     #endregion Properties
 
   } // class OrganizationalUnit
