@@ -515,7 +515,7 @@ namespace Empiria.ORM {
         if (_emptyMethodDelegate == null) {
           _emptyMethodDelegate =
               (EmptyMethodDelegate) Delegate.CreateDelegate(typeof(EmptyMethodDelegate),
-                                    ObjectFactory.TryGetEmptyInstanceProperty(this.MemberType).GetGetMethod());
+                                    ObjectFactory.TryGetEmptyInstanceProperty(this.MemberType).GetGetMethod(true));
         }
         return _emptyMethodDelegate;
       }
