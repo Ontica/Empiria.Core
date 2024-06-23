@@ -1,6 +1,6 @@
 ﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Module   : Empiria Storage                            Component : File storage services                   *
+*  Module   : Empiria Storage                            Component : Domain Layer                            *
 *  Assembly : Empiria.Core.dll                           Pattern   : Enumerated type                         *
 *  Type     : FileType                                   License   : Please read LICENSE.txt file            *
 *                                                                                                            *

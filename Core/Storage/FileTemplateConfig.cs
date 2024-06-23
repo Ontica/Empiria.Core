@@ -1,7 +1,7 @@
-﻿/* Empiria Financial *****************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Module   : Financial Accounting                       Component : Common Types                            *
-*  Assembly : FinancialAccounting.Core.dll               Pattern   : Information Holder                      *
+*  Module   : Empiria Storage                            Component : Domain Layer                            *
+*  Assembly : Empiria.Core.dll                           Pattern   : Information Holder                      *
 *  Type     : FileTemplateConfig                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Holds configuration for file templates.                                                        *
@@ -165,4 +165,4 @@ namespace Empiria.Storage {
 
   }  // class FileTemplateConfig
 
-}  // namespace Empiria.FinancialAccounting
+}  // namespace Empiria.Storage

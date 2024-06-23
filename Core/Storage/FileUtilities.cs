@@ -1,12 +1,13 @@
 ﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Module   : Empiria Storage                            Component : File storage services                   *
+*  Module   : Empiria Storage                            Component : Services Layer                          *
 *  Assembly : Empiria.Core.dll                           Pattern   : Static methods library                  *
 *  Type     : FileUtilities                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Contains methods for file handling.                                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.IO;
 using System.Text;

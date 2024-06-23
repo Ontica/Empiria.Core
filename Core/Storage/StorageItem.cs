@@ -1,7 +1,7 @@
 ﻿/* Empiria Storage *******************************************************************************************
 *                                                                                                            *
 *  Module   : Empiria Storage                            Component : Domain Layer                            *
-*  Assembly : Empiria.Storage.dll                        Pattern   : Abstract type                           *
+*  Assembly : Empiria.Core.dll                           Pattern   : Abstract type                           *
 *  Type     : StorageItem                                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : This is the base class for all storage items, including containers and files.                  *

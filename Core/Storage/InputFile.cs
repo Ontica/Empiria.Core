@@ -1,17 +1,17 @@
 ﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Module   : Empiria Storage                            Component : File storage services                   *
-*  Assembly : Empiria.Core.dll                           Pattern   : Input Data Holder                       *
-*  Type     : PostedFile                                 License   : Please read LICENSE.txt file            *
+*  Module   : Empiria Storage                            Component : Domain Layer                            *
+*  Assembly : Empiria.Core.dll                           Pattern   : Input Data Transfer Object              *
+*  Type     : InputFile                                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Input data holder for a file stream.                                                           *
+*  Summary  : Data transfer object for input file streams.                                                   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System.IO;
 
 namespace Empiria.Storage {
 
-  /// <summary>Input data holder for a file stream.</summary>
+  /// <summary>Data transfer object for input file streams.</summary>
   public class InputFile {
 
     public InputFile(Stream stream,

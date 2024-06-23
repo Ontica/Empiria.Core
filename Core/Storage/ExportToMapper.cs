@@ -1,13 +1,12 @@
-﻿/* Empiria Financial *****************************************************************************************
+﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Module   : Financial Accounting                       Component : Interface adapters                      *
-*  Assembly : FinancialAccounting.Core.dll               Pattern   : Mapper class                            *
+*  Module   : Empiria Storage                            Component : Adapters Layer                          *
+*  Assembly : Empiria.Core.dll                           Pattern   : Mapper                                  *
 *  Types    : ExportToMapper                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Mapper class for ExportTo entities.                                                            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 namespace Empiria.Storage {
 
@@ -61,4 +60,4 @@ namespace Empiria.Storage {
 
   }  // class ExportToMapper
 
-}  // namespace Empiria.FinancialAccounting
+}  // namespace Empiria.Storage

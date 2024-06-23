@@ -1,15 +1,13 @@
 ﻿/* Empiria Storage *******************************************************************************************
 *                                                                                                            *
 *  Module   : Empiria Storage                            Component : Domain Layer                            *
-*  Assembly : Empiria.Storage.dll                        Pattern   : Service provider                        *
+*  Assembly : Empiria.Core.dll                           Pattern   : Service provider                        *
 *  Type     : StorageContainer                           License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Represents a stored media object treated as a value type, so it must be related to             *
 *             other objects like metadata information holders or document entities.                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-
 
 namespace Empiria.Storage {
 
