@@ -144,7 +144,13 @@ namespace Empiria.DataTypes {
       var area = Math.Truncate((amount - ha) * 100);
       var meters = (amount - ha - (area / 100)) * 10000;
 
-      return $"{ha}-{area}-{meters.ToString("#,##0.00######")} {unit.Abbr}";
+      if (meters == 0) {
+        return $"{ha}-{area}-00 {unit.Abbr}";
+      } else if (Math.Truncate(meters) == meters) {
+        return $"{ha}-{area}-{meters.ToString("#,##0")} {unit.Abbr}";
+      } else {
+        return $"{ha}-{area}-{meters.ToString("#,##0.00######")} {unit.Abbr}";
+      }
     }
 
     #endregion Public methods
