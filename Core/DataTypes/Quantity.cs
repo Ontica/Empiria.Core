@@ -145,11 +145,11 @@ namespace Empiria.DataTypes {
       var meters = (amount - ha - (area / 100)) * 10000;
 
       if (meters == 0) {
-        return $"{ha}-{area}-00 {unit.Abbr}";
+        return $"{ha.ToString("00")}-{area.ToString("00")}-00 {unit.Abbr}";
       } else if (Math.Truncate(meters) == meters) {
-        return $"{ha}-{area}-{meters.ToString("#,##0")} {unit.Abbr}";
+        return $"{ha.ToString("00")}-{area.ToString("00")}-{meters.ToString("00")} {unit.Abbr}";
       } else {
-        return $"{ha}-{area}-{meters.ToString("#,##0.00######")} {unit.Abbr}";
+        return $"{ha.ToString("00")}-{area.ToString("00")}-{meters.ToString("00.00######")} {unit.Abbr}";
       }
     }
 
