@@ -7,7 +7,6 @@
 *  Summary  : Describes the status of an entity that can be tracked in the time, as a task or activity.      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 namespace Empiria.StateEnums {
 
@@ -24,6 +23,8 @@ namespace Empiria.StateEnums {
     Completed = 'C',
 
     Canceled = 'L',
+
+    Rejected = 'R',
 
     Deleted = 'X',
 
@@ -54,6 +55,9 @@ namespace Empiria.StateEnums {
         case ActivityStatus.Canceled:
           return "Cancelada";
 
+        case ActivityStatus.Rejected:
+          return "Rechazada";
+
         case ActivityStatus.Deleted:
           return "Eliminada";
 
@@ -83,6 +87,9 @@ namespace Empiria.StateEnums {
 
         case ActivityStatus.Canceled:
           return "Canceladas";
+
+        case ActivityStatus.Rejected:
+          return "Rechazadas";
 
         case ActivityStatus.Deleted:
           return "Eliminadas";
