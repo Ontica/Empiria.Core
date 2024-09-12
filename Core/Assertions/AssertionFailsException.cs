@@ -13,8 +13,7 @@ using System.Reflection;
 
 namespace Empiria {
 
-  /// <summary>The exception that is thrown when a code assertion fails. This exeptions always are
-  /// replicated to the EventLog.</summary>
+  /// <summary>The exception that is thrown when a code assertion fails.</summary>
   [Serializable]
   public sealed class AssertionFailsException : EmpiriaException {
 
@@ -34,7 +33,7 @@ namespace Empiria {
                                      base(msgType.ToString(), GetMessage(msgType)) {
       try {
         this.MethodName = this.GetSourceMethodName();
-
+        // base.Publish();
       } finally {
         // no-op
       }
@@ -49,6 +48,7 @@ namespace Empiria {
                                      base(msgType.ToString(), BuildMessage(message, args)) {
 
       this.MethodName = this.GetSourceMethodName();
+      // base.Publish();
     }
 
     /// <summary>Initializes a new instance of AssertionFailsException class with a specified error
@@ -59,6 +59,7 @@ namespace Empiria {
                                      base(msgType.ToString(), GetMessage(msgType), innerException) {
 
       this.MethodName = this.GetSourceMethodName();
+      // base.Publish();
     }
 
     #endregion Constructors and parsers
