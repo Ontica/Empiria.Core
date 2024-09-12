@@ -24,8 +24,6 @@ namespace Empiria.StateEnums {
 
     Canceled = 'L',
 
-    Rejected = 'R',
-
     Deleted = 'X',
 
     All = '*',
@@ -41,7 +39,7 @@ namespace Empiria.StateEnums {
       switch (status) {
 
         case ActivityStatus.Active:
-          return "En proceso";
+          return "En ejecución";
 
         case ActivityStatus.Pending:
           return "Pendiente";
@@ -54,9 +52,6 @@ namespace Empiria.StateEnums {
 
         case ActivityStatus.Canceled:
           return "Cancelada";
-
-        case ActivityStatus.Rejected:
-          return "Rechazada";
 
         case ActivityStatus.Deleted:
           return "Eliminada";
@@ -74,7 +69,7 @@ namespace Empiria.StateEnums {
       switch (status) {
 
         case ActivityStatus.Active:
-          return "En proceso";
+          return "En ejecución";
 
         case ActivityStatus.Pending:
           return "Pendientes";
@@ -87,9 +82,6 @@ namespace Empiria.StateEnums {
 
         case ActivityStatus.Canceled:
           return "Canceladas";
-
-        case ActivityStatus.Rejected:
-          return "Rechazadas";
 
         case ActivityStatus.Deleted:
           return "Eliminadas";
