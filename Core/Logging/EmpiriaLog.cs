@@ -88,6 +88,7 @@ namespace Empiria {
       CreateOperationLogEntry(LogOperationType.Error, session, operationName, description);
     }
 
+
     static public void Info(string message) {
       CreateLogEntryInCurrentLogTrail(LogEntryType.Info, message);
     }

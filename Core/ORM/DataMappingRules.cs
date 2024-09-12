@@ -84,6 +84,7 @@ namespace Empiria.ORM {
         Dictionary<string, JsonObject> jsonObjectsCache = this.CreateJsonObjectsCache();
         for (int i = 0; i < dataMappingsArray.Length; i++) {
           rule = dataMappingsArray[i];
+
           if (rule.MapToJsonItem) {
             rule.SetJsonValue(instance, EmpiriaString.ToString(dataRow[rule.DataColumnIndex]), jsonObjectsCache);
           } else {

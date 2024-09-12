@@ -76,7 +76,6 @@ namespace Empiria.Security {
         }
         dif += "|";
       }
-      EmpiriaLog.Debug("Dif string: " + dif + "|");
 
       return dif + "|";
     }

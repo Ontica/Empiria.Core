@@ -56,6 +56,7 @@ namespace Empiria.Security {
       }
     }
 
+
     /// <summary>Initializes a new instance of SecurityException class with a specified error
     ///  message and a reference to the inner exception that is the cause of this exception.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
