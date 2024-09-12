@@ -40,6 +40,16 @@ namespace Empiria.Parties {
 
     #region Properties
 
+    public string Acronym {
+      get {
+        return base.ExtendedData.Get("acronym", string.Empty);
+      }
+      set {
+        base.ExtendedData.SetIfValue("acronym", value);
+      }
+    }
+
+
     public string Code {
       get {
         return base.ExtendedData.Get("code", string.Empty);
