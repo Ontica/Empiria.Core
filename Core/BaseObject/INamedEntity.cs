@@ -7,7 +7,7 @@
 *  Summary  : Represents an entity with a unique ID and a name.                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,6 +28,8 @@ namespace Empiria {
   /// <summary>Data transfer object for INamedEntity instances.</summary>
   public class NamedEntity : INamedEntity {
 
+    #region Constructors and parsers
+
     public NamedEntity(INamedEntity entity) {
       this.UID = entity.UID;
       this.Name = entity.Name;
@@ -38,12 +40,13 @@ namespace Empiria {
       this.Name = name;
     }
 
-    public NamedEntityDto Parse(JsonObject json) {
+    static public NamedEntity Parse(JsonObject json) {
       Assertion.Require(json, nameof(json));
 
-      return new NamedEntityDto(json.Get<string>("uid"),
-                                json.Get<string>("name"));
+      return new NamedEntity(json.Get<string>("uid"), json.Get<string>("name"));
     }
+
+    #endregion Constructors and parsers
 
     public string UID {
       get; private set;
@@ -59,9 +62,16 @@ namespace Empiria {
   /// <summary>Data transfer object for INamedEntity instances.</summary>
   public class NamedEntityDto : INamedEntity {
 
+    #region Constructors and parsers
+
     public NamedEntityDto(INamedEntity entity) {
       this.UID = entity.UID;
       this.Name = entity.Name;
+    }
+
+    public NamedEntityDto(string uid, string name) {
+      this.UID = uid;
+      this.Name = name;
     }
 
     static public NamedEntityDto Parse(JsonObject json) {
@@ -71,10 +81,7 @@ namespace Empiria {
                                 json.Get<string>("name"));
     }
 
-    public NamedEntityDto(string uid, string name) {
-      this.UID = uid;
-      this.Name = name;
-    }
+    #endregion Constructors and parsers
 
     public string UID {
       get;
