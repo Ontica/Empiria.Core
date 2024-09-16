@@ -7,7 +7,12 @@
 *  Summary  : Describes a data field.                                                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
+using System.Collections.Generic;
+
 using Empiria.Json;
+using Empiria.Ontology;
+using Empiria.Reflection;
 
 namespace Empiria.DataObjects {
 
@@ -15,29 +20,89 @@ namespace Empiria.DataObjects {
   public class DataField {
 
     static public DataField Parse(JsonObject json) {
-      return new DataField {
+      var dataField = new DataField {
         Label = json.Get<string>("label"),
         Field = json.Get<string>("field"),
         DataType = json.Get<string>("dataType"),
-        Values = json.GetFixedList<NamedEntityDto>("values", false)
+        IsRequired = json.Get<bool>("isRequired", true),
+        SourceTypeId = json.Get("sourceTypeId", -1),
       };
+
+      dataField.Values = dataField.GetValues(json);
+
+      return dataField;
     }
 
     public string Label {
       get; private set;
-    }
+    } = string.Empty;
+
 
     public string Field {
       get; private set;
-    }
+    } = string.Empty;
+
 
     public string DataType {
       get; private set;
+    } = string.Empty;
+
+
+    public bool IsRequired {
+      get; private set;
+    } = true;
+
+
+    public FixedList<NamedEntity> Values {
+      get; private set;
+    } = new FixedList<NamedEntity>();
+
+
+    private int SourceTypeId {
+      get; set;
+    } = -1;
+
+
+    public DataFieldDto MapToDto() {
+      return new DataFieldDto {
+        Label = this.Label,
+        Field = this.Field,
+        DataType = this.DataType,
+        IsRequired = this.IsRequired,
+        Values = this.Values.MapToNamedEntityList(),
+      };
     }
 
-    public FixedList<NamedEntityDto> Values {
-      get; private set;
+    #region Helpers
+
+    private FixedList<NamedEntity> GetValues(JsonObject json) {
+      if (!json.HasValue("values")) {
+        return new FixedList<NamedEntity>();
+      }
+
+      if (SourceTypeId == -1) {
+        return json.GetFixedList<NamedEntity>("values", false);
+      }
+
+      return GetSourceTypeValues(json.GetFixedList<int>("values", false));
     }
+
+
+    private FixedList<NamedEntity> GetSourceTypeValues(FixedList<int> objectsIds) {
+      var oti = ObjectTypeInfo.Parse(SourceTypeId);
+
+      var list = new List<NamedEntity>(objectsIds.Count);
+
+      foreach (var objectId in objectsIds) {
+        var instance = (INamedEntity) ObjectFactory.InvokeParseMethod(oti.UnderlyingSystemType, objectId);
+
+        list.Add(new NamedEntity(instance.UID, instance.Name));
+      }
+
+      return list.ToFixedList();
+    }
+
+    #endregion Helpers
 
   }  // public class DataField
 
