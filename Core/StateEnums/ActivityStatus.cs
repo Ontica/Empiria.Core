@@ -14,9 +14,11 @@ namespace Empiria.StateEnums {
   ///in the time, as a task or activity.</summary>
   public enum ActivityStatus {
 
+    Active = 'A',
+
     Pending = 'P',
 
-    Active = 'A',
+    Waiting = 'W',
 
     Suspended = 'S',
 
@@ -43,6 +45,9 @@ namespace Empiria.StateEnums {
 
         case ActivityStatus.Pending:
           return "Pendiente";
+
+        case ActivityStatus.Waiting:
+          return "En espera";
 
         case ActivityStatus.Completed:
           return "Terminada";
@@ -73,6 +78,9 @@ namespace Empiria.StateEnums {
 
         case ActivityStatus.Pending:
           return "Pendientes";
+
+        case ActivityStatus.Waiting:
+          return "En espera";
 
         case ActivityStatus.Completed:
           return "Terminadas";
