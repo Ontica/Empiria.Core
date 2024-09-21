@@ -40,6 +40,16 @@ namespace Empiria.Parties {
       return BaseObject.ParseKey<Party>(uid);
     }
 
+
+    static public Party ParseWithContact(Contacts.Contact contact) {
+      var party = BaseObject.TryParse<Party>($"PARTY_CONTACT_ID = {contact.Id}");
+
+      Assertion.Require(party, $"A party associated with Contact {contact.Id} was not found.");
+
+      return party;
+    }
+
+
     static public FixedList<T> GetList<T>(DateTime date) where T : Party {
       return PartyDataService.GetPartiesInDate<T>(date);
     }
@@ -103,6 +113,11 @@ namespace Empiria.Parties {
 
     [DataField("PARTY_STATUS", Default = EntityStatus.Active)]
     public EntityStatus Status {
+      get; protected set;
+    }
+
+    [DataField("PARTY_CONTACT_ID")]
+    public Contacts.Contact Contact {
       get; protected set;
     }
 
