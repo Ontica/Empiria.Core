@@ -1,21 +1,24 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Empiria Core Tests                         Component : Ontology Tests                          *
-*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Test class                              *
+*  Module   : Empiria Core Tests                         Component : Test cases                              *
+*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Unit tests                              *
 *  Type     : OntologyTests                              License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Empiria Ontology types tests.                                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using Xunit;
 
-namespace Empiria.Ontology.Tests {
+using Empiria.Ontology;
 
-  /// <summary>Empiria Ontology types tests</summary>
+namespace Empiria.Tests.Ontology {
+
+  /// <summary>Empiria Ontology types tests.</summary>
   public class OntologyTests {
 
     [Fact]
-    public void MustReadOntologyTypesData() {
+    public void Should_Read_Ontology_ObjectTypeInfo() {
       var typeInfo = ObjectTypeInfo.Parse(101);
 
       Assert.NotNull(typeInfo);
@@ -23,4 +26,4 @@ namespace Empiria.Ontology.Tests {
 
   }  // OntologyTests
 
-}  // namespace Empiria.Ontology.Tests
+}  // namespace Empiria.Tests.Ontology

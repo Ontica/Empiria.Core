@@ -8,12 +8,12 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Tests {
+namespace Empiria.Tests.Parties {
 
   /// <summary>Provides testing constants for Empiria Parties Management.</summary>
   static public class PartiesTestingConstants {
 
-    static public int ORGANIZATION_ID = 1;
+    static public int ORGANIZATION_ID = 1000;
 
     static internal int ORGANIZATIONAL_UNIT_ID = 2;
 
@@ -21,4 +21,4 @@ namespace Empiria.Tests {
 
   }  // class PartiesTestingConstants
 
-}  // namespace Empiria.Tests
+}  // namespace Empiria.Tests.Parties

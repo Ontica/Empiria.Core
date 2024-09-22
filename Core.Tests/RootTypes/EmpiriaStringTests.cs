@@ -1,7 +1,7 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Empiria Core Tests                         Component : ConfigurationData Tests                 *
-*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Test class                              *
+*  Module   : Empiria Core Tests                         Component : Test cases                              *
+*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Unit tests                              *
 *  Type     : EmpiriaStringTest                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : EmpiriaString methods tests.                                                                   *
@@ -9,13 +9,13 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Xunit;
 
-namespace Empiria.Tests {
+namespace Empiria.Tests.RootTypes {
 
   /// <summary>EmpiriaString methods tests.</summary>
   public class EmpiriaStringTest {
 
     [Fact]
-    public void ShouldDivideLongStringExact() {
+    public void Should_Divide_Exact_Long_String() {
       int size = 10;
       var s = "123456789012345678901234567890123456789012345678901234567890";
 
@@ -32,7 +32,7 @@ namespace Empiria.Tests {
 
 
     [Fact]
-    public void ShouldDivideLongStringWithRemainder() {
+    public void Should_Divide_Long_String_With_Remainder() {
       int size = 7;
 
       var s = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
@@ -51,4 +51,4 @@ namespace Empiria.Tests {
 
   }  // EmpiriaStringTest
 
-}  // namespace Empiria.Tests
+}  // namespace Empiria.Tests.RootTypes

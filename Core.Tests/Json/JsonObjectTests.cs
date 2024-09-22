@@ -1,7 +1,7 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Empiria Core Tests                         Component : Json Tests                              *
-*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Test class                              *
+*  Module   : Empiria Core Tests                         Component : Test cases                              *
+*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Unit tests                              *
 *  Type     : JsonObjectTests                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : JsonObject methods tests.                                                                      *
@@ -12,93 +12,15 @@ using System.Collections.Generic;
 
 using Xunit;
 
-namespace Empiria.Json.Tests {
+using Empiria.Json;
+
+namespace Empiria.Tests.Json {
 
   /// <summary>JsonObject methods tests.</summary>
   public class JsonObjectTests {
 
     [Fact]
-    public void SetMethodOverInnerItemMustWork() {
-      const string addedValue = "Hello world";
-
-      var json = new JsonObject();
-
-      json.Set("/a/b/c/d", addedValue);   // Tested method
-
-      string actual = json.Get<string>("/a/b/c/d");
-
-      Assert.Equal(addedValue, actual);
-
-      var dictionary = json.ToDictionary();
-
-      var traversalNode = (IDictionary<string, object>) dictionary["a"];
-      traversalNode = (IDictionary<string, object>) traversalNode["b"];
-      traversalNode = (IDictionary<string, object>) traversalNode["c"];
-
-      Assert.Equal(addedValue, traversalNode["d"]);
-
-    }
-
-
-    [Fact]
-    public void SetIfValueMethodWithEmptyValueMustCleanThePath() {
-      const string addedValue = "Hello world";
-
-      var json = new JsonObject();
-
-      json.Set("/a/b/c/d", addedValue);
-
-      string actual = json.Get<string>("/a/b/c/d");
-
-      Assert.Equal(addedValue, actual);
-
-      json.SetIfValue("/a/b/c/d", String.Empty);   // Tested method
-
-      var dictionary = json.ToDictionary();
-
-      Assert.True(dictionary.Count == 0, "Json object must be empty");
-
-    }
-
-    [Fact]
-    public void RemoveMethodOverRootItemMustWork() {
-      const string addedValue = "Hello world";
-
-      var json = new JsonObject();
-
-      json.Set("a", addedValue);
-
-      json.Remove("a");                   // Tested method
-
-      var dictionary = json.ToDictionary();
-
-      Assert.True(dictionary.Count == 0, "Json object must be empty");
-
-    }
-
-    [Fact]
-    public void RemoveMethodOverInnerItemMustWork() {
-      const string addedValue = "Hello world";
-
-      var json = new JsonObject();
-
-      json.Set("/a/b/c/d", addedValue);
-
-      json.Remove("/a/b/c/d");            // Tested method
-
-      var dictionary = json.ToDictionary();
-
-      var traversalNode = (IDictionary<string, object>) dictionary["a"];
-      traversalNode = (IDictionary<string, object>) traversalNode["b"];
-      traversalNode = (IDictionary<string, object>) traversalNode["c"];
-
-      Assert.True(traversalNode.Count == 0, "Node C must not have elements.");
-
-    }
-
-
-    [Fact]
-    public void CleanMethodOverInnerItemMustWork() {
+    public void Clean_Method_Over_Inner_Item_Should_Work() {
       const string addedValue = "Hello world";
 
       var json = new JsonObject();
@@ -111,13 +33,12 @@ namespace Empiria.Json.Tests {
 
       var dictionary = json.ToDictionary();
 
-      Assert.True(dictionary.Count == 0, "Json object must be empty");
-
+      Assert.True(dictionary.Count == 0, "Json object must be empty.");
     }
 
 
     [Fact]
-    public void CleanMethodOverInnerItemWithSiblingsMustWork() {
+    public void Clean_Method_Over_Inner_Item_With_Siblings_Should_Work() {
       const string addedValue = "Hello world";
 
       var json = new JsonObject();
@@ -146,9 +67,87 @@ namespace Empiria.Json.Tests {
       traversalNode = (IDictionary<string, object>) traversalNode["c2"];
 
       Assert.Equal(addedValue, traversalNode["d"]);
+    }
+
+
+    [Fact]
+    public void Set_Method_Over_Inner_Item_Should_Work() {
+      const string addedValue = "Hello world";
+
+      var json = new JsonObject();
+
+      json.Set("/a/b/c/d", addedValue);   // Tested method
+
+      string actual = json.Get<string>("/a/b/c/d");
+
+      Assert.Equal(addedValue, actual);
+
+      var dictionary = json.ToDictionary();
+
+      var traversalNode = (IDictionary<string, object>) dictionary["a"];
+      traversalNode = (IDictionary<string, object>) traversalNode["b"];
+      traversalNode = (IDictionary<string, object>) traversalNode["c"];
+
+      Assert.Equal(addedValue, traversalNode["d"]);
+    }
+
+
+    [Fact]
+    public void SetIfValue_Method_With_Empty_Value_Should_Clean_The_Path() {
+      const string addedValue = "Hello world";
+
+      var json = new JsonObject();
+
+      json.Set("/a/b/c/d", addedValue);
+
+      string actual = json.Get<string>("/a/b/c/d");
+
+      Assert.Equal(addedValue, actual);
+
+      json.SetIfValue("/a/b/c/d", String.Empty);   // Tested method
+
+      var dictionary = json.ToDictionary();
+
+      Assert.True(dictionary.Count == 0, "Json object must be empty");
+    }
+
+
+    [Fact]
+    public void Remove_Method_Over_Root_Item_Should_Work() {
+      const string addedValue = "Hello world";
+
+      var json = new JsonObject();
+
+      json.Set("a", addedValue);
+
+      json.Remove("a");                   // Tested method
+
+      var dictionary = json.ToDictionary();
+
+      Assert.True(dictionary.Count == 0, "Json object must be empty");
+    }
+
+
+    [Fact]
+    public void Remove_Method_Over_Inner_Item_Should_Work() {
+      const string addedValue = "Hello world";
+
+      var json = new JsonObject();
+
+      json.Set("/a/b/c/d", addedValue);
+
+      json.Remove("/a/b/c/d");            // Tested method
+
+      var dictionary = json.ToDictionary();
+
+      var traversalNode = (IDictionary<string, object>) dictionary["a"];
+      traversalNode = (IDictionary<string, object>) traversalNode["b"];
+      traversalNode = (IDictionary<string, object>) traversalNode["c"];
+
+      Assert.True(traversalNode.Count == 0, "Node C must not have elements.");
 
     }
 
-  }  // EmpiriaStringTest
+  }  // JsonObjectTests
 
-}  // namespace Empiria.Json.Tests
+}  // namespace Empiria.Tests.Json

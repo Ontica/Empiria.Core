@@ -1,10 +1,10 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Module   : Empiria Core Tests                         Component : Cryptographer Tests                     *
-*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Test class                              *
+*  Module   : Empiria Core Tests                         Component : Test cases                              *
+*  Assembly : Empiria.Core.Tests.dll                     Pattern   : Unit tests                              *
 *  Type     : CryptographerTests                         License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Security claims services tests.                                                                *
+*  Summary  : Cryptographer services tests.                                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using Xunit;
@@ -13,11 +13,11 @@ using Empiria.Security;
 
 namespace Empiria.Tests.Security {
 
-  /// <summary>Security claims services tests.</summary>
+  /// <summary>Cryptographer services tests.</summary>
   public class CryptographerTests {
 
     [Fact]
-    public void MustEncryptAShortTextWithEntropy() {
+    public void Should_Encrypt_A_Short_Text_With_Entropy() {
       const string secret = "My protected message";
       const string entropy = "ABC123";
 
@@ -32,7 +32,7 @@ namespace Empiria.Tests.Security {
 
 
     [Fact]
-    public void MustEncryptTheHashOfAShortTextWithEntropy() {
+    public void Should_Encrypt_The_Hash_Of_A_Short_Text_WithEntropy() {
       const string secret = "My protected message";
       const string entropy = "ABC123";
 
@@ -50,7 +50,7 @@ namespace Empiria.Tests.Security {
     }
 
     [Fact]
-    public void MustEncryptATextUsingPureAES() {
+    public void Should_Encrypt_A_Text_Using_Pure_AES() {
       const string secret = "My protected message";
       const string entropy = "Zw-@61737323313233ABCDEFGHZBwDEF12y3ABC-79134-YU5141";
 
@@ -63,6 +63,6 @@ namespace Empiria.Tests.Security {
       Assert.Equal(secret, decrypted);
     }
 
-  }  // SecurityClaimsTests
+  }  // CryptographerTests
 
 }  // namespace Empiria.Tests.Security

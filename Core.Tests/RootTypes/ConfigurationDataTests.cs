@@ -10,15 +10,13 @@
 using System;
 using Xunit;
 
-namespace Empiria.Tests {
+namespace Empiria.Tests.RootTypes {
 
   /// <summary>Configuration data tests.</summary>
   public class ConfigurationDataTests {
 
     [Fact]
-    public void ShouldGetConfigDataValueFromExecutionServer() {
-      // Set Ok config file
-
+    public void Should_Get_ConfigDataValue_From_ExecutionServer() {
       var value = ExecutionServer.LicenseName;
       Assert.True(!String.IsNullOrWhiteSpace(value));
 
@@ -32,7 +30,7 @@ namespace Empiria.Tests {
     [InlineData("License.Name")]
     [InlineData("License.Number")]
     [InlineData("License.SerialNumber")]
-    public void ShouldHaveMandatoryConfigData(string dataKey) {
+    public void Should_Have_Mandatory_ConfigData(string dataKey) {
       // Set Ok config file
 
       var value = ConfigurationData.Get<string>(dataKey);
@@ -44,18 +42,8 @@ namespace Empiria.Tests {
     }
 
 
-    //[Theory]
-    //[InlineData("§RSACryptoFile")]
-    //public void ShouldReadProtectedSettings(string dataKey) {
-    //  // Set Ok config file
-
-    //  var value = ConfigurationData.Get<string>(typeof(Empiria.Security.ClientApplication), dataKey);
-
-    //  Assert.NotNull(value);
-    //}
-
     [Fact]
-    public void MustReturnDefaultValueWhenNoConfigData() {
+    public void Should_Return_DefaultValue_When_Not_ConfigData() {
       DateTime defaultValue = DateTime.Parse("2012-06-25");
 
       var data = ConfigurationData.Get<DateTime>("NotDefinedDateTimeValue", defaultValue);
@@ -65,7 +53,7 @@ namespace Empiria.Tests {
 
 
     [Fact]
-    public void ThrowWhenNoDataAndNoDefaultValue() {
+    public void Sholud_Throw_Exception_When_NoData_And_Not_DefaultValue() {
       Assert.Throws<ConfigurationDataException>(() =>
                                                 ConfigurationData.Get<DateTime>("NotDefinedDateTimeValue"));
     }
@@ -73,4 +61,4 @@ namespace Empiria.Tests {
 
   }  // ConfigurationDataTests
 
-}  // namespace Empiria.Tests
+}  // namespace Empiria.Tests.RootTypes
