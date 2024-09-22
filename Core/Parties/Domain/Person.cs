@@ -7,7 +7,8 @@
 *  Summary  : Represents a human person.                                                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+
+using Empiria.Parties.Adapters;
 
 namespace Empiria.Parties {
 
@@ -95,9 +96,24 @@ namespace Empiria.Parties {
       }
     }
 
+    public TaxData TaxData {
+      get {
+        return base.ExtendedData.Get("taxData", new TaxData());
+      }
+      private set {
+        base.ExtendedData.SetIfValue("taxData", value.ToJson());
+      }
+    }
+
     #endregion Properties
 
-    #region Helpers
+    #region Methods
+
+    public void SetTaxData(TaxDataFields fields) {
+      Assertion.Require(fields, nameof(fields));
+
+      this.TaxData = new TaxData(fields);
+    }
 
     protected void Update(PersonFields fields) {
       base.Update(fields);
@@ -108,7 +124,7 @@ namespace Empiria.Parties {
       this.IsFemale = fields.IsFemale;
     }
 
-    #endregion Helpers
+    #endregion Methods
 
   } // class Person
 
