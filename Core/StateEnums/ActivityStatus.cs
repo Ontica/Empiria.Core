@@ -102,6 +102,11 @@ namespace Empiria.StateEnums {
       }
     }
 
+
+    static public NamedEntityDto MapToDto(this ActivityStatus status) {
+      return new NamedEntityDto(status.ToString(), status.GetName());
+    }
+
   }  // class ActivityStatusEnumExtensions
 
 } // namespace Empiria.StateEnums

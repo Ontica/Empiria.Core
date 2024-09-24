@@ -64,6 +64,11 @@ namespace Empiria.StateEnums {
       }
     }
 
+
+    static public NamedEntityDto MapToDto(this EntityStatus status) {
+      return new NamedEntityDto(status.ToString(), status.GetName());
+    }
+
   }  // class EntityStatusEnumExtensions
 
 } // namespace Empiria.StateEnums
