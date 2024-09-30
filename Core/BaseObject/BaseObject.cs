@@ -45,6 +45,9 @@ namespace Empiria {
         // Should call InitializeObject only when is not called through BaseObject.ParseEmpiriaObject.
         objectTypeInfo.InitializeObject(this);
       }
+      if (objectTypeInfo.GenerateIdOnCreation) {
+        this.objectId = OntologyData.GetNextObjectId(this.objectTypeInfo);
+      }
     }
 
 

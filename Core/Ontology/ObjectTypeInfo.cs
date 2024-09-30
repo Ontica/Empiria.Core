@@ -97,6 +97,14 @@ namespace Empiria.Ontology {
       get { return (ObjectTypeInfo) base.BaseType; }
     }
 
+
+    public bool GenerateIdOnCreation {
+      get {
+        return ExtensionData.Get("generateIdOnCreation", false);
+      }
+    }
+
+
     private bool? _isDataBoundFlag = null;
     public bool IsDataBound {
       get {
