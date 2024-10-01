@@ -45,9 +45,6 @@ namespace Empiria {
         // Should call InitializeObject only when is not called through BaseObject.ParseEmpiriaObject.
         objectTypeInfo.InitializeObject(this);
       }
-      if (objectTypeInfo.GenerateIdOnCreation) {
-        this.objectId = OntologyData.GetNextObjectId(this.objectTypeInfo);
-      }
     }
 
 
@@ -67,6 +64,15 @@ namespace Empiria {
       item.objectTypeInfo = typeInfo;
 
       return item;
+    }
+
+
+    protected void GenerateId() {
+      Assertion.Require(objectTypeInfo.GenerateIdOnCreation,
+                       "objectTypeInfo.GenerateIdOnCreation flag can not be false");
+      Assertion.Require(objectId == 0, "Instance Id must be zero.");
+
+      objectId = OntologyData.GetNextObjectId(this.objectTypeInfo);
     }
 
 
