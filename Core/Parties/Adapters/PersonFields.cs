@@ -13,7 +13,6 @@ namespace Empiria.Parties {
   /// <summary>Fields used to create or update Person instances.</summary>
   public class PersonFields : PartyFields {
 
-
     public string FirstName {
       get; set;
     } = string.Empty;

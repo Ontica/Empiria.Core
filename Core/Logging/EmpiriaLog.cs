@@ -166,7 +166,7 @@ namespace Empiria {
 
         TryWriteLogEntryToFile(logEntry);
 
-        // WARINING: Never try to catch this error without retrowing it, because it causes an inifinite loop in EmpiriaException.Publish()
+        // WARNING: Never try to catch this error without retrowing it, because it causes an inifinite loop in EmpiriaException.Publish()
 
         throw;
       }

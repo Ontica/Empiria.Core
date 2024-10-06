@@ -6,12 +6,14 @@ Empiria Core provides the following services:
 -  Data Access Services
 -  Exceptions Management
 -  Collections
+-  Data Objects
 -  Data Types
 -  Json types
--  Logging
+-  Logging services
 -  Metadata and Ontology
 -  Object-relational mapping (ORM)
 -  Powertypes
+-  Runtime types reflection
 -  Security services
 -  Storage Management
 -  System configuration services
