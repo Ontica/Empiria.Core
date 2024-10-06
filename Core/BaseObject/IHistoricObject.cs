@@ -1,14 +1,16 @@
 ﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Module   : Parties Management                           Component : Domain Layer                          *
-*  Assembly : Empiria.Core.dll                             Pattern   : Partitioned Type                      *
-*  Type     : Party                                        License   : Please read LICENSE.txt file          *
+*  Module   : Core Types                                 Component : Base Object Management                  *
+*  Assembly : Empiria.Core.dll                           Pattern   : Data interface                          *
+*  Type     : IHistoricObject                            License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Abstract partitioned type that represents a person, an organization, an organizational unit    *
-*             or a team, that has a meaningful name and can play one or more roles in parties relationships. *
+*  Summary  : Interface for historical objects.                                                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-namespace Empiria.Parties {
+
+namespace Empiria {
+
+  /// <summary>Interface for historical objects.</summary>
   public interface IHistoricObject : IIdentifiable {
 
     int HistoricId {
@@ -17,4 +19,4 @@ namespace Empiria.Parties {
 
   }  // interface IHistoricObject
 
-} // namespace Empiria.Parties
+} // namespace Empiria
