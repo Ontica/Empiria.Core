@@ -17,24 +17,24 @@ namespace Empiria.Security.Providers {
   static internal class SecurityProviders {
 
     static internal IAuthenticationProvider AuthenticationProvider() {
-      Type type = ObjectFactory.GetType("Empiria.OnePoint.Security",
-                                        "Empiria.OnePoint.Security.Services.AuthenticationService");
+      Type type = ObjectFactory.GetType("Empiria.Security",
+                                        "Empiria.Security.Services.AuthenticationService");
 
       return (IAuthenticationProvider) ObjectFactory.CreateObject(type);
     }
 
 
     static internal IAuthorizationProvider AuthorizationProvider() {
-      Type type = ObjectFactory.GetType("Empiria.OnePoint.Security",
-                                        "Empiria.OnePoint.Security.Services.AuthorizationService");
+      Type type = ObjectFactory.GetType("Empiria.Security",
+                                        "Empiria.Security.Services.AuthorizationService");
 
       return (IAuthorizationProvider) ObjectFactory.CreateObject(type);
     }
 
 
     static internal ICryptoServiceProvider CryptoServiceProvider() {
-      Type type = ObjectFactory.GetType("Empiria.OnePoint.Security",
-                                        "Empiria.OnePoint.Security.Services.CryptoService");
+      Type type = ObjectFactory.GetType("Empiria.Security",
+                                        "Empiria.Security.Services.CryptoService");
 
       return (ICryptoServiceProvider) ObjectFactory.CreateObject(type);
     }
