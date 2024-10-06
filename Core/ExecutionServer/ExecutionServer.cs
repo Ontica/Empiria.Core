@@ -213,6 +213,35 @@ namespace Empiria {
       }
     }
 
+
+    static public DateTime NowWithCentiseconds {
+      get {
+        var now = DateTime.Now;
+
+        return new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute,
+                            now.Second, (now.Millisecond / 10) * 10);
+      }
+    }
+
+
+    static public DateTime NowWithSeconds {
+      get {
+        var now = DateTime.Now;
+
+        return new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+      }
+    }
+
+
+    static public DateTime NowWithoutSeconds {
+      get {
+        var now = DateTime.Now;
+
+        return new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
+      }
+    }
+
+
     static public int ServerId {
       get {
         return Instance.serverId;
@@ -224,6 +253,7 @@ namespace Empiria {
         return Instance.systemName;
       }
     }
+
 
     [ThreadStatic]
     static public string UserHostAddress;
