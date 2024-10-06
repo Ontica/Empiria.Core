@@ -1,15 +1,14 @@
 ﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Module   : Data Types Library                         Component : Common Data Structures                  *
-*  Assembly : Empiria.Core.dll                           Pattern   : Information Holder                      *
-*  Type     : Media                                      License   : Please read LICENSE.txt file            *
+*  Module   : Empiria Storage                            Component : Domain Layer                            *
+*  Assembly : Empiria.Core.dll                           Pattern   : Value Type                              *
+*  Type     : MediaData                                  License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Data structure for media data.                                                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
-namespace Empiria.DataTypes {
+namespace Empiria.Storage {
 
   /// <summary>Data structure for media data.</summary>
   public class MediaData {
@@ -42,6 +41,6 @@ namespace Empiria.DataTypes {
       get;
     }
 
-  }  // class Media
+  }  // class MediaData
 
-}  // namespace Empiria.DataTypes
+}  // namespace Empiria.Storage
