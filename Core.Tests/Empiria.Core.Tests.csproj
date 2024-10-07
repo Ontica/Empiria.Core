@@ -3,10 +3,10 @@
     <Company>Ontica</Company>
     <Product>Empiria Core Test Suite</Product>
     <Description>Test suite for Empiria Core types and components.</Description>
-    <Copyright>(c) 2016-2024. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
-    <Version>7.0.0</Version>
-    <AssemblyVersion>7.0.0</AssemblyVersion>
-    <FileVersion>7.0.0.0</FileVersion>
+    <Copyright>(c) 2002-2024. La Vía Óntica SC, Ontica LLC and contributors.</Copyright>
+    <Version>8.0.0</Version>
+    <AssemblyVersion>8.0.0</AssemblyVersion>
+    <FileVersion>8.0.0.0</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://github.com/Ontica/Empiria.Core/tree/master/Core.Tests/LICENSE.txt</PackageLicenseUrl>

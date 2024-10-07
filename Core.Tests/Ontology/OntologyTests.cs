@@ -19,7 +19,7 @@ namespace Empiria.Tests.Ontology {
 
     [Fact]
     public void Should_Read_Ontology_ObjectTypeInfo() {
-      var typeInfo = ObjectTypeInfo.Parse(101);
+      var typeInfo = ObjectTypeInfo.Parse(151);
 
       Assert.NotNull(typeInfo);
     }

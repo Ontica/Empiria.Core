@@ -1,7 +1,7 @@
 ﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
 *  Module   : Empiria Json Services                      Component : Json Converters                         *
-*  Assembly : Empiria.OnePoint.dll                       Pattern   : Newtonsoft Json Converter               *
+*  Assembly : Empiria.Core.dll                           Pattern   : Newtonsoft Json Converter               *
 *  Type     : DateTimeConverter                          License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Empiria JSON serialization class that writes empty strings for DateTime special values.        *

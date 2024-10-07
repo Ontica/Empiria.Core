@@ -18,7 +18,7 @@ namespace Empiria.Security.Providers {
 
     static internal IAuthenticationProvider AuthenticationProvider() {
       Type type = ObjectFactory.GetType("Empiria.Security",
-                                        "Empiria.Security.Services.AuthenticationService");
+                                        "Empiria.Security.Services.AuthenticationServiceProvider");
 
       return (IAuthenticationProvider) ObjectFactory.CreateObject(type);
     }
@@ -26,7 +26,7 @@ namespace Empiria.Security.Providers {
 
     static internal IAuthorizationProvider AuthorizationProvider() {
       Type type = ObjectFactory.GetType("Empiria.Security",
-                                        "Empiria.Security.Services.AuthorizationService");
+                                        "Empiria.Security.Services.AuthorizationServiceProvider");
 
       return (IAuthorizationProvider) ObjectFactory.CreateObject(type);
     }
@@ -34,7 +34,7 @@ namespace Empiria.Security.Providers {
 
     static internal ICryptoServiceProvider CryptoServiceProvider() {
       Type type = ObjectFactory.GetType("Empiria.Security",
-                                        "Empiria.Security.Services.CryptoService");
+                                        "Empiria.Security.Services.CryptoServiceProvider");
 
       return (ICryptoServiceProvider) ObjectFactory.CreateObject(type);
     }

@@ -1,6 +1,8 @@
 ﻿# Empiria Core Framework
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b30e3d80e67e445f98bcdab345b7474e)](https://app.codacy.com/gh/Ontica/Empiria.Core/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) &nbsp; [![Maintainability](https://api.codeclimate.com/v1/badges/4ee0453a7394098b0ce4/maintainability)](https://codeclimate.com/github/Ontica/Empiria.Core/maintainability)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b30e3d80e67e445f98bcdab345b7474e)](https://app.codacy.com/gh/Ontica/Empiria.Core/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+&nbsp; &nbsp;
+[![Maintainability](https://api.codeclimate.com/v1/badges/4ee0453a7394098b0ce4/maintainability)](https://codeclimate.com/github/Ontica/Empiria.Core/maintainability)
 
 Empiria Core Framework es un conjunto de componentes de infraestructura que proporcionan diversos servicios básicos a otras aplicaciones.
 
