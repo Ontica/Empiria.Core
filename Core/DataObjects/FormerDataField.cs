@@ -4,7 +4,7 @@
 *  Assembly : Empiria.Core.dll                             Pattern   : Information Holder                    *
 *  Type     : DataField                                    License   : Please read LICENSE.txt file          *
 *                                                                                                            *
-*  Summary  : Describes a data field.                                                                        *
+*  Summary  : Holds information about a data element to be used as a field in forms or user interfaces.      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
@@ -16,11 +16,11 @@ using Empiria.Reflection;
 
 namespace Empiria.DataObjects {
 
-  /// <summary>Describes a data field.</summary>
-  public class DataField {
+  /// <summary>Holds information about a data element to be used as a field in forms or user interfaces.</summary>
+  public class FormerDataField {
 
-    static public DataField Parse(JsonObject json) {
-      var dataField = new DataField {
+    static public FormerDataField Parse(JsonObject json) {
+      var dataField = new FormerDataField {
         Label = json.Get<string>("label"),
         Field = json.Get<string>("field"),
         DataType = json.Get<string>("dataType"),

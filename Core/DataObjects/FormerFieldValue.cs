@@ -10,7 +10,7 @@
 
 namespace Empiria.DataObjects {
 
-  public class FieldValue {
+  public class FormerFieldValue {
 
     public string Field {
       get; set;
