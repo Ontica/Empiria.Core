@@ -2,7 +2,7 @@
 *                                                                                                            *
 *  Module   : Empiria Core                               Component : Interface adapters                      *
 *  Assembly : Empiria.Core.dll                           Pattern   : Data Interface                          *
-*  Types    : INamedEntity, NamedEntityDto               License   : Please read LICENSE.txt file            *
+*  Types    : NamedEntity, NamedEntityDto                License   : Please read LICENSE.txt file            *
 *                                                                                                            *
 *  Summary  : Represents an entity with a unique ID and a name.                                              *
 *                                                                                                            *
