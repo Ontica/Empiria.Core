@@ -65,10 +65,10 @@ namespace Empiria {
       set;
     }
 
-    [DataField("ObjectKeywords")]
-    protected string Keywords {
-      get;
-      set;
+    public virtual string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(Name);
+      }
     }
 
     [DataField("ObjectStatus", Default = EntityStatus.Active)]
