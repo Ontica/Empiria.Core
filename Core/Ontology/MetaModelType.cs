@@ -35,7 +35,7 @@ namespace Empiria.Ontology {
   }
 
 
-  public abstract class MetaModelType : IIdentifiable {
+  public abstract class MetaModelType : IIdentifiable, INamedEntity {
 
     #region Fields
 
@@ -136,6 +136,12 @@ namespace Empiria.Ontology {
     public string DataSource {
       get;
       private set;
+    }
+
+    string INamedEntity.Name {
+      get {
+        return DisplayName;
+      }
     }
 
     public string DisplayName {
