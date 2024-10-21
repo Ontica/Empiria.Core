@@ -161,8 +161,12 @@ namespace Empiria {
 
       var op = DataOperation.Parse("apdOperationLog",
                     this.UID, this.LogOperationType.ToString(), this.SessionId,
-                    this.UserId, this.TimeStamp, this.UserHostAddress, this.Operation,
-                    this.Description, this.Exception, this.SubjectId, this.SubjectObject);
+                    this.UserId, this.TimeStamp, this.UserHostAddress,
+                    EmpiriaString.Truncate(this.Operation, 512),
+                    EmpiriaString.Truncate(this.Exception, 1024),
+                    EmpiriaString.Truncate(this.Exception, 2048),
+                    this.SubjectId,
+                    EmpiriaString.Truncate(this.SubjectObject, 255));
 
       DataWriter.Execute(op);
     }
