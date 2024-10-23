@@ -37,6 +37,14 @@ namespace Empiria {
     }
 
 
+    static public bool PatchField(bool? newValue, bool defaultValue) {
+      if (newValue.HasValue) {
+        return newValue.Value;
+      }
+      return defaultValue;
+    }
+
+
     static public U PatchField<U>(int newValue, U defaultValue) where U : BaseObject {
       if (newValue > 0) {
         return BaseObject.ParseId<U>(newValue);

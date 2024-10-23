@@ -432,6 +432,10 @@ namespace Empiria {
     }
 
 
+    protected bool PatchField(bool? newValue, bool defaultValue) {
+      return FieldPatcher.PatchField(newValue, defaultValue);
+    }
+
     protected U PatchField<U>(string newValue, U defaultValue) where U : BaseObject {
       return FieldPatcher.PatchField(newValue, defaultValue);
     }
