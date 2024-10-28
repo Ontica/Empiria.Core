@@ -9,6 +9,7 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Empiria {
@@ -110,6 +111,13 @@ namespace Empiria {
 
 
     static public string ParseInSet(string fieldName, int[] fieldValues) {
+      string[] formattedValues = fieldValues.Select(x => x.ToString()).ToArray();
+
+      return ParseInSetUtility(fieldName, formattedValues);
+    }
+
+
+    public static string ParseInSet(string fieldName, IEnumerable<int> fieldValues) {
       string[] formattedValues = fieldValues.Select(x => x.ToString()).ToArray();
 
       return ParseInSetUtility(fieldName, formattedValues);
