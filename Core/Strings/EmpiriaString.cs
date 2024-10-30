@@ -535,6 +535,19 @@ namespace Empiria {
     }
 
 
+    public static string TruncateLast(string source, int maxLength) {
+      if (String.IsNullOrEmpty(source)) {
+        return source;
+      }
+      if (source.Length > maxLength) {
+        return source.Substring(maxLength - 1);
+      } else {
+        return source;
+      }
+    }
+
+
+
     static public bool? TryToBoolean(string source) {
       source = source.ToUpperInvariant();
 
