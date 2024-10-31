@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.IO;
+
 namespace Empiria.Storage {
 
   /// <summary>Holds information about a physical file directory or a documents web site.</summary>
@@ -39,6 +41,20 @@ namespace Empiria.Storage {
     }
 
     #endregion Properties
+
+    #region Mehtods
+
+    public FileData Store(InputFile file) {
+      Assertion.Require(file, nameof(file));
+
+      string path = Path.Combine(BaseFileDirectory, file.FileName);
+
+      FileInfo fileInfo = FileUtilities.SaveFile(path, file);
+
+      return FileData.Parse(file);
+    }
+
+    #endregion Methods
 
   }  // class FileLocation
 

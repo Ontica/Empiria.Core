@@ -19,16 +19,17 @@ namespace Empiria.Storage {
     #region Constructors and parsers
 
     public InputFile(FileInfo fileInfo) {
+      Assertion.Require(fileInfo, nameof(fileInfo));
+
       Stream = fileInfo.OpenRead();
       AppContentType = string.Empty;
       MediaType = string.Empty;
       OriginalFileName = fileInfo.Name;
-      FileUID = Guid.NewGuid().ToString().ToLowerInvariant();
-      FileTimestamp = fileInfo.LastWriteTime;
-      FileExtension = fileInfo.Extension;
-      FileName = $"{FileUID}-{FileTimestamp.ToString("yyyy.MM.dd-HH.mm.ss")}.{this.FileExtension}";
-      IsStored = true;
+      FileUID = GenerateUID();
+      FileTimestamp = DateTime.Now;
+      FileExtension = GetFileExtension(OriginalFileName); EmpiriaString.TrimAll(fileInfo.Extension, ".", string.Empty);
     }
+
 
     public InputFile(Stream stream,
                      string appContentType,
@@ -43,11 +44,9 @@ namespace Empiria.Storage {
       AppContentType = appContentType;
       MediaType = mediaType;
       OriginalFileName = originalFileName;
-      FileUID = Guid.NewGuid().ToString().ToLowerInvariant();
+      FileUID = GenerateUID();
       FileTimestamp = DateTime.Now;
-      FileExtension = Path.GetExtension(this.OriginalFileName);
-      FileName = $"{FileTimestamp.ToString("yyyy.MM.dd-HH.mm.ss")}-{OriginalFileName}";
-      IsStored = false;
+      FileExtension = GetFileExtension(OriginalFileName);
     }
 
     #endregion Constructors and parsers
@@ -84,8 +83,10 @@ namespace Empiria.Storage {
 
 
     public string FileName {
-      get; private set;
-    } = string.Empty;
+      get {
+        return $"{FileTimestamp.ToString("yyyy.MM.dd-HH.mm.ss.ff")}-{OriginalFileName}";
+      }
+    }
 
 
     public DateTime FileTimestamp {
@@ -98,24 +99,23 @@ namespace Empiria.Storage {
     } = string.Empty;
 
 
-    public bool IsStored {
-      get; private set;
-    }
-
-    public FileInfo Store(string baseFileDirectory) {
-      Assertion.Require(baseFileDirectory, nameof(baseFileDirectory));
-      Assertion.Require(!IsStored, "File was already stored");
-
-      string path = Path.Combine(baseFileDirectory, FileName);
-
-      FileInfo fileInfo = FileUtilities.SaveFile(path, this);
-
-      IsStored = true;
-
-      return fileInfo;
-    }
-
     #endregion Properties
+
+    #region Helpers
+
+    static private string GetFileExtension(string fileName) {
+      var extension = Path.GetExtension(fileName);
+
+      extension = EmpiriaString.TrimAll(extension, ".", string.Empty);
+
+      return EmpiriaString.Clean(extension);
+    }
+
+    static private string GenerateUID() {
+      return Guid.NewGuid().ToString().ToLowerInvariant();
+    }
+
+    #endregion Helpers
 
   }  // class InputFile
 
