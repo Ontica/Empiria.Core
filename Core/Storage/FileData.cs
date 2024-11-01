@@ -118,10 +118,30 @@ namespace Empiria.Storage {
         return ExtData.Get("fileExtension", string.Empty);
       }
       private set {
-        ExtData.SetIfValue("fileExtension", value);
+        ExtData.SetIfValue("fileExtension", value.ToLowerInvariant());
       }
     }
 
+    public FileType FileType {
+      get {
+        switch (this.FileExtension) {
+          case "pdf":
+            return FileType.Pdf;
+          case "xlsx": case "xls": case "xlsm": case "xlsb": case "xltx": case "xltm": case "xlt":
+            return FileType.Excel;
+          case "xml":
+            return FileType.Xml;
+          case "csv":
+            return FileType.Csv;
+          case "txt":
+            return FileType.Text;
+          case "docx": case "doc": case "dotx": case "docm": case "dotm": case "dot":
+            return FileType.Word;
+          default:
+            return FileType.Unknown;
+        }
+      }
+    }
 
     public DateTime FileTimestamp {
       get {

@@ -7,7 +7,6 @@
 *  Summary  : Enumerates a file technology.                                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 namespace Empiria.Storage {
 
@@ -22,7 +21,11 @@ namespace Empiria.Storage {
 
     Text,
 
+    Word,
+
     Xml,
+
+    Unknown,
 
   }  // enum FileType
 
