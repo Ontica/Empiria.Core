@@ -44,6 +44,10 @@ namespace Empiria.Storage {
 
     #region Mehtods
 
+    public string GetFileFullLocalName(FileData fileData) {
+      return Path.Combine(BaseFileDirectory, fileData.FileName);
+    }
+
     public FileData Store(InputFile file) {
       Assertion.Require(file, nameof(file));
 
