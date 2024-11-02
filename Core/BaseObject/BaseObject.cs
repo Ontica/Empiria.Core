@@ -8,12 +8,15 @@
 *             All object types that uses the framework must be descendants of this abstract type.            *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Collections.Generic;
 using System.Data;
+
 using Empiria.Collections;
 
 using Empiria.Ontology;
+using Empiria.Reflection;
 
 namespace Empiria {
 
@@ -83,6 +86,24 @@ namespace Empiria {
 
     static public FixedList<T> GetFullList<T>(string filter = "", string sort = "") where T : BaseObject {
       return OntologyData.GetFullBaseObjectList<T>(filter, sort);
+    }
+
+
+    static public BaseObject Parse(int objectTypeInfoId, int instanceId) {
+
+      var objectTypeInfo = ObjectTypeInfo.Parse(objectTypeInfoId);
+
+      return (BaseObject) ObjectFactory.InvokeParseMethod(objectTypeInfo.UnderlyingSystemType, instanceId);
+    }
+
+
+    static public BaseObject Parse(string objectTypeInfoName, string instanceUID) {
+      Assertion.Require(objectTypeInfoName, nameof(objectTypeInfoName));
+      Assertion.Require(instanceUID, nameof(instanceUID));
+
+      var objectTypeInfo = ObjectTypeInfo.Parse(objectTypeInfoName);
+
+      return (BaseObject) ObjectFactory.InvokeParseMethod(objectTypeInfo.UnderlyingSystemType, instanceUID);
     }
 
 
@@ -564,6 +585,7 @@ namespace Empiria {
         return item;
       }
     }
+
 
     #endregion Helpers
 
