@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 
 using Empiria.ORM;
+using Empiria.Reflection;
 
 namespace Empiria.Ontology {
 
@@ -306,6 +307,19 @@ namespace Empiria.Ontology {
         }
       }
     }
+
+
+    public BaseObject ParseObject(int objectId) {
+      return (BaseObject) ObjectFactory.InvokeParseMethod(UnderlyingSystemType, objectId);
+    }
+
+
+    public BaseObject ParseObject(string objectUID) {
+      Assertion.Require(objectUID, nameof(objectUID));
+
+      return (BaseObject) ObjectFactory.InvokeParseMethod(UnderlyingSystemType, objectUID);
+    }
+
 
     internal Tuple<ObjectTypeInfo, DataRow> TryGetObjectTypeAndDataRow(IFilter condition) {
       DataRow dataRow = OntologyData.GetBaseObjectDataRow(this, condition);
