@@ -124,17 +124,6 @@ namespace Empiria {
     }
 
 
-    static public string ParseInSet(string fieldName, string joinedValues, char separator) {
-      string[] valuesArray = joinedValues.Split(separator);
-
-      for (int i = 1; i < valuesArray.Length; i++) {
-        valuesArray[i] = valuesArray[i - 1] + separator + valuesArray[i];
-      }
-
-      return ParseInSet(fieldName, valuesArray);
-    }
-
-
     static public string ParseLike(string fieldName, string fieldValue) {
       if (EmpiriaString.IsEmpty(fieldValue)) {
         return String.Empty;
@@ -175,13 +164,24 @@ namespace Empiria {
         return $"({fieldName} = {fieldValues[0]})";
       }
 
-      string temp = String.Empty;
+      int counter = 0;
+      int offset = 800;
+      var sql = "";
+      while (true) {
+        var takedValues = fieldValues.Skip(counter).Take(offset);
 
-      for (int i = 0; i < fieldValues.Length; i++) {
-        temp += ((temp.Length != 0) ? "," : String.Empty) + fieldValues[i];
+        if (takedValues.Count() == 0) {
+          break;
+        }
+        if (sql.Length > 0) {
+          sql += " OR ";
+        }
+        sql += $"{fieldName} IN ({String.Join(", ", takedValues)})";
+
+        counter += takedValues.Count();
       }
 
-      return $"({fieldName} IN ({temp}))";
+      return $"({sql})";
     }
 
 
