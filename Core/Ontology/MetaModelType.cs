@@ -72,7 +72,7 @@ namespace Empiria.Ontology {
     }
 
     static protected MetaModelType Parse(DataRow row) {
-      Assertion.Require(row, "row");
+      Assertion.Require(row, nameof(row));
 
       MetaModelTypeFamily typeFamily = MetaModelType.ParseMetaModelTypeFamily((string) row["TypeFamily"]);
 
@@ -98,6 +98,8 @@ namespace Empiria.Ontology {
     }
 
     static internal T Parse<T>(string empiriaTypeName) where T : MetaModelType {
+      Assertion.Require(empiriaTypeName, nameof(empiriaTypeName));
+
       if (_cache.ContainsKey(empiriaTypeName)) {
         return (T) _cache[empiriaTypeName];
       } else {
