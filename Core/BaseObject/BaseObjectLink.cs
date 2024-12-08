@@ -45,20 +45,39 @@ namespace Empiria {
     }
 
 
-    static public FixedList<T> GetLinkedObjectsFor<T>(BaseObjectLinkType linkType,
-                                                      BaseObject baseObject) where T : BaseObject {
-      Assertion.Require(linkType, nameof(linkType));
-      Assertion.Require(baseObject, nameof(baseObject));
-
-      return BaseObjectDataService.GetLinkedObjectsFor<T>(linkType, baseObject);
-    }
-
     static public FixedList<T> GetBaseObjectsFor<T>(BaseObjectLinkType linkType,
                                                     BaseObject linkedObject) where T : BaseObject {
       Assertion.Require(linkType, nameof(linkType));
       Assertion.Require(linkedObject, nameof(linkedObject));
 
       return BaseObjectDataService.GetBaseObjectsFor<T>(linkType, linkedObject);
+    }
+
+
+    static public FixedList<T> GetListWithBaseObject<T>(BaseObjectLinkType linkType,
+                                                        BaseObject baseObject) where T : BaseObjectLink {
+      Assertion.Require(linkType, nameof(linkType));
+      Assertion.Require(baseObject, nameof(baseObject));
+
+      return BaseObjectDataService.GetBaseObjectLinksWithBaseObject<T>(linkType, baseObject);
+    }
+
+
+    static public FixedList<T> GetListWithLinkedObject<T>(BaseObjectLinkType linkType,
+                                                          BaseObject linkedObject) where T : BaseObjectLink {
+      Assertion.Require(linkType, nameof(linkType));
+      Assertion.Require(linkedObject, nameof(linkedObject));
+
+      return BaseObjectDataService.GetBaseObjectLinksWithLinkedObject<T>(linkType, linkedObject);
+    }
+
+
+    static public FixedList<T> GetLinkedObjectsFor<T>(BaseObjectLinkType linkType,
+                                                      BaseObject baseObject) where T : BaseObject {
+      Assertion.Require(linkType, nameof(linkType));
+      Assertion.Require(baseObject, nameof(baseObject));
+
+      return BaseObjectDataService.GetLinkedObjectsFor<T>(linkType, baseObject);
     }
 
 
@@ -169,7 +188,7 @@ namespace Empiria {
 
     #region Methods
 
-    protected virtual void Delete() {
+    public virtual void Delete() {
       this.Status = EntityStatus.Deleted;
     }
 

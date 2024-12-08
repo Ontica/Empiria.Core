@@ -27,6 +27,31 @@ namespace Empiria {
     }
 
 
+    static internal FixedList<T> GetBaseObjectLinksWithBaseObject<T>(BaseObjectLinkType linkType,
+                                                                     BaseObject baseObject) where T : BaseObjectLink {
+      var sql = "SELECT * FROM OBJECT_LINKS " +
+               $"WHERE OBJECT_LINK_TYPE_ID = {linkType.Id} AND " +
+               $"OBJECT_LINK_BASE_OBJECT_ID = {baseObject.Id} AND " +
+               $"OBJECT_LINK_STATUS <> 'X'";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<T>(op);
+    }
+
+
+    static internal FixedList<T> GetBaseObjectLinksWithLinkedObject<T>(BaseObjectLinkType linkType,
+                                                                       BaseObject linkedObject) where T : BaseObjectLink {
+      var sql = "SELECT * FROM OBJECT_LINKS " +
+               $"WHERE OBJECT_LINK_TYPE_ID = {linkType.Id} AND " +
+               $"OBJECT_LINK_LINKED_OBJECT_ID = {linkedObject.Id} AND " +
+               $"OBJECT_LINK_STATUS <> 'X'";
+
+      var op = DataOperation.Parse(sql);
+
+      return DataReader.GetFixedList<T>(op);
+    }
+
     static internal FixedList<T> GetBaseObjectsFor<T>(BaseObjectLinkType linkType,
                                                       BaseObject linkedObject) where T : BaseObject {
       string baseObjectDataSource = linkType.BaseObjectType.DataSource;
@@ -58,6 +83,7 @@ namespace Empiria {
 
       return DataReader.GetFixedList<T>(op);
     }
+
 
     static internal void WriteBaseObjectLink(BaseObjectLink o) {
       var op = DataOperation.Parse("write_Object_Link",
