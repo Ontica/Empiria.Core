@@ -109,9 +109,10 @@ namespace Empiria {
 
 
     static public FixedList<NamedEntityDto> MapToNamedEntityList(this IEnumerable<INamedEntity> list) {
-      return new FixedList<NamedEntityDto>(list.Select((x) => MapToNamedEntity(x)));
+      return list.Select((x) => MapToNamedEntity(x))
+                 .ToFixedList()
+                 .Sort((x, y) => x.Name.CompareTo(y.Name));
     }
-
 
   } // class NamedEntityMappingExtensions
 
