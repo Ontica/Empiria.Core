@@ -15,11 +15,12 @@ namespace Empiria {
 
     public string UID {
       get; set;
-    }
+    } = string.Empty;
+
 
     public string Name {
       get; set;
-    }
+    } = string.Empty;
 
   }  // class NamedEntityFields
 

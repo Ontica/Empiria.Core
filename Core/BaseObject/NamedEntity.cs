@@ -31,11 +31,16 @@ namespace Empiria {
     #region Constructors and parsers
 
     public NamedEntity(INamedEntity entity) {
+      Assertion.Require(entity, nameof(entity));
+
       this.UID = entity.UID;
       this.Name = entity.Name;
     }
 
     public NamedEntity(string uid, string name) {
+      Assertion.Require(uid, nameof(uid));
+      Assertion.Require(name, nameof(name));
+
       this.UID = uid;
       this.Name = name;
     }
@@ -65,11 +70,16 @@ namespace Empiria {
     #region Constructors and parsers
 
     public NamedEntityDto(INamedEntity entity) {
+      Assertion.Require(entity, nameof(entity));
+
       this.UID = entity.UID;
       this.Name = entity.Name;
     }
 
     public NamedEntityDto(string uid, string name) {
+      Assertion.Require(uid, nameof(uid));
+      Assertion.Require(name, nameof(name));
+
       this.UID = uid;
       this.Name = name;
     }
@@ -92,6 +102,7 @@ namespace Empiria {
     }
 
   }  // class NamedEntityDto
+
 
 
   /// <summary>Extension methods used for map INamedEntity instances to their

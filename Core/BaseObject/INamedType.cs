@@ -25,6 +25,7 @@ namespace Empiria {
   }  // interface INamedType
 
 
+
   /// <summary>Data transfer object for INamedType instances.</summary>
   public class NamedTypeDto {
 
@@ -42,6 +43,5 @@ namespace Empiria {
     }
 
   }  // class NamedTypeDto
-
 
 }  // namespace Empiria
