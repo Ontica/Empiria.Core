@@ -126,37 +126,43 @@ namespace Empiria {
 
     [DataField("OBJECT_LINK_LINKED_OBJECT_ROLE")]
     public string LinkedObjectRole {
-      get; private set;
+      get; protected set;
+    }
+
+
+    [DataField("OBJECT_LINK_DESCRIPTION")]
+    public string Description {
+      get; protected set;
     }
 
 
     [DataField("OBJECT_LINK_IDENTIFICATORS")]
     public string Identificators {
-      get; private set;
+      get; protected set;
     }
 
 
     [DataField("OBJECT_LINK_TAGS")]
     public string Tags {
-      get; private set;
+      get; protected set;
     }
 
 
     [DataField("OBJECT_LINK_EXT_DATA")]
-    internal JsonObject ExtensionData {
+    protected internal JsonObject ExtensionData {
       get; private set;
     }
 
 
     [DataField("OBJECT_LINK_START_DATE")]
     public DateTime StartDate {
-      get; private set;
+      get; protected set;
     }
 
 
     [DataField("OBJECT_LINK_END_DATE")]
     public DateTime EndDate {
-      get; private set;
+      get; protected set;
     }
 
 
@@ -180,7 +186,7 @@ namespace Empiria {
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(BaseObjectLinkType.DisplayName, LinkedObjectRole);
+        return EmpiriaString.BuildKeywords(BaseObjectLinkType.DisplayName, LinkedObjectRole, Description);
       }
     }
 
@@ -190,15 +196,6 @@ namespace Empiria {
 
     public virtual void Delete() {
       this.Status = EntityStatus.Deleted;
-    }
-
-
-    protected override void OnSave() {
-      if (base.IsNew) {
-        this.PostedBy = ExecutionServer.CurrentContact;
-        this.PostingTime = DateTime.Now;
-      }
-      BaseObjectDataService.WriteBaseObjectLink(this);
     }
 
 
@@ -212,12 +209,12 @@ namespace Empiria {
     }
 
 
-    internal virtual void Update(BaseObjectLinkFields fields) {
-      Assertion.Require(fields, nameof(fields));
-
-      fields.EnsureValid();
-
-      LinkedObjectRole = PatchCleanField(fields.LinkedObjectRole, LinkedObjectRole);
+    protected override void OnSave() {
+      if (base.IsNew) {
+        this.PostedBy = ExecutionServer.CurrentContact;
+        this.PostingTime = DateTime.Now;
+      }
+      BaseObjectDataService.WriteBaseObjectLink(this);
     }
 
     #endregion Methods

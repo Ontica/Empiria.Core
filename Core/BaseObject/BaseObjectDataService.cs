@@ -8,7 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using System;
 using Empiria.Data;
 
 namespace Empiria {
@@ -89,7 +88,7 @@ namespace Empiria {
       var op = DataOperation.Parse("write_Object_Link",
                  o.Id, o.UID, o.BaseObjectLinkType.Id,
                  o.BaseObject.Id, o.LinkedObject.Id, o.LinkedObjectRole,
-                 o.Identificators, o.Tags, o.ExtensionData.ToString(),
+                 o.Description, o.Identificators, o.Tags, o.ExtensionData.ToString(),
                  o.Keywords, o.StartDate, o.EndDate,
                  o.PostedBy.Id, o.PostingTime, (char) o.Status);
 
