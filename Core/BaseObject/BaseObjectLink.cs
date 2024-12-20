@@ -154,7 +154,7 @@ namespace Empiria {
     }
 
 
-    [DataField("OBJECT_LINK_START_DATE")]
+    [DataField("OBJECT_LINK_START_DATE", Default = "ExecutionServer.DateMinValue")]
     public DateTime StartDate {
       get; protected set;
     }
