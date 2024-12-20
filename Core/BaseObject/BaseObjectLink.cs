@@ -130,14 +130,14 @@ namespace Empiria {
     }
 
 
-    [DataField("OBJECT_LINK_DESCRIPTION")]
-    public string Description {
+    [DataField("OBJECT_LINK_CODE")]
+    public string Code {
       get; protected set;
     }
 
 
-    [DataField("OBJECT_LINK_IDENTIFICATORS")]
-    public string Identificators {
+    [DataField("OBJECT_LINK_DESCRIPTION")]
+    public string Description {
       get; protected set;
     }
 
