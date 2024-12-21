@@ -27,26 +27,25 @@ namespace Empiria.Storage {
       OriginalFileName = fileInfo.Name;
       FileUID = GenerateUID();
       FileTimestamp = DateTime.Now;
-      FileExtension = GetFileExtension(OriginalFileName); EmpiriaString.TrimAll(fileInfo.Extension, ".", string.Empty);
+      FileExtension = GetFileExtension(OriginalFileName);
     }
 
 
     public InputFile(Stream stream,
-                     string appContentType,
                      string mediaType,
-                     string originalFileName) {
+                     string originalFileName,
+                     string appContentFile) {
       Assertion.Require(stream, nameof(stream));
-      Assertion.Require(appContentType, nameof(appContentType));
       Assertion.Require(mediaType, nameof(mediaType));
       Assertion.Require(originalFileName, nameof(originalFileName));
 
       Stream = stream;
-      AppContentType = appContentType;
       MediaType = mediaType;
       OriginalFileName = originalFileName;
       FileUID = GenerateUID();
       FileTimestamp = DateTime.Now;
       FileExtension = GetFileExtension(OriginalFileName);
+      AppContentType = appContentFile ?? string.Empty;
     }
 
     #endregion Constructors and parsers
