@@ -48,6 +48,7 @@ namespace Empiria.Storage {
       return Path.Combine(BaseFileDirectory, fileData.FileName);
     }
 
+
     public FileData Store(InputFile file) {
       Assertion.Require(file, nameof(file));
 

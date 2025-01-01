@@ -243,10 +243,13 @@ namespace Empiria.Ontology {
     /// </summary>
     public string GetSubclassesFilter() {
       ObjectTypeInfo[] subClasses = this.GetSubclasses();
+
       string subclassesFilter = this.Id.ToString();
+
       foreach (var subclassType in subClasses) {
         subclassesFilter += "," + subclassType.Id.ToString();
       }
+
       return subclassesFilter;
     }
 
@@ -269,9 +272,12 @@ namespace Empiria.Ontology {
       ObjectTypeInfo[] allSubClasses = this.GetAllSubclasses();
 
       string subclassesFilter = this.Id.ToString();
+
       foreach (var subclassType in allSubClasses) {
+
         subclassesFilter += "," + subclassType.Id.ToString();
       }
+
       return subclassesFilter;
     }
 

@@ -1,6 +1,6 @@
 ﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
-*  Module   : Empiria Ontology                           Component : Domain Layer                            *
+*  Module   : Base Objects                               Component : Domain Layer                            *
 *  Assembly : Empiria.Core.dll                           Pattern   : Layer supertype                         *
 *  Type     : BaseObject                                 License   : Please read LICENSE.txt file            *
 *                                                                                                            *
