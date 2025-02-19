@@ -158,6 +158,13 @@ namespace Empiria {
     }
 
 
+    public FixedList<TResult> SelectDistinct<TResult>(Func<T, TResult> selector) {
+      return base.Select<TResult>(selector)
+                 .Distinct()
+                 .ToFixedList();
+    }
+
+
     public new FixedList<T> Sort(Comparison<T> comparison) {
       base.Sort(comparison);
 
