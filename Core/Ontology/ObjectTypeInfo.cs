@@ -1,15 +1,17 @@
 ﻿/* Empiria Core  *********************************************************************************************
 *                                                                                                            *
-*  Solution  : Empiria Core                                     System   : Ontology                          *
-*  Namespace : Empiria.Ontology                                 License  : Please read LICENSE.txt file      *
-*  Type      : ObjectTypeInfo                                   Pattern  : Type metadata class               *
+*  Module   : Empiria Ontology                           Component : Domain Layer                            *
+*  Assembly : Empiria.Core.dll                           Pattern   : Type Metadata Information Holder        *
+*  Type     : ObjectTypeInfo                             License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary   : Represents an object type definition.                                                         *
+*  Summary  : Represents an object type definition.                                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Collections.Generic;
 using System.Data;
+
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -18,6 +20,7 @@ using Empiria.Reflection;
 
 namespace Empiria.Ontology {
 
+  /// <summary>Represents an object type definition.</summary>
   public class ObjectTypeInfo : MetaModelType {
 
     #region Fields
@@ -39,7 +42,7 @@ namespace Empiria.Ontology {
 
     #endregion Fields
 
-    #region Constructors and parsers
+    #region Properties
 
     protected internal ObjectTypeInfo() : base(MetaModelTypeFamily.ObjectType) {
 
@@ -66,7 +69,7 @@ namespace Empiria.Ontology {
     /// attempted to parse.</typeparam>
     /// <returns>The base ObjectTypeInfo for objects of type T.</returns>
     static public ObjectTypeInfo Parse<T>() where T : BaseObject {
-      return ObjectTypeInfo.Parse(typeof(T));
+      return Parse(typeof(T));
     }
 
 
@@ -125,10 +128,9 @@ namespace Empiria.Ontology {
       }
     }
 
-    #endregion Public properties
+    #endregion Properties
 
-    #region Public methods
-
+    #region Methods
 
     /// <summary>Creates a new instance of type T invoking its default or powertype constructor.</summary>
     protected internal T CreateObject<T>() where T : BaseObject {
@@ -205,7 +207,7 @@ namespace Empiria.Ontology {
       if (dataRowTypeIdValue == this.Id) {
         return this;
       } else {
-        return ObjectTypeInfo.Parse(dataRowTypeIdValue);
+        return Parse(dataRowTypeIdValue);
       }
     }
 
@@ -220,6 +222,31 @@ namespace Empiria.Ontology {
     }
 
 
+    public ObjectTypeInfo[] GetAllSubclasses() {
+      var allSubclasses = new List<ObjectTypeInfo>(16);
+
+      var subclasses = this.GetSubclasses();
+
+      foreach (var subclass in subclasses) {
+        allSubclasses.Add(subclass);
+        allSubclasses.AddRange(subclass.GetAllSubclasses());
+      }
+
+      if (!allSubclasses.Contains(this)) {
+        allSubclasses.Insert(0, this);
+      }
+
+      return allSubclasses.ToArray();
+    }
+
+
+    public string GetAllSubclassesFilter() {
+      ObjectTypeInfo[] allSubClasses = this.GetAllSubclasses();
+
+      return string.Join(",", allSubClasses.ToFixedList().Select(x => x.Id));
+    }
+
+
     private ObjectTypeInfo[] _subclassesArray = null;
     public ObjectTypeInfo[] GetSubclasses() {
       if (_subclassesArray == null) {
@@ -229,7 +256,7 @@ namespace Empiria.Ontology {
 
             ObjectTypeInfo[] array = new ObjectTypeInfo[dataTable.Rows.Count];
             for (int i = 0; i < dataTable.Rows.Count; i++) {
-              array[i] = ObjectTypeInfo.Parse((int) dataTable.Rows[i]["TypeId"]);
+              array[i] = Parse((int) dataTable.Rows[i]["TypeId"]);
             }
             _subclassesArray = array;
           }
@@ -242,43 +269,11 @@ namespace Empiria.Ontology {
     /// their subclasses Id's (e.g. "93, 192, 677")
     /// </summary>
     public string GetSubclassesFilter() {
-      ObjectTypeInfo[] subClasses = this.GetSubclasses();
+      ObjectTypeInfo[] subclasses = this.GetSubclasses();
 
-      string subclassesFilter = this.Id.ToString();
+      string joined = string.Join(",", subclasses.ToFixedList().Select(x => x.Id));
 
-      foreach (var subclassType in subClasses) {
-        subclassesFilter += "," + subclassType.Id.ToString();
-      }
-
-      return subclassesFilter;
-    }
-
-
-    public ObjectTypeInfo[] GetAllSubclasses() {
-      var allSubclasses = new List<ObjectTypeInfo>(16);
-
-      var subclasses = this.GetSubclasses();
-
-      foreach (var subclass in subclasses) {
-        allSubclasses.Add(subclass);
-        allSubclasses.AddRange(subclass.GetAllSubclasses());
-      }
-
-      return allSubclasses.ToArray();
-    }
-
-
-    public string GetAllSubclassesFilter() {
-      ObjectTypeInfo[] allSubClasses = this.GetAllSubclasses();
-
-      string subclassesFilter = this.Id.ToString();
-
-      foreach (var subclassType in allSubClasses) {
-
-        subclassesFilter += "," + subclassType.Id.ToString();
-      }
-
-      return subclassesFilter;
+      return joined.Length == 0 ? this.Id.ToString() : $"{this.Id}, {joined}";
     }
 
 
@@ -290,6 +285,7 @@ namespace Empiria.Ontology {
       return (T) _unknownInstance;
     }
 
+
     internal void InitializeObject(BaseObject baseObject) {
       if (this.IsDataBound) {
         this.AssertMappingRulesAreLoaded();
@@ -297,9 +293,11 @@ namespace Empiria.Ontology {
       }
     }
 
+
     public bool IsBaseClassOf(ObjectTypeInfo typeInfo) {
      return typeInfo.IsSubclassOf(this);
     }
+
 
     public bool IsSubclassOf(ObjectTypeInfo typeInfo) {
       var typeIterator = this.BaseType;
@@ -338,14 +336,14 @@ namespace Empiria.Ontology {
 
       int derivedTypeId = (int) dataRow[this.TypeIdFieldName];
       if (derivedTypeId != this.Id) {   // If types are distinct then change basetype to derived
-        return new Tuple<ObjectTypeInfo, DataRow>(ObjectTypeInfo.Parse(derivedTypeId), dataRow);
+        return new Tuple<ObjectTypeInfo, DataRow>(Parse(derivedTypeId), dataRow);
       }
       return new Tuple<ObjectTypeInfo, DataRow>(this, dataRow);
     }
 
-    #endregion Public methods
+    #endregion Methods
 
-    #region Private properties and methods
+    #region Helpers
 
     private void AssertMappingRulesAreLoaded() {
       if (dataMappingRules == null && this.IsDataBound) {
@@ -423,7 +421,7 @@ namespace Empiria.Ontology {
       return (PowertypeConstructorDelegate) dynMethod.CreateDelegate(typeof(PowertypeConstructorDelegate));
     }
 
-    #endregion Private properties and methods
+    #endregion Helpers
 
   } // class ObjectTypeInfo
 
