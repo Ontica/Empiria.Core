@@ -35,11 +35,25 @@ namespace Empiria.Data {
 
     #region Constructors and parsers
 
-    private DataSource(string dataSourceName) {
-      this.name = dataSourceName;
-      this.source = GetSource(dataSourceName);
-      this.technology = GetDataTechnology(dataSourceName);
+
+    private DataSource(string name) {
+      Assertion.Require(name, nameof(name));
+
+      this.name = name;
+      this.source = GetSource(name);
+      this.technology = GetDataTechnology(name);
     }
+
+
+    public DataSource(string name, string source, DataTechnology technology) {
+      Assertion.Require(name, nameof(name));
+      Assertion.Require(source, nameof(source));
+
+      this.name = name;
+      this.source = source;
+      this.technology = technology;
+    }
+
 
     static internal DataSource Parse(string sourceName) {
       string dataSourceName = GetDataSourceName(sourceName);
@@ -50,6 +64,7 @@ namespace Empiria.Data {
       }
       return sourcesCache[dataSourceName];
     }
+
 
     internal IDataHandler GetDataHandler() {
       if (handlersCache.ContainsKey(this.Source)) {

@@ -23,16 +23,6 @@ namespace Empiria.Data {
       this.Name = name;
     }
 
-    static public DataOperationList Parse(string[] messagesArray) {
-      DataOperationList list = new DataOperationList(messagesArray[0]);
-
-      for (int i = 1; i < messagesArray.Length; i++) {
-        list.Add(DataOperation.ParseFromMessage(messagesArray[i]));
-      }
-
-      return list;
-    }
-
     #endregion Constructors and parsers
 
     #region Public properties
