@@ -479,7 +479,7 @@ namespace Empiria {
     static public string RemovePunctuation(string source) {
       char[] punctuations = new char[] {'.', ',', ';', ':', '"', '\'', '/', '\\', '>', '<', '=', '-', '_',
                                         '?', '*', '$', '&', '+', '(', ')', '{', '}', '[', ']', '^', '¬',
-                                        '°', '%', '#', '¿', '!', '¡', '`', '~', '|'};
+                                        '°', '%', '#', '¿', '!', '¡', '´', '`', '~', '|'};
 
       for (int i = 0; i < punctuations.Length; i++) {
         source = source.Replace(punctuations[i], ' ');
