@@ -9,6 +9,8 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Empiria {
@@ -36,7 +38,7 @@ namespace Empiria {
 
     #region Methods
 
-     static public int DamerauLevenshteinDistance(string stringA, string stringB) {
+    static public int DamerauLevenshteinDistance(string stringA, string stringB) {
       stringA = PrepareForDistance(stringA);
       stringB = PrepareForDistance(stringB);
 
@@ -72,6 +74,22 @@ namespace Empiria {
       int distance = DamerauLevenshteinDistance(stringA, stringB);
 
       return decimal.One - ((decimal) distance / Math.Max(stringA.Length, stringB.Length));
+    }
+
+
+    static public decimal JaccardProximityFactor(string stringA, string stringB, int tokenSize = 4) {
+      HashSet<string> bigramsA = GetBigrams(stringA, tokenSize);
+      HashSet<string> bigramsB = GetBigrams(stringB, tokenSize);
+
+      int intersection = bigramsA.Intersect(bigramsB).Count();
+      int union = bigramsA.Union(bigramsB).Count();
+
+      // Handle edge case where both have no bigrams (e.g., empty or single-character strings)
+      if (union == 0) {
+        return stringA.Equals(stringB) ? 1m : 0m;
+      }
+
+      return (decimal) intersection / union;
     }
 
 
@@ -218,9 +236,36 @@ namespace Empiria {
       return EmpiriaString.TrimAll(EmpiriaString.RemoveNoiseExtended(source)).ToLowerInvariant();
     }
 
+
+    static public decimal SorensenDiceProximityFactor(string stringA, string stringB, int tokenSize = 4) {
+      HashSet<string> bigramsA = GetBigrams(stringA, tokenSize);
+      HashSet<string> bigramsB = GetBigrams(stringB, tokenSize);
+
+      int intersection = bigramsA.Intersect(bigramsB).Count();
+      int aCount = bigramsA.Count;
+      int bCount = bigramsB.Count;
+
+      if (aCount + bCount == 0) {
+        return stringA.Equals(stringB) ? 1m : 0m;
+      }
+
+      return (2m * intersection) / (aCount + bCount);
+    }
+
     #endregion Methods
 
     #region Helpers
+
+    static private HashSet<string> GetBigrams(string input, int tokenSize) {
+      HashSet<string> bigrams = new HashSet<string>();
+
+      for (int i = 0; i < input.Length - tokenSize - 1; i++) {
+        bigrams.Add(input.Substring(i, tokenSize)
+                         .Replace(" ", string.Empty));
+      }
+      return bigrams;
+    }
+
 
     static private string GetCommonCharacters(string stringA, string stringB, int distanceR) {
       if (string.IsNullOrEmpty(stringA) || string.IsNullOrEmpty(stringB)) {
