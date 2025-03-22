@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 using System.Reflection;
 using System.Reflection.Emit;
@@ -229,11 +230,7 @@ namespace Empiria.Ontology {
 
       foreach (var subclass in subclasses) {
         allSubclasses.Add(subclass);
-        allSubclasses.AddRange(subclass.GetAllSubclasses());
-      }
-
-      if (!allSubclasses.Contains(this)) {
-        allSubclasses.Insert(0, this);
+        allSubclasses.AddRange(subclass.GetSubclasses());
       }
 
       return allSubclasses.ToArray();
