@@ -125,6 +125,18 @@ namespace Empiria {
                  .Sort((x, y) => x.Name.CompareTo(y.Name));
     }
 
+
+    static public FixedList<NamedEntityDto> MapToNamedEntityList(this IEnumerable<INamedEntity> list, bool sortByName) {
+      var result = list.Select((x) => MapToNamedEntity(x))
+                       .ToFixedList();
+
+      if (!sortByName) {
+        return result;
+      }
+
+      return result.Sort((x, y) => x.Name.CompareTo(y.Name));
+    }
+
   } // class NamedEntityMappingExtensions
 
 }  // namespace Empiria
