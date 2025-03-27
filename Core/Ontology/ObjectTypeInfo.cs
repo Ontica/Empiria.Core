@@ -223,8 +223,12 @@ namespace Empiria.Ontology {
     }
 
 
-    public ObjectTypeInfo[] GetAllSubclasses() {
+    public ObjectTypeInfo[] GetAllSubclasses(bool includeBaseClass = true) {
       var allSubclasses = new List<ObjectTypeInfo>(16);
+
+      if (includeBaseClass) {
+        allSubclasses.Add(this);
+      }
 
       var subclasses = this.GetSubclasses();
 
@@ -233,7 +237,7 @@ namespace Empiria.Ontology {
         allSubclasses.AddRange(subclass.GetSubclasses());
       }
 
-      return allSubclasses.ToArray();
+      return allSubclasses.ToFixedList().Distinct().ToArray();
     }
 
 
