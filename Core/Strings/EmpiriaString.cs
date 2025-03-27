@@ -407,16 +407,17 @@ namespace Empiria {
       Assertion.Require(source, "source");
       Assertion.Require(firstValue, "firstValue");
 
-      if (source == firstValue) {
+      if (source.ToLowerInvariant() == firstValue.ToLowerInvariant()) {
         return true;
       }
       for (int i = 0; i < moreValues.Length; i++) {
-        if (moreValues[i] == source) {
+        if (moreValues[i].ToLowerInvariant() == source.ToLowerInvariant()) {
           return true;
         }
       }
       return false;
     }
+
 
     static public bool IsInteger(string source) {
       if (String.IsNullOrEmpty(source)) {
