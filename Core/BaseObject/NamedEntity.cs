@@ -69,12 +69,19 @@ namespace Empiria {
 
     #region Constructors and parsers
 
+    private NamedEntityDto() {
+      this.UID = string.Empty;
+      this.Name = string.Empty;
+    }
+
+
     public NamedEntityDto(INamedEntity entity) {
       Assertion.Require(entity, nameof(entity));
 
       this.UID = entity.UID;
       this.Name = entity.Name;
     }
+
 
     public NamedEntityDto(string uid, string name) {
       Assertion.Require(uid, nameof(uid));
@@ -84,11 +91,18 @@ namespace Empiria {
       this.Name = name;
     }
 
+
     static public NamedEntityDto Parse(JsonObject json) {
       Assertion.Require(json, nameof(json));
 
       return new NamedEntityDto(json.Get<string>("uid"),
                                 json.Get<string>("name"));
+    }
+
+    static public NamedEntityDto Empty {
+      get {
+        return new NamedEntityDto();
+      }
     }
 
     #endregion Constructors and parsers
