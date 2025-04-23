@@ -129,6 +129,13 @@ namespace Empiria {
     }
 
 
+    public new bool Remove(T item) {
+      Assertion.Require(item, nameof(item));
+
+      return base.Remove(item);
+    }
+
+
     public FixedList<T> Remove(IEnumerable<T> items) {
       var copy = new FixedList<T>(this);
 
