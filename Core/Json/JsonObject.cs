@@ -94,7 +94,6 @@ namespace Empiria.Json {
 
     #region Public methods
 
-
     /// <summary>Adds a new json item to the root of this json object.</summary>
     /// <param name="key">The key or name of the item to add.</param>
     /// <param name="value">The value of the added object.</param>
@@ -354,11 +353,11 @@ namespace Empiria.Json {
         objectsList = this.Get<List<object>>(listPath, new List<object>());
       }
 
-      if (ObjectFactory.IsIdentifiable(typeof(T))) {
+      if (objectsList.Count == 0) {
+        return new List<T>();
+      }
 
-        if (objectsList.Count == 0) {
-          return new List<T>();
-        }
+      if (ObjectFactory.IsIdentifiable(typeof(T))) {
 
         if (objectsList.TrueForAll((x) => EmpiriaString.IsInteger(Convert.ToString(x)))) {
 

@@ -22,15 +22,14 @@ namespace Empiria.Storage {
     }
 
 
-    public string Url {
-      get;
-    }
-
-
     public FileType Type {
       get;
     }
 
+
+    public string Url {
+      get;
+    }
 
   }  // class FileDto
 

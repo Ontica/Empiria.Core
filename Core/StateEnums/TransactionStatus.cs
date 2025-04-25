@@ -78,7 +78,7 @@ namespace Empiria.StateEnums {
 
 
 
-  /// <summary>Input query DTO used to retrieve budget transactions parties.</summary>
+  /// <summary>Input query DTO used to retrieve transactions parties.</summary>
   public class TransactionPartiesQuery {
 
     public TransactionPartyType PartyType {
