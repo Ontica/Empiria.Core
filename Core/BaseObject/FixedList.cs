@@ -7,6 +7,7 @@
 *  Summary   : Represents a fixed list of objects whose members cannot be added, removed or changed.         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,22 +16,6 @@ using System.Linq;
 using Empiria.Collections;
 
 namespace Empiria {
-
-  /// <summary>Static class that contains FixedList extension methods.</summary>
-  static public class FixedListExtensionMethods {
-
-    ///// <summary>Extends generic List[T] objects to return a FixedList[T] type.</summary>
-    //static public FixedList<T> ToFixedList<T>(this List<T> list) {
-    //  return new FixedList<T>(list);
-    //}
-
-    /// <summary>Extends generic IEnumerable<T> objects to return a FixedList[T] type.</summary>
-    static public FixedList<T> ToFixedList<T>(this IEnumerable<T> list) {
-      return new FixedList<T>(list);
-    }
-
-  }  // class FixedListExtensionMethods
-
 
   /// <summary>Represents a fixed list of objects whose members cannot be added, removed or changed.</summary>
   public class FixedList<T> : BaseList<T> {
@@ -79,9 +64,20 @@ namespace Empiria {
     }
 
 
+    static public FixedList<U> Merge<U>(IEnumerable<U> list1, IEnumerable<U> list2) {
+      Assertion.Require(list1, nameof(list1));
+      Assertion.Require(list2, nameof(list2));
+
+      var mergedList = new List<U>(list1);
+
+      mergedList.AddRange(list2);
+
+      return mergedList.ToFixedList();
+    }
+
     #endregion Constructors and parsers
 
-    #region Public methods
+    #region Methods
 
     public new bool Contains(T item) {
       return base.Contains(item);
@@ -165,6 +161,21 @@ namespace Empiria {
     }
 
 
+    public IEnumerable<TResult> SelectFlat<TResult>(Func<T, IEnumerable<TResult>> selector) {
+
+
+      IEnumerable<IEnumerable<TResult>> lists = Select(selector);
+
+      var result = new List<TResult>(lists.Sum(x => x.Count()));
+
+      foreach (IEnumerable<TResult> list in lists) {
+        result.AddRange(list);
+      }
+
+      return result;
+    }
+
+
     public FixedList<TResult> SelectDistinct<TResult>(Func<T, TResult> selector) {
       return base.Select<TResult>(selector)
                  .Distinct()
@@ -200,8 +211,20 @@ namespace Empiria {
       return array;
     }
 
-    #endregion Public methods
+    #endregion Methods
 
   } // class FixedList
+
+
+
+  /// <summary>Extension methods for FixedList type.</summary>
+  static public class FixedListExtensionMethods {
+
+    /// <summary>Extends generic IEnumerable<T> objects to return a FixedList[T] type.</summary>
+    static public FixedList<T> ToFixedList<T>(this IEnumerable<T> list) {
+      return new FixedList<T>(list);
+    }
+
+  }  // class FixedListExtensionMethods
 
 } // namespace Empiria
