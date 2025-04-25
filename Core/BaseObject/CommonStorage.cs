@@ -47,22 +47,39 @@ namespace Empiria {
     }
 
 
-    [DataObject]
-    protected CommonStorageData Data {
-      get; private set;
+    [DataField("OBJECT_CATEGORY_ID")]
+    protected int ObjectCategoryId {
+      get; set;
+    }
+
+
+    [DataField("OBJECT_NAMED_KEY")]
+    public string NamedKey {
+      get; set;
+    }
+
+
+    [DataField("OBJECT_CODE")]
+    public string Code {
+      get; set;
+    }
+
+
+    [DataField("OBJECT_IDENTIFICATORS")]
+    public string Identificators {
+      get; set;
+    }
+
+
+    [DataField("OBJECT_TAGS")]
+    public string Tags {
+      get; set;
     }
 
 
     [DataField("OBJECT_EXT_DATA")]
     protected JsonObject ExtData {
       get; private set;
-    }
-
-
-    public virtual string Keywords {
-      get {
-        return EmpiriaString.BuildKeywords(Name, Data.Code, Data.Identificators, Data.Tags, Description);
-      }
     }
 
 
@@ -97,13 +114,29 @@ namespace Empiria {
 
 
     [DataField("OBJECT_STATUS", Default = 'A')]
-    private char Status {
-      get; set;
+    protected char Status {
+      get; private set;
+    }
+
+
+    [DataField("PARENT_OBJECT_ID")]
+    protected int ParentObjectId {
+      get; private set;
+    }
+
+    public virtual string Keywords {
+      get {
+        return EmpiriaString.BuildKeywords(Name, Code, Identificators, Tags, Description);
+      }
     }
 
     #endregion Properties
 
     #region Methods
+
+    protected void SetParent(int parentId) {
+      ParentObjectId = parentId;
+    }
 
     protected void SetStatus(Enum status) {
       this.Status = Convert.ToChar(status);
