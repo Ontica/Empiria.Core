@@ -398,6 +398,24 @@ namespace Empiria {
     }
 
 
+    static public string MonthName(int month) {
+      Assertion.Require(1 <= month && month <= 12, $"Unrecognized month number {month}.");
+
+      var months = new string[] {
+        "Enero", "Febrero", "Marzo", "Abril",
+        "Mayo", "Junio", "Julio", "Agosto",
+        "Septiembre", "Octubre", "Noviembre", "Diciembre"
+      };
+
+      return months[month - 1];
+    }
+
+
+    static public string MonthName(DateTime date) {
+      return MonthName(date.Month);
+    }
+
+
     static public bool NotIsEmpty(string source) {
       return !IsEmpty(source);
     }
