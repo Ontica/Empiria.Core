@@ -161,8 +161,7 @@ namespace Empiria {
     }
 
 
-    public IEnumerable<TResult> SelectFlat<TResult>(Func<T, IEnumerable<TResult>> selector) {
-
+    public FixedList<TResult> SelectFlat<TResult>(Func<T, IEnumerable<TResult>> selector) {
 
       IEnumerable<IEnumerable<TResult>> lists = Select(selector);
 
@@ -172,7 +171,7 @@ namespace Empiria {
         result.AddRange(list);
       }
 
-      return result;
+      return result.ToFixedList();
     }
 
 
@@ -180,6 +179,11 @@ namespace Empiria {
       return base.Select<TResult>(selector)
                  .Distinct()
                  .ToFixedList();
+    }
+
+
+    public FixedList<TResult> SelectDistinctFlat<TResult>(Func<T, IEnumerable<TResult>> selector) {
+      return SelectFlat(selector).Distinct().ToFixedList();
     }
 
 
