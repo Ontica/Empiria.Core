@@ -133,7 +133,7 @@ namespace Empiria {
     }
 
 
-    static protected T ParseEmpty<T>(int emptyId) where T : BaseObject {
+    static private T ParseEmpty<T>(int emptyId) where T : BaseObject {
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
       return typeInfo.GetEmptyInstance<T>(emptyId).Clone<T>();
@@ -143,8 +143,11 @@ namespace Empiria {
     static protected internal T ParseId<T>(int id) where T : BaseObject {
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-      if (id == ObjectTypeInfo.EmptyInstanceId || id == 0) {    // To Do: Allow zeros using a flag
-        return typeInfo.GetEmptyInstance<T>(id).Clone<T>();
+      if (id == ObjectTypeInfo.EmptyInstanceId) {
+        return ParseEmpty<T>();
+      }
+      if (id == 0) {    // To Do: Allow zeros using a flag
+        return ParseEmpty<T>(id);
       }
       if (id == ObjectTypeInfo.UnknownInstanceId) {
         return typeInfo.GetUnknownInstance<T>().Clone<T>();
@@ -175,6 +178,10 @@ namespace Empiria {
 
     static protected internal T ParseKey<T>(string namedKey) where T : BaseObject {
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
+
+      if (namedKey.ToLowerInvariant() == "empty") {
+        return ParseEmpty<T>();
+      }
 
       if (USE_CACHE_FLAG && typeInfo.StoreInstancesInCache) {
         T item = _cache.TryGetItem<T>(typeInfo.Name, namedKey);
@@ -374,12 +381,15 @@ namespace Empiria {
     public override bool Equals(object obj) => this.Equals(obj as BaseObject);
 
     public bool Equals(BaseObject obj) {
+
       if (obj == null) {
         return false;
       }
+
       if (Object.ReferenceEquals(this, obj)) {
         return true;
       }
+
       if (this.GetType() != obj.GetType()) {
         return false;
       }
@@ -573,7 +583,6 @@ namespace Empiria {
         var cachedItem = _cache.TryGetItem<T>(item.objectTypeInfo.Name, item.Id);
 
         if (cachedItem != null) {
-          EmpiriaLog.Info($"DISCARDED ITEM WITH ID: {item.objectTypeInfo.Name} / {item.Id} / {item.UID} ");
           return cachedItem;
         }
 
@@ -585,7 +594,6 @@ namespace Empiria {
         return item;
       }
     }
-
 
     #endregion Helpers
 
