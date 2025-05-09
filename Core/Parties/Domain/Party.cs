@@ -124,7 +124,7 @@ namespace Empiria.Parties {
     }
 
     [DataField("PARTY_EXT_DATA")]
-    protected internal JsonObject ExtendedData {
+    public JsonObject ExtendedData {
       get; private set;
     }
 
