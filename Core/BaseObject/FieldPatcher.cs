@@ -16,6 +16,19 @@ namespace Empiria {
 
     #region Public methods
 
+    public static string Clean(string fieldValue) {
+      fieldValue = EmpiriaString.Clean(fieldValue);
+
+      if (string.IsNullOrWhiteSpace(fieldValue)) {
+        return string.Empty;
+      }
+      if (fieldValue.ToLowerInvariant() == "empty") {
+        return string.Empty;
+      }
+      return fieldValue;
+    }
+
+
     static public string PatchField(string newValue, string defaultValue) {
       if (!String.IsNullOrWhiteSpace(newValue)) {
         return newValue;
