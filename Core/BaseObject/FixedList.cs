@@ -111,6 +111,38 @@ namespace Empiria {
     }
 
 
+    public Dictionary<TResult, int> FrequencyTable<TResult>(Func<T, TResult> selector) {
+      Assertion.Require(selector, nameof(selector));
+
+      FixedList<TResult> members = SelectDistinct(selector);
+
+      if (members.Count == 0) {
+        return new Dictionary<TResult, int>();
+      }
+
+      return members.GroupBy(m => m)
+                    .ToDictionary(g => g.Key, g => g.Count());
+    }
+
+
+    public FixedList<TResult> GetModes<TResult>(Func<T, TResult> selector) {
+      Assertion.Require(selector, nameof(selector));
+
+      Dictionary<TResult, int> frequencyTable = FrequencyTable(selector);
+
+      if (frequencyTable.Count == 0) {
+        return new FixedList<TResult>();
+      }
+
+      var maxCount = frequencyTable.Values.Max();
+
+      return frequencyTable.ToList()
+                           .FindAll(x => x.Value == maxCount)
+                           .Select(x => x.Key)
+                           .ToFixedList();
+    }
+
+
     public FixedList<T> Intersect(FixedList<T> second) {
       var intersect = this.Intersect<T>(second);
 
