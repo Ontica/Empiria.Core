@@ -41,6 +41,9 @@ namespace Empiria.Reflection {
 
       } else if (convertToType == typeof(decimal)) {
         return (T) (object) System.Convert.ToDecimal(value);
+
+      } else if (convertToType.IsEnum) {
+        return ObjectFactory.ParseEnumValue<T>(value);
       }
 
 
@@ -51,9 +54,6 @@ namespace Empiria.Reflection {
         } else {
           return ObjectFactory.InvokeParseMethod<T>((string) value);
         }
-
-      } else if (convertToType.IsEnum) {
-        return ObjectFactory.ParseEnumValue<T>(value);
 
       } else if (convertToType == typeof(string) && value is IDictionary<string, object>) {
         object o = JsonObject.Parse((IDictionary<string, object>) value).ToString();
@@ -72,8 +72,14 @@ namespace Empiria.Reflection {
         } else {
           return JsonConverter.ToObject<T>(jsonObject.ToString());
         }
+
       } else if (convertToType == typeof(string)) {
+
         return (T) (object) System.Convert.ToString(value);
+
+      //} else if (convertToType.Name == typeof(List<>).Name) {
+
+      //  return CreateObject<T>();
 
       } else {
         return (T) System.Convert.ChangeType(value, convertToType);

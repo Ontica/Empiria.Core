@@ -510,6 +510,7 @@ namespace Empiria {
       this.isDirtyFlag = false;
     }
 
+
     protected void ReclassifyAs(ObjectTypeInfo newType) {
       Assertion.Require(newType, nameof(newType));
       Assertion.Require(!this.objectTypeInfo.Equals(newType),

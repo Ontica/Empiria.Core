@@ -336,6 +336,7 @@ namespace Empiria {
       return DateTime.TryParse(source, out dischardedResult);
     }
 
+
     static public bool NotIsDate(string source) {
       return !IsDate(source);
     }
@@ -358,6 +359,7 @@ namespace Empiria {
         return false;
       }
     }
+
 
     static public bool IsDouble(string source, string format) {
       try {
@@ -580,7 +582,6 @@ namespace Empiria {
     }
 
 
-
     static public bool? TryToBoolean(string source) {
       source = source.ToUpperInvariant();
 
@@ -597,6 +598,7 @@ namespace Empiria {
       return null;
     }
 
+
     static public bool ToBoolean(string source) {
       bool? value = TryToBoolean(source);
 
@@ -607,9 +609,11 @@ namespace Empiria {
       return value.Value;
     }
 
+
     static public DateTime ToDate(string source) {
       return ToDateTime(source, "dd/MMM/yyyy");
     }
+
 
     static public DateTime ToDateTime(string source) {
       if (source.Contains(":")) {
@@ -618,6 +622,7 @@ namespace Empiria {
         return ToDate(source);
       }
     }
+
 
     static public DateTime ToDateTime(string source, string format) {
       try {
@@ -630,13 +635,16 @@ namespace Empiria {
       }
     }
 
+
     static public DateTime ToDateTimeFull(string source) {
       return ToDateTime(source, "dd/MMM/yyyy HH:mm:ss");
     }
 
+
     static public DateTime ToDateTimeMax(string source) {
       return ToDateTime(source + " 23:59:59", "dd/MMM/yyyy HH:mm:ss");
     }
+
 
     static public decimal ToDecimal(string source) {
       try {
@@ -658,6 +666,7 @@ namespace Empiria {
       }
     }
 
+
     static public int ToInteger(string source) {
       try {
         source = TrimAll(source, ",", String.Empty);
@@ -670,6 +679,7 @@ namespace Empiria {
         throw new Exception($"No reconozco el valor {source} como del tipo de datos entero.");
       }
     }
+
 
     static public string ToProperNoun(string noun) {
       Assertion.Require(noun, "noun");
@@ -696,6 +706,7 @@ namespace Empiria {
       return temp.Trim();
     }
 
+
     static public string TrimControl(string source) {
       if (String.IsNullOrWhiteSpace(source)) {
         return String.Empty;
@@ -710,6 +721,7 @@ namespace Empiria {
       }
       return temp;
     }
+
 
     static public string TrimSpacesAndControl(string source) {
       if (String.IsNullOrWhiteSpace(source)) {
@@ -729,6 +741,7 @@ namespace Empiria {
         return String.Empty;
       }
     }
+
 
     static public string TrimAll(string source, string pattern, string replaceWith) {
       if (source == null) {
