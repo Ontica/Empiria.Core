@@ -151,6 +151,17 @@ namespace Empiria {
       }
     }
 
+    static public int CurrentSessionId {
+      get {
+        if (IsAuthenticated) {
+          return CurrentPrincipal.Session.Id;
+        } else {
+          return -1;
+        }
+      }
+    }
+
+
     static public string CurrentSessionToken {
       get {
         if (IsAuthenticated) {
@@ -161,6 +172,7 @@ namespace Empiria {
       }
     }
 
+
     static public int CurrentUserId {
       get {
         if (IsAuthenticated) {
@@ -170,6 +182,7 @@ namespace Empiria {
         }
       }
     }
+
 
     static public IEmpiriaUser CurrentUser {
       get {
@@ -247,6 +260,7 @@ namespace Empiria {
         return Instance.serverId;
       }
     }
+
 
     static public string SystemName {
       get {

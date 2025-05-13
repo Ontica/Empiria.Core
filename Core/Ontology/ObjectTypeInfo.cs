@@ -129,6 +129,13 @@ namespace Empiria.Ontology {
       }
     }
 
+
+    public string ReclassificationTag {
+      get {
+        return this.ExtensionData.Get("reclassificationTag", String.Empty);
+      }
+    }
+
     #endregion Properties
 
     #region Methods
