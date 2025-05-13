@@ -526,6 +526,20 @@ namespace Empiria {
     }
 
 
+    public static int[] SplitToIntArray(string source, char delimiter) {
+
+      if (string.IsNullOrWhiteSpace(source)) {
+        return new int[0];
+      }
+
+      var integers = source.Split(delimiter)
+                           .ToFixedList()
+                           .ConvertAll(x => int.Parse(TrimAll(x)));
+
+      return integers.ToArray();
+    }
+
+
     static public bool StartsWith(string source, string firstValue, params string[] moreValues) {
       Assertion.Require(source, "source");
       Assertion.Require(firstValue, "firstValue");
