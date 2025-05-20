@@ -15,9 +15,21 @@ namespace Empiria.StateEnums {
 
     Pending = 'P',
 
-    OnAuthorization = 'A',
+    Requested = 'Q',
 
-    Completed = 'C',
+    OnAuthorization = 'T',
+
+    Authorized = 'A',
+
+    Signed = 'G',
+
+    Closed = 'C',
+
+    Returned = 'R',
+
+    Suspended = 'S',
+
+    Canceled = 'D',
 
     Deleted = 'X',
 
@@ -36,7 +48,9 @@ namespace Empiria.StateEnums {
 
     AuthorizedBy,
 
-    CompletedBy,
+    SignedBy,
+
+    ClosedBy,
 
     None,
 
@@ -53,7 +67,7 @@ namespace Empiria.StateEnums {
 
     ControlDesk,
 
-    Completed,
+    Closed,
 
     All
 
@@ -69,6 +83,8 @@ namespace Empiria.StateEnums {
     Registered,
 
     Authorizated,
+
+    Signed,
 
     Completed,
 
@@ -99,18 +115,42 @@ namespace Empiria.StateEnums {
     static public string GetName(this TransactionStatus status) {
 
       switch (status) {
+
         case TransactionStatus.Pending:
           return "Pendiente";
+
+        case TransactionStatus.Requested:
+          return "Solicitada";
+
         case TransactionStatus.OnAuthorization:
           return "En autorización";
-        case TransactionStatus.Completed:
-          return "Completada";
+
+        case TransactionStatus.Authorized:
+          return "Autorizada";
+
+        case TransactionStatus.Signed:
+          return "Firmada";
+
+        case TransactionStatus.Closed:
+          return "Cerrada";
+
+        case TransactionStatus.Returned:
+          return "Regresada";
+
+        case TransactionStatus.Suspended:
+          return "Suspendida";
+
+        case TransactionStatus.Canceled:
+          return "Cancelada";
+
         case TransactionStatus.Deleted:
           return "Eliminada";
+
         default:
-          throw Assertion.EnsureNoReachThisCode($"Unrecognized budget transaction status {status}.");
+          throw Assertion.EnsureNoReachThisCode($"Unrecognized transaction status {status}.");
       }
     }
+
 
 
     static public NamedEntityDto MapToNamedEntity(this TransactionStatus status) {
