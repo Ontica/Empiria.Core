@@ -48,31 +48,29 @@ namespace Empiria {
 
 
     [DataField("OBJECT_CATEGORY_ID")]
-    protected int ObjectCategoryId {
-      get; set;
-    }
+    private int _categoryId = -1;
 
 
     [DataField("OBJECT_NAMED_KEY")]
-    public string NamedKey {
+    protected string NamedKey {
       get; set;
     }
 
 
     [DataField("OBJECT_CODE")]
-    public string Code {
+    protected string Code {
       get; set;
     }
 
 
     [DataField("OBJECT_IDENTIFICATORS")]
-    public string Identificators {
+    protected string Identificators {
       get; set;
     }
 
 
     [DataField("OBJECT_TAGS")]
-    public string Tags {
+    protected string Tags {
       get; set;
     }
 
@@ -90,14 +88,14 @@ namespace Empiria {
 
 
     [DataField("OBJECT_START_DATE")]
-    public DateTime StartDate {
-      get; protected set;
+    protected DateTime StartDate {
+      get; set;
     }
 
 
     [DataField("OBJECT_END_DATE")]
-    public DateTime EndDate {
-      get; protected set;
+    protected DateTime EndDate {
+      get; set;
     }
 
 
@@ -132,6 +130,13 @@ namespace Empiria {
 
     #region Methods
 
+    public T GetCategory<T>() where T : BaseObject {
+      if (_categoryId == -1) {
+        return BaseObject.ParseEmpty<T>();
+      }
+      return BaseObject.ParseId<T>(_categoryId);
+    }
+
 
     public T GetParent<T>() where T : BaseObject {
       if (_parentObjectId == -1) {
@@ -150,6 +155,13 @@ namespace Empiria {
       Assertion.Require(parent, nameof(parent));
 
       _parentObjectId = parent.Id;
+    }
+
+
+    protected void SetCategory<T>(T category) where T : BaseObject {
+      Assertion.Require(category, nameof(category));
+
+      _categoryId = category.Id;
     }
 
 
