@@ -13,7 +13,6 @@ using System;
 using Empiria.Contacts;
 using Empiria.Json;
 using Empiria.Ontology;
-using Newtonsoft.Json.Linq;
 
 namespace Empiria {
 
@@ -121,9 +120,7 @@ namespace Empiria {
 
 
     [DataField("PARENT_OBJECT_ID")]
-    private int ParentObjectId {
-      get; set;
-    }
+    private int _parentObjectId = -1;
 
     public virtual string Keywords {
       get {
@@ -135,11 +132,12 @@ namespace Empiria {
 
     #region Methods
 
+
     public T GetParent<T>() where T : BaseObject {
-      if (this.ParentObjectId == -1) {
+      if (_parentObjectId == -1) {
         return BaseObject.ParseEmpty<T>();
       }
-      return BaseObject.ParseId<T>(this.ParentObjectId);
+      return BaseObject.ParseId<T>(_parentObjectId);
     }
 
 
@@ -151,7 +149,7 @@ namespace Empiria {
     protected void SetParent<T>(T parent) where T : BaseObject {
       Assertion.Require(parent, nameof(parent));
 
-      ParentObjectId = parent.Id;
+      _parentObjectId = parent.Id;
     }
 
 
