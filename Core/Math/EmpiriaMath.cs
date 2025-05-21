@@ -7,7 +7,9 @@
 *  Summary   : Mathematical methods library class.                                                           *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
+using System.Collections.Generic;
 
 namespace Empiria {
 
@@ -34,6 +36,12 @@ namespace Empiria {
 
     static public decimal ApplyPercentage(decimal quantity, decimal percentage) {
       return (quantity * percentage) / 100m;
+    }
+
+    static public char GetFullRandomDigitOrCharacter(string current = "") {
+      const string digitsAndCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+
+      return GetRandomCharacterHelper(digitsAndCharacters, current);
     }
 
     static public bool GetRandomBoolean() {
@@ -64,11 +72,19 @@ namespace Empiria {
       return GetRandomCharacterHelper(digitsAndCharacters, current);
     }
 
-    static public char GetFullRandomDigitOrCharacter(string current = "") {
-      const string digitsAndCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
-      return GetRandomCharacterHelper(digitsAndCharacters, current);
+    static public int[] GetRange(int start, int end) {
+      Assertion.Require(start <= end, "start is greater than end parameter.");
+
+      var list = new List<int>(end - start + 1);
+
+      for (int i = start; i <= end; i++) {
+        list.Add(i);
+      }
+
+      return list.ToArray();
     }
+
 
     static public bool IsMemberOf(int value, int[] array) {
       foreach (int arrayItem in array) {
