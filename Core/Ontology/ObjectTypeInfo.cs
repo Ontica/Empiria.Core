@@ -40,7 +40,7 @@ namespace Empiria.Ontology {
     private DefaultConstructorDelegate defaultTypeConstructorDelegate;
     private PowertypeConstructorDelegate powertypeConstructorDelegate;
 
-    static private object _locker = new object();
+    private readonly object _locker = new object();
 
     #endregion Fields
 

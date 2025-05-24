@@ -11,7 +11,7 @@
 namespace Empiria.Parties {
 
   /// <summary>Describes an operation or transaction source.</summary>
-  public class OperationSource : GeneralObject {
+  public class OperationSource : CommonStorage {
 
     #region Constructors and parsers
 
@@ -19,13 +19,16 @@ namespace Empiria.Parties {
 
     static public OperationSource Parse(string uid) => ParseKey<OperationSource>(uid);
 
+    static public OperationSource ParseNamedKey(string namedKey) => ParseNamedKey<OperationSource>(namedKey);
+
     static public FixedList<OperationSource> GetList() {
-      return BaseObject.GetList<OperationSource>(string.Empty, "ObjectName")
-                       .FindAll(x => x.Status != StateEnums.EntityStatus.Deleted)
+      return BaseObject.GetList<OperationSource>(string.Empty, "Object_Name")
                        .ToFixedList();
     }
 
     static public OperationSource Empty => ParseEmpty<OperationSource>();
+
+    static public OperationSource Default => ParseNamedKey("DEFAULT");
 
     #endregion Constructors and parsers
 
