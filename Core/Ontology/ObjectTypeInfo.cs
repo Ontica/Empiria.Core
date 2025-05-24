@@ -40,6 +40,7 @@ namespace Empiria.Ontology {
     private DefaultConstructorDelegate defaultTypeConstructorDelegate;
     private PowertypeConstructorDelegate powertypeConstructorDelegate;
 
+    static private object _locker = new object();
 
     #endregion Fields
 
@@ -113,8 +114,13 @@ namespace Empiria.Ontology {
     private bool? _isDataBoundFlag = null;
     public bool IsDataBound {
       get {
-        if (!_isDataBoundFlag.HasValue) {
-          _isDataBoundFlag = DataMappingRules.IsDataBound(base.UnderlyingSystemType);
+        if (_isDataBoundFlag.HasValue) {
+          return _isDataBoundFlag.Value;
+        }
+        lock (_locker) {
+          if (!_isDataBoundFlag.HasValue) {
+            _isDataBoundFlag = DataMappingRules.IsDataBound(base.UnderlyingSystemType);
+          }
         }
         return _isDataBoundFlag.Value;
       }
