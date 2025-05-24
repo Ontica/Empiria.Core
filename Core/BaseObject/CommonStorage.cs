@@ -26,9 +26,23 @@ namespace Empiria {
       // Required by Empiria Framework.
     }
 
-
     protected CommonStorage(Powertype powertype) : base(powertype) {
       // Used by partitioned derived types.
+    }
+
+    static public T ParseNamedKey<T>(string namedKey) where T: CommonStorage {
+      Assertion.Require(namedKey, nameof(namedKey));
+
+      CommonStorage item = TryParse<T>($"Object_Named_Key = '{namedKey}'");
+
+      Assertion.Require(item, $"An object with named key '{namedKey}' was not found in common storage.");
+
+      return (T) item;
+    }
+
+    static public FixedList<T> GetStorageObjects<T>() where T : CommonStorage {
+      return BaseObject.GetList<T>(string.Empty, "Object_Name")
+                       .ToFixedList();
     }
 
     #endregion Constructors and parsers
