@@ -203,6 +203,13 @@ namespace Empiria.Parties {
     }
 
 
+    public bool PlaysRole(string role) {
+      Assertion.Require(role, nameof(role));
+
+      return this.Roles.Contains(role);
+    }
+
+
     internal void SaveHistoric(IHistoricObject historyOf) {
       Assertion.Require(base.IsNew, "Can't save already living instances as historic.");
 
