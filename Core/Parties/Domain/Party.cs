@@ -73,7 +73,7 @@ namespace Empiria.Parties {
       return TryParse<Party>($"PARTY_CODE = '{partyID}'");
     }
 
-    static public Party Empty => ParseEmpty<Person>();
+    static public Party Empty => ParseEmpty<Party>();
 
     static public Party Primary => Parse(PRIMARY_PARTY_ID);
 

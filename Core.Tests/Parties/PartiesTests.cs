@@ -18,16 +18,6 @@ namespace Empiria.Tests.Parties {
   public class PartiesTests {
 
     [Fact]
-    public void Should_Get_Empty_Party() {
-      var sut = Party.Empty;
-
-      Assert.Equal(-1, sut.Id);
-      Assert.Equal("Empty", sut.UID);
-      Assert.Equal(PartyType.Parse("ObjectType.Party.Person"), sut.PartyType);
-    }
-
-
-    [Fact]
     public void Should_Get_An_Organization() {
       var sut = Organization.Parse(PartiesTestingConstants.ORGANIZATION_ID);
 
@@ -138,6 +128,46 @@ namespace Empiria.Tests.Parties {
         Assert.NotNull(sut.Code);
         Assert.NotNull(sut.Parent);
       }
+    }
+
+
+    [Fact]
+    public void Should_Parse_Empty_Organization() {
+      var sut = Organization.Empty;
+
+      Assert.Equal(-1, sut.Id);
+      Assert.Equal("Empty", sut.UID);
+      Assert.Equal(PartyType.Parse("ObjectType.Party.Organization"), sut.PartyType);
+    }
+
+
+    [Fact]
+    public void Should_Parse_Empty_OrganizationalUnit() {
+      var sut = OrganizationalUnit.Empty;
+
+      Assert.Equal(-1, sut.Id);
+      Assert.Equal("Empty", sut.UID);
+      Assert.Equal(PartyType.Parse("ObjectType.Party.OrganizationalUnit"), sut.PartyType);
+    }
+
+
+    [Fact]
+    public void Should_Parse_Empty_Party() {
+      var sut = Party.Empty;
+
+      Assert.Equal(-1, sut.Id);
+      Assert.Equal("Empty", sut.UID);
+      Assert.Equal(PartyType.Parse("ObjectType.Party.Person"), sut.PartyType);
+    }
+
+
+    [Fact]
+    public void Should_Parse_Empty_Person() {
+      var sut = Person.Empty;
+
+      Assert.Equal(-1, sut.Id);
+      Assert.Equal("Empty", sut.UID);
+      Assert.Equal(PartyType.Parse("ObjectType.Party.Person"), sut.PartyType);
     }
 
   }  // PartiesTests
