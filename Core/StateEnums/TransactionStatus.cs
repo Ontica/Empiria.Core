@@ -39,8 +39,8 @@ namespace Empiria.StateEnums {
 
 
 
-  /// <summary>Enumerates the different parties that participates in a transaction.</summary>
-  public enum TransactionPartyType {
+  /// <summary>Enumerates the different roles for parties that participates in a transaction.</summary>
+  public enum TransactionPartyRole {
 
     RequestedBy,
 
@@ -54,7 +54,7 @@ namespace Empiria.StateEnums {
 
     None,
 
-  }  // enum TransactionPartyType
+  }  // enum TransactionPartyRole
 
 
 
@@ -97,7 +97,7 @@ namespace Empiria.StateEnums {
   /// <summary>Input query DTO used to retrieve transactions parties.</summary>
   public class TransactionPartiesQuery {
 
-    public TransactionPartyType PartyType {
+    public TransactionPartyRole PartyType {
       get; set;
     }
 
