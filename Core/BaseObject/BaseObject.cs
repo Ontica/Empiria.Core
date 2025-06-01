@@ -331,7 +331,7 @@ namespace Empiria {
     } = String.Empty;
 
 
-    protected bool IsDirty {
+    public bool IsDirty {
       get {
         return this.isDirtyFlag || this.IsNew;
       }
@@ -462,10 +462,19 @@ namespace Empiria {
       return FieldPatcher.PatchField(newValue, defaultValue);
     }
 
-
     protected bool PatchField(bool? newValue, bool defaultValue) {
       return FieldPatcher.PatchField(newValue, defaultValue);
     }
+
+    protected int PatchField(int? newValue, int defaultValue) {
+      return FieldPatcher.PatchField(newValue, defaultValue);
+    }
+
+
+    protected decimal PatchField(decimal? newValue, decimal defaultValue) {
+      return FieldPatcher.PatchField(newValue, defaultValue);
+    }
+
 
     protected U PatchField<U>(string newValue, U defaultValue) where U : BaseObject {
       return FieldPatcher.PatchField(newValue, defaultValue);

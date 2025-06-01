@@ -58,6 +58,22 @@ namespace Empiria {
     }
 
 
+    static public int PatchField(int? newValue, int defaultValue) {
+      if (newValue.HasValue) {
+        return newValue.Value;
+      }
+      return defaultValue;
+    }
+
+
+    static public decimal PatchField(decimal? newValue, decimal defaultValue) {
+      if (newValue.HasValue) {
+        return newValue.Value;
+      }
+      return defaultValue;
+    }
+
+
     static public U PatchField<U>(int newValue, U defaultValue) where U : BaseObject {
       if (newValue > 0) {
         return BaseObject.ParseId<U>(newValue);
