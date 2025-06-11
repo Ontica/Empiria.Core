@@ -30,6 +30,7 @@ namespace Empiria {
       // Used by partitioned derived types.
     }
 
+
     static public T ParseNamedKey<T>(string namedKey) where T: CommonStorage {
       Assertion.Require(namedKey, nameof(namedKey));
 
@@ -40,8 +41,9 @@ namespace Empiria {
       return (T) item;
     }
 
+
     static public FixedList<T> GetStorageObjects<T>() where T : CommonStorage {
-      return BaseObject.GetList<T>(string.Empty, "Object_Name")
+      return BaseObject.GetList<T>("Object_Status <> 'X'", "Object_Name")
                        .ToFixedList();
     }
 
