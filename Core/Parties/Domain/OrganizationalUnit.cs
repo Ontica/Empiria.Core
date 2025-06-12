@@ -23,12 +23,15 @@ namespace Empiria.Parties {
       // Required by Empiria Framework for all partitioned types.
     }
 
-
     static public new OrganizationalUnit Parse(int id) => ParseId<OrganizationalUnit>(id);
 
     static public new OrganizationalUnit Parse(string uid) => ParseKey<OrganizationalUnit>(uid);
 
     static public new OrganizationalUnit Empty => ParseEmpty<OrganizationalUnit>();
+
+    static public FixedList<OrganizationalUnit> GetListFor(Organization organization) {
+      return GetFullList<OrganizationalUnit>("PARTY_STATUS <> 'X'", "PARTY_CODE");
+    }
 
     #endregion Constructors and parsers
 

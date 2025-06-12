@@ -24,8 +24,6 @@ namespace Empiria.Parties {
   [PartitionedType(typeof(PartyType))]
   abstract public class Party : BaseObject, IHistoricObject, INamedEntity {
 
-    static private int PRIMARY_PARTY_ID = ConfigurationData.Get("PrimaryPartyId", 1);
-
     #region Constructors and parsers
 
     protected Party() {
@@ -74,8 +72,6 @@ namespace Empiria.Parties {
     }
 
     static public Party Empty => ParseEmpty<Party>();
-
-    static public Party Primary => Parse(PRIMARY_PARTY_ID);
 
     #endregion Constructors and parsers
 

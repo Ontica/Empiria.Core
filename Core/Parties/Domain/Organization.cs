@@ -15,6 +15,8 @@ namespace Empiria.Parties {
   /// <summary>Represents a government entity or agency, an enterprise or a non-profit organization.</summary>
   public class Organization : Party {
 
+    static private int PRIMARY_ORGANIZATION_ID = ConfigurationData.Get("PrimaryOrganizationId", 1);
+
     #region Constructors and parsers
 
     protected Organization() {
@@ -35,6 +37,8 @@ namespace Empiria.Parties {
     }
 
     static public new Organization Empty => BaseObject.ParseEmpty<Organization>();
+
+    static public Organization Primary => Parse(PRIMARY_ORGANIZATION_ID);
 
     #endregion Constructors and parsers
 
