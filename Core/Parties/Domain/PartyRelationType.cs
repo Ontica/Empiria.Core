@@ -13,7 +13,7 @@ using Empiria.Ontology;
 namespace Empiria.Parties {
 
   /// <summary>Power type that describes a relation between parties.</summary>
-  [Powertype(typeof(Party))]
+  [Powertype(typeof(PartyRelation))]
   public class PartyRelationType : Powertype {
 
     #region Constructors and parsers

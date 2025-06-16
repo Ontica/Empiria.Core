@@ -15,24 +15,63 @@ namespace Empiria.Parties {
   /// <summary>Fields used to create or update party relation instances.</summary>
   public class PartyRelationFields {
 
-    public string RoleUID {
-      get; internal set;
+    public string UID {
+      get; set;
+    } = string.Empty;
+
+
+    [Newtonsoft.Json.JsonProperty(PropertyName = "PartyRelationTypeUID")]
+    public string PartyRelationCategoryUID {
+      get; set;
     } = string.Empty;
 
 
     public string CommissionerUID {
-      get; internal set;
+      get; set;
     } = string.Empty;
 
 
     public string ResponsibleUID {
-      get; internal set;
+      get; set;
     } = string.Empty;
+
+
+    public string RoleUID {
+      get; set;
+    } = string.Empty;
+
+
+    public string Code {
+      get; set;
+    } = string.Empty;
+
+
+    public string Description {
+      get; set;
+    } = string.Empty;
+
+
+    public FixedList<string> Tags {
+      get; set;
+    } = new FixedList<string>();
 
 
     public DateTime StartDate {
       get; set;
     } = ExecutionServer.DateMaxValue;
+
+
+    public Party GetCommissioner() {
+      return Party.Parse(CommissionerUID);
+    }
+
+    public Party GetResponsible() {
+      return Party.Parse(ResponsibleUID);
+    }
+
+    public PartyRole GetRole() {
+      return PartyRole.Parse(RoleUID);
+    }
 
   }  // class PartyRelationFields
 

@@ -18,6 +18,21 @@ namespace Empiria.Parties.Data {
   /// <summary>Provides parties data persistence methods.</summary>
   static internal class PartyDataService {
 
+    static internal void CleanParty(Party party) {
+      if (party.IsEmptyInstance) {
+        return;
+      }
+      var sql = "UPDATE PARTIES " +
+                $"SET PARTY_NAME = '{EmpiriaString.Clean(party.Name).Replace("'", "''")}', " +
+                $"PARTY_UID = '{Guid.NewGuid().ToString()}', " +
+                $"PARTY_KEYWORDS = '{party.Keywords}' " +
+                $"WHERE PARTY_ID = {party.Id}";
+
+      var op = DataOperation.Parse(sql);
+
+      DataWriter.Execute(op);
+    }
+
     static internal FixedList<T> GetPartiesInDate<T>(DateTime date) where T : Party {
       ObjectTypeInfo typeInfo = ObjectTypeInfo.Parse<T>();
 
@@ -36,16 +51,6 @@ namespace Empiria.Parties.Data {
                 $"PARTY_END_DATE = {DataCommonMethods.FormatSqlDbDate(DateTime.Today)}" +
                 $"WHERE PARTY_HISTORIC_ID = {historyOf.HistoricId} " +
                 $"AND PARTY_END_DATE = {DataCommonMethods.FormatSqlDbDate(ExecutionServer.DateMaxValue)}";
-
-      DataWriter.Execute(DataOperation.Parse(sql));
-    }
-
-
-    static internal void CloseHistoricPartyRelation(IHistoricObject historyOf) {
-      var sql = $"UPDATE PARTIES_RELATIONS SET " +
-                $"PTY_RELATION_END_DATE = {DataCommonMethods.FormatSqlDbDate(DateTime.Today)}" +
-                $"WHERE PTY_RELATION_HISTORIC_ID = {historyOf.HistoricId} " +
-                $"AND PTY_RELATION_END_DATE = {DataCommonMethods.FormatSqlDbDate(ExecutionServer.DateMaxValue)}";
 
       DataWriter.Execute(DataOperation.Parse(sql));
     }
@@ -70,7 +75,7 @@ namespace Empiria.Parties.Data {
 
 
     static internal void WriteParty(Party o) {
-      var op = DataOperation.Parse("writeParty",
+      var op = DataOperation.Parse("write_party",
                  o.Id, o.UID, o.PartyType.Id,
                  o.Name, o.ExtendedData.ToString(), o.Keywords,
                  o.HistoricId, o.StartDate, o.EndDate,
@@ -81,12 +86,12 @@ namespace Empiria.Parties.Data {
 
 
     static internal void WritePartyRelation(PartyRelation o) {
-      var op = DataOperation.Parse("writePartyRelation",
-                 o.Id, o.UID, o.PartyRelationType.Id,
-                 o.Role.Id, o.Commissioner.Id, o.Responsible.Id,
-                 o.ExtendedData.ToString(), o.Keywords,
-                 o.HistoricId, o.StartDate, o.EndDate,
-                 o.PostedById, o.PostingTime, (char) o.Status);
+      var op = DataOperation.Parse("write_party_relation",
+                 o.Id, o.UID, o.PartyRelationType.Id, o.Category.Id, o.Role.Id,
+                 o.Commissioner.Id, o.Responsible.Id, o.Code, o.Description,
+                 string.Join(" ", o.Identificators), string.Join(" ", o.Tags),
+                 o.ExtData.ToString(), o.Keywords, o.StartDate, o.EndDate,
+                 o.PostingTime, o.PostedBy.Id, (char) o.Status);
 
       DataWriter.Execute(op);
     }

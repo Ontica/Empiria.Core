@@ -20,7 +20,7 @@ namespace Empiria.Parties {
 
   /// <summary>Partitioned type that represents a relation between parties.</summary>
   [PartitionedType(typeof(PartyRelationType))]
-  abstract public class PartyRelation : BaseObject, IHistoricObject {
+  abstract public class PartyRelation : BaseObject {
 
     #region Constructors and parsers
 
@@ -30,6 +30,21 @@ namespace Empiria.Parties {
 
     protected PartyRelation(PartyRelationType powertype) : base(powertype) {
       // Required by Empiria Framework for all partitioned types.
+    }
+
+    protected PartyRelation(PartyRole role, Party commissioner, Party responsible) {
+      Assertion.Require(role, nameof(role));
+      Assertion.Require(!role.IsEmptyInstance, nameof(role));
+      Assertion.Require(commissioner, nameof(commissioner));
+      Assertion.Require(!commissioner.IsEmptyInstance, nameof(commissioner));
+      Assertion.Require(responsible, nameof(responsible));
+      Assertion.Require(!responsible.IsEmptyInstance, nameof(responsible));
+
+      Role = role;
+      Commissioner = commissioner;
+      Responsible = responsible;
+      StartDate = DateTime.Today;
+      EndDate = ExecutionServer.DateMaxValue;
     }
 
     static public PartyRelation Parse(int id) => ParseId<PartyRelation>(id);
@@ -49,68 +64,101 @@ namespace Empiria.Parties {
     }
 
 
-    [DataField("PARTY_RELATION_ROLE_ID")]
+    [DataField("PTY_REL_CATEGORY_ID")]
+    protected internal PartyRelationCategory Category {
+      get; private set;
+    }
+
+
+    [DataField("PTY_REL_ROLE_ID")]
     protected internal PartyRole Role {
       get; private set;
     }
 
 
-    [DataField("COMMISSIONER_PARTY_ID")]
+    [DataField("PTY_REL_COMMISSIONER_ID")]
     protected internal Party Commissioner {
       get; private set;
     }
 
 
-    [DataField("RESPONSIBLE_PARTY_ID")]
+    [DataField("PTY_REL_RESPONSIBLE_ID")]
     protected internal Party Responsible {
       get; private set;
     }
 
 
-    [DataField("PARTY_RELATION_EXT_DATA")]
-    protected internal JsonObject ExtendedData {
+    [DataField("PTY_REL_CODE")]
+    protected internal string Code {
+      get; private set;
+    }
+
+
+    [DataField("PTY_REL_DESCRIPTION")]
+    protected internal string Description {
+      get; private set;
+    }
+
+
+    [DataField("PTY_REL_IDENTIFICATORS")]
+    private string _identificators = string.Empty;
+
+    protected internal FixedList<string> Identificators {
+      get {
+        return _identificators.Split(' ')
+                              .ToFixedList();
+      }
+    }
+
+    [DataField("PTY_REL_TAGS")]
+    private string _tags = string.Empty;
+
+    protected internal FixedList<string> Tags {
+      get {
+        return _tags.Split(' ')
+                    .ToFixedList();
+      }
+    }
+
+    [DataField("PTY_REL_EXT_DATA")]
+    protected internal JsonObject ExtData {
       get; private set;
     }
 
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(Commissioner.Keywords, Responsible.Keywords);
+        return EmpiriaString.BuildKeywords(Code, _identificators, _tags,
+                                           Commissioner.Keywords, Responsible.Keywords);
       }
     }
 
 
-    [DataField("PARTY_RELATION_HISTORIC_ID")]
-    public int HistoricId {
-      get; private set;
-    }
-
-
-    [DataField("PARTY_RELATION_START_DATE")]
+    [DataField("PTY_REL_START_DATE")]
     public DateTime StartDate {
       get; private set;
     }
 
 
-    [DataField("PARTY_RELATION_END_DATE")]
+    [DataField("PTY_REL_END_DATE")]
     public DateTime EndDate {
       get; private set;
     }
 
 
-    [DataField("PARTY_RELATION_POSTED_BY_ID")]
-    internal int PostedById {
+    [DataField("PTY_REL_POSTED_BY_ID")]
+    internal Party PostedBy {
       get; private set;
     }
 
 
-    [DataField("PARTY_RELATION_POSTING_TIME")]
+    [DataField("PTY_REL_POSTING_TIME")]
     internal DateTime PostingTime {
       get; private set;
     }
 
 
-    [DataField("PARTY_RELATION_STATUS", Default = EntityStatus.Active)]
+    [DataField("PTY_REL_STATUS", Default = EntityStatus.Active)]
     public EntityStatus Status {
       get; private set;
     }
@@ -124,34 +172,27 @@ namespace Empiria.Parties {
     }
 
 
+    protected void Delete() {
+      this.Status = EntityStatus.Deleted;
+      this.EndDate = DateTime.Today;
+    }
+
     protected override void OnSave() {
       if (base.IsNew) {
-        HistoricId = this.Id;
-        PostedById = ExecutionServer.CurrentUserId;
+        PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
         PostingTime = DateTime.Now;
-        EndDate = ExecutionServer.DateMaxValue;
       }
       PartyDataService.WritePartyRelation(this);
     }
 
 
-    internal void SaveHistoric(IHistoricObject historyOf) {
-      Assertion.Require(base.IsNew, "Can't save already stored instances as historic.");
-
-      this.HistoricId = historyOf.HistoricId;
-      PostedById = ExecutionServer.CurrentUserId;
-      PostingTime = DateTime.Now;
-
-      PartyDataService.CloseHistoricPartyRelation(historyOf);
-      PartyDataService.WritePartyRelation(this);
-    }
-
-
     protected void Update(PartyRelationFields fields) {
-      this.Role = PartyRole.Parse(fields.RoleUID);
-      this.Commissioner = Party.Parse(fields.CommissionerUID);
-      this.Responsible = Party.Parse(fields.ResponsibleUID);
-      this.StartDate = fields.StartDate == ExecutionServer.DateMaxValue ? StartDate : fields.StartDate;
+      Category = PatchField(fields.PartyRelationCategoryUID, Category);
+
+      Code = PatchCleanField(fields.Code, Code);
+      Description = PatchCleanField(fields.Description, Description);
+
+      _tags = string.Join(" ", fields.Tags);
     }
 
     #endregion Methods
