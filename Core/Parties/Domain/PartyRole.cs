@@ -29,6 +29,13 @@ namespace Empiria.Parties {
 
     #region Properties
 
+    public PartyRelationCategory Category {
+      get {
+        return base.GetCategory<PartyRelationCategory>();
+      }
+    }
+
+
     public new string NamedKey {
       get {
         return base.NamedKey;

@@ -35,6 +35,14 @@ namespace Empiria.Parties {
       }
     }
 
+
+    public FixedList<PartyRole> Roles {
+      get {
+        return PartyRole.GetList()
+                        .FindAll(x => x.Category.Equals(this));
+      }
+    }
+
     #endregion Properties
 
   } // class PartyRelationCategory

@@ -41,6 +41,7 @@ namespace Empiria.Parties {
       Assertion.Require(!responsible.IsEmptyInstance, nameof(responsible));
 
       Role = role;
+      Category = role.Category;
       Commissioner = commissioner;
       Responsible = responsible;
       StartDate = DateTime.Today;
@@ -65,7 +66,7 @@ namespace Empiria.Parties {
 
 
     [DataField("PTY_REL_CATEGORY_ID")]
-    protected internal PartyRelationCategory Category {
+    public PartyRelationCategory Category {
       get; private set;
     }
 
@@ -103,9 +104,9 @@ namespace Empiria.Parties {
     [DataField("PTY_REL_IDENTIFICATORS")]
     private string _identificators = string.Empty;
 
-    protected internal FixedList<string> Identificators {
+    public FixedList<string> Identificators {
       get {
-        return _identificators.Split(' ')
+        return _identificators.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
                               .ToFixedList();
       }
     }
@@ -113,9 +114,9 @@ namespace Empiria.Parties {
     [DataField("PTY_REL_TAGS")]
     private string _tags = string.Empty;
 
-    protected internal FixedList<string> Tags {
+    public FixedList<string> Tags {
       get {
-        return _tags.Split(' ')
+        return _tags.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
                     .ToFixedList();
       }
     }
@@ -191,6 +192,8 @@ namespace Empiria.Parties {
 
       Code = PatchCleanField(fields.Code, Code);
       Description = PatchCleanField(fields.Description, Description);
+
+      StartDate = PatchField(fields.StartDate, StartDate);
 
       _tags = string.Join(" ", fields.Tags);
     }

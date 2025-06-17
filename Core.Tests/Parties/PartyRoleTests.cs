@@ -33,6 +33,7 @@ namespace Empiria.Tests.Parties {
       foreach (var sut in roles) {
         Assert.NotNull(sut.Name);
         Assert.NotNull(sut.NamedKey);
+        Assert.NotNull(sut.Category);
       }
     }
 
@@ -44,6 +45,7 @@ namespace Empiria.Tests.Parties {
       Assert.Equal(-1, sut.Id);
       Assert.Equal("Empty", sut.UID);
       Assert.Equal(PartyRole.Parse("Empty"), sut);
+      Assert.True(sut.Category.IsEmptyInstance);
     }
 
   }  // PartiesTests
