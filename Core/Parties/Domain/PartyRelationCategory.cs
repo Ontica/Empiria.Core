@@ -36,7 +36,7 @@ namespace Empiria.Parties {
     }
 
 
-    public FixedList<PartyRole> Roles {
+    public new FixedList<PartyRole> Roles {
       get {
         return PartyRole.GetList()
                         .FindAll(x => x.Category.Equals(this));

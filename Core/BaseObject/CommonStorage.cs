@@ -80,14 +80,35 @@ namespace Empiria {
 
 
     [DataField("OBJECT_IDENTIFICATORS")]
-    protected string Identificators {
-      get; set;
+    private string _identificators = string.Empty;
+
+    protected FixedList<string> Identificators {
+      get {
+        return _identificators.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
+                              .ToFixedList();
+      }
     }
 
 
     [DataField("OBJECT_TAGS")]
-    protected string Tags {
-      get; set;
+    private string _tags = string.Empty;
+
+    protected FixedList<string> Tags {
+      get {
+        return _tags.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
+                     .ToFixedList();
+      }
+    }
+
+
+    [DataField("OBJECT_ROLES")]
+    private string _roles = string.Empty;
+
+    protected FixedList<string> Roles {
+      get {
+        return _roles.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
+                     .ToFixedList();
+      }
     }
 
 
@@ -138,7 +159,7 @@ namespace Empiria {
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(Name, Code, Identificators, Tags, Description);
+        return EmpiriaString.BuildKeywords(Name, Code, _identificators, _tags, Description);
       }
     }
 
