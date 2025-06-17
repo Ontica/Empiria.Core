@@ -29,6 +29,13 @@ namespace Empiria.Parties {
 
     #region Properties
 
+    public FixedList<string> AppliesTo {
+      get {
+        return base.Roles;
+      }
+    }
+
+
     public PartyRelationCategory Category {
       get {
         return base.GetCategory<PartyRelationCategory>();
@@ -39,6 +46,13 @@ namespace Empiria.Parties {
     public new string NamedKey {
       get {
         return base.NamedKey;
+      }
+    }
+
+
+    public bool RequiresCode {
+      get {
+        return base.ExtData.Get("requiresCode", false);
       }
     }
 
