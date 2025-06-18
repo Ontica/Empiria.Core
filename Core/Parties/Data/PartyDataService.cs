@@ -74,6 +74,30 @@ namespace Empiria.Parties.Data {
     }
 
 
+    static internal FixedList<Party> SearchPartyRoleSecurityPlayers(PartyRole partyRole, string keywords) {
+      Assertion.Require(partyRole, nameof(partyRole));
+      keywords = keywords ?? string.Empty;
+
+      string keywordsFilter = SearchExpression.ParseAndLikeKeywords("PARTY_KEYWORDS", keywords);
+
+      var sql = "SELECT PARTIES.* FROM PARTIES " +
+                "INNER JOIN SECURITYITEMS " +
+                "ON PARTIES.PARTY_CONTACT_ID = SECURITYITEMS.SUBJECTID " +
+                $"WHERE SECURITYITEMS.TARGETID = {partyRole.Id} AND " +
+                "SECURITYITEMTYPEID = 140 AND {{KEYWORDS.FILTER}}" +
+                $"PARTY_STATUS <> 'X' AND SECURITYITEMSTATUS <> 'X' " +
+                "ORDER BY PARTY_NAME";
+
+      if (keywordsFilter.Length != 0) {
+        sql = sql.Replace("{{KEYWORDS.FILTER}}", $"{keywordsFilter} AND ");
+      } else {
+        sql = sql.Replace("{{KEYWORDS.FILTER}}", string.Empty);
+      }
+
+      return DataReader.GetFixedList<Party>(DataOperation.Parse(sql));
+    }
+
+
     static internal void WriteParty(Party o) {
       var op = DataOperation.Parse("write_party",
                  o.Id, o.UID, o.PartyType.Id,

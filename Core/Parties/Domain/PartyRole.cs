@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using Empiria.Parties.Data;
+
 namespace Empiria.Parties {
 
   /// <summary>Represents a played role in a relation between parties.</summary>
@@ -57,6 +59,16 @@ namespace Empiria.Parties {
     }
 
     #endregion Properties
+
+    #region Methods
+
+    public FixedList<Party> SearchSecurityPlayers(string keywords) {
+      keywords = keywords ?? string.Empty;
+
+      return PartyDataService.SearchPartyRoleSecurityPlayers(this, keywords);
+    }
+
+    #endregion Methods
 
   } // class PartyRole
 
