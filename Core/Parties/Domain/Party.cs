@@ -139,13 +139,13 @@ namespace Empiria.Parties {
 
 
     [DataField("PARTY_START_DATE")]
-    internal DateTime StartDate {
+    public DateTime StartDate {
       get; private set;
     }
 
 
     [DataField("PARTY_END_DATE")]
-    internal DateTime EndDate {
+    public DateTime EndDate {
       get; private set;
     }
 

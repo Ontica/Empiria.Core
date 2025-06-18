@@ -72,7 +72,21 @@ namespace Empiria.Parties {
 
     public OrganizationalUnit Parent {
       get {
+        if (base.ParentId == -1) {
+          return Empty;
+        }
         return Parse(base.ParentId);
+      }
+    }
+
+
+    public int Level {
+      get {
+        if (Parent.IsEmptyInstance) {
+          return 1;
+        } else {
+          return Parent.Level + 1;
+        }
       }
     }
 
