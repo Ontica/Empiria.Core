@@ -143,8 +143,12 @@ namespace Empiria {
 
 
     [DataField("OBJECT_LINK_TAGS")]
-    public string Tags {
-      get; protected set;
+    private string _tags = string.Empty;
+
+    public FixedList<string> Tags {
+      get {
+        return EmpiriaString.Tagging(_tags);
+      }
     }
 
 
@@ -186,7 +190,7 @@ namespace Empiria {
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(BaseObjectLinkType.DisplayName, LinkedObjectRole, Description);
+        return EmpiriaString.BuildKeywords(BaseObjectLinkType.DisplayName, LinkedObjectRole, Description, _tags);
       }
     }
 

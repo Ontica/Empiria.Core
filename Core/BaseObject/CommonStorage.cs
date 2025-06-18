@@ -84,8 +84,7 @@ namespace Empiria {
 
     protected FixedList<string> Identificators {
       get {
-        return _identificators.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                              .ToFixedList();
+        return EmpiriaString.Tagging(_identificators);
       }
     }
 
@@ -95,8 +94,7 @@ namespace Empiria {
 
     protected FixedList<string> Tags {
       get {
-        return _tags.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                     .ToFixedList();
+        return EmpiriaString.Tagging(_tags);
       }
     }
 
@@ -106,8 +104,7 @@ namespace Empiria {
 
     protected FixedList<string> Roles {
       get {
-        return _roles.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                     .ToFixedList();
+        return EmpiriaString.Tagging(_roles);
       }
     }
 
@@ -156,6 +153,7 @@ namespace Empiria {
 
     [DataField("PARENT_OBJECT_ID")]
     private int _parentObjectId = -1;
+
 
     public virtual string Keywords {
       get {

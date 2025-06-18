@@ -106,8 +106,7 @@ namespace Empiria.Parties {
 
     public FixedList<string> Identificators {
       get {
-        return _identificators.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                              .ToFixedList();
+        return EmpiriaString.Tagging(_identificators);
       }
     }
 
@@ -116,8 +115,7 @@ namespace Empiria.Parties {
 
     public FixedList<string> Tags {
       get {
-        return _tags.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                    .ToFixedList();
+        return EmpiriaString.Tagging(_tags);
       }
     }
 
@@ -178,6 +176,7 @@ namespace Empiria.Parties {
       this.EndDate = DateTime.Today;
     }
 
+
     protected override void OnSave() {
       if (base.IsNew) {
         PostedBy = Party.ParseWithContact(ExecutionServer.CurrentContact);
@@ -195,7 +194,7 @@ namespace Empiria.Parties {
 
       StartDate = PatchField(fields.StartDate, StartDate);
 
-      _tags = string.Join(" ", fields.Tags);
+      _tags = EmpiriaString.Tagging(fields.Tags);
     }
 
     #endregion Methods

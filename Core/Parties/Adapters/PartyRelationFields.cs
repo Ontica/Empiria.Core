@@ -51,9 +51,9 @@ namespace Empiria.Parties {
     } = string.Empty;
 
 
-    public FixedList<string> Tags {
+    public string[] Tags {
       get; set;
-    } = new FixedList<string>();
+    } = new string[0];
 
 
     public DateTime StartDate {

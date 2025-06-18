@@ -89,7 +89,7 @@ namespace Empiria.Parties.Data {
       var op = DataOperation.Parse("write_party_relation",
                  o.Id, o.UID, o.PartyRelationType.Id, o.Category.Id, o.Role.Id,
                  o.Commissioner.Id, o.Responsible.Id, o.Code, o.Description,
-                 string.Join(" ", o.Identificators), string.Join(" ", o.Tags),
+                 EmpiriaString.Tagging(o.Identificators), EmpiriaString.Tagging(o.Tags),
                  o.ExtData.ToString(), o.Keywords, o.StartDate, o.EndDate,
                  o.PostingTime, o.PostedBy.Id, (char) o.Status);
 
