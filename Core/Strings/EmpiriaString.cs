@@ -576,7 +576,7 @@ namespace Empiria {
 
 
     static public FixedList<string> Tagging(string source, string separator) {
-      Assertion.Require(separator, nameof(separator));
+      separator = separator ?? " ";
 
       if (string.IsNullOrWhiteSpace(source)) {
         return new FixedList<string>();
@@ -593,7 +593,7 @@ namespace Empiria {
 
 
     static public string Tagging(FixedList<string> source, string separator) {
-      Assertion.Require(separator, nameof(separator));
+      separator = separator ?? " ";
 
       if (source == null || source.Count == 0) {
         return string.Empty;
