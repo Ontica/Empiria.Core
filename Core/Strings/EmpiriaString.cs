@@ -7,7 +7,9 @@
 *  Summary  : Static library for string manipulation.                                                        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 using Empiria.Json;
@@ -555,6 +557,49 @@ namespace Empiria {
         }
       }
       return false;
+    }
+
+
+    static public FixedList<string> Tagging(string source) {
+      return Tagging(source, " ");
+    }
+
+
+    static public string Tagging(string[] source) {
+      return Tagging(source.ToFixedList(), " ");
+    }
+
+
+    static public string Tagging(IEnumerable<string> source) {
+      return Tagging(source, " ");
+    }
+
+
+    static public FixedList<string> Tagging(string source, string separator) {
+      Assertion.Require(separator, nameof(separator));
+
+      if (string.IsNullOrWhiteSpace(source)) {
+        return new FixedList<string>();
+      }
+
+      return source.Split(separator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
+                   .ToFixedList();
+    }
+
+
+    static public string Tagging(IEnumerable<string> source, string separator) {
+      return Tagging(source.ToFixedList(), separator);
+    }
+
+
+    static public string Tagging(FixedList<string> source, string separator) {
+      Assertion.Require(separator, nameof(separator));
+
+      if (source == null || source.Count == 0) {
+        return string.Empty;
+      }
+
+      return string.Join(separator, source);
     }
 
 
