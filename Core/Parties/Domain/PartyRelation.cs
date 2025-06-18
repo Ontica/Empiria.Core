@@ -187,12 +187,12 @@ namespace Empiria.Parties {
 
 
     protected void Update(PartyRelationFields fields) {
-      Category = PatchField(fields.PartyRelationCategoryUID, Category);
+      Category = Patcher.Patch(fields.PartyRelationCategoryUID, Category);
 
-      Code = PatchCleanField(fields.Code, Code);
-      Description = PatchCleanField(fields.Description, Description);
+      Code = Patcher.PatchClean(fields.Code, Code);
+      Description = Patcher.PatchClean(fields.Description, Description);
 
-      StartDate = PatchField(fields.StartDate, StartDate);
+      StartDate = Patcher.Patch(fields.StartDate, StartDate);
 
       _tags = EmpiriaString.Tagging(fields.Tags);
     }

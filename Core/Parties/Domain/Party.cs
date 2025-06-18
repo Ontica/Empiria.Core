@@ -219,7 +219,7 @@ namespace Empiria.Parties {
 
 
     protected void Update(PartyFields fields) {
-      this.Name = PatchCleanField(fields.Name, this.Name);
+      this.Name = Patcher.PatchClean(fields.Name, this.Name);
       this.StartDate = fields.StartDate == ExecutionServer.DateMaxValue ? StartDate : fields.StartDate;
     }
 

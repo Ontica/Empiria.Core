@@ -441,46 +441,6 @@ namespace Empiria {
     }
 
 
-    protected string PatchCleanField(string newValue, string defaultValue) {
-      string cleaned = EmpiriaString.Clean(newValue);
-
-      return PatchField(cleaned, defaultValue);
-    }
-
-
-    protected string PatchField(string newValue, string defaultValue) {
-      return FieldPatcher.PatchField(newValue, defaultValue);
-    }
-
-
-    protected DateTime PatchField(DateTime newValue, DateTime defaultValue) {
-      return FieldPatcher.PatchField(newValue, defaultValue);
-    }
-
-
-    protected U PatchField<U>(int newValue, U defaultValue) where U : BaseObject {
-      return FieldPatcher.PatchField(newValue, defaultValue);
-    }
-
-    protected bool PatchField(bool? newValue, bool defaultValue) {
-      return FieldPatcher.PatchField(newValue, defaultValue);
-    }
-
-    protected int PatchField(int? newValue, int defaultValue) {
-      return FieldPatcher.PatchField(newValue, defaultValue);
-    }
-
-
-    protected decimal PatchField(decimal? newValue, decimal defaultValue) {
-      return FieldPatcher.PatchField(newValue, defaultValue);
-    }
-
-
-    protected U PatchField<U>(string newValue, U defaultValue) where U : BaseObject {
-      return FieldPatcher.PatchField(newValue, defaultValue);
-    }
-
-
     protected void PatchObjectId(int objectId) {
       Assertion.Require(this.objectId == 0, "ObjectId already assigned");
       Assertion.Require(this.IsNew && this.IsDirty, "Object is in an invalid status for objectId assignation.");

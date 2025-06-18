@@ -149,18 +149,18 @@ namespace Empiria.Contacts {
     #region Helpers
 
     private void Load(PersonFields fields) {
-      this.FullName     = PatchCleanField(fields.FullName,    FullName);
-      this.ShortName    = PatchCleanField(fields.ShortName,   ShortName);
-      this.FirstName    = PatchCleanField(fields.FirstName,   FirstName);
-      this.LastName     = PatchCleanField(fields.LastName,    LastName);
-      this.LastName2    = PatchCleanField(fields.LastName2,   LastName2);
-      this.Initials     = PatchCleanField(fields.Initials,    Initials);
+      this.FullName     = Patcher.PatchClean(fields.FullName,    FullName);
+      this.ShortName    = Patcher.PatchClean(fields.ShortName,   ShortName);
+      this.FirstName    = Patcher.PatchClean(fields.FirstName,   FirstName);
+      this.LastName     = Patcher.PatchClean(fields.LastName,    LastName);
+      this.LastName2    = Patcher.PatchClean(fields.LastName2,   LastName2);
+      this.Initials     = Patcher.PatchClean(fields.Initials,    Initials);
 
-      this.EMail        = PatchCleanField(fields.EMail,       EMail);
-      this.Tags         = PatchCleanField(fields.Tags,        Tags);
-      this.JobPosition  = PatchCleanField(fields.JobPosition, JobPosition);
-      this.JobTitle     = PatchCleanField(fields.JobTitle,    JobTitle);
-      this.EmployeeNo   = PatchCleanField(fields.EmployeeNo,  EmployeeNo);
+      this.EMail        = Patcher.PatchClean(fields.EMail,       EMail);
+      this.Tags         = Patcher.PatchClean(fields.Tags,        Tags);
+      this.JobPosition  = Patcher.PatchClean(fields.JobPosition, JobPosition);
+      this.JobTitle     = Patcher.PatchClean(fields.JobTitle,    JobTitle);
+      this.EmployeeNo   = Patcher.PatchClean(fields.EmployeeNo,  EmployeeNo);
 
       this.IsFemale = fields.IsFemale;
 

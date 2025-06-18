@@ -126,8 +126,8 @@ namespace Empiria.Parties {
     protected void Update(PersonFields fields) {
       base.Update(fields);
 
-      this.FirstName = PatchCleanField(fields.FirstName, FirstName);
-      this.LastName = PatchCleanField(fields.LastName, LastName);
+      this.FirstName = Patcher.PatchClean(fields.FirstName, FirstName);
+      this.LastName = Patcher.PatchClean(fields.LastName, LastName);
       this.LastName2 = fields.LastName2;
       this.IsFemale = fields.IsFemale;
     }

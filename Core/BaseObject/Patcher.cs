@@ -2,34 +2,34 @@
 *                                                                                                            *
 *  Module   : Empiria Core                               Component : Services                                *
 *  Assembly : Empiria.Core.dll                           Pattern   : Static service provider                 *
-*  Type     : FieldPatcher                               License   : Please read LICENSE.txt file            *
+*  Type     : Patcher                                    License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Contains methods to patch fields data using default values.                                    *
+*  Summary  : Provides methods to patch fields and properties data using default values.                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 using System;
 
 namespace Empiria {
 
-  /// <summary>Contains methods to patch fields data using default values.</summary>
-  static public class FieldPatcher {
+  /// <summary>Provides methods to patch fields and properties data using default values.</summary>
+  static public class Patcher {
 
     #region Public methods
 
-    public static string Clean(string fieldValue) {
-      fieldValue = EmpiriaString.Clean(fieldValue);
+    static public string CleanUID(string uidFieldValue) {
+      uidFieldValue = EmpiriaString.Clean(uidFieldValue);
 
-      if (string.IsNullOrWhiteSpace(fieldValue)) {
+      if (string.IsNullOrWhiteSpace(uidFieldValue)) {
         return string.Empty;
       }
-      if (fieldValue.ToLowerInvariant() == "empty") {
+      if (uidFieldValue.ToLowerInvariant() == "empty") {
         return string.Empty;
       }
-      return fieldValue;
+      return uidFieldValue;
     }
 
 
-    static public string PatchField(string newValue, string defaultValue) {
+    static public string Patch(string newValue, string defaultValue) {
       if (!String.IsNullOrWhiteSpace(newValue)) {
         return newValue;
       }
@@ -37,7 +37,7 @@ namespace Empiria {
     }
 
 
-    static public DateTime PatchField(DateTime newValue, DateTime defaultValue) {
+    static public DateTime Patch(DateTime newValue, DateTime defaultValue) {
       if (newValue != ExecutionServer.DateMaxValue &&
           newValue != ExecutionServer.DateMinValue &&
           newValue != DateTime.MinValue &&
@@ -50,7 +50,7 @@ namespace Empiria {
     }
 
 
-    static public bool PatchField(bool? newValue, bool defaultValue) {
+    static public bool Patch(bool? newValue, bool defaultValue) {
       if (newValue.HasValue) {
         return newValue.Value;
       }
@@ -58,7 +58,7 @@ namespace Empiria {
     }
 
 
-    static public int PatchField(int? newValue, int defaultValue) {
+    static public int Patch(int? newValue, int defaultValue) {
       if (newValue.HasValue) {
         return newValue.Value;
       }
@@ -66,7 +66,7 @@ namespace Empiria {
     }
 
 
-    static public decimal PatchField(decimal? newValue, decimal defaultValue) {
+    static public decimal Patch(decimal? newValue, decimal defaultValue) {
       if (newValue.HasValue) {
         return newValue.Value;
       }
@@ -74,7 +74,7 @@ namespace Empiria {
     }
 
 
-    static public U PatchField<U>(int newValue, U defaultValue) where U : BaseObject {
+    static public U Patch<U>(int newValue, U defaultValue) where U : BaseObject {
       if (newValue > 0) {
         return BaseObject.ParseId<U>(newValue);
       }
@@ -82,15 +82,22 @@ namespace Empiria {
     }
 
 
-    static public U PatchField<U>(string newValue, U defaultValue) where U : BaseObject {
+    static public U Patch<U>(string newValue, U defaultValue) where U : BaseObject {
       if (!String.IsNullOrWhiteSpace(newValue)) {
         return BaseObject.ParseKey<U>(newValue);
       }
       return defaultValue;
     }
 
+
+    static public string PatchClean(string newValue, string defaultValue) {
+      string cleaned = EmpiriaString.Clean(newValue);
+
+      return Patch(cleaned, defaultValue);
+    }
+
     #endregion Public methods
 
-  } //class FieldPatcher
+  } //class Patcher
 
 } //namespace Empiria
