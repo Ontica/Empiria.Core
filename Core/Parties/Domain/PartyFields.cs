@@ -24,6 +24,6 @@ namespace Empiria.Parties {
       get; set;
     } = ExecutionServer.DateMaxValue;
 
-  }
+  }  // class PartyFields
 
 }  // namespace Empiria.Parties

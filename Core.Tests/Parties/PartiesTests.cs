@@ -11,11 +11,22 @@
 using Xunit;
 
 using Empiria.Parties;
+using Empiria.Parties.Data;
 
 namespace Empiria.Tests.Parties {
 
   /// <summary>Unit tests for Party instances.</summary>
   public class PartiesTests {
+
+    [Fact]
+    public void CleanParties() {
+      var parties = BaseObject.GetFullList<Party>();
+
+      foreach (var party in parties) {
+        PartyDataService.CleanParty(party);
+      }
+    }
+
 
     [Fact]
     public void Should_Get_An_Organization() {

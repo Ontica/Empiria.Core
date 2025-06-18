@@ -8,7 +8,7 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-namespace Empiria.Parties.Adapters {
+namespace Empiria.Parties {
 
   /// <summary>Input fields DTO used to update tax data.</summary>
   public class TaxDataFields {
@@ -49,4 +49,4 @@ namespace Empiria.Parties.Adapters {
 
   }  // class TaxDataFields
 
-}  // namespace Empiria.Parties.Adapters
+}  // namespace Empiria.Parties

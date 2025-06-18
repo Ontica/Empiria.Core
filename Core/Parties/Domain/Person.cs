@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Parties.Adapters;
-
 namespace Empiria.Parties {
 
   /// <summary>Represents a human person.</summary>

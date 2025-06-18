@@ -10,8 +10,6 @@
 
 using Empiria.Json;
 
-using Empiria.Parties.Adapters;
-
 namespace Empiria.Parties {
 
   /// <summary>Holds tax data for a person or organization.</summary>

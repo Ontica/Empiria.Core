@@ -11,7 +11,6 @@
 using Xunit;
 
 using Empiria.Parties;
-using Empiria.Parties.Adapters;
 
 namespace Empiria.Tests.Parties {
 

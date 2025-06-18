@@ -8,8 +8,6 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
-using Empiria.Parties.Adapters;
-
 namespace Empiria.Parties {
 
   /// <summary>Represents a government entity or agency, an enterprise or a non-profit organization.</summary>
