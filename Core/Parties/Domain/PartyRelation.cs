@@ -96,7 +96,7 @@ namespace Empiria.Parties {
 
 
     [DataField("PTY_REL_DESCRIPTION")]
-    protected internal string Description {
+    public string Description {
       get; private set;
     }
 

@@ -45,6 +45,13 @@ namespace Empiria.Parties {
     }
 
 
+    public bool HasOrganizationalScope {
+      get {
+        return base.ExtData.Get("hasOrganizationalScope", false);
+      }
+    }
+
+
     public new string NamedKey {
       get {
         return base.NamedKey;
