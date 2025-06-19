@@ -11,7 +11,7 @@
 namespace Empiria.Parties {
 
   /// <summary>Represents a human person.</summary>
-  public class Person : Party {
+  public class Person : Party, INamedEntity {
 
     #region Constructors and parsers
 
@@ -88,13 +88,28 @@ namespace Empiria.Parties {
       }
     }
 
+    [DataField("PARTY_CODE")]
+    public string Code {
+      get; protected set;
+    }
 
-    public string FullName {
+
+    string INamedEntity.Name {
       get {
-        return EmpiriaString.TrimAll($"{FirstName} {LastName} {LastName2}");
+        return FullName;
       }
     }
 
+
+    public string FullName {
+      get {
+        if (Code.Length > 0) {
+          return $"{Name} ({Code})";
+        } else {
+          return Name;
+        }
+      }
+    }
 
     public TaxData TaxData {
       get {
@@ -108,7 +123,7 @@ namespace Empiria.Parties {
 
     public override string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(Name, LastName, LastName2, FirstName, TaxData.Keywords);
+        return EmpiriaString.BuildKeywords(base.Keywords, LastName, LastName2, FirstName, TaxData.Keywords);
       }
     }
 

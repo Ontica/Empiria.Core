@@ -64,7 +64,7 @@ namespace Empiria.Parties {
 
     public override string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(Name, CommonName, TaxData.Keywords);
+        return EmpiriaString.BuildKeywords(base.Keywords, CommonName, TaxData.Keywords);
       }
     }
 
