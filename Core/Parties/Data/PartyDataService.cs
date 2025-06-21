@@ -74,6 +74,24 @@ namespace Empiria.Parties.Data {
     }
 
 
+
+    static internal FixedList<PartyRole> GetPartySecurityRoles(Party party) {
+      Assertion.Require(party, nameof(party));
+
+      var sql = "SELECT DISTINCT SECURITYITEMS.TARGETID " +
+                "FROM SECURITYITEMS " +
+                $"WHERE SECURITYITEMS.SUBJECTID = {party.Id} AND " +
+                $"SECURITYITEMTYPEID = 140 AND SECURITYITEMSTATUS <> 'X'";
+
+      var op = DataOperation.Parse(sql);
+
+      var rolesIds = DataReader.GetFieldValues<int>(op);
+
+      return PartyRole.GetList()
+                      .FindAll(x => rolesIds.Contains(x.Id));
+    }
+
+
     static internal FixedList<Party> SearchPartyRoleSecurityPlayers(PartyRole partyRole, string keywords) {
       Assertion.Require(partyRole, nameof(partyRole));
       keywords = keywords ?? string.Empty;

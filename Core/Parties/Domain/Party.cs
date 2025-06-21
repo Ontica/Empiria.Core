@@ -188,6 +188,11 @@ namespace Empiria.Parties {
     }
 
 
+    public FixedList<PartyRole> GetSecurityRoles() {
+      return PartyDataService.GetPartySecurityRoles(this);
+    }
+
+
     protected override void OnSave() {
       if (base.IsNew) {
         HistoricId = this.Id;
