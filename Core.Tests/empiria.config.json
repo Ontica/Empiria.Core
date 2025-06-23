@@ -1,26 +1,16 @@
 ﻿{
   "appName": "Empiria Core Tests Suite",
-  "version": "7.0",
-  "date": "2020-10-14",
+  "version": "8.0",
+  "date": "2025-06-25",
   "settings": [
-    {
-      "type": "",
-      "key": "ApplicationKey",
-      "value": "{{APPLICATION-KEY}}"
-    },
     {
       "type": "",
       "key": "GlobalConfigurationFile",
       "value": "{{GLOBAL-CONFIGURATION-FILE}}"
     },
     {
-      "type": "Tests",
-      "key": "Testing.SessionToken",
-      "value": "{{TESTING-SESSION-TOKEN}}"
-    },
-    {
-      "type": "Data",
-      "key": "IsObjectIdGeneratorServer",
+      "type": "",
+      "key": "IsTestingModule",
       "value": true
     }
   ]

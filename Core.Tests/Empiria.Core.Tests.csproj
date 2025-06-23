@@ -66,6 +66,7 @@
     <PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\central\Central\Empiria.Central.csproj" />
     <ProjectReference Include="..\Core\Empiria.Core.csproj" />
     <ProjectReference Include="..\..\extensions\Data.Oracle\Empiria.Data.Oracle.csproj" />
   </ItemGroup>
