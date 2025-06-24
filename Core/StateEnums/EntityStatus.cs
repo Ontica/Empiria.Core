@@ -25,6 +25,8 @@ namespace Empiria.StateEnums {
 
     Deleted = 'X',
 
+    Closed = 'C',
+
     All = '*',
 
   } // EntityStatus
@@ -54,6 +56,9 @@ namespace Empiria.StateEnums {
 
         case EntityStatus.Deleted:
           return "Eliminado";
+
+        case EntityStatus.Closed:
+         return "Cerrado";
 
         case EntityStatus.All:
           return "Todos";
