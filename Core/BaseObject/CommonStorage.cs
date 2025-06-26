@@ -47,6 +47,15 @@ namespace Empiria {
                        .ToFixedList();
     }
 
+
+    static public T TryParseNamedKey<T>(string namedKey) where T : CommonStorage {
+      Assertion.Require(namedKey, nameof(namedKey));
+
+      CommonStorage item = TryParse<T>($"Object_Named_Key = '{namedKey}'");
+
+      return (T) item;
+    }
+
     #endregion Constructors and parsers
 
     #region Properties
