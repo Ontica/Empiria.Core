@@ -12,7 +12,7 @@ using System;
 namespace Empiria.Contacts {
 
   /// <summary>Represents a government entity or agency, an enterprise or a non-profit organization.</summary>
-  public class Organization : Contact {
+  public class Organization : Contact, INamedEntity {
 
     #region Constructors and parsers
 
@@ -36,6 +36,15 @@ namespace Empiria.Contacts {
 
 
     #endregion Constructors and parsers
+
+    string INamedEntity.Name {
+      get {
+        if (base.Initials.Length != 0) {
+          return $"({base.Initials}) {base.FullName}";
+        }
+        return base.FullName;
+      }
+    }
 
   } // class Organization
 
