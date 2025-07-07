@@ -25,7 +25,11 @@ namespace Empiria.Parties.Data {
       var sql = "UPDATE PARTIES " +
                 $"SET PARTY_NAME = '{EmpiriaString.Clean(party.Name).Replace("'", "''")}', " +
                 $"PARTY_UID = '{Guid.NewGuid().ToString()}', " +
-                $"PARTY_KEYWORDS = '{party.Keywords}' " +
+                $"PARTY_HISTORIC_ID = {party.Id}, " +
+                $"PARTY_KEYWORDS = '{party.Keywords}', " +
+                $"PARTY_POSTING_TIME = {DataCommonMethods.FormatSqlDbDate(new DateTime(2025, 06, 25))}, " +
+                $"PARTY_START_DATE = {DataCommonMethods.FormatSqlDbDate(new DateTime(2025, 06, 25))}, " +
+                $"PARTY_END_DATE = {DataCommonMethods.FormatSqlDbDate(new DateTime(2078, 12, 31))} " +
                 $"WHERE PARTY_ID = {party.Id}";
 
       var op = DataOperation.Parse(sql);
