@@ -202,8 +202,8 @@ namespace Empiria.ORM {
                          "Json items can only be parsed from string type data columns.");
 
       } else if (this.MapToEnumeration) {
-        Assertion.Require(this.DataFieldType == typeof(string) || this.DataFieldType == typeof(char),
-                         "Enumeration items can only be parsed from char(1) or string type data columns.");
+        Assertion.Require(this.DataFieldType == typeof(string) || this.DataFieldType == typeof(char) || this.DataFieldType == typeof(int),
+                         "Enumeration items can only be parsed from char(1), strings or integer data columns.");
 
       } else if (this.MapToChar) {
         Assertion.Require(this.DataFieldType == typeof(string) || this.DataFieldType == typeof(char),
@@ -475,8 +475,13 @@ namespace Empiria.ORM {
       }
 
       if (this.MapToEnumeration) {
-        if (((string) value).Length == 1) {
+
+        if (value is int) {
+          return Enum.ToObject(this.MemberType, Convert.ToInt32(value));
+
+        } else if (value is char || ((string) value).Length == 1) {
           return Enum.ToObject(this.MemberType, Convert.ToChar(value));
+
         } else {
           return Enum.Parse(this.MemberType, (string) value);
         }
