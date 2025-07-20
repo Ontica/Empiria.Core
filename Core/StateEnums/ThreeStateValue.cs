@@ -21,4 +21,35 @@ namespace Empiria.StateEnums {
 
   }  // enum ThreeStateValue
 
+
+
+  /// <summary>Extension methods for ThreeStateValueExtensions type.</summary>
+  static public class ThreeStateValueExtensions {
+
+    static public string GetName(this ThreeStateValue stateValue) {
+
+      switch (stateValue) {
+
+        case ThreeStateValue.True:
+          return "Sí";
+
+        case ThreeStateValue.False:
+          return "No";
+
+        case ThreeStateValue.Unknown:
+          return "No determinado";
+
+        default:
+          throw Assertion.EnsureNoReachThisCode($"Unrecognized three state value {stateValue}.");
+      }
+
+    }
+
+
+    static public NamedEntityDto MapToNamedEntity(this ThreeStateValue stateValue) {
+      return new NamedEntityDto(stateValue.ToString(), stateValue.GetName());
+    }
+
+  }  //  class ThreeStateValueExtensions
+
 }  // namespace Empiria.StateEnums
