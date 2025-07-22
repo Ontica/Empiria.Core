@@ -89,6 +89,7 @@ namespace Empiria {
       }
     }
 
+
     static public bool IsSpecialLicense {
       get {
         return Instance.isSpecialLicense;
@@ -280,6 +281,11 @@ namespace Empiria {
       string baseExecutionPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
 
       return System.IO.Path.Combine(baseExecutionPath, fileName);
+    }
+
+
+    static public bool IsMinOrMaxDate(DateTime date) {
+      return date == DateMinValue || date == DateMaxValue;
     }
 
 
