@@ -7,14 +7,14 @@
 *  Summary  : Key-value immutable value type.                                                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+
 
 using Empiria.Json;
 
 namespace Empiria.DataTypes {
 
   /// <summary>Key-value immutable value type.</summary>
-  public class KeyValue : IKeyValue<string> {
+  public class KeyValue : IKeyValue<string>, INamedEntity {
 
     #region Constructors and parsers
 
@@ -28,7 +28,7 @@ namespace Empiria.DataTypes {
     }
 
 
-    static KeyValue Parse(JsonObject json) {
+    static public KeyValue Parse(JsonObject json) {
       string key = json.Get<string>("key");
       string value = json.Get<string>("value");
 
@@ -50,6 +50,19 @@ namespace Empiria.DataTypes {
     public string Value {
       get;
       private set;
+    }
+
+
+    string IUniqueID.UID {
+      get {
+        return Key;
+      }
+    }
+
+    string INamedEntity.Name {
+      get {
+        return Value;
+      }
     }
 
 
