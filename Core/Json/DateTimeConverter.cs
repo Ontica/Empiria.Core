@@ -19,7 +19,7 @@ namespace Empiria.Json {
 
     public override bool CanRead {
       get {
-        return false;
+        return true;
       }
     }
 
@@ -37,7 +37,10 @@ namespace Empiria.Json {
 
     public override object ReadJson(JsonReader reader, Type objectType,
                                     object existingValue, JsonSerializer serializer) {
-      throw new NotImplementedException();
+      if (reader.TokenType == JsonToken.String && ((string) reader.Value).Length == 0) {
+        return (DateTime) existingValue;
+      }
+      return reader.Value;
     }
 
 
