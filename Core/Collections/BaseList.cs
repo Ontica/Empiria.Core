@@ -39,7 +39,7 @@ namespace Empiria.Collections {
     }
 
 
-    public BaseList(int capacity): this(capacity, false) {
+    public BaseList(int capacity) : this(capacity, false) {
       // no-op
     }
 
@@ -86,18 +86,28 @@ namespace Empiria.Collections {
 
     /// <summary>Gets the number of elements contained in the collection.</summary>
     public int Count {
-      get { return items.Count; }
+      get {
+        return items.Count;
+      }
     }
 
 
     public bool IsSynchronized {
-      get { return isSynchronized; }
+      get {
+        return isSynchronized;
+      }
+    }
+
+
+    protected List<T> Items {
+      get {
+        return items;
+      }
     }
 
     #endregion Public properties
 
     #region Public methods
-
 
     /// <summary>Gets the number of elements contained in the collection that
     /// matchs a spececific condition.</summary>
@@ -135,7 +145,6 @@ namespace Empiria.Collections {
 
 
     #endregion Public methods
-
 
     #region Protected methods
 
@@ -443,7 +452,9 @@ namespace Empiria.Collections {
 
 
     bool ICollection<T>.IsReadOnly {
-      get { return false; }
+      get {
+        return false;
+      }
     }
 
 
