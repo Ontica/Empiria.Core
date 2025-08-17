@@ -124,6 +124,13 @@ namespace Empiria {
     }
 
 
+    static public string ParseInSet(string fieldName, IEnumerable<long> fieldValues) {
+      string[] formattedValues = fieldValues.Select(x => x.ToString()).ToArray();
+
+      return ParseInSetUtility(fieldName, formattedValues);
+    }
+
+
     static public string ParseLike(string fieldName, string fieldValue) {
       if (EmpiriaString.IsEmpty(fieldValue)) {
         return String.Empty;
