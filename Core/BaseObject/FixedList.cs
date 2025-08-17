@@ -226,6 +226,31 @@ namespace Empiria {
     }
 
 
+    public FixedList<T>[] Split(int maxSize) {
+      Assertion.Require(maxSize > 0, nameof(maxSize));
+
+      var split = new List<FixedList<T>>(Items.Count / maxSize + 1);
+
+      int counter = 0;
+
+      while (true) {
+        var selected = Items.Skip(counter)
+                            .Take(maxSize)
+                            .ToFixedList();
+
+        if (selected.Count == 0) {
+          break;
+        }
+
+        split.Add(selected);
+
+        counter += selected.Count;
+      }
+
+      return split.ToArray();
+    }
+
+
     public FixedList<T> Sublist(int index) {
       Assertion.Require(index < this.Count, $"index out of bounds: {index}");
 
