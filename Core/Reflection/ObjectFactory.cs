@@ -7,6 +7,7 @@
 *  Summary  : Provides services for Empiria types instance creation.                                         *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -43,16 +44,16 @@ namespace Empiria.Reflection {
         return (T) (object) System.Convert.ToDecimal(value);
 
       } else if (convertToType.IsEnum) {
-        return ObjectFactory.ParseEnumValue<T>(value);
+        return ParseEnumValue<T>(value);
       }
 
 
-      if (ObjectFactory.IsIdentifiable(convertToType)) {
+      if (IsIdentifiable(convertToType)) {
 
         if (EmpiriaString.IsInteger(value.ToString())) {
-          return ObjectFactory.InvokeParseMethod<T>(System.Convert.ToInt32(value));
+          return InvokeParseMethod<T>(System.Convert.ToInt32(value));
         } else {
-          return ObjectFactory.InvokeParseMethod<T>((string) value);
+          return InvokeParseMethod<T>((string) value);
         }
 
       } else if (convertToType == typeof(string) && value is IDictionary<string, object>) {
@@ -77,10 +78,6 @@ namespace Empiria.Reflection {
 
         return (T) (object) System.Convert.ToString(value);
 
-      //} else if (convertToType.Name == typeof(List<>).Name) {
-
-      //  return CreateObject<T>();
-
       } else {
         return (T) System.Convert.ChangeType(value, convertToType);
       }
@@ -102,12 +99,16 @@ namespace Empiria.Reflection {
         var constructor = type.GetConstructor(BindingFlags.Instance | BindingFlags.Public |
                                               BindingFlags.NonPublic, null, CallingConventions.HasThis,
                                               parametersTypes, null);
+
         return constructor.Invoke(parameters);
+
       } catch (TargetException e) {
         throw new ReflectionException(ReflectionException.Msg.ConstructorNotDefined, e,
                                       type.FullName);
+
       } catch (TargetInvocationException e) {
         throw e.InnerException ?? e;
+
       } catch (Exception innerException) {
         throw new ReflectionException(ReflectionException.Msg.ConstructorNotDefined,
                                       innerException, type.FullName);
@@ -144,7 +145,9 @@ namespace Empiria.Reflection {
 
 
     static public object GetPropertyValue(object instance, string propertyName) {
+
       Type type = instance.GetType();
+
       PropertyInfo propertyInfo = type.GetProperty(propertyName);
 
       if (propertyInfo != null) {
@@ -158,59 +161,68 @@ namespace Empiria.Reflection {
 
 
     static public Type GetType(string typeName) {
+
       Type type = Type.GetType(typeName);
-      if (type == null) {
-        string assemblyName = typeName.Substring(0, typeName.LastIndexOf("."));
-        Assembly assembly = Assembly.Load(assemblyName);
-        type = assembly.GetType(typeName, true, true);
+
+      if (type != null) {
+        return type;
       }
-      return type;
+
+      string assemblyName = typeName.Substring(0, typeName.LastIndexOf("."));
+
+      Assembly assembly = Assembly.Load(assemblyName);
+
+      return assembly.GetType(typeName, true, true);
     }
 
 
     static public Type GetType(string assemblyName, string typeName) {
+
       Type type = Type.GetType(typeName);
-      if (type == null) {
-        Assembly assembly = Assembly.Load(assemblyName);
-        type = assembly.GetType(typeName, true, true);
+
+      if (type != null) {
+        return type;
       }
-      return type;
+
+      Assembly assembly = Assembly.Load(assemblyName);
+
+      return assembly.GetType(typeName, true, true);
     }
 
 
     static public bool HasEmptyInstance(Type type) {
-      return (ObjectFactory.TryGetEmptyInstanceProperty(type) != null);
+      return TryGetEmptyInstanceProperty(type) != null;
     }
 
 
     static public bool HasJsonParser(Type type) {
-      return (ObjectFactory.TryGetParseJsonMethod(type) != null);
+      return TryGetParseJsonMethod(type) != null;
     }
 
 
     static public bool HasParseWithIdMethod(Type type) {
-      return (ObjectFactory.TryGetParseWithIdMethod(type) != null);
+      return TryGetParseWithIdMethod(type) != null;
     }
 
 
     static public bool HasParseWithStringMethod(Type type) {
-      return (ObjectFactory.TryGetParseStringMethod(type) != null);
+      return TryGetParseStringMethod(type) != null;
     }
 
 
     static public T InvokeParseMethod<T>(int objectId) {
-      return (T) ObjectFactory.InvokeParseMethod(typeof(T), objectId);
+      return (T) InvokeParseMethod(typeof(T), objectId);
     }
 
 
     static public T InvokeParseMethod<T>(string value) {
-      return (T) ObjectFactory.InvokeParseMethod(typeof(T), value);
+      return (T) InvokeParseMethod(typeof(T), value);
     }
 
 
     static public object InvokeParseMethod(Type type, int objectId) {
       try {
-        MethodInfo method = ObjectFactory.TryGetParseWithIdMethod(type);
+        MethodInfo method = TryGetParseWithIdMethod(type);
 
         Assertion.Require(method, "$Type {type.FullName} doesn't has static Parse(int) method.");
 
@@ -233,7 +245,7 @@ namespace Empiria.Reflection {
 
     static public object InvokeParseMethod(Type type, string value) {
       try {
-        MethodInfo method = ObjectFactory.TryGetParseStringMethod(type);
+        MethodInfo method = TryGetParseStringMethod(type);
 
         Assertion.Require(method, $"Type {type.FullName} doesn't has static Parse(string) method.");
 
@@ -252,7 +264,7 @@ namespace Empiria.Reflection {
 
     static public T InvokeTryParseMethod<T>(Type type, string value) {
       try {
-        MethodInfo method = ObjectFactory.TryGetTryParseStringMethod(type);
+        MethodInfo method = TryGetTryParseStringMethod(type);
 
         Assertion.Require(method, $"Type {type.FullName} doesn't has static TryParse(string) method.");
 
@@ -270,7 +282,9 @@ namespace Empiria.Reflection {
 
 
     static internal T InvokeParseJsonMethod<T>(Json.JsonObject jsonObject) {
+
       Type type = typeof(T);
+
       try {
         MethodInfo method = TryGetParseJsonMethod(type);
 
@@ -309,6 +323,11 @@ namespace Empiria.Reflection {
 
     static public bool IsEmpiriaType(Type type) {
       return type.FullName.StartsWith("Empiria.");
+    }
+
+
+    static public bool IsFixedList(Type type) {
+      return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(FixedList<>);
     }
 
 
@@ -363,9 +382,11 @@ namespace Empiria.Reflection {
 
 
     static public MethodInfo TryGetParseWithIdMethod(Type type) {
+
       if (!IsEmpiriaType(type)) {
         return null;
       }
+
       return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.FlattenHierarchy |
                             BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic,
                             null, CallingConventions.Any, new Type[] { typeof(int) }, null);
@@ -373,9 +394,11 @@ namespace Empiria.Reflection {
 
 
     static private MethodInfo TryGetParseJsonMethod(Type type) {
+
       if (!IsEmpiriaType(type)) {
         return null;
       }
+
       return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static |
                             BindingFlags.Public | BindingFlags.NonPublic,
                             null, CallingConventions.Any, new Type[] { typeof(Json.JsonObject) }, null);
@@ -383,9 +406,11 @@ namespace Empiria.Reflection {
 
 
     static public MethodInfo TryGetParseStringMethod(Type type) {
+
       if (!IsEmpiriaType(type)) {
         return null;
       }
+
       return type.GetMethod("Parse", BindingFlags.ExactBinding | BindingFlags.Static |
                             BindingFlags.Public | BindingFlags.NonPublic,
                             null, CallingConventions.Any, new Type[] { typeof(string) }, null);
@@ -393,9 +418,11 @@ namespace Empiria.Reflection {
 
 
     static public MethodInfo TryGetTryParseStringMethod(Type type) {
+
       if (!IsEmpiriaType(type)) {
         return null;
       }
+
       return type.GetMethod("TryParse", BindingFlags.ExactBinding | BindingFlags.Static |
                             BindingFlags.Public | BindingFlags.NonPublic,
                             null, CallingConventions.Any, new Type[] { typeof(string) }, null);
