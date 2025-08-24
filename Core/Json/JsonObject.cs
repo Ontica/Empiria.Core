@@ -7,9 +7,12 @@
 *  Summary  : Allows data reading and parsing of JSON strings.                                               *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
+using System.Reflection;
 
 using Empiria.Reflection;
 
@@ -395,6 +398,19 @@ namespace Empiria.Json {
         }
 
       }
+    }
+
+
+    /// <summary>Returns a fixed list of objects of type <typeof<paramref name="type"/>:
+    /// FixedList<typeof<paramref name="type"/>.</summary>
+    public object GetFixedList(Type type, string listPath) {
+      Type G = type.GenericTypeArguments[0];
+
+      MethodInfo method = this.GetType().GetMethod("GetFixedList", new[] { typeof(string) });
+
+      MethodInfo genericMethod = method.MakeGenericMethod(G);
+
+      return genericMethod.Invoke(this, new object[] { listPath });
     }
 
 
@@ -847,29 +863,28 @@ namespace Empiria.Json {
         return true;
       }
 
-      if (item is String &&
-          String.IsNullOrWhiteSpace((string) item)) {
+      if (item is string str && string.IsNullOrWhiteSpace(str)) {
         return true;
       }
 
-      if (item is DateTime &&
-          (((DateTime) item) == ExecutionServer.DateMaxValue ||
-          ((DateTime) item) == ExecutionServer.DateMinValue)) {
+      if (item is DateTime date &&
+          (date == ExecutionServer.DateMaxValue || date == ExecutionServer.DateMinValue)) {
         return true;
       }
 
-      if (item is decimal &&
-          ((decimal) item == 0)) {
+      if (item is decimal dec && dec == 0) {
         return true;
       }
 
-      if (item is IDictionary<string, object> &&
-          ((IDictionary<string, object>) item).Count == 0) {
+      if (item is BaseObject baseObject && baseObject.Id == -1) {
         return true;
       }
 
-      if (item is Array &&
-         ((Array) item).Length == 0) {
+      if (item is IDictionary<string, object> dict && dict.Count == 0) {
+        return true;
+      }
+
+      if (item is Array array && array.Length == 0) {
         return true;
       }
 
