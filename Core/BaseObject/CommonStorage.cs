@@ -42,12 +42,6 @@ namespace Empiria {
     }
 
 
-    static public FixedList<T> GetStorageObjects<T>() where T : CommonStorage {
-      return BaseObject.GetList<T>("Object_Status <> 'X'", "Object_Name")
-                       .ToFixedList();
-    }
-
-
     static public T TryParseNamedKey<T>(string namedKey) where T : CommonStorage {
       Assertion.Require(namedKey, nameof(namedKey));
 
@@ -55,6 +49,13 @@ namespace Empiria {
 
       return (T) item;
     }
+
+
+    static public FixedList<T> GetStorageObjects<T>() where T : CommonStorage {
+      return BaseObject.GetList<T>("Object_Status <> 'X'", "Object_Name")
+                       .ToFixedList();
+    }
+
 
     #endregion Constructors and parsers
 

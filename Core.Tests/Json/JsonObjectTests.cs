@@ -7,12 +7,14 @@
 *  Summary  : JsonObject methods tests.                                                                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Collections.Generic;
 
 using Xunit;
 
 using Empiria.Json;
+using Empiria.Parties;
 
 namespace Empiria.Tests.Json {
 
@@ -146,6 +148,18 @@ namespace Empiria.Tests.Json {
 
       Assert.True(traversalNode.Count == 0, "Node C must not have elements.");
 
+    }
+
+
+    [Fact]
+    public void Should_Load_An_Array_Of_Object_Ids() {
+      var jsonString = "{\"parties\":[1, 2, 3, 4] }";
+
+      var json = JsonObject.Parse(jsonString);
+
+      var sut = json.GetFixedList<Party>("parties");
+
+      Assert.Equal(4, sut.Count);
     }
 
   }  // JsonObjectTests

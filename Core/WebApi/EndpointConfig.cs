@@ -7,7 +7,7 @@
 *  Summary  : Describes an endpoint used to invoke a web API from a client app.                              *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
+
 using System.Collections.Generic;
 
 using Empiria.Security;

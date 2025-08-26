@@ -226,16 +226,16 @@ namespace Empiria {
     }
 
 
-    public FixedList<T>[] Split(int maxSize) {
-      Assertion.Require(maxSize > 0, nameof(maxSize));
+    public FixedList<T>[] Split(int listsMaxSize) {
+      Assertion.Require(listsMaxSize > 0, nameof(listsMaxSize));
 
-      var split = new List<FixedList<T>>(Items.Count / maxSize + 1);
+      var split = new List<FixedList<T>>(Items.Count / listsMaxSize + 1);
 
       int counter = 0;
 
       while (true) {
         var selected = Items.Skip(counter)
-                            .Take(maxSize)
+                            .Take(listsMaxSize)
                             .ToFixedList();
 
         if (selected.Count == 0) {

@@ -7,6 +7,7 @@
 *  Summary  : Contains methods to build search expressions.                                                  *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -174,6 +175,7 @@ namespace Empiria {
       int counter = 0;
       int offset = 800;
       var sql = "";
+
       while (true) {
         var takedValues = fieldValues.Skip(counter).Take(offset);
 

@@ -238,6 +238,7 @@ namespace Empiria.Ontology {
       internal set;
     }
 
+
     protected EntityStatus Status {
       get;
       set;
@@ -309,6 +310,7 @@ namespace Empiria.Ontology {
       if (Object.ReferenceEquals(this, obj)) {
         return true;
       }
+
       if (this.GetType() != obj.GetType()) {
         return false;
       }

@@ -7,7 +7,6 @@
 *  Summary  : Describes the status of an object that can be opened an closed.                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 namespace Empiria.StateEnums {
 
