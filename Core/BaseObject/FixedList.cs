@@ -226,6 +226,13 @@ namespace Empiria {
     }
 
 
+    public FixedList<T> Sort(Func<T, string> function) {
+      base.Sort((x, y) => function.Invoke(x).CompareTo(function.Invoke(y)));
+
+      return this;
+    }
+
+
     public FixedList<T>[] Split(int listsMaxSize) {
       Assertion.Require(listsMaxSize > 0, nameof(listsMaxSize));
 
