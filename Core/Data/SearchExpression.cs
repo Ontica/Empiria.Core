@@ -9,7 +9,6 @@
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,7 +17,7 @@ namespace Empiria {
   /// <summary>Contains methods to build search expressions.</summary>
   static public class SearchExpression {
 
-    #region Public members
+    #region Properties
 
     static public string AllRecordsFilter {
       get {
@@ -32,6 +31,9 @@ namespace Empiria {
       }
     }
 
+    #endregion Properties
+
+    #region Methods
 
     static public string ParseAndLike(string fieldName, string keywords) {
       return ParseLikeExpressionUtility(fieldName, keywords, "AND", true);
@@ -47,23 +49,6 @@ namespace Empiria {
 
     static public string ParseAndLikeWithNoiseWords(string fieldName, string keywords) {
       return ParseLikeExpressionUtility(fieldName, keywords, "AND", false);
-    }
-
-
-    static public string ParseOrLike(string fieldName, string keywords) {
-      return ParseLikeExpressionUtility(fieldName, keywords, "OR", true);
-    }
-
-
-    static public string ParseOrLikeKeywords(string fieldName, string rawtext) {
-      var keywords = EmpiriaString.BuildKeywords(rawtext);
-
-      return ParseLikeExpressionUtility(fieldName, keywords, "OR", true);
-    }
-
-
-    static public string ParseOrLikeWithNoiseWords(string fieldName, string keywords) {
-      return ParseLikeExpressionUtility(fieldName, keywords, "OR", false);
     }
 
 
@@ -97,15 +82,9 @@ namespace Empiria {
     }
 
 
-    static public string ParseInSet(string fieldName, string[] fieldValues) {
-      string[] formattedValues = fieldValues.Select(x => Format(x)).ToArray();
-
-      return ParseInSetUtility(fieldName, formattedValues);
-    }
-
-
-    static public string ParseInSet(string fieldName, ArrayList fieldValues) {
-      string[] formattedValues = fieldValues.ToArray().Select(x => Format(x)).ToArray();
+    static public string ParseInSet(string fieldName, IEnumerable<string> fieldValues) {
+      string[] formattedValues = fieldValues.Select(x => $"'{EmpiriaString.TrimAll(x)}'")
+                                            .ToArray();
 
       return ParseInSetUtility(fieldName, formattedValues);
     }
@@ -140,10 +119,37 @@ namespace Empiria {
       return $"({fieldName} LIKE '%{fieldValue}%')";
     }
 
-    #endregion Public members
 
-    #region Helper methods
+    static public string ParseLike(string fieldName, IEnumerable<string> values) {
+      values = values.Select(x => EmpiriaString.TrimAll(x))
+                     .Where(x => x.Length != 0);
 
+      if (values.Count() == 0) {
+        return string.Empty;
+      }
+
+      var filter = new Filter();
+
+      foreach (string value in values) {
+
+        var temp = $"{fieldName} LIKE '{EmpiriaString.TrimAll(value)}'";
+
+        filter.AppendOr(temp);
+      }
+
+      return $"({filter.ToString()})";
+    }
+
+
+    static public string ParseOrLikeKeywords(string fieldName, string rawtext) {
+      var keywords = EmpiriaString.BuildKeywords(rawtext);
+
+      return ParseLikeExpressionUtility(fieldName, keywords, "OR", true);
+    }
+
+    #endregion Methods
+
+    #region Helpers
 
     static private string Format(object fieldValue) {
       if (fieldValue.GetType() == typeof(string)) {
@@ -162,6 +168,7 @@ namespace Empiria {
     static private string Prepare(string fieldValue) {
       return EmpiriaString.BuildKeywords(fieldValue);
     }
+
 
     static private string ParseInSetUtility(string fieldName, string[] fieldValues) {
       if ((fieldValues == null) || (fieldValues.Length == 0)) {
@@ -217,7 +224,7 @@ namespace Empiria {
       }
     }
 
-    #endregion Helper methods
+    #endregion Helpers
 
   } // struct SearchExpression
 
