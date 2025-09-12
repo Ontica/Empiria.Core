@@ -1,22 +1,20 @@
 ﻿/* Empiria Core **********************************************************************************************
 *                                                                                                            *
 *  Module   : Core Types                                 Component : Base Object Management                  *
-*  Assembly : Empiria.Core.dll                           Pattern   : Data interface                          *
-*  Type     : IUniqueID                                  License   : Please read LICENSE.txt file            *
+*  Assembly : Empiria.Core.dll                           Pattern   : Control Interface                       *
+*  Type     : IQuery                                     License   : Please read LICENSE.txt file            *
 *                                                                                                            *
-*  Summary  : Identifies an entity with a unique (usually a GUID) ID string.                                 *
+*  Summary  : Represents an entity with an integer Id and a unique ID string.                                *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
 namespace Empiria {
 
-  /// <summary>Identifies an entity with a unique (usually a GUID) ID string.</summary>
-  public interface IUniqueID {
+  /// <summary>Control interface used to determine query types.</summary>
+  public interface IQuery {
 
-    string UID {
-      get;
-    }
+    // no-op
 
-  } // interface IUniqueID
+  }  // interface IQuery
 
 } // namespace Empiria

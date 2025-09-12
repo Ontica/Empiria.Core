@@ -7,10 +7,8 @@
 *  Summary  : Holds information about the result of a command execution.                                     *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 using System.Collections.Generic;
-
 
 namespace Empiria.Commands {
 
@@ -21,11 +19,11 @@ namespace Empiria.Commands {
     public ExecutionResult(ExecutionResult result) {
       Assertion.Require(result, nameof(result));
 
-      this.Command  = result.Command;
+      this.Command = result.Command;
       this.Commited = result.Commited;
-      this.Message  = result.Message;
-      this.Actions  = result.Actions;
-      this.Issues   = result.Issues;
+      this.Message = result.Message;
+      this.Actions = result.Actions;
+      this.Issues = result.Issues;
       this.Warnings = result.Warnings;
 
       if (result.Commited) {
@@ -77,8 +75,8 @@ namespace Empiria.Commands {
 
     #region Fields
 
-    private readonly List<string> _actions  = new List<string>();
-    private readonly List<string> _issues   = new List<string>();
+    private readonly List<string> _actions = new List<string>();
+    private readonly List<string> _issues = new List<string>();
     private readonly List<string> _warnings = new List<string>();
 
     #endregion Fields
@@ -88,7 +86,7 @@ namespace Empiria.Commands {
     public ExecutionResult(IExecutionCommand command) {
       Assertion.Require(command, nameof(command));
 
-      this.Command  = command;
+      this.Command = command;
 
       AssertInvariant();
     }
@@ -219,13 +217,13 @@ namespace Empiria.Commands {
 
 
     public void MarkAsCommited(IDto outcome, string message) {
-      Assertion.Require(outcome,  nameof(outcome));
-      Assertion.Require(message,  nameof(message));
+      Assertion.Require(outcome, nameof(outcome));
+      Assertion.Require(message, nameof(message));
 
       EnsureCanBeCommited();
 
       this.Outcome = outcome;
-      this.Message  = message;
+      this.Message = message;
       this.Commited = true;
 
       AssertInvariant();

@@ -157,7 +157,6 @@ namespace Empiria.Security {
     static public string GetSHA256(string text) {
       Assertion.Require(text, "text");
 
-
       byte[] data = Encoding.UTF8.GetBytes(text);
 
       SHA256 sha = SHA256.Create();
@@ -235,7 +234,7 @@ namespace Empiria.Security {
       result[0] = (byte) (Math.Abs((x * 11) - 23) % 256);
 
       for (int i = 1; i < key.Length / 2; i++) {
-        result[i] = (byte) (Math.Abs(( ((x + 53) * result[i - 1]) + key[i]) + (x * key[key.Length - i - 1])) % 256);
+        result[i] = (byte) (Math.Abs((((x + 53) * result[i - 1]) + key[i]) + (x * key[key.Length - i - 1])) % 256);
 
         x += Math.Abs((license[i] * key[key.Length - i - 1]) - result[i]);
       }
@@ -372,7 +371,7 @@ namespace Empiria.Security {
             x += licenseArray[i] * 3;
             break;
 
-            case 1:
+          case 1:
             x += licenseArray[i] * 5;
             break;
           case 2:
