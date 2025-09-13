@@ -20,7 +20,7 @@ namespace Empiria {
     public DataFieldAttribute(string name) {
       Assertion.Require(name, "name");
       this.Name = name;
-      this.IsOptional = true;
+      this.IsOptional = false;
       this.Default = null;
       this.ConvertFrom = null;
       this.IsEncrypted = false;
@@ -60,8 +60,6 @@ namespace Empiria {
       get;
       set;
     }
-
-
 
   }  // class DataFieldAttribute
 

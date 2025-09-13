@@ -25,8 +25,12 @@ namespace Empiria.ORM {
 
     #region Abstract members
 
-    internal abstract MemberInfo MemberInfo { get; }
-    internal abstract Type MemberType { get; }
+    internal abstract MemberInfo MemberInfo {
+      get;
+    }
+    internal abstract Type MemberType {
+      get;
+    }
 
     protected abstract object ImplementsGetValue(object instance);
     protected abstract void ImplementsSetValue(object instance, object value);
@@ -176,55 +180,61 @@ namespace Empiria.ORM {
     #region Public methods
 
     internal string GetExecutionData() {
-      string str = String.Empty;
+      string str = string.Empty;
 
-      str = $"Mapped type member: {this.MemberInfo.Name}.\n" +
-            $"Mapped data field: {this.DataFieldName}.\n";
-      if (this.JsonInnerFieldName.Length != 0) {
-        str += $"Mapped Json source field: {this.JsonFieldName}.\n" +
-               $"Mapped Json item: {this.JsonInnerFieldName}.\n";
+      str = $"Mapped type member: {MemberInfo.Name}.\n" +
+            $"Mapped data field: {DataFieldName}.\n";
+      if (JsonInnerFieldName.Length != 0) {
+        str += $"Mapped Json source field: {JsonFieldName}.\n" +
+               $"Mapped Json item: {JsonInnerFieldName}.\n";
       }
       return str;
     }
 
     internal void MapDataColumn(DataColumn dataColumn) {
-      this.DataColumn = dataColumn;
-      this.DataColumnIndex = this.DataColumn.Ordinal;
-      this.DataFieldName = this.DataColumn.ColumnName;
-      this.DataFieldType = this.DataColumn.DataType;
+      DataColumn = dataColumn;
+      DataColumnIndex = DataColumn.Ordinal;
+      DataFieldName = DataColumn.ColumnName;
+      DataFieldType = DataColumn.DataType;
 
-      if (this.MapToLazyParseWithIdInstance) {
-        Assertion.Require(this.DataFieldType == typeof(int),
+      if (MapToLazyParseWithIdInstance) {
+        Assertion.Require(DataFieldType == typeof(int),
                          "LazyObjects can only be parsed from integer type data columns.");
 
-      } else if (this.MapToJsonItem) {
-        Assertion.Require(this.DataFieldType == typeof(string),
+      } else if (MapToJsonItem) {
+        Assertion.Require(DataFieldType == typeof(string),
                          "Json items can only be parsed from string type data columns.");
 
-      } else if (this.MapToEnumeration) {
-        Assertion.Require(this.DataFieldType == typeof(string) || this.DataFieldType == typeof(char) || this.DataFieldType == typeof(int),
+      } else if (MapToEnumeration) {
+        Assertion.Require(DataFieldType == typeof(string) || DataFieldType == typeof(char) || DataFieldType == typeof(int),
                          "Enumeration items can only be parsed from char(1), strings or integer data columns.");
 
-      } else if (this.MapToChar) {
-        Assertion.Require(this.DataFieldType == typeof(string) || this.DataFieldType == typeof(char),
+      } else if (MapToChar) {
+        Assertion.Require(DataFieldType == typeof(string) || DataFieldType == typeof(char),
                          "Char value items can only be parsed from char(1) or string type data columns.");
 
       }
 
-      if (this.MapToParseWithIdObject && !this.MapToParseWithStringObject) {
-        Assertion.Require(this.DataFieldType == typeof(int) || this.DataFieldType == typeof(long),
-                         this.MemberInfo.Name + " can only be parsed from an integer type data column.");
+      if (MapToParseWithIdObject && DataFieldAttribute.IsOptional &&
+          DataFieldType.Equals(DataColumn.DataType)) {
+        return;
+      }
 
-      } else if (!this.MapToParseWithIdObject && this.MapToParseWithStringObject) {
-        Assertion.Require(this.DataFieldType == typeof(string),
-                         this.MemberInfo.Name + " can only be parsed from string type data columns.");
+      if (MapToParseWithIdObject && !MapToParseWithStringObject) {
+        Assertion.Require(DataFieldType == typeof(int) || DataFieldType == typeof(long),
+                         $"{MemberInfo.Name} can only be parsed from an integer or long type data column. " +
+                         $"(DataFieldType was {DataFieldType})");
+
+      } else if (!MapToParseWithIdObject && MapToParseWithStringObject) {
+        Assertion.Require(DataFieldType == typeof(string),
+                         $"{MemberInfo.Name} can only be parsed from string type data columns.");
 
       }
     }
 
     /// <summary>Set instance member value according to implicit or explicit default values rules.</summary>
     internal void SetDefaultValue(object instance) {
-      this.ImplementsSetValue(instance, this.DefaultValue);
+      ImplementsSetValue(instance, DefaultValue);
     }
 
     /// <summary>Set instance member value from a Json string according to this DataMapping rule.

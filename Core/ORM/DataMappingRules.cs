@@ -11,9 +11,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Reflection;
 using System.Linq;
-
+using System.Reflection;
 using Empiria.Json;
 
 namespace Empiria.ORM {
@@ -241,8 +240,19 @@ namespace Empiria.ORM {
         return;
       }
 
-      foreach(DataMapping mapping in dataMappingsArray) {
+      foreach (DataMapping mapping in dataMappingsArray) {
         int columnIndex = dataColumns.IndexOf(mapping.DataFieldAttributeName);
+
+        if (columnIndex == -1 && mapping.DataFieldAttribute.IsOptional) {
+
+          DataColumn column = new DataColumn(mapping.DataFieldAttributeName,
+                                            mapping.DefaultValue.GetType());
+          dataColumns.Add(column);
+          mapping.MapDataColumn(column);
+
+          continue;
+        }
+
         if (columnIndex != -1) {
           mapping.MapDataColumn(dataColumns[columnIndex]);
 
