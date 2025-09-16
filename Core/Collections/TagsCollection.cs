@@ -7,10 +7,10 @@
 *  Summary   : Collection of string tags.                                                                    *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace Empiria.Collections {
 
@@ -74,7 +74,7 @@ namespace Empiria.Collections {
 
     public IList<string> Items {
       get {
-         return this.tagsArray;
+        return this.tagsArray;
       }
     }
 
@@ -150,10 +150,9 @@ namespace Empiria.Collections {
     private void Load(string tagsString) {
       tagsString = EmpiriaString.TrimAll(tagsString);
 
-
       string pattern = @"'([^']*)";
 
-      foreach (string value in Regex.Split(tagsString, pattern)) {
+      foreach (string value in EmpiriaString.SplitWithRegExPattern(tagsString, pattern)) {
 
         var temp = CleanTag(value);
 

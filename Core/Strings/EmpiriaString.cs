@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 using Empiria.Json;
 
@@ -511,7 +512,7 @@ namespace Empiria {
     }
 
     static public string RemoveEndPunctuation(string source) {
-      char[] punctuations = new char[] {'.', ',', ';', ':', '=', '-', '_', '|'};
+      char[] punctuations = new char[] { '.', ',', ';', ':', '=', '-', '_', '|' };
 
       string temp = source;
 
@@ -543,6 +544,11 @@ namespace Empiria {
       return integers.ToArray();
     }
 
+
+    static internal IEnumerable<string> SplitWithRegExPattern(string tagsString, string pattern) {
+      return Regex.Split(tagsString, pattern, RegexOptions.None,
+                         TimeSpan.FromSeconds(10));
+    }
 
     static public bool StartsWith(string source, string firstValue, params string[] moreValues) {
       Assertion.Require(source, "source");
@@ -731,7 +737,7 @@ namespace Empiria {
 
       string[] nounParts = EmpiriaString.TrimAll(noun).Split(' ');
       string result = String.Empty;
-      foreach(string nounPart in nounParts) {
+      foreach (string nounPart in nounParts) {
         if (result.Length != 0) {
           result += ' ';
         }
