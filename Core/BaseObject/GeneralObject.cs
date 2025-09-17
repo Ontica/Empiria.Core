@@ -7,8 +7,6 @@
 *  Summary   : Abstract type that holds basic object instances which are stored in a general common table.   *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-
 using Empiria.Data;
 using Empiria.Ontology;
 using Empiria.StateEnums;
@@ -20,9 +18,6 @@ namespace Empiria {
   public abstract class GeneralObject : BaseObject, INamedEntity {
 
     #region Fields
-
-    /// <summary>Use this field name in derived types to access extended fields items.</summary>
-    protected const string ExtensionDataFieldName = "ObjectExtData";
 
     #endregion Fields
 
@@ -59,7 +54,7 @@ namespace Empiria {
       protected set;
     }
 
-    [DataField(GeneralObject.ExtensionDataFieldName, IsOptional=true)]
+    [DataField("ObjectExtData")]
     protected Json.JsonObject ExtendedDataField {
       get;
       set;

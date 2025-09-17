@@ -87,10 +87,10 @@ namespace Empiria.WebApi {
 
 
     /// <summary>The Http relative endpoint that provides the service.</summary>
-    [DataField(ExtensionDataFieldName + ".path")]
     public string Path {
-      get;
-      private set;
+      get {
+        return base.ExtendedDataField.Get("path", string.Empty);
+      }
     }
 
 
@@ -104,10 +104,10 @@ namespace Empiria.WebApi {
 
     /// <summary>HTTP method used to invoke the call.
     /// Posible return values are GET, POST, PUT, PATCH or DELETE.</summary>
-    [DataField(ExtensionDataFieldName + ".method", Default = "GET")]
     public string Method {
-      get;
-      private set;
+      get {
+        return base.ExtendedDataField.Get("method", "GET");
+      }
     }
 
 
@@ -120,10 +120,10 @@ namespace Empiria.WebApi {
 
 
     /// <summary>Indicates if the service must be requested with a valid Authorization header.</summary>
-    [DataField(ExtensionDataFieldName + ".isProtected", Default = true)]
     public bool IsProtected {
-      get;
-      private set;
+      get {
+        return base.ExtendedDataField.Get("isProtected", true);
+      }
     }
 
 
@@ -136,34 +136,34 @@ namespace Empiria.WebApi {
 
 
     /// <summary>The response's payload type.</summary>
-    [DataField(ExtensionDataFieldName + ".payloadType")]
     public string PayloadType {
-      get;
-      private set;
+      get {
+        return base.ExtendedDataField.Get("payloadType", string.Empty);
+      }
     }
 
 
     /// <summary>The response's payload data file name.</summary>
-    [DataField(ExtensionDataFieldName + ".payloadDataField", Default = "data")]
     public string PayloadDataField {
-      get;
-      private set;
+      get {
+        return base.ExtendedDataField.Get("payloadDataField", "data");
+      }
     }
 
 
     /// <summary>Array with any additional request headers.</summary>
-    [DataField(ExtensionDataFieldName + ".responseDataType")]
     public string ResponseDataType {
-      get;
-      private set;
+      get {
+        return base.ExtendedDataField.Get("responseDataType", string.Empty);
+      }
     }
 
 
     /// <summary>The API unique identificator</summary>
-    [DataField(ExtensionDataFieldName + ".api")]
     private string ApiName {
-      get;
-      set;
+      get {
+        return base.ExtendedDataField.Get("api", string.Empty);
+      }
     }
 
     #endregion Properties

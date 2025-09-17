@@ -545,10 +545,11 @@ namespace Empiria {
     }
 
 
-    static internal IEnumerable<string> SplitWithRegExPattern(string tagsString, string pattern) {
+    static public IEnumerable<string> SplitWithRegExPattern(string tagsString, string pattern) {
       return Regex.Split(tagsString, pattern, RegexOptions.None,
                          TimeSpan.FromSeconds(10));
     }
+
 
     static public bool StartsWith(string source, string firstValue, params string[] moreValues) {
       Assertion.Require(source, "source");
