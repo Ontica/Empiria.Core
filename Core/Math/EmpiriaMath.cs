@@ -11,18 +11,14 @@
 using System;
 using System.Collections.Generic;
 
+using System.Security.Cryptography;
+
 namespace Empiria {
 
   /// <summary>Mathematical methods library class.</summary>
   static public class EmpiriaMath {
 
-    #region Fields
-
-    static private Random random = new Random();
-
-    #endregion Fields
-
-    #region Public methods
+    #region Methods
 
     static public decimal Add(decimal a, params decimal[] list) {
       decimal result = 0m;
@@ -34,9 +30,11 @@ namespace Empiria {
       return result;
     }
 
+
     static public decimal ApplyPercentage(decimal quantity, decimal percentage) {
       return (quantity * percentage) / 100m;
     }
+
 
     static public char GetFullRandomDigitOrCharacter(string current = "") {
       const string digitsAndCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -44,15 +42,45 @@ namespace Empiria {
       return GetRandomCharacterHelper(digitsAndCharacters, current);
     }
 
+
+    static public int GetRandom(int minValue, int maxValue) {
+      Assertion.Require(minValue <= maxValue,
+                        "minValue parameter must be greater than maxValue parameter.");
+
+      using (var generator = RandomNumberGenerator.Create()) {
+
+        uint range = (uint) (maxValue - minValue + 1);
+
+        // Array to store 4 bytes for the random number
+        byte[] bytes = new byte[4];
+
+        uint result;
+
+        while (true) {
+          // Fill the array with random bytes
+          generator.GetBytes(bytes);
+
+          // Convert the bytes to an unsigned integer
+          result = BitConverter.ToUInt32(bytes, 0);
+
+          // Repeat if the result could cause bias
+          if (result < uint.MaxValue - (uint.MaxValue % range)) {
+            break;
+          }
+        }
+
+        // Apply the modulus and adjust to the desired range
+        return (int) (result % range) + minValue;
+      }
+    }
+
+
     static public bool GetRandomBoolean() {
-      int i = random.Next();
+      int i = GetRandom(1, 100);
 
       return ((i % 2) == 0);
     }
 
-    static public int GetRandom(int minValue, int maxValue) {
-      return random.Next(minValue, maxValue);
-    }
 
     static public char GetRandomCharacter(string current = "") {
       const string characters = "ABCDEFHJKLMNPQRSTUVWXYZ";
@@ -112,25 +140,31 @@ namespace Empiria {
       return result;
     }
 
-    #endregion Public methods
+    #endregion Methods
 
-    #region Private methods
+    #region Helpers
 
     static private char GetRandomCharacterHelper(string characters, string current) {
-      string attempts = String.Empty;
+      string attempts = string.Empty;
+
       while (true) {
-        char character = characters[random.Next(characters.Length)];
+
+        char character = characters[GetRandom(0, characters.Length - 1)];
+
         if (!current.Contains(character.ToString())) {
           return character;
+
         } else if (attempts.Length >= characters.Length) {
           return character;
+
         } else {
           attempts += character;
+
         }
       }
     }
 
-    #endregion Private methods
+    #endregion Helpers
 
   }  // class EmpiriaMath
 
