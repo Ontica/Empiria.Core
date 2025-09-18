@@ -31,6 +31,7 @@ namespace Empiria.Security {
       MustChangePassword,
       PrivateKeyFileNotExists,
       SessionTokenNotFound,
+      HSTSRequired,
       UnauthenticatedIdentity,
       UserAccountHasBeenBlocked,
       UserAccountIsSuspended,
