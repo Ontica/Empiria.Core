@@ -21,47 +21,56 @@ namespace Empiria {
 
     #region Public methods
 
-
     static public bool All(string source, string characterSet) {
+
       for (int i = 0; i < source.Length; i++) {
+
         if (!characterSet.Contains(source.Substring(i, 1))) {
           return false;
         }
       }
+
       return true;
     }
 
 
     static public bool AllDigits(string value) {
+
       foreach (char c in value) {
-        if (!Char.IsDigit(c)) {
+        if (!char.IsDigit(c)) {
           return false;
         }
       }
+
       return true;
     }
 
 
     static public string BuildKeywords(params string[] words) {
-      string temp = String.Join(" ", words).ToLowerInvariant();
+      string temp = string.Join(" ", words).ToLowerInvariant();
 
-      var keywords = EmpiriaString.BuildKeywords(temp, true);
+      var keywords = BuildKeywords(temp, true);
 
       return Truncate(keywords, 4000);
     }
 
 
     static public string BuildKeywords(string words, bool removeNoiseStrings) {
+
       words = TrimAll(words);
-      if (String.IsNullOrEmpty(words)) {
-        return String.Empty;
+
+      if (string.IsNullOrEmpty(words)) {
+        return string.Empty;
       }
+
       words = words.ToLowerInvariant();
+
       if (removeNoiseStrings) {
         words = RemoveNoiseStrings(RemoveAccents(RemovePunctuation(words)));
       } else {
         words = RemoveAccents(RemovePunctuation(words));
       }
+
       return words;
     }
 
@@ -74,11 +83,12 @@ namespace Empiria {
     static public string BuildRandomString(int minLength, int maxLength) {
       Assertion.Require(0 < minLength,
                       $"Parameter 'minLength' ({minLength}) must be greater than zero.");
+
       Assertion.Require(minLength == -1 || minLength <= maxLength,
                       $"Parameter 'minLength' ({minLength}) must be less or equal than " +
                       $"parameter 'maxLength' ({maxLength}).");
 
-      var temp = String.Empty;
+      var temp = string.Empty;
 
       int length = minLength;
       if (maxLength != -1) {
@@ -96,55 +106,78 @@ namespace Empiria {
 
         temp += value;
       }
+
       return temp;
     }
 
 
     /// <summary>Trims all excesive whitespaces and removes any control characters.</summary>
     static public string Clean(string value) {
-      value = EmpiriaString.TrimControl(value);
+      value = TrimControl(value);
 
-      return EmpiriaString.TrimAll(value);
+      return TrimAll(value);
     }
 
+
     static public bool Contains(string source, string searchWords) {
+
       searchWords = TrimAll(searchWords);
+
       if (source.Length == 0 || searchWords.Length == 0) {
         return false;
       }
+
       string[] array = searchWords.Split(' ');
+
       for (int i = 0; i < array.Length; i++) {
+
         if (!source.Contains(TrimAll(array[i]))) {
           return false;
         }
       }
+
       return true;
     }
 
+
     static public bool ContainsAny(string source, string searchWords) {
+
       searchWords = TrimAll(searchWords);
+
       if (source.Length == 0 || searchWords.Length == 0) {
         return false;
       }
+
       string[] array = searchWords.Split(' ');
+
       for (int i = 0; i < array.Length; i++) {
+
         if (source.Contains(TrimAll(array[i]))) {
           return true;
         }
       }
+
       return false;
     }
 
+
     static public bool ContainsAnyChar(string source, string characterSet) {
+
       for (int i = 0; i < characterSet.Length; i++) {
+
         if (source.Contains(characterSet.Substring(i, 1))) {
           return true;
         }
       }
+
       return false;
     }
 
+
     static public bool ContainsSegment(string source, string data, int segmentLength) {
+      Assertion.Require(source, "source");
+      Assertion.Require(data, "data");
+
       if (segmentLength <= 0) {
         return false;
       }
@@ -156,13 +189,17 @@ namespace Empiria {
       }
 
       for (int startIndex = 0; startIndex <= data.Length - segmentLength; startIndex++) {
+
         string segment = data.Substring(startIndex, segmentLength);
+
         if (source.Contains(segment)) {
           return true;
         }
       }
+
       return false;
     }
+
 
     static public T ConvertTo<T>(string source) {
       Assertion.Require(source, "source");
@@ -180,7 +217,7 @@ namespace Empiria {
         return (T) Enum.Parse(typeof(T), source);
 
       } else if (JsonConverter.IsValidJson(source)) {
-        return Empiria.Json.JsonConverter.ToObject<T>(source);
+        return JsonConverter.ToObject<T>(source);
 
       } else {
         throw new EmpiriaStringException(EmpiriaStringException.Msg.CantConvertStringToTypeInstance,
@@ -195,18 +232,26 @@ namespace Empiria {
 
 
     static public string RemoveNoiseStrings(string source) {
+
       string[] tokens = source.Split(' ');
-      string temp = String.Empty;
+
+      string temp = string.Empty;
+
       for (int i = 0; i < tokens.Length; i++) {
+
         string token = tokens[i];
+
         if (temp.IndexOf(token + " ") < 0 && !IsPrepositionOrConjuntion(token)) {
           temp += token + " ";
         }
       }
+
       return TrimAll(temp);
     }
 
+
     static public string DateTimeString(object date) {
+
       if (date != null) {
         return DateTimeString((DateTime) date);
       } else {
@@ -216,7 +261,8 @@ namespace Empiria {
 
 
     static public string Duplicate(string source, int times) {
-      string temp = String.Empty;
+
+      string temp = string.Empty;
 
       for (int i = 0; i < times; i++) {
         temp += source;
@@ -228,22 +274,31 @@ namespace Empiria {
 
     static public string Exclude(string source, string excludeThis) {
       string[] excludeArray = excludeThis.Split(' ');
+
       int index = 0;
 
       source = source + " ";
+
       for (int i = 0; i < excludeArray.Length; i++) {
+
         index = source.IndexOf(excludeArray[i]);
-        if (index > 0 && source.Substring(index, excludeArray[i].Length + 1) == (excludeArray[i] + " ")) {
-          source = source.Replace(excludeArray[i], String.Empty);
+
+        if (index > 0 &&
+            source.Substring(index, excludeArray[i].Length + 1) == (excludeArray[i] + " ")) {
+
+          source = source.Replace(excludeArray[i], string.Empty);
         }
       }
+
       return TrimAll(source);
     }
 
 
     static public string Format(string source, object[] arguments) {
+
       if (source != null && arguments != null && arguments.Length != 0) {
-        return String.Format(source, arguments);
+
+        return string.Format(source, arguments);
       } else {
         return source;
       }
@@ -258,9 +313,9 @@ namespace Empiria {
 
 
     static public string IncrementCounter(string source, string prefix = "") {
-      string counterPart = source.Replace(prefix, String.Empty);
+      string counterPart = source.Replace(prefix, string.Empty);
 
-      int counter = EmpiriaString.ToInteger(counterPart);
+      int counter = ToInteger(counterPart);
 
       counter++;
 
@@ -270,11 +325,15 @@ namespace Empiria {
 
     static public bool IsBoolean(string source) {
       try {
-        if (String.IsNullOrEmpty(source)) {
+
+        if (string.IsNullOrEmpty(source)) {
           return false;
         }
+
         bool sourceValue = ToBoolean(source);
+
         return true;
+
       } catch {
         return false;
       }
@@ -282,7 +341,8 @@ namespace Empiria {
 
     static public bool IsCurrency(string source) {
       try {
-        if (String.IsNullOrEmpty(source)) {
+
+        if (string.IsNullOrEmpty(source)) {
           return false;
         }
         if (source.IndexOf(".") >= 0) {
@@ -291,16 +351,21 @@ namespace Empiria {
         if (source.StartsWith(".")) {
           source = "0" + source;
         }
-        Decimal sourceValue = Decimal.Parse(source);
+
+        var sourceValue = decimal.Parse(source);
+
         return true;
+
       } catch {
         return false;
       }
     }
 
+
     static public bool IsCurrency(string source, string format) {
+
       try {
-        if (String.IsNullOrEmpty(source)) {
+        if (string.IsNullOrEmpty(source)) {
           return false;
         }
         if (source.IndexOf(".") >= 0) {
@@ -309,24 +374,27 @@ namespace Empiria {
         if (source.StartsWith(".")) {
           source = "0" + source;
         }
-        Decimal sourceValue = Decimal.Parse(source);
-        if (source == sourceValue.ToString(format)) {
-          return true;
-        } else {
-          return false;
-        }
+
+        decimal sourceValue = decimal.Parse(source);
+
+        return source == sourceValue.ToString(format);
+
       } catch {
+
         return false;
       }
     }
 
     static public bool IsDateTime(string source, string format) {
+
       try {
-        if (String.IsNullOrEmpty(source)) {
+        if (string.IsNullOrEmpty(source)) {
           return false;
         }
         DateTime temp = DateTime.ParseExact(source, format, DateTimeFormatInfo.InvariantInfo);
+
         return true;
+
       } catch {
         return false;
       }
@@ -334,9 +402,10 @@ namespace Empiria {
 
 
     static public bool IsDate(string source) {
-      DateTime dischardedResult;
-
-      return DateTime.TryParse(source, out dischardedResult);
+      if (string.IsNullOrEmpty(source)) {
+        return false;
+      }
+      return DateTime.TryParse(source, out _);
     }
 
 
@@ -347,7 +416,7 @@ namespace Empiria {
 
     static public bool IsDouble(string source) {
       try {
-        if (String.IsNullOrEmpty(source)) {
+        if (string.IsNullOrEmpty(source)) {
           return false;
         }
         if (source.IndexOf(".") >= 0) {
@@ -357,7 +426,9 @@ namespace Empiria {
           source = "0" + source;
         }
         double sourceValue = double.Parse(source);
+
         return true;
+
       } catch {
         return false;
       }
@@ -366,7 +437,7 @@ namespace Empiria {
 
     static public bool IsDouble(string source, string format) {
       try {
-        if (String.IsNullOrEmpty(source)) {
+        if (string.IsNullOrEmpty(source)) {
           return false;
         }
         if (source.IndexOf(".") >= 0) {
@@ -375,12 +446,11 @@ namespace Empiria {
         if (source.StartsWith(".")) {
           source = "0" + source;
         }
+
         double sourceValue = double.Parse(source);
-        if (source == sourceValue.ToString(format)) {
-          return true;
-        } else {
-          return false;
-        }
+
+        return source == sourceValue.ToString(format);
+
       } catch {
         return false;
       }
@@ -390,12 +460,12 @@ namespace Empiria {
     static public bool IsEmpty(string source) {
       string temp = TrimAll(source);
 
-      if (String.IsNullOrWhiteSpace(source)) {
+      if (string.IsNullOrWhiteSpace(source)) {
         return true;
       }
 
       for (int i = 0; i < temp.Length; i++) {
-        if (!Char.IsWhiteSpace(temp[i])) {
+        if (!char.IsWhiteSpace(temp[i])) {
           return false;
         }
       }
@@ -426,56 +496,73 @@ namespace Empiria {
     }
 
 
-    static public bool IsInList(string source, string firstValue, params string[] moreValues) {
-      Assertion.Require(source, "source");
-      Assertion.Require(firstValue, "firstValue");
+    static public bool IsInList(string source, string firstValue,
+                                params string[] moreValues) {
+
+      Assertion.Require(source, nameof(source));
+      Assertion.Require(firstValue, nameof(firstValue));
 
       if (source.ToLowerInvariant() == firstValue.ToLowerInvariant()) {
         return true;
       }
+
       for (int i = 0; i < moreValues.Length; i++) {
         if (moreValues[i].ToLowerInvariant() == source.ToLowerInvariant()) {
           return true;
         }
       }
+
       return false;
     }
 
 
     static public bool IsInteger(string source) {
-      if (String.IsNullOrEmpty(source)) {
+      if (string.IsNullOrWhiteSpace(source)) {
         return false;
       }
+
       int startSearchPosition = 0;
+
       if (source[0] == '-' || source[0] == '$') {
         startSearchPosition = 1;
       }
+
       for (int i = startSearchPosition; i < source.Length; i++) {
-        if (!Char.IsDigit(source[i])) {
+        if (!char.IsDigit(source[i])) {
           return false;
         }
       }
+
       return true;
     }
 
     static public bool IsQuantity(string source) {
-      if (String.IsNullOrEmpty(source)) {
+
+      if (string.IsNullOrEmpty(source)) {
         return false;
       }
+
       int startSearchPosition = 0;
+
       if (source[0] == '-' || source[0] == '$') {
         startSearchPosition = 1;
       }
+
       for (int i = startSearchPosition; i < source.Length; i++) {
-        if (!(Char.IsDigit(source[i]) || source[i] == '.' || source[i] == ',')) {
+        if (!(char.IsDigit(source[i]) || source[i] == '.' || source[i] == ',')) {
           return false;
         }
       }
+
       return IsCurrency(source.Substring(startSearchPosition));
     }
 
 
     static public string RemoveAccents(string source) {
+      if (string.IsNullOrWhiteSpace(source)) {
+        return source;
+      }
+
       source = source.Replace("ñ", "n");
       source = source.Replace("á", "a");
       source = source.Replace("à", "a");
@@ -492,15 +579,18 @@ namespace Empiria {
       return source;
     }
 
+
     static public string RemoveNoise(string source) {
       return TrimAll(RemoveAccents(RemovePunctuation(TrimControl(source))));
     }
+
 
     static public string RemoveNoiseExtended(string source) {
       return TrimAll(RemoveNoiseStrings(RemoveAccents(RemovePunctuation(TrimControl(source)))));
     }
 
     static public string RemovePunctuation(string source) {
+
       char[] punctuations = new char[] {'.', ',', ';', ':', '"', '\'', '/', '\\', '>', '<', '=', '-', '_',
                                         '?', '*', '$', '&', '+', '(', ')', '{', '}', '[', ']', '^', '¬',
                                         '°', '%', '#', '¿', '!', '¡', '´', '`', '~', '|'};
@@ -552,8 +642,8 @@ namespace Empiria {
 
 
     static public bool StartsWith(string source, string firstValue, params string[] moreValues) {
-      Assertion.Require(source, "source");
-      Assertion.Require(firstValue, "firstValue");
+      Assertion.Require(source, nameof(source));
+      Assertion.Require(firstValue, nameof(firstValue));
 
       if (source.StartsWith(firstValue)) {
         return true;
@@ -611,7 +701,7 @@ namespace Empiria {
 
 
     static public string Truncate(string source, int maxLength) {
-      if (String.IsNullOrEmpty(source)) {
+      if (string.IsNullOrEmpty(source)) {
         return source;
       }
       if (source.Length > maxLength) {
@@ -623,9 +713,10 @@ namespace Empiria {
 
 
     public static string TruncateLast(string source, int maxLength) {
-      if (String.IsNullOrEmpty(source)) {
+      if (string.IsNullOrEmpty(source)) {
         return source;
       }
+
       if (source.Length > maxLength) {
         return source.Substring(maxLength - 1);
       } else {
@@ -655,7 +746,8 @@ namespace Empiria {
       bool? value = TryToBoolean(source);
 
       if (!value.HasValue) {
-        throw Assertion.EnsureNoReachThisCode($"No reconozco el valor '{source}' como del tipo de datos Boolean.");
+        throw Assertion.EnsureNoReachThisCode($"No reconozco el valor '{source}' " +
+                                              $"como del tipo de datos Boolean.");
       }
 
       return value.Value;
@@ -681,6 +773,7 @@ namespace Empiria {
         source = source.Replace("-", "/");
         source = source.Replace("./", "/");
         source = source.Replace(".-", "-");
+
         return DateTime.ParseExact(source, format, new CultureInfo("es-US"));
       } catch {
         throw new Exception($"No reconozco el valor {source} como del tipo de datos fecha.");
@@ -700,8 +793,9 @@ namespace Empiria {
 
     static public decimal ToDecimal(string source) {
       try {
-        source = TrimAll(source, ",", String.Empty);
-        source = TrimAll(source, "$", String.Empty);
+        source = TrimAll(source, ",", string.Empty);
+        source = TrimAll(source, "$", string.Empty);
+
         if (source.IndexOf(".") >= 0) {
           source = source.TrimStart("0".ToCharArray());
         }
@@ -720,34 +814,41 @@ namespace Empiria {
 
 
     static public int ToInteger(string source) {
+
       try {
-        source = TrimAll(source, ",", String.Empty);
+        source = TrimAll(source, ",", string.Empty);
         if (source.Length != 0) {
           return int.Parse(source);
-        } else {
-          return 0;
         }
+        return 0;
+
       } catch {
+
         throw new Exception($"No reconozco el valor {source} como del tipo de datos entero.");
       }
     }
 
 
     static public string ToProperNoun(string noun) {
-      Assertion.Require(noun, "noun");
+      Assertion.Require(noun, nameof(noun));
 
-      string[] nounParts = EmpiriaString.TrimAll(noun).Split(' ');
-      string result = String.Empty;
+      string[] nounParts = TrimAll(noun).Split(' ');
+      string result = string.Empty;
+
       foreach (string nounPart in nounParts) {
         if (result.Length != 0) {
           result += ' ';
         }
+
         if (IsPrepositionOrConjuntion(nounPart)) {
           result += nounPart;  // Prepositions and conjuntions are not capitalized.
         } else {
-          result += nounPart.Substring(0, 1).ToUpperInvariant() + nounPart.Substring(1);
+          result += nounPart.Substring(0, 1)
+                            .ToUpperInvariant() + nounPart.Substring(1);
         }
+
       }
+
       return result;
     }
 
@@ -760,15 +861,16 @@ namespace Empiria {
 
 
     static public string TrimControl(string source) {
-      if (String.IsNullOrWhiteSpace(source)) {
-        return String.Empty;
+
+      if (string.IsNullOrWhiteSpace(source)) {
+        return string.Empty;
       }
 
       string temp = source;
 
       for (int i = 0; i < temp.Length; i++) {
-        if (Char.IsControl(temp[i])) {
-          temp = temp.Replace(temp[i].ToString(), String.Empty);
+        if (char.IsControl(temp[i])) {
+          temp = temp.Replace(temp[i].ToString(), string.Empty);
         }
       }
       return temp;
@@ -776,10 +878,13 @@ namespace Empiria {
 
 
     static public string TrimSpacesAndControl(string source) {
-      if (String.IsNullOrWhiteSpace(source)) {
-        return String.Empty;
+
+      if (string.IsNullOrWhiteSpace(source)) {
+        return string.Empty;
       }
+
       string temp = TrimControl(source);
+
       temp = temp.Replace("|", " ");
       temp = temp.Replace("<", " ");
       temp = temp.Replace(">", " ");
@@ -787,21 +892,20 @@ namespace Empiria {
       temp = temp.Replace("\'", "´");
 
       temp = TrimAll(temp);
-      if (!String.IsNullOrWhiteSpace(temp)) {
+      if (!string.IsNullOrWhiteSpace(temp)) {
         return temp;
       } else {
-        return String.Empty;
+        return string.Empty;
       }
     }
 
 
     static public string TrimAll(string source, string pattern, string replaceWith) {
-      if (source == null) {
-        return String.Empty;
+
+      if (string.IsNullOrWhiteSpace(source)) {
+        return string.Empty;
       }
-      if (source.Length == 0) {
-        return String.Empty;
-      }
+
       while (true) {
         if (source.IndexOf(pattern) >= 0) {
           source = source.Replace(pattern, replaceWith);
@@ -817,9 +921,9 @@ namespace Empiria {
     #region Private methods
 
     static private bool IsPrepositionOrConjuntion(string token) {
-      string[] noiseTokens = new String[] { " ", "y", "o", "a", "e", "ó", "la", "el", "los", "las", "lo",
-                                            "que", "con", "de", "del", "the", "and", "or", "of", "on",
-                                            "in", "at", "for", "by", "to"};
+      var noiseTokens = new string[] { " ", "y", "o", "a", "e", "ó", "la", "el", "los", "las", "lo",
+                                       "que", "con", "de", "del", "the", "and", "or", "of", "on",
+                                       "in", "at", "for", "by", "to"};
 
       token = token.ToLowerInvariant();
       for (int i = 0; i < noiseTokens.Length; i++) {
