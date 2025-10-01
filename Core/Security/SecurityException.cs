@@ -33,11 +33,12 @@ namespace Empiria.Security {
       SessionTokenNotFound,
       HSTSRequired,
       UnauthenticatedIdentity,
+      UnsafeInput,
       UserAccountHasBeenBlocked,
       UserAccountIsSuspended,
       UserPasswordExpired,
       WrongDIFVersionRequested,
-      WrongImpersonationToken,
+      WrongImpersonationToken
     }
 
     static private string resourceBaseName = "Empiria.Security.SecurityExceptionMsg";
@@ -75,6 +76,12 @@ namespace Empiria.Security {
     #endregion Constructors and parsers
 
     #region Public methods
+
+    public bool DenyService {
+      get {
+        return ExceptionTag != Msg.UnsafeInput.ToString();
+      }
+    }
 
     static public string GetMessage(Msg message) {
       return GetResourceMessage(message.ToString(), resourceBaseName, Assembly.GetExecutingAssembly());

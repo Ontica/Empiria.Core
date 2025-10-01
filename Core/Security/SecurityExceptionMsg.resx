@@ -180,4 +180,7 @@
   <data name="HSTSRequired" xml:space="preserve">
     <value>This Web API server requires a secure connection.</value>
   </data>
+  <data name="UnsafeInput" xml:space="preserve">
+    <value>La información proporcionada contiene palabras o textos que podrían comprometer la seguridad del sistema. Si es necesario, se requiere darles un formato o un tratamiento especial antes de intentarlo de nuevo. El manual de uso del sistema contiene información sobre este tema.</value>
+  </data>
 </root>
