@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 using Empiria.Json;
@@ -385,6 +386,7 @@ namespace Empiria {
       }
     }
 
+
     static public bool IsDateTime(string source, string format) {
 
       try {
@@ -534,6 +536,31 @@ namespace Empiria {
       }
 
       return true;
+    }
+
+
+    static public bool IsUnsafe(string source) {
+      if (string.IsNullOrWhiteSpace(source)) {
+        return false;
+      }
+
+      string[] unsafePatterns =         {
+          @"(""|\s|^)(select|insert|update|delete|drop|truncate|create|alter|exec|execute)\s",
+          @"(""|\s|^)(xp|sp|apd|do|qry|write)_\S",
+          @"--",  @"\/\*",  @"\*\/",
+          @";.*--",  @"';.*--",  @"../",  @"..\\",
+          @"(['\""]?)[a-zA-Z0-9_@.\-+]+\1\s*(=|==|<>|!=|<|<=|>|>=)\s*(['\""]?)[a-zA-Z0-9_@.\-+]+\3",
+          @"javascript:", @"vbscript:", @"onload\s*=",
+          @"<script\s", @"</script>", @"function\s*\(", @"sub\s*\(", @"alert\s*\(",
+          @"<html\s", @"</html>", @"<head\s", @"</head>", @"<body\s", @"</body>",
+          @"<iframe\s", @"</iframe>", @"<form\s", @"</form>", @"<input\s",
+          @"<a\s", @"</a>", @"<link\s", @"</link>",@"<button\s", @"</button>", @"href\s*=",
+          @"benchmark\s*\(", @"sleep\s*\(", @"waitfor\s+delay"
+      };
+
+      return unsafePatterns.Any(pattern => Regex.IsMatch(source, pattern,
+                                                         RegexOptions.IgnoreCase,
+                                                         TimeSpan.FromSeconds(5)));
     }
 
     static public bool IsQuantity(string source) {
