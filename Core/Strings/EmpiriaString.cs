@@ -539,6 +539,11 @@ namespace Empiria {
     }
 
 
+    static public bool IsSafe(string source) {
+      return !IsUnsafe(source);
+    }
+
+
     static public bool IsUnsafe(string source) {
       if (string.IsNullOrWhiteSpace(source)) {
         return false;

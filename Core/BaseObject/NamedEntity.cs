@@ -16,7 +16,7 @@ using Empiria.Json;
 namespace Empiria {
 
   /// <summary>Represents an entity with a unique ID and a name.</summary>
-  public interface INamedEntity: IUniqueID {
+  public interface INamedEntity : IUniqueID {
 
     string Name {
       get;

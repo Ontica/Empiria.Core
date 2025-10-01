@@ -33,8 +33,7 @@ namespace Empiria {
     #region Properties
 
     static private Guid CurrentTraceGuid {
-      get;
-      set;
+      get; set;
     } = Guid.NewGuid();
 
 
@@ -123,14 +122,14 @@ namespace Empiria {
 
 
     static public void Trace(string message) {
-      EmpiriaLog.CurrentTraceGuid = Guid.NewGuid();
+      CurrentTraceGuid = Guid.NewGuid();
 
       CreateLogEntryInCurrentLogTrail(LogEntryType.Trace, message);
     }
 
 
     static public void EndTrace() {
-      EmpiriaLog.CurrentTraceGuid = Guid.Empty;
+      CurrentTraceGuid = Guid.Empty;
     }
 
 
@@ -142,13 +141,17 @@ namespace Empiria {
       var logEntry = new LogEntryModel();
 
       logEntry.EntryType = type;
+
       if (ExecutionServer.IsAuthenticated) {
         logEntry.SessionToken = ExecutionServer.CurrentPrincipal.Session.Token;
       }
+
       logEntry.Data = data;
+
       if (logEntry.EntryType == LogEntryType.Trace) {
-        logEntry.TraceGuid = EmpiriaLog.CurrentTraceGuid;
+        logEntry.TraceGuid = CurrentTraceGuid;
       }
+
       return logEntry;
     }
 
@@ -166,7 +169,8 @@ namespace Empiria {
 
         TryWriteLogEntryToFile(logEntry);
 
-        // WARNING: Never try to catch this error without retrowing it, because it causes an inifinite loop in EmpiriaException.Publish()
+        // WARNING: Never try to catch this error without retrowing it, because
+        // it causes an inifinite loop in EmpiriaException.Publish()
 
         throw;
       }
@@ -205,10 +209,11 @@ namespace Empiria {
     }
 
 
-    static private Object _lockObject = new object();
+    static private object _lockObject = new object();
     static private ILogTrail _defaultLogTrail = null;
 
     static private ILogTrail GetDefaultLogTrail() {
+
       if (_defaultLogTrail == null) {
         lock (_lockObject) {
           if (_defaultLogTrail == null) {
@@ -219,7 +224,6 @@ namespace Empiria {
 
       return _defaultLogTrail;
     }
-
 
     #endregion Helpers
 

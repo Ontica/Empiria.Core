@@ -15,8 +15,6 @@ using System.Resources;
 using System.Runtime.Serialization;
 using System.Text;
 
-using Empiria.Json;
-
 namespace Empiria {
 
   /// <summary>Base class for handling run-time exceptions in Empiria Backend Framework.</summary>
@@ -26,11 +24,10 @@ namespace Empiria {
 
     #region Fields
 
-    private string exceptionTag = String.Empty;
-    private DateTime timestamp = DateTime.Now;
-    private string processId = String.Empty;
-    private bool initialized = false;
-
+    private readonly DateTime _timestamp = DateTime.Now;
+    private string _exceptionTag = string.Empty;
+    private string _processId = string.Empty;
+    private bool _initialized = false;
 
     #endregion Fields
 
@@ -40,8 +37,9 @@ namespace Empiria {
     /// message.</summary>
     /// <param name="message">Used to indicate the description of the exception.</param>
     protected EmpiriaException(string exceptionTag, string message) : base(message) {
-      this.exceptionTag = exceptionTag;
-      this.timestamp = DateTime.Now;
+
+      _exceptionTag = exceptionTag;
+
       InitializeEnvironmentInformation();
     }
 
@@ -51,22 +49,15 @@ namespace Empiria {
     /// <param name="innerException">The inner exception that throws this exception.</param>
     protected EmpiriaException(string exceptionTag, string message, Exception innerException) :
                             base(message, innerException) {
-      this.exceptionTag = exceptionTag;
-      this.timestamp = DateTime.Now;
+
+      _exceptionTag = exceptionTag;
+
       InitializeEnvironmentInformation();
     }
 
     protected EmpiriaException(SerializationInfo info, StreamingContext context) : base(info, context) {
 
-    }
-
-    static public JsonObject ToJson(Exception exception) {
-      var json = new JsonObject();
-
-      json.Add("source", exception.Source == null ? "N/A" : exception.Source);
-      json.Add("message", exception.Message);
-
-      return json;
+      InitializeEnvironmentInformation();
     }
 
     #endregion Constructors and parsers
@@ -76,7 +67,7 @@ namespace Empiria {
     /// <summary>Unique identificator tag or name for the exception.</summary>
     public string ExceptionTag {
       get {
-        return exceptionTag;
+        return _exceptionTag;
       }
     }
 
@@ -90,14 +81,14 @@ namespace Empiria {
     /// <summary>Returns the .NET CLR Working Process ID that host the application.</summary>
     public string ProcessId {
       get {
-        return processId;
+        return _processId;
       }
     }
 
     /// <summary>Date and time when the exception was created.</summary>
     public DateTime Timestamp {
       get {
-        return timestamp;
+        return _timestamp;
       }
     }
 
@@ -105,32 +96,14 @@ namespace Empiria {
 
     #region Public methods
 
-    static public string GetHtmlString(Exception exception) {
-      return EmpiriaException.GetHTMLString(exception);
-    }
-
-    static public string GetTextString(Exception exception) {
-      string temp = EmpiriaException.GetHTMLString(exception);
-
-      temp = temp.Replace("<u>", String.Empty);
-      temp = temp.Replace("</u>", String.Empty);
-      temp = temp.Replace("<b>", String.Empty);
-      temp = temp.Replace("</b>", String.Empty);
-
-      return temp;
-    }
-
-    public string ToHtmlString() {
-      return EmpiriaException.GetHTMLString(this);
-    }
-
     public override string ToString() {
-      return EmpiriaException.GetTextString(this);
+      return GetExceptionText(this);
     }
+
 
     static protected string BuildMessage(string message, params object[] args) {
       if (args != null && args.Length != 0) {
-        return String.Format(message, args);
+        return string.Format(message, args);
       } else {
         return message;
       }
@@ -143,16 +116,22 @@ namespace Empiria {
 
       try {
         temp = resMgr.GetString(messageTag);
-        temp = temp.Replace(@"\n", System.Environment.NewLine);
+        temp = temp.Replace(@"\n", Environment.NewLine);
+
       } catch (Exception e) {
         EmpiriaLog.Error(e.Message);
+
       } finally {
-        if (String.IsNullOrEmpty(temp)) {
+
+        if (string.IsNullOrWhiteSpace(temp)) {
           temp = messageTag;
+
         } else if (args != null && args.Length != 0) {
+
           try {
-            temp = String.Format(temp, args);
-          } catch { // format exception
+            temp = string.Format(temp, args);
+
+          } catch {
             // no-op
           }
         }
@@ -162,13 +141,13 @@ namespace Empiria {
 
     #endregion Public methods
 
-    #region Exception publishing
+    #region Exception Publisher
 
     static private bool _publishErrors;
     static private DateTime _publishingErrorsStoppedSince;
 
     static EmpiriaException() {
-      EmpiriaException.StartPublishingNextErrors();
+      StartPublishingNextErrors();
     }
 
     /// <summary>Publish this exception.</summary>
@@ -192,7 +171,6 @@ namespace Empiria {
 
         // ToDo: Make something else with the error
       }
-
     }
 
 
@@ -217,32 +195,35 @@ namespace Empiria {
       return _publishErrors || mustRetryPublishing;
     }
 
-    #endregion Exception publishing
+    #endregion Exception Publisher
 
-    #region Private methods
+    #region Helpers
 
     /// <summary>Creates and returns a string representation of the current exception.</summary>
-    static private string GetHTMLString(Exception exception) {
+    static private string GetExceptionText(Exception exception) {
       StringBuilder stringBuilder = new StringBuilder();
 
       Exception tempException = exception;
       int exceptionCount = 1;
       try {
         while (true) {
-          stringBuilder.AppendFormat("{0}{0}", (exceptionCount != 1) ? Environment.NewLine : String.Empty);
-          stringBuilder.AppendFormat("<b>{1}) <u>{2}</u></b>{0}{0}", Environment.NewLine, exceptionCount.ToString(),
+          stringBuilder.AppendFormat("{0}{0}", (exceptionCount != 1) ? Environment.NewLine : string.Empty);
+          stringBuilder.AppendFormat("{1}) {2}{0}{0}", Environment.NewLine, exceptionCount.ToString(),
                                      exceptionCount == 1 ? "Exception Information" : "Inner Exception Information");
           stringBuilder.AppendFormat("ExceptionType: {0}", tempException.GetType().FullName);
 
           PropertyInfo[] exceptionProperties = tempException.GetType().GetProperties();
           foreach (PropertyInfo property in exceptionProperties) {
+
             if (property.Name != "InnerException" && property.Name != "StackTrace" && property.Name != "Data") {
               object propertyValue = property.GetValue(tempException, null);
+
               if (propertyValue != null) {
                 stringBuilder.AppendFormat("{0}{1}: {2}", Environment.NewLine, property.Name, propertyValue);
               }
             }
           } // foreach
+
           if (tempException.InnerException == null) {
             break;
           } else {
@@ -252,12 +233,12 @@ namespace Empiria {
         }  // while
 
         if (exception.StackTrace != null) {
-          stringBuilder.AppendFormat("{0}{0}<u>Exception Stack Trace:</u>{0}", Environment.NewLine);
+          stringBuilder.AppendFormat("{0}{0}Exception Stack Trace:{0}", Environment.NewLine);
           stringBuilder.AppendFormat("{0}", exception.StackTrace);
         }
-        if (System.Environment.StackTrace != null) {
-          stringBuilder.AppendFormat("{0}{0}<u>Environment Stack Trace:</u>{0}", Environment.NewLine);
-          stringBuilder.AppendFormat("{0}", System.Environment.StackTrace ?? "Empty stack trace");
+        if (Environment.StackTrace != null) {
+          stringBuilder.AppendFormat("{0}{0}Environment Stack Trace:{0}", Environment.NewLine);
+          stringBuilder.AppendFormat("{0}", Environment.StackTrace ?? "Empty stack trace");
         }
       } catch {
         //no-op
@@ -266,13 +247,14 @@ namespace Empiria {
     }
 
     static private string GetSourceMethodName() {
+
       MethodBase sourceMethod = new StackFrame(3).GetMethod();
       ParameterInfo[] methodPars = sourceMethod.GetParameters();
 
-      string methodName = String.Format("{0}.{1}", sourceMethod.DeclaringType, sourceMethod.Name);
+      string methodName = string.Format("{0}.{1}", sourceMethod.DeclaringType, sourceMethod.Name);
       methodName += "(";
       for (int i = 0; i < methodPars.Length; i++) {
-        methodName += String.Format("{0}{1} {2}", (i != 0) ? ", " : String.Empty,
+        methodName += string.Format("{0}{1} {2}", (i != 0) ? ", " : string.Empty,
                                     methodPars[i].ParameterType.Name, methodPars[i].Name);
       }
       methodName += ")";
@@ -285,11 +267,11 @@ namespace Empiria {
       const string unknownExceptionTag = "Unknown Exception";
       const string unknownProcessId = "Unknown Process Id";
 
-      if (initialized) {
+      if (_initialized) {
         return;
       }
-      if (String.IsNullOrEmpty(this.exceptionTag)) {
-        this.exceptionTag = unknownExceptionTag;
+      if (string.IsNullOrEmpty(_exceptionTag)) {
+        _exceptionTag = unknownExceptionTag;
       }
       try {
         base.Source = GetSourceMethodName();
@@ -297,14 +279,14 @@ namespace Empiria {
         base.Source = unknownExceptionTag;
       }
       try {
-        processId = Process.GetCurrentProcess().Id.ToString();
+        _processId = Process.GetCurrentProcess().Id.ToString();
       } catch {
-        processId = unknownProcessId;
+        _processId = unknownProcessId;
       }
-      initialized = true;
+      _initialized = true;
     }
 
-    #endregion Private methods
+    #endregion Helpers
 
   } //class EmpiriaException
 

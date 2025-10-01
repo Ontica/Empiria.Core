@@ -146,7 +146,7 @@ namespace Empiria.Security {
     }
 
 
-    private void TrySetSessionData() {
+    private void SetSessionData() {
 
       if (ExecutionServer.IsAuthenticated) {
 
@@ -169,11 +169,11 @@ namespace Empiria.Security {
 
     protected void Write() {
 
-      this.TrySetSessionData();
+      SetSessionData();
 
       try {
 
-        this.Id = AuditTrailData.WriteAuditTrail(this);
+        Id = AuditTrailData.WriteAuditTrail(this);
 
       } catch (Exception inner) {
 
