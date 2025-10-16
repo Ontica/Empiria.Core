@@ -25,8 +25,8 @@ namespace Empiria {
     internal OperationLog(LogOperationType logOperationType,
                           string operation, string description) {
       LogOperationType = logOperationType;
-      Operation = operation;
-      Description = description;
+      Operation = EmpiriaString.Clean(operation);
+      Description = EmpiriaString.Clean(description);
       SetSessionId();
       SetUserId();
     }
@@ -34,7 +34,7 @@ namespace Empiria {
     internal OperationLog(LogOperationType logOperationType,
                           string operation, string description,
                           Exception exception) : this(logOperationType, operation, description) {
-      Exception = exception.Message;
+      Exception = EmpiriaString.Clean(exception.Message);
     }
 
 
@@ -46,9 +46,9 @@ namespace Empiria {
       LogOperationType = logOperationType;
       SessionId = session.Id;
       UserId = session.UserId;
-      Operation = operation;
-      Description = description;
-      Exception = exception.Message;
+      Operation = EmpiriaString.Clean(operation);
+      Description = EmpiriaString.Clean(description);
+      Exception = EmpiriaString.Clean(exception.Message);
     }
 
     public OperationLog(LogOperationType logOperationType, Contact subject,
@@ -64,8 +64,8 @@ namespace Empiria {
       LogOperationType = logOperationType;
       SessionId = session.Id;
       UserId = session.UserId;
-      Operation = operation;
-      Description = description;
+      Operation = EmpiriaString.Clean(operation);
+      Description = EmpiriaString.Clean(description);
     }
 
     #endregion Constructors and parsers
@@ -80,13 +80,11 @@ namespace Empiria {
 
 
     internal int SessionId {
-      get;
-      private set;
+      get; private set;
     }
 
     internal int UserId {
-      get;
-      private set;
+      get; private set;
     }
 
     internal DateTime TimeStamp {
@@ -108,36 +106,29 @@ namespace Empiria {
 
 
     internal LogOperationType LogOperationType {
-      get;
-      private set;
+      get; private set;
     }
 
     internal string Operation {
-      get;
-      private set;
+      get; private set;
     }
 
     internal string Description {
-      get;
-      private set;
+      get; private set;
     }
 
     internal string Exception {
-      get;
-      private set;
+      get; private set;
     }
 
     internal int SubjectId {
-      get;
-      private set;
+      get; private set;
     } = -1;
 
 
     internal string SubjectObject {
-      get;
-      private set;
+      get; private set;
     } = string.Empty;
-
 
     #endregion Properties
 
