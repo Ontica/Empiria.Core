@@ -128,6 +128,16 @@ namespace Empiria {
     }
 
 
+    static public NamedEntityDto MapToNamedEntity(this INamedEntity instance, string whenIsEmptyName) {
+      Assertion.Require(whenIsEmptyName, nameof(whenIsEmptyName));
+
+      if (instance.UID.Length == 0 || instance.UID.ToLower() == "empty") {
+        return new NamedEntityDto("Empty", whenIsEmptyName);
+      }
+      return new NamedEntityDto(instance);
+    }
+
+
     static public NamedEntityDto[] MapToNamedEntityArray(this IEnumerable<INamedEntity> list) {
       return list.Select((x) => MapToNamedEntity(x)).ToArray();
     }
