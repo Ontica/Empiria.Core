@@ -46,6 +46,11 @@ namespace Empiria {
     }
 
 
+    static public string DateLongString(DateTime source) {
+      return source.ToString("dd \\de MMMM \\de yyyy");
+    }
+
+
     static public string DateTimeString(DateTime date) {
       if (date.Date == ExecutionServer.DateMinValue) {
         return "Nunca";
