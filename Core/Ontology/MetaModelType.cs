@@ -129,7 +129,6 @@ namespace Empiria.Ontology {
 
     #region Public properties
 
-
     protected MetaModelType BaseType {
       get;
       private set;
@@ -197,7 +196,9 @@ namespace Empiria.Ontology {
     }
 
     public bool IsPrimitive {
-      get { return (this.Id == this.BaseTypeId); }
+      get {
+        return (this.Id == this.BaseTypeId);
+      }
     }
 
     public bool IsSealed {
@@ -275,7 +276,9 @@ namespace Empiria.Ontology {
     }
 
     public bool UsesNamedKey {
-      get { return (this.NamedIdFieldName.Length != 0); }
+      get {
+        return (this.NamedIdFieldName.Length != 0);
+      }
     }
 
     public string Version {
@@ -402,27 +405,27 @@ namespace Empiria.Ontology {
 
       AssertValidTypeFamily(ParseMetaModelTypeFamily((string) dataRow["TypeFamily"]));
 
-      this.Name               = (string) dataRow["TypeName"];
-      this.BaseTypeId         = (int) dataRow["BaseTypeId"];
-      this.AssemblyName       = (string) dataRow["AssemblyName"];
-      this.ClassName          = (string) dataRow["ClassName"];
-      this.DisplayName        = (string) dataRow["DisplayName"];
-      this.DisplayPluralName  = EmpiriaString.ToString(dataRow["DisplayPluralName"]);
-      this.FemaleGenre        = Convert.ToBoolean(dataRow["FemaleGenre"]);
-      this.Documentation      = EmpiriaString.ToString(dataRow["Documentation"]);
-      this.ExtensionData      = JsonObject.Parse(EmpiriaString.ToString(dataRow["TypeExtData"]));
-      this.SolutionName       = EmpiriaString.ToString(dataRow["SolutionName"]);
-      this.SystemName         = EmpiriaString.ToString(dataRow["SystemName"]);
-      this.Version            = EmpiriaString.ToString(dataRow["Version"]);
-      this.LastUpdate         = (DateTime) dataRow["LastUpdate"];
-      this.DataSource         = EmpiriaString.ToString(dataRow["TypeDataSource"]);
-      this.IdFieldName        = EmpiriaString.ToString(dataRow["IdFieldName"]);
-      this.NamedIdFieldName   = EmpiriaString.ToString(dataRow["NamedIdFieldName"]);
-      this.TypeIdFieldName    = EmpiriaString.ToString(dataRow["TypeIdFieldName"]);
-      this.IsAbstract         = Convert.ToBoolean(dataRow["IsAbstract"]);
-      this.IsSealed           = Convert.ToBoolean(dataRow["IsSealed"]);
-      this.IsHistorizable     = Convert.ToBoolean(dataRow["IsHistorizable"]);
-      this.Status             = (EntityStatus) char.Parse((string) dataRow["TypeStatus"]);
+      this.Name = (string) dataRow["TypeName"];
+      this.BaseTypeId = (int) dataRow["BaseTypeId"];
+      this.AssemblyName = (string) dataRow["AssemblyName"];
+      this.ClassName = (string) dataRow["ClassName"];
+      this.DisplayName = (string) dataRow["DisplayName"];
+      this.DisplayPluralName = EmpiriaString.ToString(dataRow["DisplayPluralName"]);
+      this.FemaleGenre = Convert.ToBoolean(dataRow["FemaleGenre"]);
+      this.Documentation = EmpiriaString.ToString(dataRow["Documentation"]);
+      this.ExtensionData = JsonObject.Parse(EmpiriaString.ToString(dataRow["TypeExtData"]));
+      this.SolutionName = EmpiriaString.ToString(dataRow["SolutionName"]);
+      this.SystemName = EmpiriaString.ToString(dataRow["SystemName"]);
+      this.Version = EmpiriaString.ToString(dataRow["Version"]);
+      this.LastUpdate = (DateTime) dataRow["LastUpdate"];
+      this.DataSource = EmpiriaString.ToString(dataRow["TypeDataSource"]);
+      this.IdFieldName = EmpiriaString.ToString(dataRow["IdFieldName"]);
+      this.NamedIdFieldName = EmpiriaString.ToString(dataRow["NamedIdFieldName"]);
+      this.TypeIdFieldName = EmpiriaString.ToString(dataRow["TypeIdFieldName"]);
+      this.IsAbstract = Convert.ToBoolean(dataRow["IsAbstract"]);
+      this.IsSealed = Convert.ToBoolean(dataRow["IsSealed"]);
+      this.IsHistorizable = Convert.ToBoolean(dataRow["IsHistorizable"]);
+      this.Status = (EntityStatus) char.Parse((string) dataRow["TypeStatus"]);
     }
 
 

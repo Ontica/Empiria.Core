@@ -178,7 +178,7 @@
     <value>La cuenta '{0}' está suspendida. Para poder ingresar se requiere que una persona administradora de la seguridad del sistema reactive la cuenta.</value>
   </data>
   <data name="HSTSRequired" xml:space="preserve">
-    <value>This Web API server requires a secure connection.</value>
+    <value>This Web API server requires a secure connection: (Please retry using https protocol).</value>
   </data>
   <data name="UnsafeInput" xml:space="preserve">
     <value>La información proporcionada contiene palabras o textos que podrían comprometer la seguridad del sistema. Si es necesario, se requiere darles un formato o un tratamiento especial antes de intentarlo de nuevo. El manual de uso del sistema contiene información sobre este tema.</value>

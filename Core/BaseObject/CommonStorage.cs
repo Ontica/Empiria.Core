@@ -31,7 +31,7 @@ namespace Empiria {
     }
 
 
-    static public T ParseNamedKey<T>(string namedKey) where T: CommonStorage {
+    static public T ParseNamedKey<T>(string namedKey) where T : CommonStorage {
       Assertion.Require(namedKey, nameof(namedKey));
 
       CommonStorage item = TryParse<T>($"Object_Named_Key = '{namedKey}'");
@@ -52,8 +52,8 @@ namespace Empiria {
 
 
     static public FixedList<T> GetStorageObjects<T>() where T : CommonStorage {
-      return BaseObject.GetList<T>("Object_Status <> 'X'", "Object_Name")
-                       .ToFixedList();
+      return GetList<T>("Object_Status <> 'X'", "Object_Name")
+             .ToFixedList();
     }
 
 
@@ -177,17 +177,17 @@ namespace Empiria {
 
     public T GetCategory<T>() where T : BaseObject {
       if (_categoryId == -1) {
-        return BaseObject.ParseEmpty<T>();
+        return ParseEmpty<T>();
       }
-      return BaseObject.ParseId<T>(_categoryId);
+      return ParseId<T>(_categoryId);
     }
 
 
     public T GetParent<T>() where T : BaseObject {
       if (_parentObjectId == -1) {
-        return BaseObject.ParseEmpty<T>();
+        return ParseEmpty<T>();
       }
-      return BaseObject.ParseId<T>(_parentObjectId);
+      return ParseId<T>(_parentObjectId);
     }
 
 
@@ -211,7 +211,7 @@ namespace Empiria {
 
 
     protected void SetStatus(Enum status) {
-      this.Status = Convert.ToChar(status);
+      Status = Convert.ToChar(status);
     }
 
     #endregion Methods
