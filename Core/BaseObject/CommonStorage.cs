@@ -68,7 +68,7 @@ namespace Empiria {
 
 
     static public FixedList<T> GetStorageObjects<T>() where T : CommonStorage {
-      return GetList<T>("Object_Status <> 'X'", "Object_Name")
+      return GetList<T>("Object_Status <> 'X'", "Object_Position, Object_Name")
             .ToFixedList();
     }
 
@@ -148,18 +148,24 @@ namespace Empiria {
 
     [DataField("OBJECT_START_DATE")]
     protected DateTime StartDate {
-      get; set;
+      get; private set;
     }
 
 
     [DataField("OBJECT_END_DATE")]
     protected DateTime EndDate {
-      get; set;
+      get; private set;
     }
 
 
     [DataField("OBJECT_POSTED_BY_ID")]
     public Contact PostedBy {
+      get; private set;
+    }
+
+
+    [DataField("OBJECT_POSITION")]
+    public int Position {
       get; private set;
     }
 
@@ -171,9 +177,7 @@ namespace Empiria {
 
 
     [DataField("OBJECT_STATUS", Default = 'A')]
-    private char Status {
-      get; set;
-    }
+    private char _status = 'A';
 
 
     [DataField("PARENT_OBJECT_ID")]
@@ -207,7 +211,7 @@ namespace Empiria {
 
 
     public T GetStatus<T>() where T : Enum {
-      return (T) Enum.Parse(typeof(T), ((int) this.Status).ToString());
+      return (T) Enum.Parse(typeof(T), ((int) _status).ToString());
     }
 
 
@@ -226,7 +230,7 @@ namespace Empiria {
 
 
     protected void SetStatus(Enum status) {
-      Status = Convert.ToChar(status);
+      _status = Convert.ToChar(status);
     }
 
     #endregion Methods
