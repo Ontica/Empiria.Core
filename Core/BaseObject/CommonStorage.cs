@@ -42,6 +42,15 @@ namespace Empiria {
     }
 
 
+    static protected T ParseWithCode<T>(string code) where T : CommonStorage {
+      T item = TryParseWithCode<T>(code);
+
+      Assertion.Require(item, $"An object of type {typeof(T)} with code '{code}' was not found in common storage.");
+
+      return item;
+    }
+
+
     static public T TryParseNamedKey<T>(string namedKey) where T : CommonStorage {
       Assertion.Require(namedKey, nameof(namedKey));
 
@@ -51,11 +60,17 @@ namespace Empiria {
     }
 
 
-    static public FixedList<T> GetStorageObjects<T>() where T : CommonStorage {
-      return GetList<T>("Object_Status <> 'X'", "Object_Name")
-             .ToFixedList();
+    static protected T TryParseWithCode<T>(string code) where T : CommonStorage {
+      Assertion.Require(code, nameof(code));
+
+      return TryParse<T>($"Object_Code = '{code}'");
     }
 
+
+    static public FixedList<T> GetStorageObjects<T>() where T : CommonStorage {
+      return GetList<T>("Object_Status <> 'X'", "Object_Name")
+            .ToFixedList();
+    }
 
     #endregion Constructors and parsers
 
