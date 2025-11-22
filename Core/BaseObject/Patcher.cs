@@ -37,19 +37,6 @@ namespace Empiria {
     }
 
 
-    static public DateTime Patch(DateTime newValue, DateTime defaultValue) {
-      if (newValue != ExecutionServer.DateMaxValue &&
-          newValue != ExecutionServer.DateMinValue &&
-          newValue != DateTime.MinValue &&
-          newValue != DateTime.MaxValue &&
-          newValue != new DateTime()) {
-        return newValue;
-      }
-
-      return defaultValue;
-    }
-
-
     static public bool Patch(bool? newValue, bool defaultValue) {
       if (newValue.HasValue) {
         return newValue.Value;
@@ -73,6 +60,26 @@ namespace Empiria {
       return defaultValue;
     }
 
+
+    static public DateTime Patch(DateTime? newValue, DateTime defaultValue) {
+      if (newValue.HasValue) {
+        return newValue.Value;
+      }
+      return defaultValue;
+    }
+
+
+    static public DateTime Patch(DateTime newValue, DateTime defaultValue) {
+      if (newValue != ExecutionServer.DateMaxValue &&
+          newValue != ExecutionServer.DateMinValue &&
+          newValue != DateTime.MinValue &&
+          newValue != DateTime.MaxValue &&
+          newValue != new DateTime()) {
+        return newValue;
+      }
+
+      return defaultValue;
+    }
 
     static public U Patch<U>(int newValue, U defaultValue) where U : BaseObject {
       if (newValue > 0) {
