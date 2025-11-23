@@ -13,9 +13,12 @@ using System.IO;
 namespace Empiria.Storage {
 
   /// <summary>Holds information about a physical file directory or a documents web site.</summary>
-  public class FileLocation : GeneralObject {
+  public class FileLocation : CommonStorage {
 
     #region Constructors and parsers
+
+    static private string DEFAULT_BASE_FILE_DIRECTORY = ConfigurationData.GetString("Documents.Storage.Path");
+    static private string DEFAULT_BASE_URL = ConfigurationData.GetString("Documents.Storage.BaseUrl");
 
     static public FileLocation Parse(int id) => ParseId<FileLocation>(id);
 
@@ -29,20 +32,40 @@ namespace Empiria.Storage {
 
     public string BaseUrl {
       get {
-        return ExtendedDataField.Get<string>("baseUrl");
+        if (string.IsNullOrEmpty(RelativeUrl) && !string.IsNullOrEmpty(RelativePath)) {
+          return $"{DEFAULT_BASE_URL}/{RelativePath}";
+        }
+        return $"{DEFAULT_BASE_URL}/{RelativeUrl}";
       }
     }
 
 
     public string BaseFileDirectory {
       get {
-        return ExtendedDataField.Get<string>("baseFileDirectory");
+        if (string.IsNullOrEmpty(RelativePath)) {
+          return DEFAULT_BASE_FILE_DIRECTORY;
+        }
+        return Path.Combine(DEFAULT_BASE_FILE_DIRECTORY, RelativePath);
+      }
+    }
+
+
+    private string RelativePath {
+      get {
+        return base.ExtData.Get("relativePath", string.Empty);
+      }
+    }
+
+
+    private string RelativeUrl {
+      get {
+        return base.ExtData.Get("relativeUrl", string.Empty);
       }
     }
 
     #endregion Properties
 
-    #region Mehtods
+    #region Methods
 
     public string GetFileFullLocalName(FileData fileData) {
       return Path.Combine(BaseFileDirectory, fileData.FileName);
