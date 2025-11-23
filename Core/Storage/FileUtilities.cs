@@ -110,6 +110,8 @@ namespace Empiria.Storage {
       EnsureExistsFolderForFullPath(fullPath);
 
       using (FileStream outputStream = File.OpenWrite(fullPath)) {
+        file.Stream.Position = 0;
+
         file.Stream.CopyTo(outputStream);
       }
 
