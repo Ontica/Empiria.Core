@@ -11,7 +11,7 @@
 namespace Empiria.Parties {
 
   /// <summary>Represents a government entity or agency, an enterprise or a non-profit organization.</summary>
-  public class Organization : Party {
+  public class Organization : Party, ITaxableParty {
 
     static private int PRIMARY_ORGANIZATION_ID = ConfigurationData.Get("PrimaryOrganizationId", 1);
 
