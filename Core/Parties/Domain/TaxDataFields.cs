@@ -20,6 +20,11 @@ namespace Empiria.Parties {
     } = string.Empty;
 
 
+    public string TaxEntityKind {
+      get; set;
+    } = string.Empty;
+
+
     public string TaxEntityName {
       get; set;
     } = string.Empty;
@@ -34,15 +39,20 @@ namespace Empiria.Parties {
       get; set;
     } = string.Empty;
 
+
+    public string SubledgerAccount {
+      get; set;
+    } = string.Empty;
+
+
     #endregion Properties
 
     #region Methods
 
     internal void EnsureValid() {
+      TaxCode = EmpiriaString.Clean(TaxCode);
+
       Assertion.Require(TaxCode, nameof(TaxCode));
-      Assertion.Require(TaxEntityName, nameof(TaxEntityName));
-      Assertion.Require(TaxRegimeCode, nameof(TaxRegimeCode));
-      Assertion.Require(TaxZipCode, nameof(TaxZipCode));
     }
 
     #endregion Methods
