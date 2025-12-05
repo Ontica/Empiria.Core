@@ -11,7 +11,7 @@
 namespace Empiria.Parties {
 
   /// <summary>Represents a human person.</summary>
-  public class Person : Party, INamedEntity {
+  public class Person : Party, INamedEntity, ITaxableParty {
 
     #region Constructors and parsers
 
@@ -86,11 +86,6 @@ namespace Empiria.Parties {
       private set {
         ExtendedData.Set("person/isFemale", value);
       }
-    }
-
-    [DataField("PARTY_CODE")]
-    public string Code {
-      get; protected set;
     }
 
 

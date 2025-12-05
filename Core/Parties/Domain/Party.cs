@@ -90,6 +90,12 @@ namespace Empiria.Parties {
     }
 
 
+    [DataField("PARTY_CODE")]
+    public string Code {
+      get; protected set;
+    }
+
+
     [DataField("PARTY_IDENTIFICATORS")]
     private string _identificators = string.Empty;
 

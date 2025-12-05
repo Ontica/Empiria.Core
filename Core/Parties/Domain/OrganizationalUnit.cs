@@ -46,13 +46,6 @@ namespace Empiria.Parties {
       }
     }
 
-
-    [DataField("PARTY_CODE")]
-    public string Code {
-      get; protected set;
-    }
-
-
     string INamedEntity.Name {
       get {
         return FullName;
