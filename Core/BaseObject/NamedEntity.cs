@@ -83,6 +83,14 @@ namespace Empiria {
     }
 
 
+    public NamedEntityDto(string name) {
+      Assertion.Require(name, nameof(name));
+
+      this.UID = name;
+      this.Name = name;
+    }
+
+
     public NamedEntityDto(string uid, string name) {
       Assertion.Require(uid, nameof(uid));
       Assertion.Require(name, nameof(name));
