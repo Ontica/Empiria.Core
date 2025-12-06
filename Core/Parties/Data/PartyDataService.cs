@@ -27,8 +27,8 @@ namespace Empiria.Parties.Data {
                 $"PARTY_UID = '{Guid.NewGuid().ToString()}', " +
                 $"PARTY_HISTORIC_ID = {party.Id}, " +
                 $"PARTY_KEYWORDS = '{party.Keywords}', " +
-                $"PARTY_POSTING_TIME = {DataCommonMethods.FormatSqlDbDate(new DateTime(2025, 06, 25))}, " +
-                $"PARTY_START_DATE = {DataCommonMethods.FormatSqlDbDate(new DateTime(2025, 06, 25))}, " +
+                $"PARTY_POSTING_TIME = {DataCommonMethods.FormatSqlDbDate(new DateTime(2025, 01, 25))}, " +
+                $"PARTY_START_DATE = {DataCommonMethods.FormatSqlDbDate(new DateTime(2025, 01, 25))}, " +
                 $"PARTY_END_DATE = {DataCommonMethods.FormatSqlDbDate(new DateTime(2078, 12, 31))} " +
                 $"WHERE PARTY_ID = {party.Id}";
 
@@ -122,10 +122,10 @@ namespace Empiria.Parties.Data {
 
     static internal void WriteParty(Party o) {
       var op = DataOperation.Parse("write_party",
-                 o.Id, o.UID, o.PartyType.Id,
-                 o.Name, o.ExtendedData.ToString(), o.Keywords,
-                 o.HistoricId, o.StartDate, o.EndDate,
-                 o.PostedById, o.PostingTime, (char) o.Status);
+                 o.Id, o.UID, o.PartyType.Id, o.Code, o.Name, o.Identificators,
+                 o.Roles, o.Tags, o.ExtendedData.ToString(), o.Keywords, o.HistoricId,
+                 o.StartDate, o.EndDate, o.ParentId, o.PostedById, o.PostingTime,
+                 (char) o.Status, o.Contact.Id);
 
       DataWriter.Execute(op);
     }

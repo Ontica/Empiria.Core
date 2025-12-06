@@ -20,7 +20,27 @@ namespace Empiria.Parties {
     } = string.Empty;
 
 
+    public string Code {
+      get; set;
+    } = string.Empty;
+
+
+    public string[] Identificators {
+      get; set;
+    } = new string[0];
+
+
+    public string[] Tags {
+      get; set;
+    } = new string[0];
+
+
     public DateTime StartDate {
+      get; set;
+    } = DateTime.Today;
+
+
+    public DateTime EndDate {
       get; set;
     } = ExecutionServer.DateMaxValue;
 

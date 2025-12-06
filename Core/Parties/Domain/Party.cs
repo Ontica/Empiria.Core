@@ -133,7 +133,7 @@ namespace Empiria.Parties {
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(Name, _identificators, _tags);
+        return EmpiriaString.BuildKeywords(Name, Code, _identificators, _tags);
       }
     }
 
@@ -157,7 +157,7 @@ namespace Empiria.Parties {
 
 
     [DataField("PARTY_PARENT_ID")]
-    protected int ParentId {
+    protected internal int ParentId {
       get; private set;
     }
 
@@ -230,8 +230,12 @@ namespace Empiria.Parties {
 
 
     protected void Update(PartyFields fields) {
-      this.Name = Patcher.PatchClean(fields.Name, this.Name);
-      this.StartDate = fields.StartDate == ExecutionServer.DateMaxValue ? StartDate : fields.StartDate;
+      Name = Patcher.PatchClean(fields.Name, this.Name);
+      Code = Patcher.PatchClean(fields.Code, this.Code);
+      _identificators = EmpiriaString.Tagging(fields.Identificators);
+      _tags = EmpiriaString.Tagging(fields.Tags);
+      StartDate = Patcher.Patch(fields.StartDate, DateTime.Today);
+      EndDate = Patcher.Patch(fields.EndDate, ExecutionServer.DateMaxValue);
     }
 
     #endregion Methods
