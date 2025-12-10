@@ -27,6 +27,8 @@ namespace Empiria.StateEnums {
 
     Returned = 'R',
 
+    Rejected = 'J',
+
     Suspended = 'S',
 
     Canceled = 'D',
@@ -136,6 +138,9 @@ namespace Empiria.StateEnums {
 
         case TransactionStatus.Returned:
           return "Regresada";
+
+        case TransactionStatus.Rejected:
+          return "Rechazada";
 
         case TransactionStatus.Suspended:
           return "Suspendida";
