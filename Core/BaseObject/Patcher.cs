@@ -62,10 +62,12 @@ namespace Empiria {
 
 
     static public DateTime Patch(DateTime? newValue, DateTime defaultValue) {
-      if (newValue.HasValue) {
-        return newValue.Value;
+
+      if (!newValue.HasValue) {
+        return defaultValue;
       }
-      return defaultValue;
+
+      return Patch(newValue.Value, defaultValue);
     }
 
 
