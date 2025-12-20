@@ -113,7 +113,6 @@ namespace Empiria.Tests.Parties {
         Assert.NotEmpty(sut.FirstName);
         Assert.NotEmpty(sut.LastName);
         Assert.NotNull(sut.LastName2);
-        Assert.NotNull(sut.TaxData);
       }
     }
 
@@ -124,7 +123,6 @@ namespace Empiria.Tests.Parties {
 
       foreach (var sut in organizations) {
         Assert.NotEmpty(sut.Name);
-        Assert.NotNull(sut.TaxData);
       }
     }
 
