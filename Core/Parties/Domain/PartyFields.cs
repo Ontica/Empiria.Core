@@ -35,6 +35,11 @@ namespace Empiria.Parties {
     } = new string[0];
 
 
+    public string[] Roles {
+      get; set;
+    } = new string[0];
+
+
     public DateTime StartDate {
       get; set;
     } = DateTime.Today;

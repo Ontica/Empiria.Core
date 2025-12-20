@@ -127,7 +127,7 @@ namespace Empiria.Parties {
 
     [DataField("PARTY_EXT_DATA")]
     public JsonObject ExtendedData {
-      get; private set;
+      get; protected set;
     }
 
 
@@ -234,6 +234,7 @@ namespace Empiria.Parties {
       Code = Patcher.PatchClean(fields.Code, this.Code);
       _identificators = EmpiriaString.Tagging(fields.Identificators);
       _tags = EmpiriaString.Tagging(fields.Tags);
+      _roles = EmpiriaString.Tagging(fields.Roles);
       StartDate = Patcher.Patch(fields.StartDate, DateTime.Today);
       EndDate = Patcher.Patch(fields.EndDate, ExecutionServer.DateMaxValue);
     }

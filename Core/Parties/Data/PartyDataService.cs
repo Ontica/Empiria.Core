@@ -122,9 +122,10 @@ namespace Empiria.Parties.Data {
 
     static internal void WriteParty(Party o) {
       var op = DataOperation.Parse("write_party",
-                 o.Id, o.UID, o.PartyType.Id, o.Code, o.Name, o.Identificators,
-                 o.Roles, o.Tags, o.ExtendedData.ToString(), o.Keywords, o.HistoricId,
-                 o.StartDate, o.EndDate, o.ParentId, o.PostedById, o.PostingTime,
+                 o.Id, o.UID, o.PartyType.Id, o.Code, o.Name,
+                 EmpiriaString.Tagging(o.Identificators), EmpiriaString.Tagging(o.Roles),
+                 EmpiriaString.Tagging(o.Tags), o.ExtendedData.ToString(), o.Keywords,
+                 o.HistoricId, o.StartDate, o.EndDate, o.ParentId, o.PostedById, o.PostingTime,
                  (char) o.Status, o.Contact.Id);
 
       DataWriter.Execute(op);
