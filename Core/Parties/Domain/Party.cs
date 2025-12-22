@@ -189,11 +189,6 @@ namespace Empiria.Parties {
 
     #region Methods
 
-    public void ChangeStatus(EntityStatus status) {
-      this.Status = status;
-    }
-
-
     public FixedList<PartyRole> GetSecurityRoles() {
       return PartyDataService.GetPartySecurityRoles(this);
     }
@@ -228,6 +223,10 @@ namespace Empiria.Parties {
       PartyDataService.WriteParty(this);
     }
 
+
+    protected void SetStatus(EntityStatus status) {
+      Status = status;
+    }
 
     protected void Update(PartyFields fields) {
       Name = Patcher.PatchClean(fields.Name, this.Name);
