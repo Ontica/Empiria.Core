@@ -215,6 +215,13 @@ namespace Empiria {
     }
 
 
+    public bool PlaysRole(string role) {
+      Assertion.Require(role, nameof(role));
+
+      return this.Roles.Contains(role);
+    }
+
+
     protected void SetParent<T>(T parent) where T : BaseObject {
       Assertion.Require(parent, nameof(parent));
 
