@@ -118,8 +118,8 @@ namespace Empiria.Data {
       get {
         return EmpiriaString.IsInList(this.Name,
                                       "apdDataLog", "apdAuditTrail", "apdLogEntry",
-                                      "apdUserSession", "doCloseUserSession",
-                                      "doOptimization");
+                                      "apdOperationLog", "apdUserSession", "doCloseUserSession",
+                                      "doCloseAllUserSessions", "doOptimization");
       }
     }
 
