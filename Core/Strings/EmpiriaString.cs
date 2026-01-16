@@ -552,9 +552,6 @@ namespace Empiria {
       string[] unsafePatterns =         {
           @"(""|\s|^)(select|insert|update|delete|drop|truncate|create|alter|exec|execute)\s",
           @"(""|\s|^)(xp|sp|apd|do|qry|write)_\S",
-          @"--",  @"\/\*",  @"\*\/",
-          @";.*--",  @"';.*--",  @"../",  @"..\\",
-          @"(['\""]?)[a-zA-Z0-9_@.\-+]+\1\s*(=|==|<>|!=|<|<=|>|>=)\s*(['\""]?)[a-zA-Z0-9_@.\-+]+\3",
           @"javascript:", @"vbscript:", @"onload\s*=",
           @"<script\s", @"</script>", @"function\s*\(", @"sub\s*\(", @"alert\s*\(",
           @"<html\s", @"</html>", @"<head\s", @"</head>", @"<body\s", @"</body>",
@@ -750,7 +747,7 @@ namespace Empiria {
       }
 
       if (source.Length > maxLength) {
-        return source.Substring(maxLength - 1);
+        return source.Substring(source.Length - maxLength - 1);
       } else {
         return source;
       }
@@ -789,7 +786,6 @@ namespace Empiria {
     static public DateTime ToDate(string source) {
       return ToDateTime(source, "dd/MMM/yyyy");
     }
-
 
     static public DateTime ToDateTime(string source) {
       if (source.Contains(":")) {
