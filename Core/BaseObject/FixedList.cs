@@ -75,6 +75,22 @@ namespace Empiria {
       return mergedList.ToFixedList();
     }
 
+
+    static public FixedList<U> MergeDistinct<U>(IEnumerable<U> list1, IEnumerable<U> list2) {
+      Assertion.Require(list1, nameof(list1));
+      Assertion.Require(list2, nameof(list2));
+
+      var mergedList = new List<U>(list1);
+
+      foreach (var item in list2) {
+        if (!mergedList.Contains(item)) {
+          mergedList.Add(item);
+        }
+      }
+
+      return mergedList.ToFixedList();
+    }
+
     #endregion Constructors and parsers
 
     #region Methods
