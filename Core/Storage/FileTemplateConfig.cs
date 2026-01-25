@@ -155,11 +155,25 @@ namespace Empiria.Storage {
 
     #region Methods
 
-    public string NewFilePath() {
-      var copyFileName = DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss-") + this.OriginalFileName;
+    public string CreatePdfFileName(string relativePath, string fileNamePrefix) {
+      string extension = Path.GetExtension(OriginalFileName);
 
-      return Path.Combine(GenerationStoragePath, copyFileName);
+      var temp = EmpiriaString.TrimAll(OriginalFileName, extension, string.Empty);
+
+      if (fileNamePrefix.Length != 0) {
+        temp = $"{fileNamePrefix}-{temp}";
+      }
+
+      return $"{relativePath}/{temp}-{DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss")}.pdf";
     }
+
+
+    public string NewFilePath() {
+      var newFileName = $"{DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss")}-{OriginalFileName}";
+
+      return Path.Combine(GenerationStoragePath, newFileName);
+    }
+
 
     #endregion Methods
 
