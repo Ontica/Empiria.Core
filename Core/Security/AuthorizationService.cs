@@ -7,13 +7,20 @@
 *  Summary  : Provides user authorization services.                                                          *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
-
 using Empiria.Security.Providers;
 
 namespace Empiria.Security {
 
   static public class AuthorizationService {
+
+    static public bool IsSubjectActive(IIdentifiable subject) {
+      Assertion.Require(subject, nameof(subject));
+
+      var provider = SecurityProviders.AuthorizationProvider();
+
+      return provider.IsSubjectActive(subject);
+    }
+
 
     static public bool IsSubjectInRole(IIdentifiable subject, string role) {
       Assertion.Require(subject, nameof(subject));

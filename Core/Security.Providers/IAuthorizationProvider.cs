@@ -7,12 +7,13 @@
 *  Summary  : Interface for subject authorization providers.                                                 *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 namespace Empiria.Security.Providers {
 
   /// <summary>Interface for subject authorization providers.</summary>
   public interface IAuthorizationProvider {
+
+    bool IsSubjectActive(IIdentifiable subject);
 
     bool IsSubjectInRole(IIdentifiable subject, IClientApplication clientApp, string role);
 
