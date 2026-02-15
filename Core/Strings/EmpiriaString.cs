@@ -295,6 +295,23 @@ namespace Empiria {
     }
 
 
+    static public string FirstWithValue(string value1, string value2, params string[] moreValues) {
+
+      if (!string.IsNullOrEmpty(value1)) {
+        return value1;
+      }
+      if (!string.IsNullOrEmpty(value2)) {
+        return value2;
+      }
+      for (int i = 0; i < moreValues.Length; i++) {
+        if (!string.IsNullOrEmpty(moreValues[i])) {
+          return moreValues[i];
+        }
+      }
+      return string.Empty;
+    }
+
+
     static public string Format(string source, object[] arguments) {
 
       if (source != null && arguments != null && arguments.Length != 0) {
