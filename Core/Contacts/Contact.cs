@@ -34,6 +34,9 @@ namespace Empiria.Contacts {
       return BaseObject.ParseKey<Contact>(uid);
     }
 
+    public static Contact TryParse(int id) {
+      return BaseObject.TryParse<Contact>($"ContactId = {id}");
+    }
 
     static public Contact Empty => BaseObject.ParseEmpty<Contact>();
 
