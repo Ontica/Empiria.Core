@@ -33,6 +33,12 @@ namespace Empiria.Parties {
       return GetFullList<OrganizationalUnit>("PARTY_STATUS <> 'X'", "PARTY_CODE");
     }
 
+    static public new OrganizationalUnit TryParseWithID(string orgUnitID) {
+      Assertion.Require(orgUnitID, nameof(orgUnitID));
+
+      return TryParse<OrganizationalUnit>($"PARTY_CODE = '{orgUnitID}'");
+    }
+
     #endregion Constructors and parsers
 
     #region Properties
