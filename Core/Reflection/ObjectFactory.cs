@@ -64,7 +64,6 @@ namespace Empiria.Reflection {
       } else if (convertToType == typeof(JsonObject) && value is string) {
         return (T) (object) JsonObject.Parse((string) value);
 
-
       } else if (convertToType != typeof(string) && value is IDictionary<string, object>) {
         var jsonObject = JsonObject.Parse((IDictionary<string, object>) value);
 
@@ -77,6 +76,12 @@ namespace Empiria.Reflection {
       } else if (convertToType == typeof(string)) {
 
         return (T) (object) System.Convert.ToString(value);
+
+      } else if (convertToType == typeof(List<object>) && value is List<int> list) {
+
+        object o = list.ConvertAll(x => (object) x);
+
+        return (T) o;
 
       } else {
         return (T) System.Convert.ChangeType(value, convertToType);
