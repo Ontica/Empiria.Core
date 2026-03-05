@@ -295,7 +295,8 @@ namespace Empiria {
     }
 
 
-    static public string FirstWithValue(string value1, string value2, params string[] moreValues) {
+    static public string FirstWithValue(string value1, string value2,
+                                        params string[] moreValues) {
 
       if (!string.IsNullOrEmpty(value1)) {
         return value1;

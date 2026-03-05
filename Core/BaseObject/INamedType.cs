@@ -7,7 +7,6 @@
 *  Summary  : Represents a named type.                                                                       *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
-using System;
 
 namespace Empiria {
 
@@ -30,8 +29,8 @@ namespace Empiria {
   public class NamedTypeDto {
 
     public NamedTypeDto(string type, string name) {
-      this.Type = type;
-      this.Name = name;
+      Type = type;
+      Name = name;
     }
 
     public string Type {

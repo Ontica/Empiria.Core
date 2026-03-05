@@ -221,19 +221,28 @@ namespace Empiria {
 
 
     static public string KeywordsForDistance(string source) {
+      if (String.IsNullOrWhiteSpace(source)) {
+        return string.Empty;
+      }
+
+      source = source.Replace(".", string.Empty)
+                     .Replace(",", string.Empty)
+                     .Replace(";", string.Empty);
+
       source = PrepareForDistance(source);
 
       FixedList<string> list = source.Split(' ')
-                                      .ToFixedList()
-                                      .FindAll(x => x.Length >= 3 || EmpiriaString.IsInteger(x))
-                                      .Sort((x, y) => x.CompareTo(y));
+                                     .ToFixedList()
+                                     .FindAll(x => x.Length >= 2 || EmpiriaString.IsInteger(x))
+                                     .Sort((x, y) => x.CompareTo(y));
 
-      return EmpiriaString.BuildKeywords(EmpiriaString.TrimAll(string.Join(" ", list)));
+      return EmpiriaString.TrimAll(string.Join(" ", list));
     }
 
 
     static public string PrepareForDistance(string source) {
-      return EmpiriaString.TrimAll(EmpiriaString.RemoveNoiseExtended(source)).ToLowerInvariant();
+      return EmpiriaString.TrimAll(EmpiriaString.RemoveNoise(source))
+                          .ToLowerInvariant();
     }
 
 

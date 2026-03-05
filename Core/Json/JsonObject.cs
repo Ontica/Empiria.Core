@@ -367,31 +367,30 @@ namespace Empiria.Json {
           Assertion.Require(ObjectFactory.HasParseWithIdMethod(typeof(T)),
                            $"Type {typeof(T).FullName} doesn't have defined a static Parse(int) method.");
 
-          return objectsList.ConvertAll<T>((x) => ObjectFactory.InvokeParseMethod<T>(Convert.ToInt32(x)));
+          return objectsList.ConvertAll((x) => ObjectFactory.InvokeParseMethod<T>(Convert.ToInt32(x)));
 
         } else {
 
           Assertion.Require(ObjectFactory.HasParseWithStringMethod(typeof(T)),
                            $"Type {typeof(T).FullName} doesn't have defined a static Parse(string) method.");
 
-          return objectsList.ConvertAll<T>((x) => ObjectFactory.InvokeParseMethod<T>(Convert.ToString(x)));
+          return objectsList.ConvertAll((x) => ObjectFactory.InvokeParseMethod<T>(Convert.ToString(x)));
         }
 
       } else if (ObjectFactory.IsValueObject(typeof(T))) {
 
-        return objectsList.ConvertAll<T>((x) =>
-                                         ObjectFactory.InvokeParseMethod<T>(Convert.ToString(x)));
+        return objectsList.ConvertAll((x) => ObjectFactory.InvokeParseMethod<T>(Convert.ToString(x)));
 
       } else if (ObjectFactory.HasJsonParser(typeof(T))) {
 
-        return objectsList.ConvertAll<T>(
-                  (x) => ObjectFactory.InvokeParseJsonMethod<T>(new JsonObject((IDictionary<string, Object>) x))
+        return objectsList.ConvertAll(
+                  (x) => ObjectFactory.InvokeParseJsonMethod<T>(new JsonObject((IDictionary<string, object>) x))
                );
 
       } else {
 
         try {
-          return objectsList.ConvertAll<T>((x) => ObjectFactory.Convert<T>(x));
+          return objectsList.ConvertAll((x) => ObjectFactory.Convert<T>(x));
         } catch (Exception e) {
           throw new JsonDataException(JsonDataException.Msg.JsonListTypeConvertionFails, e,
                                       listPath, typeof(T).ToString());
@@ -452,21 +451,17 @@ namespace Empiria.Json {
 
           return false;  // The item or the path to it do not exist, so there is nothing to remove
 
-        } else {
-
-          if (i == (pathMembers.Length - 1)) {  // Remove the last path item and finish
-
-            item.Remove(pathMembers[i]);
-
-            return true;
-
-          } else {    // Do nothing. Just continue processing the next path item
-
-            item = (IDictionary<string, object>) item[pathMembers[i]];
-
-          }
-
         }
+
+        if (i == (pathMembers.Length - 1)) {  // Remove the last path item and finish
+
+          item.Remove(pathMembers[i]);
+
+          return true;
+        }
+
+        // Do nothing. Just continue processing the next path item
+        item = (IDictionary<string, object>) item[pathMembers[i]];
 
       }  // for
 
