@@ -36,7 +36,13 @@ namespace Empiria.Parties {
     static public new OrganizationalUnit TryParseWithID(string orgUnitID) {
       Assertion.Require(orgUnitID, nameof(orgUnitID));
 
-      return TryParse<OrganizationalUnit>($"PARTY_CODE = '{orgUnitID}'");
+      var party = TryParse<Party>($"PARTY_CODE = '{orgUnitID}'");
+
+      if (party == null || !(party is OrganizationalUnit)) {
+        return null;
+      }
+
+      return (OrganizationalUnit) party;
     }
 
     #endregion Constructors and parsers
