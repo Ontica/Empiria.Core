@@ -10,6 +10,8 @@
 using System;
 using System.Collections.Generic;
 
+using Empiria.Ontology;
+
 namespace Empiria.Collections {
 
   /// <summary>Dynamic cached collection of BaseObject instances.</summary>
@@ -45,11 +47,15 @@ namespace Empiria.Collections {
     }
 
     public int Count {
-      get { return objects.Count; }
+      get {
+        return objects.Count;
+      }
     }
 
     public bool IsReadOnly {
-      get { return false; }
+      get {
+        return false;
+      }
     }
 
     #endregion Properties
@@ -174,6 +180,19 @@ namespace Empiria.Collections {
     }
 
 
+    internal void RemoveAll(ObjectTypeInfo typeInfo) {
+      string typeInfoName = typeInfo.Name;
+
+      lock (_locker) {
+        var toRemovekeys = objects.Keys.ToFixedList().FindAll(x => x.EndsWith("." + typeInfoName));
+
+        foreach (var key in toRemovekeys) {
+          objects.Remove(key);
+        }
+      }
+    }
+
+
     bool ICollection<BaseObject>.Remove(BaseObject item) {
       throw new NotImplementedException();
     }
@@ -193,7 +212,7 @@ namespace Empiria.Collections {
     }
 
 
-    internal T TryGetItem<T>(string itemTypeName, string namedKey) where T: BaseObject {
+    internal T TryGetItem<T>(string itemTypeName, string namedKey) where T : BaseObject {
       string objectKey = namedKey + "." + itemTypeName;
 
       lock (_locker) {

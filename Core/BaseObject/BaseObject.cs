@@ -288,6 +288,15 @@ namespace Empiria {
     }
 
 
+    static protected void RestoreCache<T>() where T : BaseObject {
+      var typeInfo = ObjectTypeInfo.Parse(typeof(T));
+
+      if (USE_CACHE_FLAG && typeInfo.StoreInstancesInCache) {
+        _cache.RemoveAll(typeInfo);
+      }
+    }
+
+
     static protected T TryParse<T>(string condition) where T : BaseObject {
       IFilter filter = Empiria.Data.SqlFilter.Parse(condition);
 
