@@ -133,7 +133,7 @@ namespace Empiria.Parties {
 
     public virtual string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(Name, Code, _identificators, _tags);
+        return Code + " " + EmpiriaString.BuildKeywords(Name, _identificators, _tags);
       }
     }
 

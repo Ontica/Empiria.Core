@@ -97,7 +97,7 @@ namespace Empiria.Parties {
 
     public override string Keywords {
       get {
-        return EmpiriaString.BuildKeywords(Code, Acronym, base.Keywords);
+        return Code + " " + EmpiriaString.BuildKeywords(Acronym, base.Keywords);
       }
     }
 
