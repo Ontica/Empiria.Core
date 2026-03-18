@@ -489,6 +489,13 @@ namespace Empiria {
     }
 
 
+    public void RestoreCache() {
+
+      if (USE_CACHE_FLAG && this.objectTypeInfo.StoreInstancesInCache) {
+        _cache.Remove(this);
+      }
+    }
+
     protected void ReclassifyAs(ObjectTypeInfo newType) {
       Assertion.Require(newType, nameof(newType));
       Assertion.Require(!this.objectTypeInfo.Equals(newType),
