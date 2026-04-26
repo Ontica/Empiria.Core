@@ -49,8 +49,9 @@ namespace Empiria.Json {
 
     static public JsonObject Parse(string jsonString) {
       if (String.IsNullOrWhiteSpace(jsonString)) {
-        return JsonObject.Empty;
+        return new JsonObject();
       }
+
       var dictionary = JsonConverter.ToDictionary(jsonString);
 
       return new JsonObject(dictionary);
