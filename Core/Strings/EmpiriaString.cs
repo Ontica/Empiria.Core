@@ -493,7 +493,7 @@ namespace Empiria {
     }
 
 
-    static public string MonthName(int month) {
+    static public string MonthName(int month, bool abbreviated = false) {
       Assertion.Require(1 <= month && month <= 12, $"Unrecognized month number {month}.");
 
       var months = new string[] {
@@ -501,6 +501,10 @@ namespace Empiria {
         "Mayo", "Junio", "Julio", "Agosto",
         "Septiembre", "Octubre", "Noviembre", "Diciembre"
       };
+
+      if (abbreviated) {
+        return months[month - 1].Substring(0, 3);
+      }
 
       return months[month - 1];
     }
