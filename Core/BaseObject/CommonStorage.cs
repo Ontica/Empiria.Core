@@ -32,11 +32,7 @@ namespace Empiria {
 
 
     static public T ParseNamedKey<T>(string namedKey) where T : CommonStorage {
-      Assertion.Require(namedKey, nameof(namedKey));
-
-      var typeInfo = ObjectTypeInfo.Parse(typeof(T));
-
-      CommonStorage item = TryParse<T>($"Object_Type_Id = {typeInfo.Id} AND Object_Named_Key = '{namedKey}'");
+      T item = TryParseNamedKey<T>(namedKey);
 
       Assertion.Require(item, $"An object with named key '{namedKey}' was not found in common storage.");
 
@@ -58,7 +54,8 @@ namespace Empiria {
 
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-      CommonStorage item = TryParse<T>($"Object_Type_Id = {typeInfo.Id} AND Object_Named_Key = '{namedKey}'");
+      CommonStorage item = TryParse<T>($"Object_Type_Id IN ({typeInfo.GetAllSubclassesFilter()}) AND " +
+                                       $"Object_Named_Key = '{namedKey}'");
 
       return (T) item;
     }
@@ -69,7 +66,8 @@ namespace Empiria {
 
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
 
-      return TryParse<T>($"Object_Type_Id = {typeInfo.Id} AND Object_Code = '{code}'");
+      return TryParse<T>($"Object_Type_Id IN ({typeInfo.GetAllSubclassesFilter()}) AND " +
+                         $"Object_Code = '{code}'");
     }
 
 
