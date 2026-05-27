@@ -63,6 +63,8 @@ namespace Empiria.StateEnums {
   /// <summary>Enumerates the different workflow stages for a transaction.</summary>
   public enum TransactionStage {
 
+    Planning,
+
     MyInbox,
 
     Pending,
