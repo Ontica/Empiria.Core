@@ -7,6 +7,7 @@
 *  Summary  : Empiria JSON serialization class that writes empty strings for DateTime special values.        *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 
 using Newtonsoft.Json;
@@ -19,9 +20,10 @@ namespace Empiria.Json {
 
     public override bool CanRead {
       get {
-        return true;
+        return false;
       }
     }
+
 
     public override bool CanWrite {
       get {
@@ -37,23 +39,39 @@ namespace Empiria.Json {
 
     public override object ReadJson(JsonReader reader, Type objectType,
                                     object existingValue, JsonSerializer serializer) {
-      if (reader.TokenType == JsonToken.String && ((string) reader.Value).Length == 0) {
-        return (DateTime) existingValue;
-      }
-      return reader.Value;
+
+      throw new NotImplementedException();
+
+      //if (existingValue == null) {
+      //  return ExecutionServer.DateMaxValue;
+      //} else {
+      //  return (DateTime) existingValue;
+      //}
+
+
+      //if (reader.TokenType == JsonToken.Date) {
+      //  return (DateTime) existingValue;
+      //}
+      //if (reader.TokenType == JsonToken.String && ((string) reader.Value).Length != 0) {
+      //  return (DateTime) existingValue;
+      //}
+      //if (reader.TokenType == JsonToken.String && ((string) reader.Value).Length == 0) {
+      //  return existingValue ?? ExecutionServer.DateMinValue;
+      //}
+      //return reader.Value;
     }
 
 
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
       DateTime date = (DateTime) value;
 
-      if (date != ExecutionServer.DateMinValue &&
-          date != ExecutionServer.DateMaxValue) {
+      if (ExecutionServer.IsMinOrMaxDate(date)) {
 
-        serializer.Serialize(writer, date.ToString(serializer.DateFormatString));
+        serializer.Serialize(writer, String.Empty);   // Write empty strings for Empiria Date special values
 
       } else {
-        serializer.Serialize(writer, String.Empty);   // Write empty strings for Empiria Date special values
+
+        serializer.Serialize(writer, date.ToString(serializer.DateFormatString));
 
       }
     }
