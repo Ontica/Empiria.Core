@@ -29,14 +29,15 @@ namespace Empiria.Parties {
 
     static public new OrganizationalUnit Empty => ParseEmpty<OrganizationalUnit>();
 
-    static public FixedList<OrganizationalUnit> GetListFor(Organization organization) {
+    static public FixedList<OrganizationalUnit> GetList() {
       return GetFullList<OrganizationalUnit>("PARTY_STATUS <> 'X'", "PARTY_CODE");
     }
 
     static public new OrganizationalUnit TryParseWithID(string orgUnitID) {
       Assertion.Require(orgUnitID, nameof(orgUnitID));
 
-      var party = TryParse<Party>($"PARTY_CODE = '{orgUnitID}'");
+
+      var party = TryParse<Party>($"PARTY_TYPE_ID = {Empty.PartyType.Id} AND PARTY_CODE = '{orgUnitID}'");
 
       if (party == null || !(party is OrganizationalUnit)) {
         return null;
