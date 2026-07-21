@@ -34,7 +34,8 @@ namespace Empiria {
     static public T ParseNamedKey<T>(string namedKey) where T : CommonStorage {
       T item = TryParseNamedKey<T>(namedKey);
 
-      Assertion.Require(item, $"An object with named key '{namedKey}' was not found in common storage.");
+      Assertion.Require(item, $"An object of type {typeof(T)} with named key '{namedKey}' " +
+                              $"was not found in common storage.");
 
       return (T) item;
     }
@@ -43,7 +44,8 @@ namespace Empiria {
     static protected T ParseWithCode<T>(string code) where T : CommonStorage {
       T item = TryParseWithCode<T>(code);
 
-      Assertion.Require(item, $"An object of type {typeof(T)} with code '{code}' was not found in common storage.");
+      Assertion.Require(item, $"An object of type {typeof(T)} with code '{code}' " +
+                              $"was not found in common storage.");
 
       return item;
     }

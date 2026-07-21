@@ -25,6 +25,8 @@ namespace Empiria.Storage {
 
     Xml,
 
+    Zip,
+
     Unknown,
 
   }  // enum FileType
