@@ -320,6 +320,12 @@ namespace Empiria.Ontology {
       return (this.Id == obj.Id);
     }
 
+
+    public bool Distinct(MetaModelType obj) {
+      return !Equals(obj);
+    }
+
+
     public override int GetHashCode() {
       return (this.Id).GetHashCode();
     }
