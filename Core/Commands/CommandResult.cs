@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Linq;
+
 namespace Empiria.Commands {
 
   /// <summary>Output DTO used to return the results of a command execution.</summary>
@@ -53,7 +55,7 @@ namespace Empiria.Commands {
 
 
     public FixedList<NamedEntityDto> Warnings {
-      get;
+      get; private set;
     }
 
 
@@ -65,6 +67,20 @@ namespace Empiria.Commands {
     public FixedList<CommandTotals> TransactionTotals {
       get;
     }
+
+
+    public void AddWarning(NamedEntityDto warning) {
+      Assertion.Require(warning, nameof(warning));
+
+      Warnings = new FixedList<NamedEntityDto>(Warnings.ToArray()
+                                                       .ToList()
+                                                       .Append(warning));
+
+      if (TransactionTotals.Count != 0) {
+        TransactionTotals[0].WarningsCount++;
+      }
+    }
+
 
   }  // class CommandResult
 
@@ -115,7 +131,7 @@ namespace Empiria.Commands {
 
 
     public int WarningsCount {
-      get;
+      get; internal set;
     }
 
   }  // class CommandTotals
