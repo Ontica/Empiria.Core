@@ -8,6 +8,8 @@
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
 
+using System.Collections.Generic;
+
 namespace Empiria.Parties {
 
   /// <summary>Represents an organizational unit that is a part of an organization.</summary>
@@ -103,6 +105,33 @@ namespace Empiria.Parties {
     }
 
     #endregion Properties
+
+    #region Methods
+
+    public FixedList<OrganizationalUnit> GetAllChildren() {
+      if (this.IsEmptyInstance) {
+        return new FixedList<OrganizationalUnit>();
+      }
+
+      var result = new List<OrganizationalUnit>(1000);
+
+      foreach (var child in GetChildren()) {
+        result.Add(child);
+        result.AddRange(child.GetAllChildren());
+      }
+
+      return result.ToFixedList();
+    }
+
+
+    public FixedList<OrganizationalUnit> GetChildren() {
+      if (this.IsEmptyInstance) {
+        return new FixedList<OrganizationalUnit>();
+      }
+      return GetFullList<OrganizationalUnit>($"PARTY_PARENT_ID = {this.Id} AND PARTY_STATUS <> 'X'", "PARTY_CODE");
+    }
+
+    #endregion Methods
 
   } // class OrganizationalUnit
 

@@ -49,6 +49,15 @@ namespace Empiria.Tests.Parties {
 
 
     [Fact]
+    public void Should_Get_All_Organizational_Unit_Children() {
+      var orgUnit = OrganizationalUnit.Parse(PartiesTestingConstants.ORGANIZATIONAL_UNIT_ID);
+      var sut = orgUnit.GetAllChildren();
+
+      Assert.NotNull(sut);
+    }
+
+
+    [Fact]
     public void Should_Get_An_Organizational_Unit() {
       var sut = OrganizationalUnit.Parse(PartiesTestingConstants.ORGANIZATIONAL_UNIT_ID);
 
