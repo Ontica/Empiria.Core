@@ -11,6 +11,7 @@
 using System;
 
 using Empiria.Contacts;
+using Empiria.Data;
 using Empiria.Json;
 using Empiria.Ontology;
 
@@ -244,6 +245,25 @@ namespace Empiria {
 
     protected void SetStatus(Enum status) {
       _status = Convert.ToChar(status);
+    }
+
+
+    protected override void OnSave() {
+      WriteCommonStorageObject(this);
+    }
+
+
+    static private void WriteCommonStorageObject(CommonStorage o) {
+      var op = DataOperation.Parse("write_common_storage",
+                    o.Id, o.UID, o.GetEmpiriaType().Id, o._categoryId, o.Name,
+                    o.NamedKey, o.Code, o.Description,
+                    o.Identificators.ToString(), o.Tags.ToString(), o.Roles.ToString(),
+                   o.ExtData.ToString(), o.Keywords, o.HistoricId, o.StartDate,
+                    o.EndDate, o._parentObjectId, o.Position, o.PostingTime,
+                    o.PostedBy.Id, o._status);
+
+
+      DataWriter.Execute(op);
     }
 
     #endregion Methods
