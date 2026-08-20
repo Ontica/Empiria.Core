@@ -108,12 +108,16 @@ namespace Empiria.Parties {
 
     #region Methods
 
-    public FixedList<OrganizationalUnit> GetAllChildren() {
+    public FixedList<OrganizationalUnit> GetAllChildren(bool includeRoot = false) {
       if (this.IsEmptyInstance) {
         return new FixedList<OrganizationalUnit>();
       }
 
       var result = new List<OrganizationalUnit>(1000);
+
+      if (includeRoot) {
+        result.Add(this);
+      }
 
       foreach (var child in GetChildren()) {
         result.Add(child);
