@@ -343,81 +343,49 @@ namespace Empiria {
 
 
     static public bool IsBoolean(string source) {
-      try {
-
-        if (string.IsNullOrEmpty(source)) {
-          return false;
-        }
-
-        bool sourceValue = ToBoolean(source);
-
-        return true;
-
-      } catch {
+      if (string.IsNullOrEmpty(source)) {
         return false;
       }
+      return TryToBoolean(source).HasValue;
     }
 
     static public bool IsCurrency(string source) {
-      try {
-
-        if (string.IsNullOrEmpty(source)) {
-          return false;
-        }
-        if (source.IndexOf(".") >= 0) {
-          source = source.TrimStart("0".ToCharArray());
-        }
-        if (source.StartsWith(".")) {
-          source = "0" + source;
-        }
-
-        var sourceValue = decimal.Parse(source);
-
-        return true;
-
-      } catch {
+      if (string.IsNullOrEmpty(source)) {
         return false;
       }
+      if (source.IndexOf(".") >= 0) {
+        source = source.TrimStart("0".ToCharArray());
+      }
+      if (source.StartsWith(".")) {
+        source = "0" + source;
+      }
+      return decimal.TryParse(source, out _);
     }
 
 
     static public bool IsCurrency(string source, string format) {
-
-      try {
-        if (string.IsNullOrEmpty(source)) {
-          return false;
-        }
-        if (source.IndexOf(".") >= 0) {
-          source = source.TrimStart("0".ToCharArray());
-        }
-        if (source.StartsWith(".")) {
-          source = "0" + source;
-        }
-
-        decimal sourceValue = decimal.Parse(source);
-
-        return source == sourceValue.ToString(format);
-
-      } catch {
-
+      if (string.IsNullOrEmpty(source)) {
         return false;
       }
+      if (source.IndexOf(".") >= 0) {
+        source = source.TrimStart("0".ToCharArray());
+      }
+      if (source.StartsWith(".")) {
+        source = "0" + source;
+      }
+      if (!decimal.TryParse(source, out decimal sourceValue)) {
+        return false;
+      }
+      return source == sourceValue.ToString(format);
     }
 
 
     static public bool IsDateTime(string source, string format) {
-
-      try {
-        if (string.IsNullOrEmpty(source)) {
-          return false;
-        }
-        DateTime temp = DateTime.ParseExact(source, format, DateTimeFormatInfo.InvariantInfo);
-
-        return true;
-
-      } catch {
+      if (string.IsNullOrEmpty(source)) {
         return false;
       }
+      return DateTime.TryParseExact(source, format, DateTimeFormatInfo.InvariantInfo,
+                                    DateTimeStyles.None, out _);
     }
 
 
@@ -435,45 +403,33 @@ namespace Empiria {
 
 
     static public bool IsDouble(string source) {
-      try {
-        if (string.IsNullOrEmpty(source)) {
-          return false;
-        }
-        if (source.IndexOf(".") >= 0) {
-          source = source.TrimStart("0".ToCharArray());
-        }
-        if (source.StartsWith(".")) {
-          source = "0" + source;
-        }
-        double sourceValue = double.Parse(source);
-
-        return true;
-
-      } catch {
+      if (string.IsNullOrEmpty(source)) {
         return false;
       }
+      if (source.IndexOf(".") >= 0) {
+        source = source.TrimStart("0".ToCharArray());
+      }
+      if (source.StartsWith(".")) {
+        source = "0" + source;
+      }
+      return double.TryParse(source, out _);
     }
 
 
     static public bool IsDouble(string source, string format) {
-      try {
-        if (string.IsNullOrEmpty(source)) {
-          return false;
-        }
-        if (source.IndexOf(".") >= 0) {
-          source = source.TrimStart("0".ToCharArray());
-        }
-        if (source.StartsWith(".")) {
-          source = "0" + source;
-        }
-
-        double sourceValue = double.Parse(source);
-
-        return source == sourceValue.ToString(format);
-
-      } catch {
+      if (string.IsNullOrEmpty(source)) {
         return false;
       }
+      if (source.IndexOf(".") >= 0) {
+        source = source.TrimStart("0".ToCharArray());
+      }
+      if (source.StartsWith(".")) {
+        source = "0" + source;
+      }
+      if (!double.TryParse(source, out double sourceValue)) {
+        return false;
+      }
+      return source == sourceValue.ToString(format);
     }
 
 
@@ -777,15 +733,16 @@ namespace Empiria {
 
 
     static public bool? TryToBoolean(string source) {
-      source = source.ToUpperInvariant();
+      source = Clean(source).ToUpperInvariant();
 
       if (source == "1" || source == "Y" || source == "T" || source == "S" || source == "V" ||
-        source == "TRUE" || source == "SI" || source == "SÍ" || source == "VERDADERO") {
+          source == "TRUE" || source == "YES" || source == "SI" || source == "SÍ" || source == "VERDADERO") {
+
         return true;
       }
 
       if (source == "0" || source == "N" || source == "F" || source == "FALSE" ||
-        source == "NO" || source == "FALSO") {
+          source == "NO" || source == "FALSE" || source == "FALSO") {
         return false;
       }
 
@@ -808,6 +765,7 @@ namespace Empiria {
     static public DateTime ToDate(string source) {
       return ToDateTime(source, "dd/MMM/yyyy");
     }
+
 
     static public DateTime ToDateTime(string source) {
       if (source.Contains(":")) {
@@ -968,7 +926,7 @@ namespace Empiria {
 
     #endregion Public methods
 
-    #region Private methods
+    #region Helpers
 
     static private bool IsPrepositionOrConjuntion(string token) {
       var noiseTokens = new string[] { " ", "y", "o", "a", "e", "ó", "la", "el", "los", "las", "lo",
@@ -984,7 +942,7 @@ namespace Empiria {
       return false;
     }
 
-    #endregion Private methods
+    #endregion Helpers
 
   }  // class EmpiriaString
 
