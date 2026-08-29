@@ -155,7 +155,16 @@ namespace Empiria.Storage {
 
     #region Methods
 
+    public string CreatePdfFileName(string relativePath) {
+      return CreatePdfFileName(relativePath, string.Empty);
+    }
+
+
     public string CreatePdfFileName(string relativePath, string fileNamePrefix) {
+      Assertion.Require(relativePath, nameof(relativePath));
+
+      fileNamePrefix = fileNamePrefix ?? string.Empty;
+
       string extension = Path.GetExtension(OriginalFileName);
 
       var temp = EmpiriaString.TrimAll(OriginalFileName, extension, string.Empty);
