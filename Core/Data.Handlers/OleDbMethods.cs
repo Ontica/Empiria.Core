@@ -110,9 +110,8 @@ namespace Empiria.Data.Handlers {
                                      (OleDbConnection) transaction.Connection,
                                      (OleDbTransaction) transaction);
       try {
-        operation.PrepareCommand(command);
 
-        TryOpenConnection((OleDbConnection) transaction.Connection);
+        operation.PrepareCommand(command);
 
         return command.ExecuteNonQuery();
 
@@ -121,7 +120,7 @@ namespace Empiria.Data.Handlers {
 
       } catch (Exception exception) {
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery,
-                                       exception,  operation.SourceName, operation.ParametersToString());
+                                       exception, operation.SourceName, operation.ParametersToString());
 
       } finally {
         command.Parameters.Clear();

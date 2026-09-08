@@ -156,21 +156,23 @@ namespace Empiria.Data.Handlers {
                                   (SqlTransaction) transaction);
 
       try {
-        operation.PrepareCommand(command);
 
-        TryOpenConnection((SqlConnection) transaction.Connection);
+        operation.PrepareCommand(command);
 
         return command.ExecuteNonQuery();
 
       } catch (ServiceException) {
+
         throw;
 
       } catch (Exception exception) {
+
         throw new EmpiriaDataException(EmpiriaDataException.Msg.CannotExecuteActionQuery,
                                        exception,
                                        operation.SourceName, operation.ParametersToString());
 
       } finally {
+
         command.Parameters.Clear();
       }
     }
