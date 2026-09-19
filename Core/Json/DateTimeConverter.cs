@@ -17,10 +17,9 @@ namespace Empiria.Json {
   ///<summary>Empiria JSON serialization class that writes empty strings for DateTime special values.</summary>
   public class DateTimeConverter : Newtonsoft.Json.Converters.DateTimeConverterBase {
 
-
     public override bool CanRead {
       get {
-        return false;
+        return true;
       }
     }
 
@@ -40,25 +39,32 @@ namespace Empiria.Json {
     public override object ReadJson(JsonReader reader, Type objectType,
                                     object existingValue, JsonSerializer serializer) {
 
-      throw new NotImplementedException();
+      if (reader.TokenType == JsonToken.Date) {
 
-      //if (existingValue == null) {
-      //  return ExecutionServer.DateMaxValue;
-      //} else {
-      //  return (DateTime) existingValue;
-      //}
+        return (DateTime) reader.Value;
 
+      } else if (reader.TokenType == JsonToken.String) {
 
-      //if (reader.TokenType == JsonToken.Date) {
-      //  return (DateTime) existingValue;
-      //}
-      //if (reader.TokenType == JsonToken.String && ((string) reader.Value).Length != 0) {
-      //  return (DateTime) existingValue;
-      //}
-      //if (reader.TokenType == JsonToken.String && ((string) reader.Value).Length == 0) {
-      //  return existingValue ?? ExecutionServer.DateMinValue;
-      //}
-      //return reader.Value;
+        string stringValue = (string) reader.Value;
+
+        if (stringValue.Length == 0) {
+
+          return ExecutionServer.DateMaxValue;    // Empty strings map to Empiria Date special values
+
+        } else {
+
+          return DateTime.Parse(stringValue);
+        }
+
+      } else if (reader.TokenType == JsonToken.Null) {
+
+        return ExecutionServer.DateMaxValue;
+
+      } else {
+
+        throw Assertion.EnsureNoReachThisCode(
+                    $"Unhandled JSON token type '{reader.TokenType}' for DateTime deserialization.");
+      }
     }
 
 
