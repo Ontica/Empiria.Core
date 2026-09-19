@@ -32,6 +32,12 @@ namespace Empiria.Parties {
 
     #endregion Constructors and parsers
 
+    public new string Code {
+      get {
+        return base.Code;
+      }
+    }
+
   }  // class OperationSource
 
 }  // namespace Empiria.Parties
