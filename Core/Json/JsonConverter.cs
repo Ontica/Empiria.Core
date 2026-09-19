@@ -63,7 +63,7 @@ namespace Empiria.Json {
 
     static public bool IsValidJson(string json) {
       try {
-        JsonConvert.DeserializeObject(json);
+        JsonConvert.DeserializeObject(json, JsonSerializerDefaultSettings());
         return true;
       } catch {
         return false;
@@ -119,7 +119,7 @@ namespace Empiria.Json {
       if (jsonConverters.ContainsKey(typeFullName)) {
         return jsonConverters[typeFullName].Invoke(o);
       } else {    // Use the default JsonConvert serialization
-        return JsonConvert.SerializeObject(o);
+        return JsonConvert.SerializeObject(o, JsonSerializerDefaultSettings());
       }
     }
 
@@ -134,12 +134,16 @@ namespace Empiria.Json {
     static public string ToJsonIndented(object o) {
       string typeFullName = BuildDictionaryKey(o.GetType());
 
+      var settings = JsonSerializerDefaultSettings();
+
+      settings.Formatting = Formatting.Indented;
+
       if (jsonConverters.ContainsKey(typeFullName)) {
         string json = jsonConverters[typeFullName].Invoke(o);
-        return JsonConvert.SerializeObject(JsonConvert.DeserializeObject(json),
-                                           Formatting.Indented);
+        return JsonConvert.SerializeObject(JsonConvert.DeserializeObject(json, settings),
+                                           settings);
       } else {
-        return JsonConvert.SerializeObject(o, Formatting.Indented);
+        return JsonConvert.SerializeObject(o, settings);
       }
     }
 
@@ -164,7 +168,7 @@ namespace Empiria.Json {
     /// <param name="jsonString">The JSON string to convert.</param>
     /// <returns>The object instance of type T with the properties obtained from the JSON structure.</returns>
     static public T ToObject<T>(string jsonString) {
-      return JsonConvert.DeserializeObject<T>(jsonString);
+      return JsonConvert.DeserializeObject<T>(jsonString, JsonSerializerDefaultSettings());
     }
 
     /// <summary>Converts a JSON string into an object instance of type T</summary>
@@ -181,7 +185,7 @@ namespace Empiria.Json {
       if (instance.GetType().Namespace == null) {
         return JsonConvert.DeserializeAnonymousType(jsonString, instance);
       } else {
-        return JsonConvert.DeserializeObject<T>(jsonString);
+        return JsonConvert.DeserializeObject<T>(jsonString, JsonSerializerDefaultSettings());
       }
     }
 
