@@ -213,6 +213,8 @@ namespace Empiria.Json {
       settings.Converters.Add(new DateTimeConverter());
       settings.Converters.Add(new ValueObjectConverter());
       settings.Converters.Add(new NamedEntityConverter());
+      settings.Converters.Add(new JsonObjectConverter());
+
       settings.Converters.Add(new DataViewConverter());
       settings.Converters.Add(new DataRowConverter());
 
