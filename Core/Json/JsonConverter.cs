@@ -13,7 +13,6 @@ using System.Dynamic;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
 
 /// ToDo List:    OOJJOO
 /// Object slicing (include/exclude a list of properties)
@@ -208,7 +207,7 @@ namespace Empiria.Json {
 
       settings.NullValueHandling = NullValueHandling.Ignore;
 
-      settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+      settings.ContractResolver = new EmpiriaContractResolver();
 
       // Empiria Json converters
 
