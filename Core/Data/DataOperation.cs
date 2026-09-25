@@ -39,6 +39,7 @@ namespace Empiria.Data {
       _sourceText = GetSourceText(dataOperation);
     }
 
+
     private DataOperation(DataSource dataSource, string dataOperation, object[] parameters)
                                                                 : base(dataOperation, parameters) {
       _dataSource = dataSource;
@@ -195,60 +196,57 @@ namespace Empiria.Data {
 
       string textCommand = string.Empty;
 
-      if (!_textCommandCache.ContainsKey(sourceName)) {
-
-        textCommand = ReadDataSourceText(sourceName);
-        _textCommandCache.Insert(sourceName, textCommand);
-
-      } else {
-        textCommand = _textCommandCache[sourceName];
+      if (_textCommandCache.ContainsKey(sourceName)) {
+        return _textCommandCache[sourceName];
       }
+
+      textCommand = ReadDataSourceText(sourceName);
+      _textCommandCache.Insert(sourceName, textCommand);
 
       return textCommand;
     }
 
 
     static private string ReadDataSourceText(string sourceName) {
-      try {
-        var sql = $"SELECT * FROM DBQueryStrings " +
-                  $"WHERE QueryName = '{sourceName}'";
 
-        var operation = DataOperation.Parse(sql);
+      EmpiriaString.EnsureIsSafe(sourceName,
+        $"DataOperation.ReadDataSourceText(string) method was invoked with possible dangerous parameter. " +
+        $"Parameter value: {sourceName}");
 
-        string text = string.Empty;
+      var sql = $"SELECT * FROM DBQueryStrings " +
+                $"WHERE QueryName = '{sourceName}'";
 
-        switch (operation.DataSource.Technology) {
-          case DataTechnology.SqlServer:
-            text = DataReader.GetFieldValue(operation, "SqlQueryString") as string;
-            break;
+      var operation = Parse(sql);
 
-          case DataTechnology.MySql:
-            text = DataReader.GetFieldValue(operation, "MySqlQueryString") as string;
-            break;
+      string text = string.Empty;
 
-          case DataTechnology.Oracle:
-            text = DataReader.GetFieldValue(operation, "OracleQueryString") as string;
-            break;
+      switch (operation.DataSource.Technology) {
+        case DataTechnology.SqlServer:
+          text = DataReader.GetFieldValue(operation, "SqlQueryString") as string;
+          break;
 
-          case DataTechnology.PostgreSql:
-            text = DataReader.GetFieldValue(operation, "PostgreSQLQueryString") as string;
-            break;
+        case DataTechnology.MySql:
+          text = DataReader.GetFieldValue(operation, "MySqlQueryString") as string;
+          break;
 
-          default:
-            text = DataReader.GetFieldValue(operation, "OleDbQueryString") as string;
-            break;
+        case DataTechnology.Oracle:
+          text = DataReader.GetFieldValue(operation, "OracleQueryString") as string;
+          break;
 
-        }
+        case DataTechnology.PostgreSql:
+          text = DataReader.GetFieldValue(operation, "PostgreSQLQueryString") as string;
+          break;
 
-        if (!String.IsNullOrWhiteSpace(text)) {
-          return text;
-        } else {
-          throw new EmpiriaDataException(EmpiriaDataException.Msg.DataSourceNotDefined, sourceName);
-        }
+        default:
+          text = DataReader.GetFieldValue(operation, "OleDbQueryString") as string;
+          break;
 
-      } catch (Exception innerException) {
-        throw new EmpiriaDataException(EmpiriaDataException.Msg.DataSourceNotDefined,
-                                       innerException, sourceName);
+      }
+
+      if (!string.IsNullOrWhiteSpace(text)) {
+        return text;
+      } else {
+        throw new EmpiriaDataException(EmpiriaDataException.Msg.DataSourceNotDefined, sourceName);
       }
     }
 
