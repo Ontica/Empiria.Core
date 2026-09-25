@@ -190,6 +190,10 @@ namespace Empiria {
         }
       }
 
+      EmpiriaString.EnsureIsSafe(namedKey,
+        $"BaseObject.ParseKey<T>(string) method was invoked with possible dangerous parameter. " +
+        $"Parameter value: {namedKey}; typeInfo: {typeInfo.ClassName}");
+
       Tuple<ObjectTypeInfo, DataRow> objectData = typeInfo.GetObjectTypeAndDataRow(namedKey);
 
       return BaseObject.ParseEmpiriaObject<T>(objectData.Item1, objectData.Item2);
@@ -298,9 +302,15 @@ namespace Empiria {
 
 
     static protected T TryParse<T>(string condition) where T : BaseObject {
-      IFilter filter = Empiria.Data.SqlFilter.Parse(condition);
+      Assertion.Require(condition, nameof(condition));
 
       var typeInfo = ObjectTypeInfo.Parse(typeof(T));
+
+      EmpiriaString.EnsureIsSafe(condition,
+        $"BaseObject.TryParse<T>(string) method was invoked with possible dangerous parameter. " +
+        $"Parameter value: {condition}, typeInfo: {typeInfo.ClassName}");
+
+      IFilter filter = Data.SqlFilter.Parse(condition);
 
       Tuple<ObjectTypeInfo, DataRow> objectData = typeInfo.TryGetObjectTypeAndDataRow(filter);
 
@@ -542,7 +552,7 @@ namespace Empiria {
 
       } catch (Exception e) {
         throw new NotSupportedException(
-              $"No pude hacer el parsing del objeto de tipo {item.objectTypeInfo}", e);
+              $"No pude hacer el parsing del objeto de tipo {item.objectTypeInfo} con identificador {item.Id}.", e);
       }
       if (typeInfo.IsDataBound) {
         item.DataBind(dataRow);
