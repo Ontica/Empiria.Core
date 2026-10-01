@@ -19,6 +19,43 @@ namespace Empiria {
   /// <summary>Static partial class with methods for string security.</summary>
   static public partial class EmpiriaString {
 
+    #region Fields
+
+    static private readonly string[] _unsafePatterns = {
+        @"(""|\s|^)select\s+.+\s+from\s",
+        @"(""|\s|^)insert\s+into\s",
+        @"(""|\s|^)update\s+.+\s+set\s",
+        @"(""|\s|^)delete\s+from\s",
+        @"(""|\s|^)(drop|create|alter)\s+(table|database|schema|view|index|procedure|proc|package|function|trigger|sequence|
+                                          synonym|user|login|role|column|constraint|type|default|rule|assembly|certificate|
+                                          credential|queue|service|statistics|tablespace|profile|cluster|context|directory|
+                                          materialized\s+view|package\s+body|partition\s+function|fulltext\s+index|database\s+link)\s",
+        @"(""|\s|^)truncate\s+table\s",
+        @"(""|\s|^)exec(ute)?\s+\S",
+        @"(""|\s|^)(sysadmin|is_member|is_srvrolemember)",
+        @"(""|\s|^)(sys\.)\w",
+        @"(""|\s|^)(xp|sp|apd|do|qry|write|user|all|db)_\w",
+        @"javascript:", @"vbscript:", @"data:text/html",
+        @"\bon\w+\s*=",
+        @"<\s*script\b", @"<\s*/\s*script\s*>",
+        @"<\s*iframe\b", @"<\s*/\s*iframe\s*>",
+        @"<\s*object\b", @"<\s*/\s*object\s*>",
+        @"<\s*embed\b", @"<\s*applet\b", @"<\s*/\s*applet\s*>",
+        @"<\s*meta\b", @"<\s*base\b",
+        @"<\s*style\b", @"<\s*/\s*style\s*>", @"expression\s*\(",
+        @"<\s*svg\b", @"<\s*/\s*svg\s*>", @"<\s*img\b",
+        @"<\s*html\b", @"<\s*/\s*html\s*>", @"<\s*head\b", @"<\s*/\s*head\s*>",
+        @"<\s*body\b", @"<\s*/\s*body\s*>",
+        @"<\s*form\b", @"<\s*/\s*form\s*>", @"<\s*input\b",
+        @"<\s*a\b", @"<\s*/\s*a\s*>", @"<\s*link\b", @"<\s*/\s*link\s*>",
+        @"<\s*button\b", @"<\s*/\s*button\s*>",
+        @"<\s*video\b", @"<\s*audio\b", @"<\s*source\b",
+        @"function\s*\(", @"sub\s*\(", @"alert\s*\(", @"href\s*=",
+        @"benchmark\s*\(", @"sleep\s*\(", @"waitfor\s+delay"
+    };
+
+    #endregion Fields
+
     #region Methods
 
     static public void EnsureIsSafe(string value, string message) {
@@ -42,22 +79,9 @@ namespace Empiria {
         return false;
       }
 
-      string[] unsafePatterns =         {
-          @"(""|\s|^)(select|insert|update|delete|drop|truncate|create|alter|exec|execute)\s",
-          @"(""|\s|^)(sysadmin|is_member|is_srvrolemember)",
-          @"(""|\s|^)(sys.)\S",
-          @"(""|\s|^)(xp|sp|apd|do|qry|write|user|all|db)_\S",
-          @"javascript:", @"vbscript:", @"onload\s*=",
-          @"<script\s", @"</script>", @"function\s*\(", @"sub\s*\(", @"alert\s*\(",
-          @"<html\s", @"</html>", @"<head\s", @"</head>", @"<body\s", @"</body>",
-          @"<iframe\s", @"</iframe>", @"<form\s", @"</form>", @"<input\s",
-          @"<a\s", @"</a>", @"<link\s", @"</link>",@"<button\s", @"</button>", @"href\s*=",
-          @"benchmark\s*\(", @"sleep\s*\(", @"waitfor\s+delay"
-      };
-
-      return unsafePatterns.Any(pattern => Regex.IsMatch(source, pattern,
-                                                         RegexOptions.IgnoreCase,
-                                                         TimeSpan.FromSeconds(5)));
+      return _unsafePatterns.Any(pattern => Regex.IsMatch(source, pattern,
+                                                          RegexOptions.IgnoreCase,
+                                                          TimeSpan.FromSeconds(5)));
     }
 
     #endregion Methods
