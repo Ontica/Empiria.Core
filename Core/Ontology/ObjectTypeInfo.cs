@@ -80,7 +80,7 @@ namespace Empiria.Ontology {
 
 
     static internal ObjectTypeInfo Parse(Type type) {
-     int typeHashCode = type.GetHashCode();
+      int typeHashCode = type.GetHashCode();
       ObjectTypeInfo value = null;
       if (_cacheByUnderlyingType.TryGetValue(typeHashCode, out value)) {
         return value;
@@ -100,7 +100,9 @@ namespace Empiria.Ontology {
 
     [Newtonsoft.Json.JsonIgnore]
     public new ObjectTypeInfo BaseType {
-      get { return (ObjectTypeInfo) base.BaseType; }
+      get {
+        return (ObjectTypeInfo) base.BaseType;
+      }
     }
 
 
@@ -196,7 +198,9 @@ namespace Empiria.Ontology {
 
 
     internal Tuple<ObjectTypeInfo, DataRow> GetObjectTypeAndDataRow(string objectNamedKey) {
+
       DataRow dataRow = OntologyData.GetBaseObjectDataRow(this, objectNamedKey);
+
       if (dataRow == null) {
         throw new OntologyException(OntologyException.Msg.ObjectNamedKeyNotFound,
                                     this.Name, objectNamedKey);
@@ -206,9 +210,11 @@ namespace Empiria.Ontology {
       }
 
       int derivedTypeId = (int) dataRow[this.TypeIdFieldName];
+
       if (derivedTypeId != this.Id) {   // If types are distinct then change basetype to derived
         return new Tuple<ObjectTypeInfo, DataRow>(ObjectTypeInfo.Parse(derivedTypeId), dataRow);
       }
+
       return new Tuple<ObjectTypeInfo, DataRow>(this, dataRow);
     }
 
@@ -250,12 +256,14 @@ namespace Empiria.Ontology {
         allSubclasses.AddRange(subclass.GetSubclasses());
       }
 
-      return allSubclasses.ToFixedList().Distinct().ToArray();
+      return allSubclasses.ToFixedList()
+                          .Distinct()
+                          .ToArray();
     }
 
 
-    public string GetAllSubclassesFilter() {
-      ObjectTypeInfo[] allSubClasses = this.GetAllSubclasses();
+    public string GetAllSubclassesFilter(bool includeBaseClass = true) {
+      ObjectTypeInfo[] allSubClasses = this.GetAllSubclasses(includeBaseClass);
 
       return string.Join(",", allSubClasses.ToFixedList().Select(x => x.Id));
     }
@@ -309,7 +317,7 @@ namespace Empiria.Ontology {
 
 
     public bool IsBaseClassOf(ObjectTypeInfo typeInfo) {
-     return typeInfo.IsSubclassOf(this);
+      return typeInfo.IsSubclassOf(this);
     }
 
 
@@ -340,18 +348,30 @@ namespace Empiria.Ontology {
 
 
     internal Tuple<ObjectTypeInfo, DataRow> TryGetObjectTypeAndDataRow(IFilter condition) {
-      DataRow dataRow = OntologyData.GetBaseObjectDataRow(this, condition);
+
+      IFilter effectiveCondition = condition;
+
+      if (TypeIdFieldName.Length != 0) {
+        effectiveCondition = Data.SqlFilter.Parse(
+            $"({condition.Value}) AND ({TypeIdFieldName} IN ({GetAllSubclassesFilter(true)}))");
+      }
+
+      DataRow dataRow = OntologyData.GetBaseObjectDataRow(this, effectiveCondition);
+
       if (dataRow == null) {
         return null;
       }
+
       if (this.TypeIdFieldName.Length == 0) {
         return new Tuple<ObjectTypeInfo, DataRow>(this, dataRow);
       }
 
       int derivedTypeId = (int) dataRow[this.TypeIdFieldName];
+
       if (derivedTypeId != this.Id) {   // If types are distinct then change basetype to derived
         return new Tuple<ObjectTypeInfo, DataRow>(Parse(derivedTypeId), dataRow);
       }
+
       return new Tuple<ObjectTypeInfo, DataRow>(this, dataRow);
     }
 
