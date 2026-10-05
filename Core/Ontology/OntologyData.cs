@@ -7,6 +7,7 @@
 *  Summary   : Provides data read methods for Empiria Ontology objects.                                      *
 *                                                                                                            *
 ************************* Copyright(c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved. **/
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,31 +21,35 @@ namespace Empiria.Ontology {
     #region Internal methods
 
     static internal DataRow GetBaseObjectDataRow(ObjectTypeInfo objectTypeInfo, int objectId) {
+
       if (objectTypeInfo.DataSource.StartsWith("qry") || objectTypeInfo.DataSource.StartsWith("get")) {
         return DataReader.GetDataRow(DataOperation.Parse(objectTypeInfo.DataSource, objectId));
       }
+
       return OntologyDataHelpers.GetEntityById(objectTypeInfo.DataSource,
-                                                 objectTypeInfo.IdFieldName, objectId);
+                                               objectTypeInfo.IdFieldName, objectId);
     }
 
 
     static internal DataRow GetBaseObjectDataRow(ObjectTypeInfo objectTypeInfo, string objectKey) {
+
       if (objectTypeInfo.DataSource.StartsWith("qry") || objectTypeInfo.DataSource.StartsWith("get")) {
         return DataReader.GetDataRow(DataOperation.Parse(objectTypeInfo.DataSource, objectKey));
       }
 
-      if (objectTypeInfo.TypeIdFieldName.Length != 0) {
-        var filter = $"({objectTypeInfo.DataSource}.{objectTypeInfo.NamedIdFieldName} = '{objectKey}') AND " +
-                     $"(Types.TypeName = '{objectTypeInfo.Name}' OR Types.TypeName LIKE '{objectTypeInfo.Name}.%')";
-
-        DataTable table = OntologyDataHelpers.GetEntitiesJoined(objectTypeInfo.DataSource, "Types",
-                                                                  objectTypeInfo.TypeIdFieldName, "TypeId",
-                                                                  filter);
-        return (table.Rows.Count == 1) ? table.Rows[0] : null;
-      } else {
+      if (objectTypeInfo.TypeIdFieldName.Length == 0) {
         return OntologyDataHelpers.GetEntityByKey(objectTypeInfo.DataSource,
-                                                    objectTypeInfo.NamedIdFieldName, objectKey);
+                                                  objectTypeInfo.NamedIdFieldName, objectKey);
       }
+
+
+      var filter = $"({objectTypeInfo.DataSource}.{objectTypeInfo.NamedIdFieldName} = '{objectKey}') AND " +
+                   $"(Types.TypeName = '{objectTypeInfo.Name}' OR Types.TypeName LIKE '{objectTypeInfo.Name}.%')";
+
+      DataTable table = OntologyDataHelpers.GetEntitiesJoined(objectTypeInfo.DataSource, "Types",
+                                                              objectTypeInfo.TypeIdFieldName, "TypeId",
+                                                              filter);
+      return (table.Rows.Count == 1) ? table.Rows[0] : null;
     }
 
 
@@ -70,7 +75,7 @@ namespace Empiria.Ontology {
     }
 
 
-    static internal FixedList<T> GetSimpleObjects<T>() where T: BaseObject {
+    static internal FixedList<T> GetSimpleObjects<T>() where T : BaseObject {
       ObjectTypeInfo objectTypeInfo = ObjectTypeInfo.Parse<T>();
 
       var sql = "SELECT * FROM SimpleObjects " +
@@ -93,7 +98,7 @@ namespace Empiria.Ontology {
     }
 
 
-    static internal List<T> GetBaseObjectList<T>(string filter = "", string sort = "") where T: BaseObject {
+    static internal List<T> GetBaseObjectList<T>(string filter = "", string sort = "") where T : BaseObject {
       var typeInfo = ObjectTypeInfo.Parse<T>();
 
       string fullFilter = String.Empty;
