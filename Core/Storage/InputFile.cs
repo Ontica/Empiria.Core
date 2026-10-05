@@ -34,10 +34,12 @@ namespace Empiria.Storage {
     public InputFile(Stream stream,
                      string mediaType,
                      string originalFileName,
-                     string appContentFile) {
+                     string appContentFile = "") {
       Assertion.Require(stream, nameof(stream));
       Assertion.Require(mediaType, nameof(mediaType));
       Assertion.Require(originalFileName, nameof(originalFileName));
+
+      appContentFile = appContentFile ?? string.Empty;
 
       Stream = stream;
       MediaType = mediaType;
@@ -45,7 +47,7 @@ namespace Empiria.Storage {
       FileUID = GenerateUID();
       FileTimestamp = DateTime.Now;
       FileExtension = GetFileExtension(OriginalFileName);
-      AppContentType = appContentFile ?? string.Empty;
+      AppContentType = appContentFile;
     }
 
     #endregion Constructors and parsers
@@ -58,7 +60,7 @@ namespace Empiria.Storage {
 
 
     public string AppContentType {
-      get;
+      get; private set;
     }
 
 
@@ -77,8 +79,8 @@ namespace Empiria.Storage {
     }
 
     public string FileUID {
-      get; private set;
-    } = string.Empty;
+      get;
+    }
 
 
     public string FileName {
@@ -89,16 +91,27 @@ namespace Empiria.Storage {
 
 
     public DateTime FileTimestamp {
-      get; private set;
-    } = ExecutionServer.DateMaxValue;
+      get;
+    }
 
 
     public string FileExtension {
-      get; private set;
-    } = string.Empty;
-
+      get;
+    }
 
     #endregion Properties
+
+    #region Methods
+
+    public void SetAppContentType(string appContentType) {
+      Assertion.Require(appContentType, nameof(appContentType));
+
+      Assertion.Require(this.AppContentType == string.Empty, "AppContentType was already assigned so can not be changed.");
+
+      this.AppContentType = appContentType;
+    }
+
+    #endregion Methods
 
     #region Helpers
 
