@@ -76,8 +76,10 @@ namespace Empiria.Commands {
                                                        .ToList()
                                                        .Append(warning));
 
-      if (TransactionTotals.Count != 0) {
-        TransactionTotals[0].WarningsCount++;
+      var total = TransactionTotals.Find(x => x.UID == warning.UID);
+
+      if (total != null) {
+        total.WarningsCount++;
       }
     }
 
